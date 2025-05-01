@@ -1,8 +1,0 @@
-`json
-{
-  "name": "anime-player-cloudflare",
-  "version": "1.0.0",
-  "scripts": {
-    "build": "echo Building completed"
-  }
-}
