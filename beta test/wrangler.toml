@@ -1,0 +1,6 @@
+name = "anime-video-player"
+main = "worker.js"
+compatibility_date = "2023-05-01"
+
+[site]
+bucket = "./"

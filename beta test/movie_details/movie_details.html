@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="movie_details.css">
+    <link rel="icon" href="/assests/netflix.ico">
+    <title>Movie Details</title>
+</head>
+
+<body>
+    <!-- Header section -->
+    <header class="header">
+        <img src="/assests/netflix.png" alt="logo" class="logo">
+    </header>
+
+    <!-- Movie details section -->
+    <div class="movie-details">
+
+        <!-- Movie poster section -->
+        <div class="movie-poster">
+            <img id="moviePoster" src="" alt="Movie Poster">
+            <iframe id="iframe" frameborder="0" allowfullscreen
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"></iframe>
+
+            <!-- Season selector (visible only for TV shows) -->
+            <div id="seasons-container" class="seasons-container">
+                <div class="season-dropdown">
+                    <div class="season-selector">
+                        <span>Season</span>
+                        <select id="season-select" class="season-select">
+                            <!-- Seasons will be populated here -->
+                        </select>
+                    </div>
+                </div>
+
+                <div id="episodes-list" class="episodes-list">
+                    <!-- Episodes will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Movie information section -->
+        <div class="movie-info">
+            <h1 id="movieTitle"></h1>
+            <p id="plot"></p>
+
+            <div class="movie-data">
+                <div class="design">
+                    <span>Released :</span>
+                    <p id="movieYear"></p>
+                </div>
+
+                <div class="design">
+                    <span>Language :</span>
+                    <p id="language"></p>
+                </div>
+            </div>
+
+            <div class="movie-data rating-data">
+                <div class="design">
+                    <span>Rating :</span>
+                    <p id="rating"></p>
+                </div>
+                <div class="design">
+                    <span>Genre :</span>
+                    <p id="genre"></p>
+                </div>
+            </div>
+
+            <!-- watchList button section -->
+            <button class="watchListBtn">Add To WatchList</button>
+
+            <!-- Server Dropdown - Redesigned to match watchlist button -->
+            <div class="server-dropdown">
+                <div class="server-dropdown-header">
+                    <div class="selected-server">
+                        <span class="server-name">MIZUKI</span>
+                        <span class="server-tag tag-recommended">Recommended</span>
+                        <span class="server-tag tag-stable">Stable</span>
+                        <span class="server-tag tag-4k">4K</span>
+                        <span class="server-tag tag-hd">HD</span>
+                    </div>
+                    <span class="dropdown-arrow">▼</span>
+                </div>
+                <div class="server-dropdown-content">
+                    <div class="server-option" data-server="player.videasy.net">
+                        <span class="server-name">MAFUYU</span>
+                        <span class="server-tag tag-recommended">Recommended</span>
+                        <span class="server-tag tag-stable">Stable</span>
+                        <span class="server-tag tag-4k">4K</span>
+                    </div>
+                    <div class="server-option" data-server="vidlink.pro">
+                        <span class="server-name">MIZUKI</span>
+                        <span class="server-tag tag-stable">Stable</span>
+                        <span class="server-tag tag-4k">4K</span>
+                        <span class="server-tag tag-hd">HD</span>
+                    </div>
+                    <div class="server-option" data-server="vidsrc.cc">
+                        <span class="server-name">KANADE</span>
+                        <span class="server-tag tag-stable">Stable</span>
+                        <span class="server-tag tag-hd">HD</span>
+                    </div>
+                    <div class="server-option" data-server="movieapi.club">
+                        <span class="server-name">SAKI</span>
+                        <span class="server-tag tag-4k">4K</span>
+                    </div>
+                    <div class="server-option" data-server="vidsrc.me">
+                        <span class="server-name">OTORI</span>
+                        <span class="server-tag tag-hd">HD</span>
+                    </div>
+                    <!-- Anime-specific server options with different data-server values -->
+                    <div class="server-option anime-server" data-server="vidstreaming" style="display: none;">
+                        <span class="server-name">VIDSTREAMING</span>
+                        <span class="server-tag tag-recommended">Anime</span>
+                        <span class="server-tag tag-stable">Stable</span>
+                        <span class="server-tag tag-hd">HD</span>
+                    </div>
+                    <div class="server-option anime-server" data-server="streamsb" style="display: none;">
+                        <span class="server-name">STREAMSB</span>
+                        <span class="server-tag tag-recommended">Anime</span>
+                        <span class="server-tag tag-stable">Stable</span>
+                        <span class="server-tag tag-4k">4K</span>
+                    </div>
+                    <div class="server-option anime-server" data-server="vidcdn" style="display: none;">
+                        <span class="server-name">VIDCDN</span>
+                        <span class="server-tag tag-recommended">Anime</span>
+                        <span class="server-tag tag-stable">Stable</span>
+                        <span class="server-tag tag-hd">HD</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Old Server selector dropdown - hidden, kept for backward compatibility -->
+            <button id="change-server-btn" class="change-server-btn" style="display: none;"><b>CHANGE SERVER</b></button>
+            <div id="server-selector" class="server-selector-dropdown" style="display: none;">
+                <label for="server">Select Server:</label>
+                <select id="server" class="server-selector-select">
+                    <!-- Regular servers -->
+                    <option value="player.videasy.net">MAFUYU 1080p FAST</option>
+                    <option value="vidlink.pro">MIZUKI 4K FAST</option>
+                    <option value="vidsrc.cc">KANADE HD FAST</option>
+                    <option value="movieapi.club">SAKI 4K FAST</option>
+                    <option value="vidsrc.me">OTORI 1080P FAST</option>
+                    <option value="2embed">TSUKASA 720P SLOW</option>
+
+                    <!-- Anime servers -->
+                    <option value="vidstreaming">VIDSTREAMING ANIME HD</option>
+                    <option value="streamsb">STREAMSB ANIME 4K</option>
+                    <option value="vidcdn">VIDCDN ANIME HD</option>
+                </select>
+                <button class="close-button" style="position: absolute; top: 10px; right: 10px;">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add HLS.js for m3u8 streaming support -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.12"></script>
+    <!-- Add error handling for HLS.js -->
+    <script>
+        window.addEventListener('error', function(e) {
+            console.error('Global error caught:', e.error || e.message);
+            if (e.message && e.message.includes('hls.js')) {
+                console.error('HLS.js loading error detected');
+                // Try to reload HLS.js from alternate CDN
+                var newScript = document.createElement('script');
+                newScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.4.12/hls.min.js';
+                document.head.appendChild(newScript);
+            }
+        });
+    </script>
+    <script src="movie_details.js"></script>
+</body>
+
+</html>

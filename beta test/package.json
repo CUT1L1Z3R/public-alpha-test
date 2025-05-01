@@ -1,0 +1,19 @@
+{
+  "name": "anime-video-player",
+  "version": "1.0.0",
+  "description": "Anime video player with API integration",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "wrangler dev",
+    "publish": "wrangler publish",
+    "deploy": "wrangler deploy"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "wrangler": "^3.5.0"
+  }
+}
