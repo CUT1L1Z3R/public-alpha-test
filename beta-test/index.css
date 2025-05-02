@@ -988,22 +988,31 @@ input::-webkit-input-placeholder {
     text-overflow: ellipsis;
   }
 
-  /* All section headers now use the same font size */
+  /* All section headers now use the same font style as Netflix Originals */
   #netflix-originals h1,
+  #trending-now h1,
+  #top-rated-movies h1,
+  #horror-movies h1,
+  #comedy-movies h1,
+  #thriller-movies h1,
+  #adventure-movies h1,
+  #drama-tv h1,
+  #crime-tv h1,
+  #comedy-tv h1,
   #scifi-tv h1,
-  #documentary-tv h1 {
+  #documentary-tv h1,
+  #anime-section h1,
+  #anime-comedy h1,
+  #anime-romance h1,
+  #anime-popular h1,
+  #anime-top-rated h1,
+  #anime-ongoing h1,
+  #anime-upcoming-new h1 {
     font-size: 0.85rem; /* Consistent size for all section headers */
     max-width: 95%;
-  }
-
-  /* Special style for UPCOMING ANIME section - now uses consistent font size */
-  #anime-upcoming-new h1 {
-    font-size: 0.85rem;
-    padding: 5px 10px;
-    margin-left: 10px;
-    margin-bottom: 15px;
-    letter-spacing: 0.3px;
-    max-width: 90%;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.5px;
   }
 
   /* Scrolling containers */
@@ -1034,10 +1043,10 @@ input::-webkit-input-placeholder {
     scroll-snap-align: start;
   }
 
-  /* Netflix and anime containers */
+  /* Netflix and anime containers - standardized to same size as other containers */
   .netflix-container .movie-item, .anime-container .movie-item {
-    width: 140px;
-    height: 200px;
+    width: 220px;
+    height: 130px;
   }
 
   .movies-box img {
@@ -1070,7 +1079,7 @@ input::-webkit-input-placeholder {
   }
 
   .netflix-previous, .netflix-next {
-    height: 200px;
+    height: 130px; /* Match the standard height */
   }
 
   .anime-section .movie-item {
@@ -1083,6 +1092,11 @@ input::-webkit-input-placeholder {
   }
 
   .anime-section .movies-box {
+    min-height: 150px;
+  }
+
+  /* Set Netflix container to same height as other containers in mobile */
+  .netflix-container {
     min-height: 150px;
   }
 
@@ -1261,8 +1275,8 @@ input::-webkit-input-placeholder {
   }
 
   .netflix-container .movie-item, .anime-container .movie-item {
-    width: 120px;
-    height: 180px;
+    width: 220px;
+    height: 120px;
   }
 
   .movies-box img {
@@ -1293,11 +1307,11 @@ input::-webkit-input-placeholder {
   }
 
   .netflix-previous, .netflix-next {
-    height: 180px;
+    height: 120px;
   }
 
   .anime-previous, .anime-next {
-    height: 180px;
+    height: 120px;
   }
 
   .movies-box::-webkit-scrollbar {
@@ -1606,12 +1620,30 @@ html::-webkit-scrollbar-thumb:hover {
     border-left: 2px solid #8d16c9;
   }
 
-  /* All section headers now use the same font size */
+  /* All section headers now use the same font style as Netflix Originals */
   #netflix-originals h1,
+  #trending-now h1,
+  #top-rated-movies h1,
+  #horror-movies h1,
+  #comedy-movies h1,
+  #thriller-movies h1,
+  #adventure-movies h1,
+  #drama-tv h1,
+  #crime-tv h1,
+  #comedy-tv h1,
   #scifi-tv h1,
   #documentary-tv h1,
+  #anime-section h1,
+  #anime-comedy h1,
+  #anime-romance h1,
+  #anime-popular h1,
+  #anime-top-rated h1,
+  #anime-ongoing h1,
   #anime-upcoming-new h1 {
     font-size: 0.75rem;
     padding: 4px 8px;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.3px;
   }
 }
