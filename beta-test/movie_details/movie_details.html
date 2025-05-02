@@ -19,13 +19,13 @@
     <div class="movie-details">
 
         <!-- Movie poster section -->
-        <div class="movie-poster">
-            <img id="moviePoster" src="" alt="Movie Poster">
-            <iframe id="iframe" frameborder="0" allowfullscreen
+        <div class="movie-poster" style="position: relative;">
+            <img id="moviePoster" src="https://via.placeholder.com/500x281?text=No+Image+Available" alt="Movie Poster">
+            <iframe id="iframe" frameborder="0" allowfullscreen style="display: none; width: 100%; height: 100%; position: absolute; top: 0; left: 0;"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"></iframe>
 
             <!-- Season selector (visible only for TV shows) -->
-            <div id="seasons-container" class="seasons-container">
+            <div id="seasons-container" class="seasons-container" style="display: none;">
                 <div class="season-dropdown">
                     <div class="season-selector">
                         <span>Season</span>
@@ -44,28 +44,28 @@
         <!-- Movie information section -->
         <div class="movie-info">
             <h1 id="movieTitle"></h1>
-            <p id="plot"></p>
+            <p id="plot">No description available</p>
 
             <div class="movie-data">
                 <div class="design">
                     <span>Released :</span>
-                    <p id="movieYear"></p>
+                    <p id="movieYear">Unknown</p>
                 </div>
 
                 <div class="design">
                     <span>Language :</span>
-                    <p id="language"></p>
+                    <p id="language">Unknown</p>
                 </div>
             </div>
 
             <div class="movie-data rating-data">
                 <div class="design">
                     <span>Rating :</span>
-                    <p id="rating"></p>
+                    <p id="rating">N/A</p>
                 </div>
                 <div class="design">
                     <span>Genre :</span>
-                    <p id="genre"></p>
+                    <p id="genre">Unknown</p>
                 </div>
             </div>
 
@@ -84,7 +84,7 @@
                     <span class="dropdown-arrow">▼</span>
                 </div>
                 <div class="server-dropdown-content">
-                    <div class="server-option" data-server="player.videasy.net">
+                    <div class="server-option active" data-server="player.videasy.net">
                         <span class="server-name">MAFUYU</span>
                         <span class="server-tag tag-recommended">Recommended</span>
                         <span class="server-tag tag-stable">Stable</span>

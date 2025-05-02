@@ -30,45 +30,104 @@ const params = new URLSearchParams(window.location.search);
 const id = params.get('id');
 const media = params.get("media");
 
+// Log parameters for debugging
+console.log(`Loaded with parameters - ID: ${id}, Media type: ${media}`);
+
 // Function to fetch detailed information using its TMDb ID
 async function fetchMovieDetails(id) {
-    // For all media types including anime, use TMDB API
-    const response = await fetch(`https://api.themoviedb.org/3/${media}/${id}?api_key=${api_Key}`);
-    const data = await response.json();
+    try {
+        // For all media types including anime, use TMDB API
+        // Make sure to use the correct endpoint based on media type
+        const mediaType = media === "all" ? "movie" : media;
+        const url = `https://api.themoviedb.org/3/${mediaType}/${id}?api_key=${api_Key}`;
+        console.log(`Fetching details from: ${url}`);
 
-    // For anime check if we have additional genre info to include
-    if (media === "tv" && data) {
-        // Check if this is likely anime by looking at genres
-        const isAnime = data.genres && data.genres.some(genre => genre.id === 16); // 16 is Animation genre
+        const response = await fetch(url);
 
-        if (isAnime) {
-            // Mark this as anime content for specialized handling if needed
-            data.is_anime = true;
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
         }
-    }
 
-    return data;
+        const data = await response.json();
+        console.log("Fetched movie details:", data);
+
+        // For anime check if we have additional genre info to include
+        if (mediaType === "tv" && data) {
+            // Check if this is likely anime by looking at genres
+            const isAnime = data.genres && data.genres.some(genre => genre.id === 16); // 16 is Animation genre
+
+            if (isAnime) {
+                // Mark this as anime content for specialized handling if needed
+                data.is_anime = true;
+            }
+        }
+
+        return data;
+    } catch (error) {
+        console.error('Error fetching movie details:', error);
+        return {
+            title: "Error Loading Details",
+            name: "Error Loading Details",
+            overview: "Unable to load details. Please try again later.",
+            release_date: "Unknown",
+            first_air_date: "Unknown",
+            vote_average: "N/A",
+            genres: [{ name: "Unknown" }],
+            spoken_languages: [{ english_name: "Unknown" }]
+        };
+    }
 }
 
 // Function to fetch video details (trailers) for a movie or TV show
 async function fetchVideoDetails(id) {
-    const response = await fetch(`https://api.themoviedb.org/3/${media}/${id}/videos?api_key=${api_Key}`);
-    const data = await response.json();
-    return data.results;
+    try {
+        const mediaType = media === "all" ? "movie" : media;
+        const response = await fetch(`https://api.themoviedb.org/3/${mediaType}/${id}/videos?api_key=${api_Key}`);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data.results;
+    } catch (error) {
+        console.error('Error fetching video details:', error);
+        return [];
+    }
 }
 
 // Function to fetch TV show seasons
 async function fetchTVSeasons(id) {
-    const response = await fetch(`https://api.themoviedb.org/3/tv/${id}?api_key=${api_Key}`);
-    const data = await response.json();
-    return data.seasons;
+    try {
+        const response = await fetch(`https://api.themoviedb.org/3/tv/${id}?api_key=${api_Key}`);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data.seasons;
+    } catch (error) {
+        console.error('Error fetching TV seasons:', error);
+        return [];
+    }
 }
 
 // Function to fetch episodes for a specific season
 async function fetchSeasonEpisodes(tvId, seasonNumber) {
-    const response = await fetch(`https://api.themoviedb.org/3/tv/${tvId}/season/${seasonNumber}?api_key=${api_Key}`);
-    const data = await response.json();
-    return data.episodes;
+    try {
+        const response = await fetch(`https://api.themoviedb.org/3/tv/${tvId}/season/${seasonNumber}?api_key=${api_Key}`);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data.episodes;
+    } catch (error) {
+        console.error('Error fetching season episodes:', error);
+        return [];
+    }
 }
 
 document.getElementById('change-server-btn').addEventListener('click', () => {
@@ -202,7 +261,10 @@ async function loadEpisodes(tvId, seasonNumber) {
 // Function to handle video source change based on selected server
 async function changeServer() {
     const server = document.getElementById('server').value; // Get the selected server
-    const type = media === "movie" ? "movie" : (media === "anime" ? "anime" : "tv"); // Movie, TV, or Anime type
+    const actualMedia = media === "all" ? "movie" : media; // Convert "all" to "movie" for server URLs
+    const type = actualMedia === "movie" ? "movie" : (actualMedia === "anime" ? "anime" : "tv"); // Movie, TV, or Anime type
+
+    console.log(`Changing server to: ${server}, Media type: ${type}, ID: ${id}`);
 
     // Check if we're viewing a TV show with episode selected
     if (type === "tv" && seasonsContainer.style.display === "flex") {
@@ -287,13 +349,17 @@ async function changeServer() {
     console.log(`Loading ${type} from: ${embedURL}`);
 
     // Update the iframe source with the correct video URL
-    iframe.src = embedURL;
-
-    // Ensure iframe is visible and sized correctly
-    iframe.style.display = "block";  // Show the iframe
+    if (iframe) {
+        iframe.src = embedURL;
+        iframe.style.display = "block";  // Show the iframe
+    } else {
+        console.error("iframe element not found!");
+    }
 
     // Hide the movie poster when the video is playing
-    moviePoster.style.display = "none";  // Hide the movie poster image
+    if (moviePoster) {
+        moviePoster.style.display = "none";  // Hide the movie poster image
+    }
 }
 
 // Function to play a specific episode
@@ -358,10 +424,22 @@ function playEpisode(tvId, seasonNumber, episodeNumber) {
     }
 }
 
+// Store the last loaded movie details for watchlist toggling
+let lastLoadedMovieDetails = null;
+
 // Function to display movie details on the page
 async function displayMovieDetails() {
     try {
+        if (!id) {
+            throw new Error("No movie ID provided in URL parameters");
+        }
+
         const movieDetails = await fetchMovieDetails(id);
+        lastLoadedMovieDetails = movieDetails;
+
+        if (!movieDetails) {
+            throw new Error("Failed to fetch movie details");
+        }
 
         var spokenlanguage = movieDetails.spoken_languages ? movieDetails.spoken_languages.map(language => language.english_name) : ['Unknown'];
         language.textContent = spokenlanguage.join(', ');
@@ -378,34 +456,45 @@ async function displayMovieDetails() {
             plot.textContent = movieDetails.overview || 'No description available';
         }
 
-        movieTitle.textContent = movieDetails.name || movieDetails.title;
+        // Set the movie title (using name for TV shows or title for movies)
+        movieTitle.textContent = movieDetails.name || movieDetails.title || "Unknown Title";
 
+        // Set the movie poster image
         if (movieDetails.backdrop_path) {
             if (movieDetails.backdrop_path.startsWith('http')) {
                 moviePoster.src = movieDetails.backdrop_path;
             } else {
                 moviePoster.src = `https://image.tmdb.org/t/p/w500${movieDetails.backdrop_path}`;
             }
+            moviePoster.style.display = "block";
         } else if (movieDetails.poster_path) {
             if (movieDetails.poster_path.startsWith('http')) {
                 moviePoster.src = movieDetails.poster_path;
             } else {
                 moviePoster.src = `https://image.tmdb.org/t/p/w500${movieDetails.poster_path}`;
             }
+            moviePoster.style.display = "block";
         } else {
             moviePoster.src = 'https://via.placeholder.com/500x281?text=No+Image+Available';
+            moviePoster.style.display = "block";
         }
 
+        // Set release date and rating
         movieYear.textContent = `${movieDetails.release_date || movieDetails.first_air_date || 'Unknown'}`;
-        rating.textContent = movieDetails.vote_average || 'N/A';
+        rating.textContent = movieDetails.vote_average ? (typeof movieDetails.vote_average === "number" ? movieDetails.vote_average.toFixed(1) : movieDetails.vote_average) : 'N/A';
 
         // If this is a TV show, setup the seasons and episodes section
-        if (media === "tv") {
-            const seasons = await fetchTVSeasons(id);
-            if (seasons && seasons.length > 0) {
-                createSeasonOptions(seasons);
-                // Display the seasons container
-                seasonsContainer.style.display = "flex";
+        const actualMedia = media === "all" ? "movie" : media;
+        if (actualMedia === "tv") {
+            try {
+                const seasons = await fetchTVSeasons(id);
+                if (seasons && seasons.length > 0) {
+                    createSeasonOptions(seasons);
+                    // Display the seasons container
+                    seasonsContainer.style.display = "flex";
+                }
+            } catch (err) {
+                console.error("Error setting up TV seasons:", err);
             }
         }
 
@@ -419,23 +508,30 @@ async function displayMovieDetails() {
             watchListBtn.textContent = "Add To WatchList";
         }
 
-        watchListBtn.addEventListener('click', () => toggleFavorite(movieDetails));
+        // Remove previous event listeners to prevent duplicates
+        watchListBtn.replaceWith(watchListBtn.cloneNode(true));
+        // Re-select the button after replacement
+        const newWatchListBtn = document.querySelector('.watchListBtn');
+        newWatchListBtn.textContent = watchListBtn.textContent;
+        newWatchListBtn.addEventListener('click', () => toggleFavorite(lastLoadedMovieDetails));
 
     } catch (error) {
         console.error('Error displaying movie details:', error);
         movieTitle.textContent = "Details are not available right now! Please try after some time.";
+        plot.textContent = "Error: " + error.message;
     }
 }
 
 // Function to toggle adding/removing from favorites
 function toggleFavorite(movieDetails) {
+    if (!movieDetails) return;
     const index = watchlist.findIndex(movie => movie.id === movieDetails.id);
     if (index !== -1) {
         watchlist.splice(index, 1);
-        watchListBtn.textContent = "Add To WatchList";
+        document.querySelector('.watchListBtn').textContent = "Add To WatchList";
     } else {
         watchlist.push(movieDetails);
-        watchListBtn.textContent = "Remove From WatchList";
+        document.querySelector('.watchListBtn').textContent = "Remove From WatchList";
     }
     localStorage.setItem('watchlist', JSON.stringify(watchlist));
 }
@@ -496,7 +592,9 @@ function initServerDropdown() {
     });
 
     // Set initial active server
-    const initialServer = document.getElementById('server').value;
+    const initialServer = document.getElementById('server').value || 'player.videasy.net';
+    document.getElementById('server').value = initialServer; // Ensure select matches
+
     const initialServerOption = document.querySelector(`.server-option[data-server="${initialServer}"]`);
     if (initialServerOption) {
         initialServerOption.classList.add('active');
@@ -512,17 +610,20 @@ document.getElementById('server').addEventListener('change', () => {
 // Add window resize listener to ensure responsive video size
 window.addEventListener('resize', () => {
     // Only update if iframe is visible
-    if (iframe.style.display === "block") {
-        changeServer();
+    if (iframe && iframe.style.display === "block") {
+        // No need to call changeServer here as it would reload the video
+        // Just ensure the sizing is correct
     }
 });
 
 // Initialize everything when the window loads
 window.addEventListener('load', function() {
+    console.log("Window loaded, initializing FreeFlix...");
+
     // Set a default server if none is selected
     const serverSelect = document.getElementById('server');
     if (serverSelect && !serverSelect.value) {
-        serverSelect.value = "vidlink.pro";
+        serverSelect.value = "player.videasy.net";
     }
 
     // Initialize server dropdown

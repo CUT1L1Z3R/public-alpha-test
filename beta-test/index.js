@@ -1181,21 +1181,41 @@ movieContainers.forEach(container => {
     let startX, startTime;
     let isDragging = false;
     let scrollLeft;
+    let lastX; // Track the last X position for smoother scrolling
 
-    // Touch event handlers
+    // Prevent content jumping during scroll
+    container.style.overscrollBehavior = 'none';
+
+    // Touch event handlers with improved performance
     container.addEventListener('touchstart', (e) => {
         isDragging = true;
         startX = e.touches[0].pageX;
+        lastX = startX; // Initialize lastX
         startTime = new Date().getTime();
         scrollLeft = container.scrollLeft;
+
+        // Prevent parent container scrolling during drag
+        container.parentElement.style.overflow = 'hidden';
+
+        // Add temporary class while dragging
+        container.classList.add('active-scroll');
     }, { passive: true });
 
     container.addEventListener('touchmove', (e) => {
         if (!isDragging) return;
+
         const x = e.touches[0].pageX;
-        const dragDistance = startX - x;
-        container.scrollLeft = scrollLeft + dragDistance;
-    }, { passive: true });
+        const dragDistance = lastX - x;
+        lastX = x; // Update lastX for smoother incremental scrolling
+
+        // Apply scrolling with slight damping for smoother feel
+        container.scrollLeft += dragDistance * 0.95;
+
+        // Prevent page scroll while swiping horizontally
+        if (Math.abs(startX - x) > 10) {
+            e.preventDefault();
+        }
+    }, { passive: false });
 
     container.addEventListener('touchend', (e) => {
         if (!isDragging) return;
@@ -1205,10 +1225,72 @@ movieContainers.forEach(container => {
         const dragDistance = startX - endX;
         const dragDuration = endTime - startTime;
 
+        // Enhanced momentum scrolling with better physics
         // If swipe is quick enough and long enough, add momentum
         if (dragDuration < 300 && Math.abs(dragDistance) > 50) {
             // Calculate momentum based on drag speed and distance
-            const momentum = (dragDistance * 1.5) * (300 / dragDuration);
+            // Higher multiplier for faster flicks, lower for slower gestures
+            const velocityFactor = Math.min(3, 600 / dragDuration); // Cap maximum velocity
+            const momentum = (dragDistance * velocityFactor);
+
+            // Apply smooth momentum scrolling
+            container.scrollBy({
+                left: momentum,
+                behavior: 'smooth'
+            });
+        }
+
+        // Remove active scrolling class
+        container.classList.remove('active-scroll');
+
+        // Restore parent scrolling
+        container.parentElement.style.overflow = '';
+
+        isDragging = false;
+    }, { passive: true });
+
+    // Handle mouse events for desktop as well
+    container.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        startX = e.pageX;
+        lastX = startX;
+        startTime = new Date().getTime();
+        scrollLeft = container.scrollLeft;
+        container.style.cursor = 'grabbing';
+        container.classList.add('active-scroll');
+        e.preventDefault();
+    });
+
+    container.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+
+        const x = e.pageX;
+        const dragDistance = lastX - x;
+        lastX = x;
+        container.scrollLeft += dragDistance * 0.95;
+    });
+
+    container.addEventListener('mouseup', (e) => {
+        finishDrag(e);
+    });
+
+    container.addEventListener('mouseleave', (e) => {
+        if (isDragging) {
+            finishDrag(e);
+        }
+    });
+
+    function finishDrag(e) {
+        if (!isDragging) return;
+
+        const endX = e.pageX;
+        const endTime = new Date().getTime();
+        const dragDistance = startX - endX;
+        const dragDuration = endTime - startTime;
+
+        if (dragDuration < 300 && Math.abs(dragDistance) > 50) {
+            const velocityFactor = Math.min(3, 600 / dragDuration);
+            const momentum = (dragDistance * velocityFactor);
 
             container.scrollBy({
                 left: momentum,
@@ -1216,8 +1298,10 @@ movieContainers.forEach(container => {
             });
         }
 
+        container.style.cursor = '';
+        container.classList.remove('active-scroll');
         isDragging = false;
-    }, { passive: true });
+    }
 });
 
 // Add fade-in/fade-out CSS classes for smooth transitions if not already present
