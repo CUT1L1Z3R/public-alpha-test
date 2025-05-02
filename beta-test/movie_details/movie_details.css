@@ -148,26 +148,31 @@ p {
     display: none;
     flex-direction: column;
     width: 100%;
-    margin-top: 30px !important;
+    margin-top: 10px !important;
     color: white;
-    background-color: #111;
-    border-radius: 10px;
+    background-color: transparent;
+    border-radius: 3px;
     overflow: hidden;
-    border: 1px solid #333;
+    border: 1.5px solid rgb(141, 22, 201);
+    position: relative;
 }
 
-/* Mobile seasons container - initially hidden on all devices */
-.mobile-seasons-container {
-    display: none; /* Always hidden by default */
-    margin-top: 15px !important;
-    border-color: #a209da;
-    box-shadow: 0 0 10px rgba(162, 9, 218, 0.2);
+.seasons-container::before {
+    content: "Episodes";
+    position: absolute;
+    top: -15px;
+    left: 0;
+    font-size: 12px;
+    color: #a209da;
+    background: none;
+    padding: 0;
+    letter-spacing: 0.5px;
 }
 
 .season-dropdown {
     width: 100%;
-    background-color: #1f1f1f;
-    border-bottom: 1px solid #333;
+    background-color: transparent;
+    border-bottom: 1px solid rgba(162, 9, 218, 0.2);
     position: relative;
 }
 
@@ -177,6 +182,12 @@ p {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.season-selector span {
+    color: rgb(141, 22, 201);
+    font-weight: 600;
+    font-size: 16px;
 }
 
 .season-select {
@@ -198,48 +209,27 @@ p {
     padding: 8px;
 }
 
-.season-dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #222;
-    width: 100%;
-    max-height: 300px;
-    overflow-y: auto;
-    z-index: 1;
-    border-radius: 0 0 5px 5px;
-}
-
-.season-dropdown-content.show {
-    display: block;
-}
-
-.season-item {
-    padding: 12px 15px;
-    cursor: pointer;
-}
-
-.season-item:hover {
-    background-color: #333;
-}
-
+/* Episodes list styling */
 .episodes-list {
     display: flex;
     flex-direction: column;
     width: 100%;
-    max-height: 500px;
+    max-height: 400px;
     overflow-y: auto;
+    background-color: #201020;
 }
 
+/* Episode item styling */
 .episode-item {
     display: flex;
     padding: 15px;
-    border-bottom: 1px solid #333;
+    border-bottom: 1px solid rgba(162, 9, 218, 0.2);
     cursor: pointer;
     transition: background-color 0.2s;
 }
 
 .episode-item:hover {
-    background-color: #333;
+    background-color: #3a1052;
 }
 
 .episode-item.active {
@@ -681,11 +671,9 @@ p {
     width: 100%;
     height: 450px !important;
     display: none; /* Initially hidden until loaded */
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     border: none; /* Remove border to make it cleaner */
-    position: absolute;
-    top: 0;
-    left: 0;
+    border-radius: 8px;
     z-index: 2; /* Ensure it's above the poster */
 }
 
@@ -700,7 +688,7 @@ p {
 
 /* ----Media Queries---- */
 
-/* Media query adjustments for server dropdown */
+/* Media query adjustments for server dropdown and seasons container */
 @media only screen and (max-width: 560px) {
     .movie-details {
         flex-direction: column;
@@ -719,32 +707,15 @@ p {
         height: 240px !important;
         width: 100%;
         margin: 0 auto 20px auto;
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
     }
 
-    /* Show mobile seasons container, hide desktop one */
-    #seasons-container-desktop {
-        display: none !important; /* Force hide in mobile */
-    }
-
-    #seasons-container-mobile {
-        /* Will be toggled with JS to display: flex */
-        margin-top: 15px !important;
+    .seasons-container {
+        margin-top: 20px !important;
         width: 100%;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .mobile-seasons-container .season-dropdown {
-        background-color: #2e0839;
-    }
-
-    .mobile-seasons-container .season-selector {
-        padding: 12px 15px;
-    }
-
-    .mobile-seasons-container .season-select {
-        background-color: #41013f;
-        padding: 10px 12px;
+        max-width: 100%;
     }
 
     .episodes-list {
@@ -784,8 +755,7 @@ p {
     }
 
     .server-dropdown,
-    .watchListBtn,
-    .mobile-seasons-container {
+    .watchListBtn {
         max-width: 100%;
         margin: 10px auto;
     }
@@ -823,13 +793,15 @@ p {
         margin: 0;
         width: 95%;
         margin: 0 auto 20px auto;
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
     }
 
     .seasons-container {
-        margin-top: 40px;
-        width: 95%;
-        margin-left: auto;
-        margin-right: auto;
+        margin-top: 20px !important;
+        width: 100%;
+        max-width: 100%;
     }
 
     .movie-info {
@@ -875,6 +847,9 @@ p {
         margin: 0;
         width: 95%;
         margin: 0 auto 20px auto;
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
     }
 
     .seasons-container {
@@ -1026,12 +1001,5 @@ p {
     .server-dropdown-content {
         min-width: 0;
         max-width: 100vw;
-    }
-}
-
-/* Always hide mobile seasons container on non-mobile devices */
-@media screen and (min-width:561px) {
-    #seasons-container-mobile {
-        display: none !important;
     }
 }

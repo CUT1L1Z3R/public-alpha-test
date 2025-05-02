@@ -1174,62 +1174,28 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Detect if on mobile device for scroll optimizations
-const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-
-// Add touch swipe functionality for movie sections with enhanced mobile detection
+// Add touch swipe functionality for movie sections
 const movieContainers = document.querySelectorAll('.movies-box');
 
 movieContainers.forEach(container => {
     let startX, startTime;
     let isDragging = false;
-    let scrollLeft, velocityX = 0;
-    let animationFrameId = null;
-    let lastX = 0, newX = 0;
-    let lastTimestamp = 0;
-    let initialScrollLeft = 0;
+    let scrollLeft;
 
     // Touch event handlers
     container.addEventListener('touchstart', (e) => {
         isDragging = true;
         startX = e.touches[0].pageX;
-        lastX = startX;
         startTime = new Date().getTime();
-        lastTimestamp = startTime;
         scrollLeft = container.scrollLeft;
-        initialScrollLeft = scrollLeft;
-        velocityX = 0;
-
-        // Cancel any ongoing animation
-        if (animationFrameId) {
-            cancelAnimationFrame(animationFrameId);
-            animationFrameId = null;
-        }
     }, { passive: true });
 
     container.addEventListener('touchmove', (e) => {
         if (!isDragging) return;
-
-        e.preventDefault(); // Prevent page scrolling
-
-        newX = e.touches[0].pageX;
-        const now = new Date().getTime();
-        const elapsed = now - lastTimestamp;
-
-        // Calculate velocity in pixels per ms - use a weighted average for smoother velocity
-        if (elapsed > 0) {
-            const newVelocity = (lastX - newX) / elapsed;
-            velocityX = velocityX * 0.7 + newVelocity * 0.3; // Weighted average
-        }
-
-        // Update position
-        const dragDistance = newX - startX;
-        container.scrollLeft = scrollLeft - dragDistance;
-
-        // Save values for next move event
-        lastX = newX;
-        lastTimestamp = now;
-    }, { passive: false });
+        const x = e.touches[0].pageX;
+        const dragDistance = startX - x;
+        container.scrollLeft = scrollLeft + dragDistance;
+    }, { passive: true });
 
     container.addEventListener('touchend', (e) => {
         if (!isDragging) return;
@@ -1239,106 +1205,19 @@ movieContainers.forEach(container => {
         const dragDistance = startX - endX;
         const dragDuration = endTime - startTime;
 
-        // Detect if this was just a tap/click (small movements)
-        const isSmallMovement = Math.abs(dragDistance) < 10;
-        const isQuickInteraction = dragDuration < 200;
+        // If swipe is quick enough and long enough, add momentum
+        if (dragDuration < 300 && Math.abs(dragDistance) > 50) {
+            // Calculate momentum based on drag speed and distance
+            const momentum = (dragDistance * 1.5) * (300 / dragDuration);
 
-        // Skip momentum for small movements or if we're at bounds
-        if (isSmallMovement ||
-            (container.scrollLeft <= 0 && dragDistance < 0) ||
-            (container.scrollLeft >= container.scrollWidth - container.clientWidth && dragDistance > 0)) {
-            isDragging = false;
-            return;
-        }
-
-        // Calculate final velocity (pixels per frame assuming 60fps)
-        const finalVelocity = velocityX * 16.667; // ms per frame at 60fps
-
-        // Apply momentum effect for rapid swipes
-        if ((Math.abs(finalVelocity) > 0.5 && !isQuickInteraction) ||
-            (dragDuration < 300 && Math.abs(dragDistance) > 30)) {
-            applyMomentumScroll(container, finalVelocity, dragDistance, dragDuration);
+            container.scrollBy({
+                left: momentum,
+                behavior: 'smooth'
+            });
         }
 
         isDragging = false;
     }, { passive: true });
-
-    // Apply momentum scrolling with easing
-    function applyMomentumScroll(element, velocity, dragDistance, duration) {
-        // Calculate momentum based on swipe speed and distance
-        let momentum = 0;
-
-        // For quick swipes, use velocity
-        if (Math.abs(velocity) > 0.5) {
-            momentum = velocity * (isMobileDevice ? 13 : 18); // Reduce effect on mobile
-        }
-        // For slower longer swipes, use distance
-        else if (duration < 300 && Math.abs(dragDistance) > 30) {
-            momentum = (dragDistance / duration) * 300;
-        }
-
-        if (Math.abs(momentum) < 1) return; // Ignore tiny movements
-
-        let currentVelocity = momentum;
-        let timestamp = performance.now();
-        let lastPosition = element.scrollLeft;
-
-        // Start the animation
-        function momentumStep(now) {
-            const elapsed = now - timestamp;
-            timestamp = now;
-
-            // Apply resistance (simulate friction)
-            currentVelocity *= 0.95;
-
-            // Move the container
-            element.scrollLeft += currentVelocity;
-
-            // Detect if we've hit the edge to stop scrolling
-            if (element.scrollLeft <= 0 || element.scrollLeft >= element.scrollWidth - element.clientWidth) {
-                animationFrameId = null;
-                return;
-            }
-
-            // Detect if we're not actually moving (stuck)
-            if (Math.abs(element.scrollLeft - lastPosition) < 0.1 && Math.abs(currentVelocity) > 0.5) {
-                animationFrameId = null;
-                return;
-            }
-
-            lastPosition = element.scrollLeft;
-
-            // Continue animation until the movement is negligible
-            if (Math.abs(currentVelocity) > 0.5) {
-                animationFrameId = requestAnimationFrame(momentumStep);
-            } else {
-                animationFrameId = null;
-            }
-        }
-
-        // Start the animation loop
-        animationFrameId = requestAnimationFrame(momentumStep);
-    }
-});
-
-// Add horizontal scroll wheel support with improved behavior
-movieContainers.forEach(container => {
-    container.addEventListener('wheel', (e) => {
-        // Prevent the default vertical scroll
-        e.preventDefault();
-
-        // More natural scrolling amount
-        const scrollFactor = 1.2;
-
-        // Calculate scroll amount based on wheel delta
-        const scrollAmount = (e.deltaY || e.deltaX) * scrollFactor;
-
-        // Apply smooth scrolling
-        container.scrollBy({
-            left: scrollAmount,
-            behavior: 'smooth'
-        });
-    }, { passive: false });
 });
 
 // Add fade-in/fade-out CSS classes for smooth transitions if not already present
