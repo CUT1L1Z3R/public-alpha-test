@@ -486,13 +486,18 @@ input::-webkit-input-placeholder {
   display: flex;
   flex-direction: row;
   gap: 20px;
-  overflow-x: scroll;
+  overflow-x: auto;
   scrollbar-width: none; /* Firefox: hide scrollbar */
   -ms-overflow-style: none; /* IE and Edge: hide scrollbar */
   width: 100%;
   min-height: 210px;
-  scroll-behavior: smooth;
+  scroll-behavior: auto; /* Changed from smooth to auto for better performance */
   -webkit-overflow-scrolling: touch;
+  scroll-snap-type: none; /* Removed snap points for smoother scrolling */
+  overscroll-behavior-x: none; /* Allow natural inertia */
+  -webkit-transform: translateZ(0); /* Force GPU acceleration */
+  transform: translateZ(0);
+  will-change: transform; /* Hint for browser to optimize */
 }
 
 /* Hide scrollbars for all browsers */
@@ -1025,7 +1030,12 @@ input::-webkit-input-placeholder {
     -ms-overflow-style: none;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    scroll-snap-type: x mandatory;
+    scroll-snap-type: none;
+    overscroll-behavior-x: none;
+    will-change: transform;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    scroll-behavior: auto;
   }
 
   .movies-box::-webkit-scrollbar {
@@ -1040,7 +1050,12 @@ input::-webkit-input-placeholder {
     height: 130px;
     margin: 10px 0;
     box-sizing: border-box;
-    scroll-snap-align: start;
+    scroll-snap-align: none; /* Removed snap points for smooth scrolling */
+    -webkit-transform: translateZ(0); /* Force GPU acceleration */
+    transform: translateZ(0);
+    will-change: transform;
+    transition: transform 0.2s ease;
+    backface-visibility: hidden; /* Prevent flickering */
   }
 
   /* Netflix and anime containers - standardized to same size as other containers */

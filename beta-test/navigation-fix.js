@@ -1,19 +1,11 @@
-// Enhanced navigation functionality for both banner and sections
+/**
+ * Enhanced navigation for movie sections with smooth scrolling
+ */
 (function() {
-    // Function to set up both banner and section navigation
-    function setupAllNavigationButtons() {
-        console.log("Setting up all navigation buttons");
-        // 1. Set up banner navigation buttons
-        setupBannerNavigation();
-
-        // 2. Set up section navigation buttons (for movie rows)
-        setupSectionNavigation();
-    }
-
-    // Function to set up section navigation (for movie rows)
+    /**
+     * Set up navigation buttons for sections with improved scrolling
+     */
     function setupSectionNavigation() {
-        console.log("Setting up section navigation buttons");
-
         // Get all navigation buttons
         const navButtons = document.querySelectorAll('.navigation-button');
 
@@ -28,7 +20,6 @@
             button.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log('Navigation button clicked:', this.className);
 
                 // Find the parent container
                 const container = this.closest('.movie-container');
@@ -38,36 +29,57 @@
                 const moviesBox = container.querySelector('.movies-box');
                 if (!moviesBox) return;
 
-                // Calculate scroll amount - 80% of container width for better visual movement
-                const scrollAmount = moviesBox.clientWidth * 0.8;
+                // Calculate scroll amount based on device and container width
+                const itemWidth = 220; // Base movie item width
+                const gap = 15; // Gap between items
+                const isSmallScreen = window.innerWidth <= 560;
+                const containerWidth = moviesBox.clientWidth;
 
+                // Adjust scroll amount for different screen sizes
+                let scrollAmount;
+
+                if (isSmallScreen) {
+                    // For mobile, use a smaller scroll amount that feels more natural
+                    scrollAmount = containerWidth * 0.85;
+                } else if (window.innerWidth <= 780) {
+                    // For tablets
+                    scrollAmount = containerWidth * 0.7;
+                } else {
+                    // For desktop
+                    scrollAmount = containerWidth * 0.75;
+                }
+
+                // Provide visual feedback
+                this.classList.add('button-active');
+                setTimeout(() => {
+                    this.classList.remove('button-active');
+                }, 200);
+
+                // Apply the scroll
                 if (this.classList.contains('previous')) {
-                    // Scroll left
                     moviesBox.scrollBy({
                         left: -scrollAmount,
-                        behavior: 'smooth'
+                        behavior: 'auto' // Use 'auto' instead of 'smooth' for better performance with our custom momentum
                     });
                 } else if (this.classList.contains('next')) {
-                    // Scroll right
                     moviesBox.scrollBy({
                         left: scrollAmount,
-                        behavior: 'smooth'
+                        behavior: 'auto'
                     });
                 }
             });
         });
     }
 
-    // Improved banner navigation setup
+    /**
+     * Set up banner navigation with improved touch handling
+     */
     function setupBannerNavigation() {
-        console.log("Setting up banner navigation buttons");
         const prevButton = document.getElementById('banner-prev');
         const nextButton = document.getElementById('banner-next');
 
-        // Make sure bannerItems array is not empty
+        // Only proceed if we have banner items
         if (!window.bannerItems || window.bannerItems.length <= 1) {
-            console.log("Not enough banner items to enable navigation");
-            // Hide navigation if we don't have multiple items
             if (prevButton) prevButton.style.display = 'none';
             if (nextButton) nextButton.style.display = 'none';
             return;
@@ -77,28 +89,42 @@
         if (prevButton) prevButton.style.display = 'flex';
         if (nextButton) nextButton.style.display = 'flex';
 
-        // Remove any existing event listeners to avoid duplicates
+        // Set up event handlers with clean replacement to avoid duplicates
         if (prevButton) {
             prevButton.replaceWith(prevButton.cloneNode(true));
             const newPrevButton = document.getElementById('banner-prev');
 
             if (newPrevButton) {
-                console.log("Adding event listener to banner prev button");
                 newPrevButton.addEventListener('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    console.log("Banner prev button clicked");
 
-                    // Move to previous banner
-                    window.currentBannerIndex = (window.currentBannerIndex - 1 + window.bannerItems.length) % window.bannerItems.length;
+                    // Show visual feedback
+                    this.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+                    setTimeout(() => {
+                        this.style.backgroundColor = '';
+                    }, 150);
 
-                    // Show the banner
-                    updateBanner(window.bannerItems[window.currentBannerIndex]);
+                    // Navigate to previous banner
+                    if (window.currentBannerIndex !== undefined && window.bannerItems) {
+                        window.currentBannerIndex = (window.currentBannerIndex - 1 + window.bannerItems.length) % window.bannerItems.length;
 
-                    // Reset interval to prevent quick transitions
-                    if (window.bannerInterval) {
-                        clearInterval(window.bannerInterval);
-                        startBannerRotation();
+                        // Use the existing function if available, otherwise use a simpler approach
+                        if (typeof window.showBannerAtIndex === 'function') {
+                            window.showBannerAtIndex(window.currentBannerIndex);
+                        } else if (typeof window.updateBanner === 'function' && window.bannerItems[window.currentBannerIndex]) {
+                            window.updateBanner(window.bannerItems[window.currentBannerIndex]);
+                        }
+
+                        // Reset auto-rotation if needed
+                        if (window.bannerInterval) {
+                            clearInterval(window.bannerInterval);
+                            if (typeof window.startBannerSlideshow === 'function') {
+                                window.startBannerSlideshow();
+                            } else if (typeof window.startBannerRotation === 'function') {
+                                window.startBannerRotation();
+                            }
+                        }
                     }
                 });
             }
@@ -109,47 +135,100 @@
             const newNextButton = document.getElementById('banner-next');
 
             if (newNextButton) {
-                console.log("Adding event listener to banner next button");
                 newNextButton.addEventListener('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    console.log("Banner next button clicked");
 
-                    // Move to next banner
-                    window.currentBannerIndex = (window.currentBannerIndex + 1) % window.bannerItems.length;
+                    // Show visual feedback
+                    this.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+                    setTimeout(() => {
+                        this.style.backgroundColor = '';
+                    }, 150);
 
-                    // Show the banner
-                    updateBanner(window.bannerItems[window.currentBannerIndex]);
+                    // Navigate to next banner
+                    if (window.currentBannerIndex !== undefined && window.bannerItems) {
+                        window.currentBannerIndex = (window.currentBannerIndex + 1) % window.bannerItems.length;
 
-                    // Reset interval to prevent quick transitions
-                    if (window.bannerInterval) {
-                        clearInterval(window.bannerInterval);
-                        startBannerRotation();
+                        // Use the existing function if available, otherwise use a simpler approach
+                        if (typeof window.showBannerAtIndex === 'function') {
+                            window.showBannerAtIndex(window.currentBannerIndex);
+                        } else if (typeof window.updateBanner === 'function' && window.bannerItems[window.currentBannerIndex]) {
+                            window.updateBanner(window.bannerItems[window.currentBannerIndex]);
+                        }
+
+                        // Reset auto-rotation if needed
+                        if (window.bannerInterval) {
+                            clearInterval(window.bannerInterval);
+                            if (typeof window.startBannerSlideshow === 'function') {
+                                window.startBannerSlideshow();
+                            } else if (typeof window.startBannerRotation === 'function') {
+                                window.startBannerRotation();
+                            }
+                        }
                     }
                 });
             }
         }
     }
 
-    // When document is ready
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log("DOM loaded - setting up navigation");
-        // Setup all navigation buttons
-        setupAllNavigationButtons();
-
-        // Override the original startBannerRotation to include our enhanced navigation
-        const originalStartBannerRotation = window.startBannerRotation;
-        window.startBannerRotation = function() {
-            if (typeof originalStartBannerRotation === 'function') {
-                originalStartBannerRotation();
+    /**
+     * Add CSS for better navigation button feedback
+     */
+    function addNavigationButtonStyles() {
+        const styleElement = document.createElement('style');
+        styleElement.textContent = `
+            .navigation-button {
+                transition: background-color 0.15s ease-out, opacity 0.2s ease !important;
             }
-            // Make sure banner navigation works
-            setupBannerNavigation();
-        };
-    });
+            .navigation-button:active,
+            .button-active {
+                background-color: rgba(0, 0, 0, 0.8) !important;
+                opacity: 1 !important;
+            }
+            @media only screen and (max-width: 780px) {
+                .navigation-button {
+                    opacity: 0.6 !important;
+                    background-color: rgba(0, 0, 0, 0.7) !important;
+                    width: 40px !important;
+                }
+                .movie-container:hover .navigation-button {
+                    opacity: 0.75 !important;
+                }
+            }
+        `;
+        document.head.appendChild(styleElement);
+    }
 
-    // Make functions available globally
-    window.setupAllNavigationButtons = setupAllNavigationButtons;
-    window.setupBannerNavigation = setupBannerNavigation;
-    window.setupSectionNavigation = setupSectionNavigation;
+    // Initialize everything when the document is ready
+    document.addEventListener('DOMContentLoaded', function() {
+        // Setup section navigation buttons
+        setupSectionNavigation();
+
+        // Setup banner navigation
+        setupBannerNavigation();
+
+        // Add styles for navigation buttons
+        addNavigationButtonStyles();
+
+        // Fix any window-level functions
+        if (window.startBannerRotation && typeof window.startBannerRotation === 'function') {
+            const originalFn = window.startBannerRotation;
+            window.startBannerRotation = function() {
+                if (typeof originalFn === 'function') {
+                    originalFn.apply(this, arguments);
+                }
+                setupBannerNavigation();
+            };
+        }
+
+        if (window.startBannerSlideshow && typeof window.startBannerSlideshow === 'function') {
+            const originalFn = window.startBannerSlideshow;
+            window.startBannerSlideshow = function() {
+                if (typeof originalFn === 'function') {
+                    originalFn.apply(this, arguments);
+                }
+                setupBannerNavigation();
+            };
+        }
+    });
 })();

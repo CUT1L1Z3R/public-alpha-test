@@ -520,8 +520,7 @@ function fetchAnime(containerClass, genreOrKeyword) {
                                       containerClass === 'anime-romance-container' ||
                                       containerClass === 'anime-popular-container' ||
                                       containerClass === 'anime-top-container' ||
-                                      containerClass === 'anime-upcoming-container' ||
-                                      containerClass === 'anime-container';
+                                      containerClass === 'anime-upcoming-container';
 
                     const imageUrl = useBackdrop && anime.backdrop_path
                         ? `https://image.tmdb.org/t/p/w780${anime.backdrop_path}` // Use higher quality for landscape
@@ -644,17 +643,13 @@ fetchMedia('documentary-tv-container', 'discover/tv?with_genres=99&', 'tv'); // 
 fetchAnime('anime-popular-container', 'popular'); // Popular anime
 fetchAnime('anime-top-container', 'top_rated'); // Top rated anime
 fetchAnime('anime-upcoming-container', 'upcoming'); // Ongoing anime (keeping the same container name)
-fetchAnime('anime-upcoming-new-container', 'truly_upcoming'); // Truly upcoming anime
+fetchAnime('anime-upcoming-new-container', 'truly_upcoming'); // Latest anime
 
 // Additional anime genres (removed the ones not needed)
 fetchAnime('anime-comedy-container', 'comedy'); // Comedy anime
 fetchAnime('anime-romance-container', 'romance'); // Romance anime
 
-// Fetch anime for generic anime container - now using ongoing anime
-const genericAnimeContainer = document.querySelector('.anime-container');
-if (genericAnimeContainer) {
-    fetchAnime('anime-container', 'upcoming'); // Use ongoing anime for the main anime container
-}
+// The generic anime container has been removed
 
 // Function to fetch search results from TMDB API
 async function fetchSearchResults(query) {
@@ -782,7 +777,6 @@ setupScroll('comedy-tv-container', 'comedy-tv-previous', 'comedy-tv-next');
 setupScroll('documentary-tv-container', 'documentary-tv-previous', 'documentary-tv-next');
 
 // Anime scroll (updated to reflect removed sections)
-setupScroll('anime-container', 'anime-previous', 'anime-next');
 setupScroll('anime-popular-container', 'anime-popular-previous', 'anime-popular-next');
 setupScroll('anime-top-container', 'anime-top-previous', 'anime-top-next');
 setupScroll('anime-upcoming-container', 'anime-upcoming-previous', 'anime-upcoming-next');
@@ -1174,50 +1168,148 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Add touch swipe functionality for movie sections
+// Improved touch swipe functionality for movie sections
 const movieContainers = document.querySelectorAll('.movies-box');
 
 movieContainers.forEach(container => {
-    let startX, startTime;
+    let startX, startY;
     let isDragging = false;
+    let lastX;
     let scrollLeft;
+    let velocityX = 0;
+    let lastTimestamp = 0;
+    let isTouchScrolling = false;
+    let rafId = null;
+    let lastTouchPosition = { x: 0, y: 0 };
 
-    // Touch event handlers
+    // Prevent default browser handling of all panning and zooming gestures
+    container.addEventListener('gesturestart', function(e) {
+        e.preventDefault();
+    }, { passive: false });
+
+    // Reset function
+    function resetTouchState() {
+        isDragging = false;
+        isTouchScrolling = false;
+        if (rafId) {
+            cancelAnimationFrame(rafId);
+            rafId = null;
+        }
+    }
+
+    // Touch start handler with passive option
     container.addEventListener('touchstart', (e) => {
-        isDragging = true;
-        startX = e.touches[0].pageX;
-        startTime = new Date().getTime();
-        scrollLeft = container.scrollLeft;
-    }, { passive: true });
-
-    container.addEventListener('touchmove', (e) => {
-        if (!isDragging) return;
-        const x = e.touches[0].pageX;
-        const dragDistance = startX - x;
-        container.scrollLeft = scrollLeft + dragDistance;
-    }, { passive: true });
-
-    container.addEventListener('touchend', (e) => {
-        if (!isDragging) return;
-
-        const endX = e.changedTouches[0].pageX;
-        const endTime = new Date().getTime();
-        const dragDistance = startX - endX;
-        const dragDuration = endTime - startTime;
-
-        // If swipe is quick enough and long enough, add momentum
-        if (dragDuration < 300 && Math.abs(dragDistance) > 50) {
-            // Calculate momentum based on drag speed and distance
-            const momentum = (dragDistance * 1.5) * (300 / dragDuration);
-
-            container.scrollBy({
-                left: momentum,
-                behavior: 'smooth'
-            });
+        // Cancel any existing momentum scrolling
+        if (rafId) {
+            cancelAnimationFrame(rafId);
+            rafId = null;
         }
 
-        isDragging = false;
+        if (e.touches.length === 1) {
+            isDragging = true;
+            isTouchScrolling = true;
+            startX = e.touches[0].pageX;
+            startY = e.touches[0].pageY;
+            lastX = startX;
+            lastTouchPosition.x = startX;
+            lastTouchPosition.y = startY;
+            scrollLeft = container.scrollLeft;
+            lastTimestamp = Date.now();
+            velocityX = 0;
+        }
     }, { passive: true });
+
+    // Touch move handler
+    container.addEventListener('touchmove', (e) => {
+        if (!isDragging || !isTouchScrolling) return;
+
+        const touch = e.touches[0];
+        const x = touch.pageX;
+        const y = touch.pageY;
+        const now = Date.now();
+        const elapsed = now - lastTimestamp;
+
+        // Calculate horizontal and vertical movement
+        const deltaX = lastTouchPosition.x - x;
+        const deltaY = lastTouchPosition.y - y;
+
+        // If vertical scrolling is more significant, let the browser handle it
+        if (Math.abs(deltaY) > Math.abs(deltaX) * 1.5) {
+            isTouchScrolling = false;
+            return;
+        }
+
+        // Prevent default to disable browser overscroll
+        if (e.cancelable) {
+            e.preventDefault();
+        }
+
+        // Calculate velocity (pixels per millisecond)
+        if (elapsed > 0) {
+            velocityX = (lastX - x) / elapsed;
+        }
+
+        // Update scroll position
+        container.scrollLeft = scrollLeft + (startX - x);
+
+        // Store last position and timestamp
+        lastX = x;
+        lastTouchPosition.x = x;
+        lastTouchPosition.y = y;
+        lastTimestamp = now;
+    }, { passive: false });
+
+    // Touch end handler
+    container.addEventListener('touchend', (e) => {
+        if (!isDragging || !isTouchScrolling) {
+            resetTouchState();
+            return;
+        }
+
+        // Calculate final momentum scroll
+        const vx = velocityX * 1000; // Convert to pixels per second
+        const distance = Math.abs(vx);
+
+        // Apply momentum scrolling only if there was enough velocity
+        if (Math.abs(vx) > 0.5) {
+            // Determine scroll distance based on velocity
+            // Use a deceleration factor to slow down naturally
+            const momentumDistance = vx * 0.7;
+
+            // Setting up momentum scrolling with requestAnimationFrame for smoother animation
+            let startTime = null;
+            const momentumDuration = Math.min(Math.abs(momentumDistance) * 4, 800); // Cap duration
+
+            function momentumScroll(timestamp) {
+                if (!startTime) startTime = timestamp;
+                const elapsed = timestamp - startTime;
+                const progress = Math.min(elapsed / momentumDuration, 1);
+
+                // Apply easing for natural deceleration
+                const easeOutQuad = function(t) { return t * (2 - t); };
+                const easedProgress = easeOutQuad(progress);
+
+                // Calculate the new scroll position with easing
+                const scrollDistance = momentumDistance * (1 - easedProgress);
+                container.scrollBy({ left: scrollDistance, behavior: 'auto' });
+
+                // Continue animation if not complete
+                if (progress < 1) {
+                    rafId = requestAnimationFrame(momentumScroll);
+                } else {
+                    rafId = null;
+                }
+            }
+
+            // Start momentum scrolling animation
+            rafId = requestAnimationFrame(momentumScroll);
+        }
+
+        resetTouchState();
+    }, { passive: true });
+
+    // Cancel momentum scrolling if user touches screen again
+    container.addEventListener('touchcancel', resetTouchState, { passive: true });
 });
 
 // Add fade-in/fade-out CSS classes for smooth transitions if not already present

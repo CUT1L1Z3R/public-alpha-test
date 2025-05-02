@@ -25,6 +25,22 @@
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"></iframe>
         </div>
 
+        <!-- Season selector (visible only for TV shows) - Moved below video player -->
+        <div id="seasons-container" class="seasons-container" style="display: none;">
+            <div class="season-dropdown">
+                <div class="season-selector">
+                    <span>Season</span>
+                    <select id="season-select" class="season-select">
+                        <!-- Seasons will be populated here -->
+                    </select>
+                </div>
+            </div>
+
+            <div id="episodes-list" class="episodes-list">
+                <!-- Episodes will be populated here -->
+            </div>
+        </div>
+
         <!-- Movie information section -->
         <div class="movie-info">
             <h1 id="movieTitle"></h1>
@@ -109,22 +125,6 @@
                     <option value="2embed">OTORI 720P SLOW</option>
                 </select>
                 <button class="close-button" style="position: absolute; top: 10px; right: 10px;">Close</button>
-            </div>
-
-            <!-- Season selector (visible only for TV shows) -->
-            <div id="seasons-container" class="seasons-container" style="display: none;">
-                <div class="season-dropdown">
-                    <div class="season-selector">
-                        <span>Season</span>
-                        <select id="season-select" class="season-select">
-                            <!-- Seasons will be populated here -->
-                        </select>
-                    </div>
-                </div>
-
-                <div id="episodes-list" class="episodes-list">
-                    <!-- Episodes will be populated here -->
-                </div>
             </div>
         </div>
     </div>

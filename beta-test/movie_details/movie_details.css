@@ -148,7 +148,8 @@ p {
     display: none;
     flex-direction: column;
     width: 100%;
-    margin-top: 10px !important;
+    margin-top: 25px !important;
+    margin-bottom: 25px;
     color: white;
     background-color: transparent;
     border-radius: 3px;
@@ -690,6 +691,11 @@ p {
 
 /* Media query adjustments for server dropdown and seasons container */
 @media only screen and (max-width: 560px) {
+    body {
+        transform: scale(0.95);
+        transform-origin: top center;
+    }
+
     .movie-details {
         flex-direction: column;
         margin-top: 0;
@@ -713,7 +719,7 @@ p {
     }
 
     .seasons-container {
-        margin-top: 20px !important;
+        margin-top: 15px !important;
         width: 100%;
         max-width: 100%;
     }
@@ -777,6 +783,11 @@ p {
 }
 
 @media screen and (min-width:561px) and (max-width:740px) {
+    body {
+        transform: scale(0.97);
+        transform-origin: top center;
+    }
+
     .movie-details {
         flex-direction: column;
         gap: 15px;
@@ -800,6 +811,7 @@ p {
 
     .seasons-container {
         margin-top: 20px !important;
+        margin-bottom: 20px;
         width: 100%;
         max-width: 100%;
     }
@@ -853,7 +865,8 @@ p {
     }
 
     .seasons-container {
-        margin-top: 40px;
+        margin-top: 25px !important;
+        margin-bottom: 20px;
         width: 95%;
         margin-left: auto;
         margin-right: auto;
