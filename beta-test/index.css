@@ -1,10 +1,12 @@
 /* Body styles */
 body {
   font-family: Arial, sans-serif;
-  margin: 0 0 0 0;
+  margin: 0;
   padding: 0;
   background: #0c0c0c;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Header styles */
@@ -564,9 +566,25 @@ input::-webkit-input-placeholder {
 
 @media only screen and (max-width: 560px) {
   .movie-overlay {
-    padding: 12px 14px;
-    background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.95) 85%);
-    border-top: 3px solid rgba(141, 22, 201, 0.8);
+    padding: 8px 10px;
+    background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.9) 90%);
+    border-top: 2px solid rgba(141, 22, 201, 0.7);
+  }
+
+  .movie-title {
+    font-size: 11px;
+    font-weight: 600;
+    max-width: 75%;
+    letter-spacing: 0.3px;
+  }
+
+  .rating-star {
+    font-size: 11px;
+  }
+
+  .rating-value {
+    font-size: 10px;
+    font-weight: 600;
   }
 }
 
@@ -691,10 +709,6 @@ input::-webkit-input-placeholder {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-#anime-upcoming-new .movie-item:hover {
-  /* This is now handled globally for all .movie-item */
-}
-
 /* ----Media Query---- */
 
 @media only screen and (max-width: 560px) {
@@ -708,29 +722,34 @@ input::-webkit-input-placeholder {
     display: none; /* Disable glow effect on mobile for better performance */
   }
 
+  /* Fixed header positioning */
   .header {
     flex-direction: row;
     height: 60px;
     position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
     align-items: center;
     padding: 0 10px;
     width: 100%;
     box-sizing: border-box;
+    z-index: 30;
+    border-bottom: 1px solid rgba(141, 22, 201, 0.3);
   }
 
   #netflix-logo {
-    margin: 10px 0 10px 15px;
-    width: 120px;
-    height: 35px;
+    margin: 10px 0 10px 5px;
+    width: 100px;
+    height: 30px;
     object-fit: contain;
   }
 
   .watchList-Btn {
-    margin: 10px 15px 10px 0;
-    padding: 5px 15px;
-    font-size: 16px;
-    height: 36px;
+    margin: 10px 5px 10px 0;
+    padding: 5px 10px;
+    font-size: 14px;
+    height: 32px;
     width: auto;
     background-color: rgb(141, 22, 201);
     border: none;
@@ -744,7 +763,7 @@ input::-webkit-input-placeholder {
   }
 
   input {
-    height: 36px;
+    height: 32px;
     font-size: 14px;
     background-color: rgba(50, 50, 50, 0.8);
     border: 1px solid #333;
@@ -754,36 +773,40 @@ input::-webkit-input-placeholder {
   #searchResults {
     width: 90vw;
     max-height: 300px;
-    top: 43px;
+    top: 40px;
     left: 50%;
     transform: translateX(-50%);
   }
 
+  /* Fixed nav menu positioning */
   .nav-menu {
     top: 60px;
-    height: 50px;
+    height: 45px;
     display: flex;
     align-items: center;
     background-color: rgba(0, 0, 0, 0.9);
     backdrop-filter: blur(10px);
     width: 100%;
-    border-bottom: 1px solid rgba(141, 22, 201, 0.5);
+    border-bottom: 1px solid rgba(141, 22, 201, 0.3);
     padding: 0;
+    position: fixed;
+    z-index: 25;
   }
 
   .nav-list {
     justify-content: space-around;
     width: 100%;
+    padding: 0;
   }
 
   .nav-item {
-    margin: 0 5px;
-    padding: 6px 12px;
+    margin: 0 2px;
+    padding: 5px 8px;
     border-radius: 8px;
   }
 
   .nav-item a {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 500;
   }
 
@@ -793,60 +816,55 @@ input::-webkit-input-placeholder {
     animation: pulse-purple 0.5s cubic-bezier(0.4, 0, 0.6, 1);
   }
 
+  /* Banner adjustments */
   #banner-container {
     width: 100vw;
-    height: 70vh;
-    margin-top: 110px;
+    height: 60vh;
+    margin-top: 105px; /* Adjusted for fixed header + nav */
+    margin-bottom: 40px;
     position: relative;
   }
 
   #banner-title {
-    font-size: 32px;
+    font-size: 26px;
     font-weight: 700;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
   }
 
   #details-container {
     bottom: 15%;
-    gap: 15px;
+    gap: 12px;
     padding: 0 15px;
   }
 
   #empty {
     width: 100vw;
-    height: 9rem;
+    height: 7rem;
   }
 
   #button-container {
-    gap: 12px;
+    gap: 10px;
   }
 
   #more-info, #play-button {
-    padding: 8px 16px;
-    font-size: 1rem;
+    padding: 6px 12px;
+    font-size: 0.9rem;
     border-radius: 5px;
   }
 
-  #play-button {
-    background-color: rgb(141, 22, 201);
-  }
-
-  #more-info {
-    background-color: rgba(80, 80, 80, 0.7);
-  }
-
+  /* Section adjustments */
   .movie-section {
-    margin-bottom: 35px;
+    margin-bottom: 30px;
     padding-bottom: 10px;
     position: relative;
   }
 
   .movie-section h1 {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     margin-left: 12px;
-    margin-bottom: 12px;
-    margin-top: 20px;
-    padding: 8px 15px;
+    margin-bottom: 10px;
+    margin-top: 15px;
+    padding: 6px 12px;
     text-transform: uppercase;
     font-weight: bold;
     letter-spacing: 0.5px;
@@ -857,9 +875,10 @@ input::-webkit-input-placeholder {
     border-radius: 4px;
   }
 
+  /* Scrolling containers */
   .movies-box {
-    gap: 18px;
-    min-height: 180px;
+    gap: 15px;
+    min-height: 160px;
     padding-left: 12px;
     padding-right: 12px;
     scrollbar-width: none;
@@ -874,18 +893,20 @@ input::-webkit-input-placeholder {
     height: 0;
   }
 
+  /* Movie items */
   .movie-item {
     flex: 0 0 auto;
-    width: 280px;
-    height: 160px;
+    width: 220px;
+    height: 130px;
     margin: 10px 0;
     box-sizing: border-box;
     scroll-snap-align: start;
   }
 
+  /* Netflix and anime containers */
   .netflix-container .movie-item, .anime-container .movie-item {
-    width: 170px;
-    height: 255px;
+    width: 140px;
+    height: 200px;
   }
 
   .movies-box img {
@@ -895,7 +916,7 @@ input::-webkit-input-placeholder {
   }
 
   .movie-title {
-    font-size: 14px;
+    font-size: 12px;
     max-width: 70%;
     white-space: nowrap;
     overflow: hidden;
@@ -903,70 +924,54 @@ input::-webkit-input-placeholder {
   }
 
   .rating-star, .rating-value {
-    font-size: 13px;
+    font-size: 12px;
   }
 
+  /* Navigation buttons */
   .navigation-button {
-    width: 40px;
-    height: 160px;
-    font-size: 1.8rem;
+    width: 36px;
+    height: 130px;
+    font-size: 1.5rem;
     top: 50%;
     transform: translateY(-50%);
-    opacity: 0.8;
-    background-color: rgba(0, 0, 0, 0.7);
+    opacity: 0.7;
+    background-color: rgba(0, 0, 0, 0.6);
   }
 
   .netflix-previous, .netflix-next {
-    height: 255px;
-  }
-
-  .anime-section .movie-item {
-    width: 280px;
-    height: 160px;
-  }
-
-  .anime-section .navigation-button {
-    height: 160px !important;
-  }
-
-  .movie-container .navigation-button {
-    opacity: 0.6;
-  }
-
-  .anime-previous, .anime-next {
     height: 200px;
   }
 
-  #anime-upcoming-new h1 {
-    font-size: 1.1rem;
-    padding: 8px 12px;
-    margin-left: 8px;
-    margin-bottom: 15px;
-  }
-
   .anime-section .movie-item {
-    width: 240px;
-    height: 140px;
+    width: 220px;
+    height: 130px;
   }
 
   .anime-section .navigation-button {
-    height: 140px !important;
+    height: 130px !important;
   }
 
   .anime-section .movies-box {
-    min-height: 170px;
+    min-height: 150px;
   }
 
+  /* Back to top button */
   #back-to-top-btn {
-      width: 40px;
-      height: 40px;
-      bottom: 20px;
-      right: 20px;
+    width: 36px;
+    height: 36px;
+    bottom: 15px;
+    right: 15px;
   }
 
   #back-to-top-btn svg {
-      width: 20px;
-      height: 20px;
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Custom small scrollbars for mobile */
+  .movies-box::-webkit-scrollbar {
+    display: none;
+    height: 0;
   }
 }
 
@@ -1321,24 +1326,24 @@ input::-webkit-input-placeholder {
 
 /* Back to top button */
 #back-to-top-btn {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 50px;
-    height: 50px;
-    background-color: #8d16c9;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-    z-index: 99;
-    box-shadow: 0 4px 10px rgba(141, 22, 201, 0.3);
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  background-color: rgba(141, 22, 201, 0.8);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  z-index: 50;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 #back-to-top-btn.visible {
@@ -1347,13 +1352,15 @@ input::-webkit-input-placeholder {
 }
 
 #back-to-top-btn:hover {
-    background-color: #a020f0;
-    transform: translateY(-5px);
-    box-shadow: 0 6px 15px rgba(141, 22, 201, 0.5);
+  background-color: rgb(141, 22, 201);
+  transform: translateY(-3px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
 }
 
 #back-to-top-btn svg {
-    stroke: white;
+  width: 22px;
+  height: 22px;
+  stroke: white;
 }
 
 /* Keep main page scrollbar styled */
@@ -1386,15 +1393,15 @@ html::-webkit-scrollbar-thumb:hover {
 /* Custom small scrollbars for mobile */
 @media only screen and (max-width: 560px) {
     #back-to-top-btn {
-        width: 40px;
-        height: 40px;
-        bottom: 20px;
-        right: 20px;
+        width: 36px;
+        height: 36px;
+        bottom: 15px;
+        right: 15px;
     }
 
     #back-to-top-btn svg {
-        width: 20px;
-        height: 20px;
+        width: 18px;
+        height: 18px;
     }
 
     .movies-box::-webkit-scrollbar {

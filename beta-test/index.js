@@ -410,8 +410,7 @@ function fetchMedia(containerClass, endpoint, mediaType, usePosterPath = false) 
 const scrollDistance = 1200;
 
 // Get references to the header and other elements
-const header = document.querySelector('.header');
-let lastScrollTop = 0; // Keep track of the last scroll position
+// (header and navMenu are now defined below for scroll behavior)
 
 // Retrieve watchlist from local storage or create an empty array if it doesn't exist
 const watchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
@@ -777,22 +776,84 @@ goToWatchlistBtn.addEventListener('click', () => {
     window.location.href = 'watchList/watchlist.html';
 });
 
-// Re-implement the scroll event listener to hide/show the header
-window.addEventListener('scroll', () => {
-    let currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+// Add header scroll behavior
+let prevScrollPos = window.scrollY;
+const header = document.querySelector('.header');
+const navMenu = document.querySelector('.nav-menu');
 
-    if (currentScrollTop > lastScrollTop && currentScrollTop > 100) {
-        // Scrolling down: hide the header and nav
-        header.style.top = "-120px"; // Move the header out of view
-        document.querySelector('.nav-menu').style.top = "-50px"; // Move nav out of view
+// Function to handle scroll behavior
+function handleScroll() {
+    const currentScrollPos = window.scrollY;
+
+    if (window.innerWidth <= 560) { // Only apply this behavior on mobile
+        if (prevScrollPos > currentScrollPos) {
+            // Scrolling up - show header
+            header.style.top = "0";
+            navMenu.style.top = "60px";
+        } else {
+            // Scrolling down - hide header when not at the top
+            if (currentScrollPos > 100) {
+                header.style.top = "-60px";
+                navMenu.style.top = "0";
+            }
+        }
     } else {
-        // Scrolling up: show the header and nav
-        header.style.top = "0px"; // Reset the header position to the top
-        document.querySelector('.nav-menu').style.top = "70px"; // Place nav under header
+        // Reset for desktop
+        header.style.top = "0";
+        navMenu.style.top = "70px";
     }
 
-    lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop; // Prevent negative scroll value
+    prevScrollPos = currentScrollPos;
+}
+
+// Add scroll event listener
+window.addEventListener('scroll', handleScroll);
+
+// Listen for window resize to adjust behavior
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 560) {
+        // Reset for desktop
+        header.style.top = "0";
+        navMenu.style.top = "70px";
+    }
 });
+
+// Function to add Back to Top button
+function addBackToTopButton() {
+    const backToTopBtn = document.createElement('button');
+    backToTopBtn.setAttribute('id', 'back-to-top-btn');
+    backToTopBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="18 15 12 9 6 15"></polyline>
+    </svg>`;
+
+    document.body.appendChild(backToTopBtn);
+
+    // Initially hide the button
+    backToTopBtn.style.opacity = '0';
+    backToTopBtn.style.visibility = 'hidden';
+
+    // Show button when scrolled down
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 500) {
+            backToTopBtn.style.opacity = '1';
+            backToTopBtn.style.visibility = 'visible';
+        } else {
+            backToTopBtn.style.opacity = '0';
+            backToTopBtn.style.visibility = 'hidden';
+        }
+    });
+
+    // Scroll to top when clicked
+    backToTopBtn.addEventListener('click', function() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+}
+
+// Add the back to top button
+addBackToTopButton();
 
 // Navigation menu functionality
 navItems.forEach(item => {
@@ -1092,26 +1153,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-});
-
-// Back to top button functionality
-const backToTopBtn = document.getElementById('back-to-top-btn');
-
-// Show back to top button when scrolling down
-window.addEventListener('scroll', () => {
-    if (window.pageYOffset > 300) {
-        backToTopBtn.classList.add('visible');
-    } else {
-        backToTopBtn.classList.remove('visible');
-    }
-});
-
-// Scroll to top when button is clicked
-backToTopBtn.addEventListener('click', () => {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
 });
 
 // Add touch swipe functionality for movie sections
