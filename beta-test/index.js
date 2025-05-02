@@ -283,12 +283,31 @@ function showBannerAtIndex(index) {
         }
 
         // Update button click events
-        document.getElementById('play-button').onclick = () => {
-            window.location.href = `movie_details/movie_details.html?media=${item.mediaType}&id=${item.id}`;
-        };
-        document.getElementById('more-info').onclick = () => {
-            window.location.href = `movie_details/movie_details.html?media=${item.mediaType}&id=${item.id}`;
-        };
+        const playButton = document.getElementById('play-button');
+        const moreInfoButton = document.getElementById('more-info');
+
+        // Clear any existing event listeners
+        playButton.replaceWith(playButton.cloneNode(true));
+        moreInfoButton.replaceWith(moreInfoButton.cloneNode(true));
+
+        // Get fresh references to the buttons
+        const newPlayButton = document.getElementById('play-button');
+        const newMoreInfoButton = document.getElementById('more-info');
+
+        // Add multiple event types for better mobile compatibility
+        ['click', 'touchstart'].forEach(eventType => {
+            newPlayButton.addEventListener(eventType, function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                window.location.href = `movie_details/movie_details.html?media=${item.mediaType}&id=${item.id}`;
+            }, {passive: false});
+
+            newMoreInfoButton.addEventListener(eventType, function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                window.location.href = `movie_details/movie_details.html?media=${item.mediaType}&id=${item.id}`;
+            }, {passive: false});
+        });
 
         // Update current index
         currentBannerIndex = index;
