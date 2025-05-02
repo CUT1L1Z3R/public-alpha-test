@@ -969,7 +969,7 @@ input::-webkit-input-placeholder {
   }
 
   .movie-section h1 {
-    font-size: 0.9rem; /* Smaller font size, was 1.2rem */
+    font-size: 0.85rem; /* Consistent sizing with Documentary TV Shows */
     margin-left: 10px;
     margin-bottom: 8px;
     margin-top: 12px;
@@ -988,24 +988,17 @@ input::-webkit-input-placeholder {
     text-overflow: ellipsis;
   }
 
-  /* Special style for Netflix Originals */
-  #netflix-originals h1 {
-    font-size: 1rem; /* Slightly larger than other headers */
-  }
-
-  /* Special style for longer section titles */
-  #scifi-tv h1 {
-    font-size: 0.85rem; /* Even smaller for long titles */
+  /* All section headers now use the same font size */
+  #netflix-originals h1,
+  #scifi-tv h1,
+  #documentary-tv h1 {
+    font-size: 0.85rem; /* Consistent size for all section headers */
     max-width: 95%;
   }
 
-  #documentary-tv h1 {
-    font-size: 0.85rem; /* Even smaller for long titles */
-  }
-
-  /* Special style for UPCOMING ANIME section */
+  /* Special style for UPCOMING ANIME section - now uses consistent font size */
   #anime-upcoming-new h1 {
-    font-size: 0.95rem;
+    font-size: 0.85rem;
     padding: 5px 10px;
     margin-left: 10px;
     margin-bottom: 15px;
@@ -1604,7 +1597,7 @@ html::-webkit-scrollbar-thumb:hover {
 /* Additional styles for very small screens */
 @media only screen and (max-width: 375px) {
   .movie-section h1 {
-    font-size: 0.8rem;
+    font-size: 0.75rem; /* Consistent size for all headers on very small screens */
     padding: 4px 8px;
     margin-left: 8px;
     margin-top: 10px;
@@ -1613,17 +1606,12 @@ html::-webkit-scrollbar-thumb:hover {
     border-left: 2px solid #8d16c9;
   }
 
-  #netflix-originals h1 {
-    font-size: 0.9rem;
-  }
-
+  /* All section headers now use the same font size */
+  #netflix-originals h1,
   #scifi-tv h1,
-  #documentary-tv h1 {
-    font-size: 0.75rem;
-  }
-
+  #documentary-tv h1,
   #anime-upcoming-new h1 {
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     padding: 4px 8px;
   }
 }
