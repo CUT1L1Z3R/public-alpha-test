@@ -810,65 +810,101 @@ navItems.forEach(item => {
         // Update the banner slideshow for the selected section
         updateBannerForSection(section);
 
-        // Show/hide sections based on selection
-        if (section === 'all') {
-            // Show all sections
-            movieSections.forEach(section => section.style.display = 'block');
-        } else if (section === 'anime') {
-            // Show only anime sections
-            movieSections.forEach(section => {
-                if (section.classList.contains('anime-section')) {
-                    section.style.display = 'block';
-                } else {
-                    section.style.display = 'none';
-                }
-            });
+        // First, fade out all sections
+        movieSections.forEach(section => {
+            section.classList.add('fade-out');
+            section.classList.remove('fade-in');
+        });
 
-            // Adjust the scroll position to show the first anime section
-            const firstAnimeSection = document.querySelector('.anime-section');
-            if (firstAnimeSection) {
-                setTimeout(() => {
-                    window.scrollTo({
-                        top: firstAnimeSection.offsetTop - 150,
-                        behavior: 'smooth'
-                    });
-                }, 100);
+        // Wait for fade out to complete, then update visibility and fade in
+        setTimeout(() => {
+            // Show/hide sections based on selection
+            if (section === 'all') {
+                // Show all sections
+                movieSections.forEach(section => {
+                    section.style.display = 'block';
+                    // Stagger the animations for a cascade effect
+                    setTimeout(() => {
+                        section.classList.remove('fade-out');
+                        section.classList.add('fade-in');
+                    }, Math.random() * 200); // Random delay between 0-200ms for natural feel
+                });
+            } else if (section === 'anime') {
+                // Show only anime sections
+                movieSections.forEach(section => {
+                    if (section.classList.contains('anime-section')) {
+                        section.style.display = 'block';
+                        // Stagger the animations
+                        setTimeout(() => {
+                            section.classList.remove('fade-out');
+                            section.classList.add('fade-in');
+                        }, Math.random() * 200);
+                    } else {
+                        section.style.display = 'none';
+                    }
+                });
+
+                // Adjust the scroll position to show the first anime section
+                const firstAnimeSection = document.querySelector('.anime-section');
+                if (firstAnimeSection) {
+                    setTimeout(() => {
+                        window.scrollTo({
+                            top: firstAnimeSection.offsetTop - 150,
+                            behavior: 'smooth'
+                        });
+                    }, 300);
+                }
+            } else if (section === 'movies') {
+                // Show only movie sections (not TV or anime)
+                movieSections.forEach(section => {
+                    if (section.classList.contains('anime-section')) {
+                        section.style.display = 'none';
+                    } else if (section.id && section.id.includes('tv')) {
+                        section.style.display = 'none';
+                    } else {
+                        // Check if the section contains "Netflix" which is TV shows
+                        const sectionTitle = section.querySelector('h1');
+                        if (sectionTitle && sectionTitle.textContent.includes('NETFLIX ORIGINALS')) {
+                            section.style.display = 'none';
+                        } else {
+                            section.style.display = 'block';
+                            // Stagger the animations
+                            setTimeout(() => {
+                                section.classList.remove('fade-out');
+                                section.classList.add('fade-in');
+                            }, Math.random() * 200);
+                        }
+                    }
+                });
+            } else if (section === 'tv') {
+                // Show only TV show sections (not movies or anime)
+                movieSections.forEach(section => {
+                    if (section.classList.contains('anime-section')) {
+                        section.style.display = 'none';
+                    } else {
+                        // Check if the section contains "Netflix" which is TV shows
+                        const sectionTitle = section.querySelector('h1');
+                        if (sectionTitle && sectionTitle.textContent.includes('NETFLIX ORIGINALS')) {
+                            section.style.display = 'block';
+                            // Stagger the animations
+                            setTimeout(() => {
+                                section.classList.remove('fade-out');
+                                section.classList.add('fade-in');
+                            }, Math.random() * 200);
+                        } else if (section.classList.contains('tv-section')) {
+                            section.style.display = 'block';
+                            // Stagger the animations
+                            setTimeout(() => {
+                                section.classList.remove('fade-out');
+                                section.classList.add('fade-in');
+                            }, Math.random() * 200);
+                        } else {
+                            section.style.display = 'none';
+                        }
+                    }
+                });
             }
-        } else if (section === 'movies') {
-            // Show only movie sections (not TV or anime)
-            movieSections.forEach(section => {
-                if (section.classList.contains('anime-section')) {
-                    section.style.display = 'none';
-                } else if (section.id && section.id.includes('tv')) {
-                    section.style.display = 'none';
-                } else {
-                    // Check if the section contains "Netflix" which is TV shows
-                    const sectionTitle = section.querySelector('h1');
-                    if (sectionTitle && sectionTitle.textContent.includes('NETFLIX ORIGINALS')) {
-                        section.style.display = 'none';
-                    } else {
-                        section.style.display = 'block';
-                    }
-                }
-            });
-        } else if (section === 'tv') {
-            // Show only TV show sections (not movies or anime)
-            movieSections.forEach(section => {
-                if (section.classList.contains('anime-section')) {
-                    section.style.display = 'none';
-                } else {
-                    // Check if the section contains "Netflix" which is TV shows
-                    const sectionTitle = section.querySelector('h1');
-                    if (sectionTitle && sectionTitle.textContent.includes('NETFLIX ORIGINALS')) {
-                        section.style.display = 'block';
-                    } else if (section.classList.contains('tv-section')) {
-                        section.style.display = 'block';
-                    } else {
-                        section.style.display = 'none';
-                    }
-                }
-            });
-        }
+        }, 400); // Wait for fade out animation to complete
     });
 });
 
@@ -986,6 +1022,16 @@ document.addEventListener('click', event => {
 
 // Initialize the banner when the page loads
 document.addEventListener('DOMContentLoaded', () => {
+    // Add initial fade-in class to all sections
+    movieSections.forEach(section => {
+        section.classList.add('fade-out');
+        // Stagger the animations for a cascade effect on initial load
+        setTimeout(() => {
+            section.classList.remove('fade-out');
+            section.classList.add('fade-in');
+        }, Math.random() * 500); // Longer random delay for initial load
+    });
+
     // Update the banner based on the active section
     const activeNavItem = document.querySelector('.nav-item.active');
     if (activeNavItem) {
@@ -1047,3 +1093,94 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// Back to top button functionality
+const backToTopBtn = document.getElementById('back-to-top-btn');
+
+// Show back to top button when scrolling down
+window.addEventListener('scroll', () => {
+    if (window.pageYOffset > 300) {
+        backToTopBtn.classList.add('visible');
+    } else {
+        backToTopBtn.classList.remove('visible');
+    }
+});
+
+// Scroll to top when button is clicked
+backToTopBtn.addEventListener('click', () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+});
+
+// Add touch swipe functionality for movie sections
+const movieContainers = document.querySelectorAll('.movies-box');
+
+movieContainers.forEach(container => {
+    let startX, startTime;
+    let isDragging = false;
+    let scrollLeft;
+
+    // Touch event handlers
+    container.addEventListener('touchstart', (e) => {
+        isDragging = true;
+        startX = e.touches[0].pageX;
+        startTime = new Date().getTime();
+        scrollLeft = container.scrollLeft;
+    }, { passive: true });
+
+    container.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        const x = e.touches[0].pageX;
+        const dragDistance = startX - x;
+        container.scrollLeft = scrollLeft + dragDistance;
+    }, { passive: true });
+
+    container.addEventListener('touchend', (e) => {
+        if (!isDragging) return;
+
+        const endX = e.changedTouches[0].pageX;
+        const endTime = new Date().getTime();
+        const dragDistance = startX - endX;
+        const dragDuration = endTime - startTime;
+
+        // If swipe is quick enough and long enough, add momentum
+        if (dragDuration < 300 && Math.abs(dragDistance) > 50) {
+            // Calculate momentum based on drag speed and distance
+            const momentum = (dragDistance * 1.5) * (300 / dragDuration);
+
+            container.scrollBy({
+                left: momentum,
+                behavior: 'smooth'
+            });
+        }
+
+        isDragging = false;
+    }, { passive: true });
+});
+
+// Add fade-in/fade-out CSS classes for smooth transitions if not already present
+(function injectFadeStyles() {
+    if (!document.getElementById('fade-section-styles')) {
+        const style = document.createElement('style');
+        style.id = 'fade-section-styles';
+        style.innerHTML = `
+            .fade-in {
+                opacity: 1 !important;
+                transition: opacity 0.5s cubic-bezier(0.4,0,0.2,1);
+                pointer-events: auto;
+            }
+            .fade-out {
+                opacity: 0 !important;
+                transition: opacity 0.4s cubic-bezier(0.4,0,0.2,1);
+                pointer-events: none;
+            }
+            .movie-section, .anime-section {
+                opacity: 1;
+                transition: opacity 0.5s cubic-bezier(0.4,0,0.2,1);
+            }
+        `;
+        document.head.appendChild(style);
+    }
+})();
