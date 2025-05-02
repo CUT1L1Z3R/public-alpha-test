@@ -472,14 +472,15 @@ input::-webkit-input-placeholder {
 }
 
 /* Movies box styling */
-/* Add this class for smoother scrolling */
 .movie-container {
   position: relative;
   width: 100%;
   overflow: hidden; /* Ensure content doesn't spill out */
   margin-bottom: 20px;
+  contain: layout style; /* Performance optimization */
 }
 
+/* Consolidated scrollbar styling - hide all movie container scrollbars */
 .movies-box {
   padding-left: 20px;
   padding-right: 20px;
@@ -492,39 +493,60 @@ input::-webkit-input-placeholder {
   width: 100%;
   min-height: 210px;
   scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch; /* Enable smooth scrolling on iOS */
-  scroll-snap-type: x proximity; /* Encourage snapping to items */
-  transform: translateZ(0); /* Enable hardware acceleration */
-  -webkit-transform: translateZ(0);
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS devices */
+  scroll-snap-type: x proximity; /* Improved snap behavior */
+  will-change: scroll-position; /* Performance optimization hint */
+  transform: translateZ(0); /* Hardware acceleration */
 }
 
-/* Active scrolling state for better visual feedback */
-.movies-box.active-scroll {
-  cursor: grabbing;
-  will-change: scroll-position; /* Hint to browser to optimize for scrolling */
-  user-select: none;
-  scrollbar-width: none; /* Ensure scrollbar remains hidden during active scrolling */
+/* Hide scrollbars for all browsers */
+.movies-box::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
 }
 
-/* Add animation effect during scroll to give a sense of movement */
-.movies-box.active-scroll .movie-item {
-  transition: transform 0.2s ease-out; /* Make items slightly more responsive during scroll */
+/* Remove the anime-specific height since all containers now use landscape */
+.anime-container {
+  min-height: 200px !important;
 }
 
-/* Add subtle transform to provide better visual depth during scrolling */
-.movies-box.active-scroll .movie-item:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 12px 20px rgba(141, 22, 201, 0.35);
-  transition: all 0.2s ease-out;
+/* Specific styles for anime containers that use landscape images */
+.anime-section .movie-item {
+  width: 290px;
+  height: 170px;
+  margin: 15px 5px;
 }
 
-/* Enhanced hover effect during scrolling */
-.movie-item:active {
-  transform: scale(0.98);
-  transition: transform 0.15s ease-out;
+.anime-section .image-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
 }
 
-/* Enhanced snap points for movie items */
+.anime-section img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+/* Special heights for anime section navigation buttons */
+.anime-section .navigation-button {
+  height: 170px !important;
+}
+
+/* Adjust height for all anime containers */
+.anime-section .movies-box {
+  min-height: 200px;
+}
+
+/* Special height for Netflix container */
+.netflix-container {
+  min-height: 380px;
+}
+
+/* Movie item styling - Fixed rectangular dimensions */
 .movie-item {
   flex: 0 0 auto;
   width: 290px;
@@ -534,9 +556,6 @@ input::-webkit-input-placeholder {
   transition: all 0.5s ease-in-out, transform 0.3s ease, box-shadow 0.3s ease;
   position: relative;
   box-sizing: border-box;
-  scroll-snap-align: start; /* Snap alignment */
-  scroll-snap-stop: normal;
-  touch-action: pan-x;
 }
 
 /* Add hover effect to all movie items like the upcoming anime section */
@@ -760,78 +779,13 @@ input::-webkit-input-placeholder {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Remove the anime-specific height since all containers now use landscape */
-.anime-container {
-  min-height: 200px !important;
-}
-
-/* Specific styles for anime containers that use landscape images */
-.anime-section .movie-item {
-  width: 290px;
-  height: 170px;
-  margin: 15px 5px;
-}
-
-.anime-section .image-wrapper {
-  width: 100%;
-  height: 100%;
-  position: relative;
-}
-
-.anime-section img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 5px;
-}
-
-/* Special heights for anime section navigation buttons */
-.anime-section .navigation-button {
-  height: 170px !important;
-}
-
-/* Adjust height for all anime containers */
-.anime-section .movies-box {
-  min-height: 200px;
-}
-
-/* Special height for Netflix container */
-.netflix-container {
-  min-height: 380px;
-}
-
-/* Enhanced scroll momentum and touch feedback for mobile */
-@media (max-width: 768px) {
-  .movies-box {
-    -webkit-overflow-scrolling: touch; /* Ensure it's applied on mobile */
-    scroll-padding: 0 20px; /* Add padding for better snapping */
-  }
-
-  .navigation-button {
-    opacity: 0.7 !important; /* Make buttons more visible on mobile */
-  }
-
-  @media (max-width: 480px) {
-    .movie-item {
-      width: 260px; /* Slightly smaller width */
-      height: 155px; /* Maintain aspect ratio */
-    }
-  }
-}
-
-/* Hide scrollbars for all browsers */
-.movies-box::-webkit-scrollbar {
-  display: none;
-  width: 0;
-  height: 0;
-}
-
 /* ----Media Query---- */
 
 @media only screen and (max-width: 560px) {
   /* Adjust hover effect for mobile devices */
   .movie-item:hover {
-    transform: translateY(-5px); /* Smaller lift effect for mobile */
+    transform: translateY(-3px); /* Smaller lift effect for mobile */
+    transition-duration: 0.2s; /* Faster transition for better performance */
     box-shadow: 0 8px 15px rgba(141, 22, 201, 0.4);
   }
 
@@ -1076,7 +1030,14 @@ input::-webkit-input-placeholder {
     -ms-overflow-style: none;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    scroll-snap-type: x mandatory;
+    scroll-snap-type: x mandatory; /* Stronger snap for small screens */
+    will-change: scroll-position;
+    transform: translateZ(0);
+
+    /* Mobile performance optimizations */
+    contain: content;
+    overscroll-behavior-x: contain; /* Prevent page overscroll */
+    touch-action: pan-x; /* Optimize for horizontal touch actions */
   }
 
   .movies-box::-webkit-scrollbar {
@@ -1084,26 +1045,39 @@ input::-webkit-input-placeholder {
     height: 0;
   }
 
-  /* Movie items */
+  /* Movie items - optimized dimensions based on beta version */
   .movie-item {
     flex: 0 0 auto;
-    width: 220px;
-    height: 130px;
-    margin: 10px 0;
+    width: 180px; /* Smaller width for better fit on mobile screens */
+    height: 100px; /* Shorter height for better proportions */
+    margin: 8px 0;
     box-sizing: border-box;
     scroll-snap-align: start;
+    /* Add border radius and shadow for better visuals */
+    border-radius: 6px;
+    overflow: hidden;
+    /* Apply GPU acceleration to elements during scrolling */
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+
+  .image-wrapper,
+  .movie-overlay {
+    backface-visibility: hidden;
+    perspective: 1000px;
   }
 
   /* Netflix and anime containers - standardized to same size as other containers */
   .netflix-container .movie-item, .anime-container .movie-item {
-    width: 220px;
-    height: 130px;
+    width: 120px; /* Narrower for poster format */
+    height: 200px; /* Taller for poster format */
   }
 
   .movies-box img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    contain: layout paint; /* Optimize rendering */
   }
 
   .movie-title {
@@ -1121,7 +1095,7 @@ input::-webkit-input-placeholder {
   /* Navigation buttons */
   .navigation-button {
     width: 36px;
-    height: 130px;
+    height: 100px; /* Match the standard height */
     font-size: 1.5rem;
     top: 50%;
     transform: translateY(-50%);
@@ -1130,16 +1104,16 @@ input::-webkit-input-placeholder {
   }
 
   .netflix-previous, .netflix-next {
-    height: 130px; /* Match the standard height */
+    height: 200px; /* Match the Netflix item height */
   }
 
   .anime-section .movie-item {
-    width: 220px;
-    height: 130px;
+    width: 120px;
+    height: 200px;
   }
 
   .anime-section .navigation-button {
-    height: 130px !important;
+    height: 200px !important;
   }
 
   .anime-section .movies-box {
