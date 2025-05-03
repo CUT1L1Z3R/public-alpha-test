@@ -139,12 +139,24 @@ function startBannerSlideshow() {
 
             // Show the banner
             showBannerAtIndex(currentBannerIndex);
+
+            // This will be implemented in navigation-fix.js
+            if (typeof updateActiveIndicator === 'function') {
+                updateActiveIndicator();
+            }
         }, 8000); // Change banner every 8 seconds
     }
+
+    // Make banner items available to navigation-fix.js
+    window.bannerItems = bannerItems;
+    window.currentBannerIndex = currentBannerIndex;
+    window.bannerInterval = bannerInterval;
 }
 
 // Function to show banner at specific index with enhanced styling
 function showBannerAtIndex(index) {
+    if (index < 0 || index >= bannerItems.length) return;
+
     const item = bannerItems[index];
     if (item && item.backdrop_path) {
         const banner = document.getElementById('banner');
@@ -309,9 +321,16 @@ function showBannerAtIndex(index) {
             }, {passive: false});
         });
 
-        // Update current index
+        // Update the current index
         currentBannerIndex = index;
-        updateBannerIndicators();
+
+        // Make current index available to navigation-fix.js
+        window.currentBannerIndex = currentBannerIndex;
+
+        // This will be implemented in navigation-fix.js
+        if (typeof updateActiveIndicator === 'function') {
+            updateActiveIndicator();
+        }
     }
 }
 
