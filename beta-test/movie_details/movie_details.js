@@ -17,10 +17,15 @@ const iframe = document.getElementById("iframe");
 const watchListBtn = document.querySelector('.watchListBtn');
 const watchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
 
-// Season and Episode selectors
+// Season and Episode selectors (mobile)
 const seasonsContainer = document.getElementById('seasons-container');
 const seasonSelect = document.getElementById('season-select');
 const episodesList = document.getElementById('episodes-list');
+
+// Desktop Season and Episode selectors
+const desktopSeasonsContainer = document.getElementById('desktop-seasons-container');
+const desktopSeasonSelect = document.getElementById('desktop-season-select');
+const desktopEpisodesList = document.getElementById('desktop-episodes-list');
 
 // API key for TMDB API
 const api_Key = 'e79515e88dfd7d9f6eeca36e49101ac2';
@@ -96,7 +101,7 @@ async function fetchVideoDetails(id) {
     }
 }
 
-// Function to fetch TV show seasons
+// Function to fetch TV show seasons (with episodes for each season)
 async function fetchTVSeasons(id) {
     try {
         const response = await fetch(`https://api.themoviedb.org/3/tv/${id}?api_key=${api_Key}`);
@@ -106,7 +111,22 @@ async function fetchTVSeasons(id) {
         }
 
         const data = await response.json();
-        return data.seasons;
+        // For each season, fetch its episodes
+        if (data.seasons && data.seasons.length > 0) {
+            // Only fetch episodes for regular seasons (season_number > 0)
+            const seasonsWithEpisodes = [];
+            for (const season of data.seasons) {
+                if (season.season_number > 0) {
+                    const episodes = await fetchSeasonEpisodes(id, season.season_number);
+                    seasonsWithEpisodes.push({
+                        ...season,
+                        episodes: episodes
+                    });
+                }
+            }
+            return seasonsWithEpisodes;
+        }
+        return [];
     } catch (error) {
         console.error('Error fetching TV seasons:', error);
         return [];
@@ -130,19 +150,36 @@ async function fetchSeasonEpisodes(tvId, seasonNumber) {
     }
 }
 
-document.getElementById('change-server-btn').addEventListener('click', () => {
-    const serverSelector = document.getElementById('server-selector');
-    serverSelector.style.display = (serverSelector.style.display === 'block') ? 'none' : 'block';
+// Document ready function to set up event handlers
+document.addEventListener('DOMContentLoaded', function() {
+    // Set up event handlers for both desktop and mobile server selectors
+    setupServerDropdowns();
 
-    // Log current state for debugging
-    console.log(`Current media type: ${media}, ID: ${id}`);
-    if (media === "tv") {
-        const activeEpisode = document.querySelector('.episode-item.active');
-        if (activeEpisode) {
-            console.log(`Active episode - Season: ${activeEpisode.dataset.seasonNumber}, Episode: ${activeEpisode.dataset.episodeNumber}`);
-        }
-    }
+    // Set up event handlers for change server buttons
+    setupChangeServerButtons();
+
+    // Other DOMContentLoaded event handlers can go here if needed
 });
+
+// Function to set up change server buttons
+function setupChangeServerButtons() {
+    const serverSelector = document.getElementById('server-selector');
+
+    // Set up click handler for close button
+    const closeButton = serverSelector.querySelector('.close-button');
+    if (closeButton) {
+        closeButton.addEventListener('click', function() {
+            serverSelector.style.display = 'none';
+        });
+    }
+
+    // Set up click handler for document to close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        if (!event.target.closest('#server-selector')) {
+            serverSelector.style.display = 'none';
+        }
+    });
+}
 
 document.getElementById('server-selector').addEventListener('click', (e) => {
   if (e.target !== document.getElementById('server')) {
@@ -155,119 +192,288 @@ document.querySelector('.close-button').addEventListener('click', () => {
   document.getElementById('server-selector').style.display = 'none';
 });
 
-// Function to create season dropdown items
+// Function to create season options in the season select dropdown
 function createSeasonOptions(seasons) {
+    // Clear existing options
     seasonSelect.innerHTML = '';
+    desktopSeasonSelect.innerHTML = '';
 
     seasons.forEach(season => {
-        // Skip season 0 which is typically for specials
-        if (season.season_number > 0) {
-            const option = document.createElement('option');
-            option.value = season.season_number;
-            option.textContent = `Season ${season.season_number} (${season.episode_count} Episodes)`;
-            seasonSelect.appendChild(option);
-        }
+        const option = document.createElement('option');
+        option.value = season.season_number;
+        option.textContent = `Season ${season.season_number} (${season.episodes.length} Episodes)`;
+
+        const desktopOption = option.cloneNode(true);
+
+        seasonSelect.appendChild(option);
+        desktopSeasonSelect.appendChild(desktopOption);
     });
 
-    // Set up event listener for season selection
+    // Remove previous event listeners to prevent duplicates
+    seasonSelect.onchange = null;
+    desktopSeasonSelect.onchange = null;
+
+    // Add event listener to season select dropdown to populate episodes
     seasonSelect.addEventListener('change', function() {
-        const selectedSeason = this.value;
-        loadEpisodes(id, selectedSeason);
+        const selectedSeason = seasons.find(season => season.season_number == this.value);
+        populateEpisodes(selectedSeason);
+
+        // Sync with desktop
+        desktopSeasonSelect.value = this.value;
     });
 
-    // Load the first season episodes by default
+    // Add same event listener to desktop season select
+    desktopSeasonSelect.addEventListener('change', function() {
+        const selectedSeason = seasons.find(season => season.season_number == this.value);
+        populateEpisodes(selectedSeason, true);
+
+        // Sync with mobile
+        seasonSelect.value = this.value;
+    });
+
+    // Populate episodes for the first season
     if (seasons.length > 0) {
-        // Find the first regular season (season_number > 0)
-        const firstSeason = seasons.find(season => season.season_number > 0);
-        if (firstSeason) {
-            loadEpisodes(id, firstSeason.season_number);
-        }
+        populateEpisodes(seasons[0]);
     }
 }
 
-// Function to create episode list items
-function createEpisodesList(episodes) {
+// Function to populate episodes for the selected season
+function populateEpisodes(season, fromDesktop = false) {
+    // Clear the existing episodes
     episodesList.innerHTML = '';
+    desktopEpisodesList.innerHTML = '';
 
-    episodes.forEach(episode => {
-        const episodeItem = document.createElement('div');
-        episodeItem.className = 'episode-item';
-        episodeItem.dataset.episodeNumber = episode.episode_number;
-        episodeItem.dataset.seasonNumber = episode.season_number;
+    if (!season || !season.episodes) return;
 
-        // Create thumbnail container
-        const thumbnailContainer = document.createElement('div');
-        thumbnailContainer.className = 'thumbnail-container';
-
-        // Create thumbnail image
-        const thumbnail = document.createElement('img');
-        thumbnail.className = 'episode-thumbnail';
-        thumbnail.src = episode.still_path
-            ? `https://image.tmdb.org/t/p/w300${episode.still_path}`
-            : 'https://via.placeholder.com/300x170?text=No+Image';
-        thumbnail.alt = `${episode.name} Thumbnail`;
-
-        // Create episode number badge
-        const episodeNumber = document.createElement('div');
-        episodeNumber.className = 'episode-number';
-        episodeNumber.textContent = episode.episode_number;
-
-        // Add thumbnail and number to container
-        thumbnailContainer.appendChild(thumbnail);
-        thumbnailContainer.appendChild(episodeNumber);
-
-        // Create episode info container
-        const episodeInfo = document.createElement('div');
-        episodeInfo.className = 'episode-info';
-
-        // Create episode title
-        const episodeTitle = document.createElement('div');
-        episodeTitle.className = 'episode-title';
-        episodeTitle.textContent = episode.name;
-
-        // Create episode description
-        const episodeDescription = document.createElement('div');
-        episodeDescription.className = 'episode-description';
-        episodeDescription.textContent = episode.overview || 'No description available.';
-
-        // Add title and description to info container
-        episodeInfo.appendChild(episodeTitle);
-        episodeInfo.appendChild(episodeDescription);
-
-        // Add all elements to episode item
-        episodeItem.appendChild(thumbnailContainer);
-        episodeItem.appendChild(episodeInfo);
-
-        // Add click event to play the episode
-        episodeItem.addEventListener('click', () => {
-            playEpisode(id, episode.season_number, episode.episode_number);
-        });
+    season.episodes.forEach(episode => {
+        // Create an episode item for each episode
+        const episodeItem = createEpisodeItem(episode, season.season_number);
+        const desktopEpisodeItem = createEpisodeItem(episode, season.season_number, true);
 
         episodesList.appendChild(episodeItem);
+        desktopEpisodesList.appendChild(desktopEpisodeItem);
     });
 }
 
-// Function to load episodes for a specific season
-async function loadEpisodes(tvId, seasonNumber) {
-    try {
-        const episodes = await fetchSeasonEpisodes(tvId, seasonNumber);
-        createEpisodesList(episodes);
-    } catch (error) {
-        console.error('Error loading episodes:', error);
-        episodesList.innerHTML = '<p>Error loading episodes. Please try again.</p>';
+// Function to create an episode item
+function createEpisodeItem(episode, seasonNumber, isDesktop = false) {
+    const episodeItem = document.createElement('div');
+    episodeItem.className = 'episode-item';
+    episodeItem.dataset.episodeNumber = episode.episode_number;
+    episodeItem.dataset.seasonNumber = seasonNumber;
+
+    // Create thumbnail container
+    const thumbnailContainer = document.createElement('div');
+    thumbnailContainer.className = 'thumbnail-container';
+
+    // Create thumbnail image
+    const thumbnail = document.createElement('img');
+    thumbnail.className = 'episode-thumbnail';
+    thumbnail.alt = `${episode.name} Thumbnail`;
+
+    if (episode.still_path) {
+        thumbnail.src = `https://image.tmdb.org/t/p/w300${episode.still_path}`;
+    } else {
+        thumbnail.src = 'https://via.placeholder.com/300x170?text=No+Image';
     }
+
+    // Create episode number
+    const episodeNumber = document.createElement('div');
+    episodeNumber.className = 'episode-number';
+    episodeNumber.textContent = episode.episode_number;
+
+    thumbnailContainer.appendChild(thumbnail);
+    thumbnailContainer.appendChild(episodeNumber);
+
+    // Create episode info
+    const episodeInfo = document.createElement('div');
+    episodeInfo.className = 'episode-info';
+
+    // Create episode title
+    const episodeTitle = document.createElement('div');
+    episodeTitle.className = 'episode-title';
+    episodeTitle.textContent = episode.name || `Episode ${episode.episode_number}`;
+
+    // Create episode description
+    const episodeDescription = document.createElement('div');
+    episodeDescription.className = 'episode-description';
+    episodeDescription.textContent = episode.overview || 'No description available';
+
+    episodeInfo.appendChild(episodeTitle);
+    episodeInfo.appendChild(episodeDescription);
+
+    // Append all to episode item
+    episodeItem.appendChild(thumbnailContainer);
+    episodeItem.appendChild(episodeInfo);
+
+    // Add click event to play the episode
+    episodeItem.addEventListener('click', function() {
+        // Get the season and episode numbers
+        const seasonNumber = this.dataset.seasonNumber;
+        const episodeNumber = this.dataset.episodeNumber;
+
+        // Remove active class from all episode items in both desktop and mobile
+        document.querySelectorAll('.episode-item').forEach(item => {
+            item.classList.remove('active');
+        });
+
+        // Add active class to this episode item
+        this.classList.add('active');
+
+        // Sync active state with desktop/mobile counterpart
+        let selector;
+        if (isDesktop) {
+            // Find the mobile episode item
+            selector = `.episode-item[data-season-number="${seasonNumber}"][data-episode-number="${episodeNumber}"]:not(#desktop-episodes-list .episode-item)`;
+        } else {
+            // Find the desktop episode item
+            selector = `#desktop-episodes-list .episode-item[data-season-number="${seasonNumber}"][data-episode-number="${episodeNumber}"]`;
+        }
+        const otherItem = document.querySelector(selector);
+        if (otherItem) {
+            otherItem.classList.add('active');
+        }
+
+        // Play the episode
+        playEpisode(id, seasonNumber, episodeNumber);
+    });
+
+    return episodeItem;
+}
+
+// Function to show seasons for TV shows
+async function setupTVShow(id) {
+    try {
+        const seasons = await fetchTVSeasons(id);
+        if (seasons && seasons.length > 0) {
+            createSeasonOptions(seasons);
+
+            // Display the seasons containers
+            seasonsContainer.style.display = "flex";
+            desktopSeasonsContainer.classList.add('show-seasons');
+
+            // Scroll to the seasons container for better mobile experience if needed
+            if (window.innerWidth <= 740) {
+                window.scrollTo({
+                    top: seasonsContainer.offsetTop - 20,
+                    behavior: 'smooth'
+                });
+            }
+        }
+    } catch (err) {
+        console.error("Error setting up TV seasons:", err);
+    }
+}
+
+// Function to set up server dropdowns for both desktop and mobile
+function setupServerDropdowns() {
+    // Get all server dropdown headers (both desktop and mobile)
+    const serverDropdownHeaders = document.querySelectorAll('.server-dropdown-header');
+    const serverOptions = document.querySelectorAll('.server-option');
+
+    // Set up click handlers for all dropdown headers
+    serverDropdownHeaders.forEach(header => {
+        header.addEventListener('click', function() {
+            // Toggle dropdown
+            const content = this.nextElementSibling;
+            const arrow = this.querySelector('.dropdown-arrow');
+            content.classList.toggle('show');
+            arrow.classList.toggle('up');
+
+            // Add active class to header
+            this.classList.toggle('active');
+        });
+    });
+
+    // Set up click handlers for all server options
+    serverOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            // Get the server value
+            const server = this.dataset.server;
+
+            // Remove active class from all options in all dropdowns
+            serverOptions.forEach(opt => opt.classList.remove('active'));
+
+            // Add active class to clicked option
+            this.classList.add('active');
+
+            // Update both desktop and mobile dropdown headers
+            updateServerSelectionDisplay(server, this);
+
+            // Set the hidden server select value
+            document.getElementById('server').value = server;
+
+            // Close dropdown
+            const content = this.closest('.server-dropdown-content');
+            content.classList.remove('show');
+
+            // Update arrow
+            const header = content.previousElementSibling;
+            const arrow = header.querySelector('.dropdown-arrow');
+            arrow.classList.remove('up');
+
+            // Change server
+            changeServer();
+        });
+    });
+
+    // Set initial active server and update display
+    const initialServer = document.getElementById('server').value || 'player.videasy.net';
+    document.getElementById('server').value = initialServer; // Ensure select matches
+
+    const initialServerOption = document.querySelector(`.server-option[data-server="${initialServer}"]`);
+    if (initialServerOption) {
+        initialServerOption.classList.add('active');
+        updateServerSelectionDisplay(initialServer, initialServerOption);
+    }
+}
+
+// Function to update the display of server selection in both dropdowns
+function updateServerSelectionDisplay(server, selectedOption) {
+    // Get server info
+    const serverName = selectedOption.querySelector('.server-name').textContent;
+    const serverTags = selectedOption.querySelectorAll('.server-tag');
+
+    // Update all dropdown headers
+    const selectedServers = document.querySelectorAll('.selected-server');
+
+    selectedServers.forEach(selected => {
+        // Clear current selection
+        selected.innerHTML = '';
+
+        // Add server name
+        const nameSpan = document.createElement('span');
+        nameSpan.className = 'server-name';
+        nameSpan.textContent = serverName;
+        selected.appendChild(nameSpan);
+
+        // Add tags
+        serverTags.forEach(tag => {
+            const newTag = tag.cloneNode(true);
+            selected.appendChild(newTag);
+        });
+    });
 }
 
 // Function to handle video source change based on selected server
 async function changeServer() {
-    const server = document.getElementById('server').value; // Get the selected server
+    // Get server value - try to get from active server option first
+    const activeOption = document.querySelector('.server-option.active');
+    let server = '';
+
+    if (activeOption) {
+        server = activeOption.dataset.server;
+    } else {
+        server = document.getElementById('server').value; // Fallback to select element
+    }
+
     const actualMedia = media === "all" ? "movie" : media; // Convert "all" to "movie" for server URLs
     const type = actualMedia === "movie" ? "movie" : (actualMedia === "anime" ? "anime" : "tv"); // Movie, TV, or Anime type
 
     console.log(`Changing server to: ${server}, Media type: ${type}, ID: ${id}`);
 
     // Check if we're viewing a TV show with episode selected
-    if (type === "tv" && seasonsContainer.style.display === "flex") {
+    if (type === "tv" && (seasonsContainer.style.display === "flex" || desktopSeasonsContainer.classList.contains('show-seasons'))) {
         // If an episode is already selected (playing), update it with the new server
         const activeEpisode = document.querySelector('.episode-item.active');
         if (activeEpisode) {
@@ -369,7 +575,14 @@ async function changeServer() {
 
 // Function to play a specific episode
 function playEpisode(tvId, seasonNumber, episodeNumber) {
-    const server = document.getElementById('server').value;
+    // Get server value - try to get from active server option first
+    const activeOption = document.querySelector('.server-option.active');
+    let server = '';
+    if (activeOption) {
+        server = activeOption.dataset.server;
+    } else {
+        server = document.getElementById('server').value;
+    }
     let embedURL = "";
 
     // Update the URL for each server to include season and episode parameters
@@ -416,12 +629,19 @@ function playEpisode(tvId, seasonNumber, episodeNumber) {
         const episodes = document.querySelectorAll('.episode-item');
         episodes.forEach(item => item.classList.remove('active'));
 
-        const currentEpisode = document.querySelector(`.episode-item[data-season-number="${seasonNumber}"][data-episode-number="${episodeNumber}"]`);
-        if (currentEpisode) {
-            currentEpisode.classList.add('active');
+        // Mark both desktop and mobile episode items as active
+        document.querySelectorAll(`.episode-item[data-season-number="${seasonNumber}"][data-episode-number="${episodeNumber}"]`).forEach(item => {
+            item.classList.add('active');
+        });
 
-            // Scroll to the active episode for better UX
-            episodesList.scrollTop = currentEpisode.offsetTop - episodesList.offsetTop - 10;
+        // Scroll to the active episode for better UX (only in the relevant list)
+        const currentEpisodeMobile = episodesList.querySelector(`.episode-item[data-season-number="${seasonNumber}"][data-episode-number="${episodeNumber}"]`);
+        if (currentEpisodeMobile) {
+            episodesList.scrollTop = currentEpisodeMobile.offsetTop - episodesList.offsetTop - 10;
+        }
+        const currentEpisodeDesktop = desktopEpisodesList.querySelector(`.episode-item[data-season-number="${seasonNumber}"][data-episode-number="${episodeNumber}"]`);
+        if (currentEpisodeDesktop) {
+            desktopEpisodesList.scrollTop = currentEpisodeDesktop.offsetTop - desktopEpisodesList.offsetTop - 10;
         }
 
         // Scroll to top of video for better mobile experience
@@ -496,23 +716,7 @@ async function displayMovieDetails() {
         // If this is a TV show, setup the seasons and episodes section
         const actualMedia = media === "all" ? "movie" : media;
         if (actualMedia === "tv") {
-            try {
-                const seasons = await fetchTVSeasons(id);
-                if (seasons && seasons.length > 0) {
-                    createSeasonOptions(seasons);
-                    // Display the seasons container
-                    seasonsContainer.style.display = "flex";
-                    // Scroll to the seasons container for better mobile experience if needed
-                    if (window.innerWidth <= 740) {
-                        window.scrollTo({
-                            top: seasonsContainer.offsetTop - 20,
-                            behavior: 'smooth'
-                        });
-                    }
-                }
-            } catch (err) {
-                console.error("Error setting up TV seasons:", err);
-            }
+            await setupTVShow(id);
         }
 
         // Call the changeServer function to update the video source
@@ -553,72 +757,6 @@ function toggleFavorite(movieDetails) {
     localStorage.setItem('watchlist', JSON.stringify(watchlist));
 }
 
-// Enhanced server dropdown UI functionality
-function initServerDropdown() {
-    // Setup server dropdown toggle
-    const serverDropdownHeader = document.querySelector('.server-dropdown-header');
-    const serverDropdownContent = document.querySelector('.server-dropdown-content');
-    const dropdownArrow = document.querySelector('.dropdown-arrow');
-
-    if (!serverDropdownHeader) return; // Exit if elements don't exist
-
-    // Toggle dropdown when clicking the header
-    serverDropdownHeader.addEventListener('click', function(event) {
-        event.stopPropagation();
-        serverDropdownContent.classList.toggle('show');
-        serverDropdownHeader.classList.toggle('active');
-        dropdownArrow.classList.toggle('up');
-    });
-
-    // Close dropdown when clicking outside
-    document.addEventListener('click', function(event) {
-        if (!event.target.closest('.server-dropdown')) {
-            serverDropdownContent.classList.remove('show');
-            serverDropdownHeader.classList.remove('active');
-            dropdownArrow.classList.remove('up');
-        }
-    });
-
-    // Handle server selection
-    const serverOptions = document.querySelectorAll('.server-option');
-    const selectedServerDisplay = document.querySelector('.selected-server');
-
-    serverOptions.forEach(option => {
-        option.addEventListener('click', function() {
-            // Update the hidden select for compatibility with existing code
-            const serverValue = this.getAttribute('data-server');
-            document.getElementById('server').value = serverValue;
-
-            // Update selected server display in header
-            selectedServerDisplay.innerHTML = this.innerHTML;
-
-            // Remove active class from all options
-            serverOptions.forEach(opt => opt.classList.remove('active'));
-
-            // Add active class to clicked option
-            this.classList.add('active');
-
-            // Close the dropdown
-            serverDropdownContent.classList.remove('show');
-            serverDropdownHeader.classList.remove('active');
-            dropdownArrow.classList.remove('up');
-
-            // Call the existing changeServer function
-            changeServer();
-        });
-    });
-
-    // Set initial active server
-    const initialServer = document.getElementById('server').value || 'player.videasy.net';
-    document.getElementById('server').value = initialServer; // Ensure select matches
-
-    const initialServerOption = document.querySelector(`.server-option[data-server="${initialServer}"]`);
-    if (initialServerOption) {
-        initialServerOption.classList.add('active');
-        selectedServerDisplay.innerHTML = initialServerOption.innerHTML;
-    }
-}
-
 // Function to handle changes when server selection is made
 document.getElementById('server').addEventListener('change', () => {
     changeServer();
@@ -642,9 +780,6 @@ window.addEventListener('load', function() {
     if (serverSelect && !serverSelect.value) {
         serverSelect.value = "player.videasy.net";
     }
-
-    // Initialize server dropdown
-    initServerDropdown();
 
     // Display movie details
     displayMovieDetails();
