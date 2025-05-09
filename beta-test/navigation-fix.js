@@ -1,11 +1,19 @@
-/**
- * Enhanced navigation for movie sections with smooth scrolling
- */
+// Enhanced navigation functionality for both banner and sections
 (function() {
-    /**
-     * Set up navigation buttons for sections with improved scrolling
-     */
+    // Function to set up both banner and section navigation
+    function setupAllNavigationButtons() {
+        console.log("Setting up all navigation buttons");
+        // 1. Set up banner navigation buttons
+        setupBannerNavigation();
+
+        // 2. Set up section navigation buttons (for movie rows)
+        setupSectionNavigation();
+    }
+
+    // Function to set up section navigation (for movie rows)
     function setupSectionNavigation() {
+        console.log("Setting up section navigation buttons");
+
         // Get all navigation buttons
         const navButtons = document.querySelectorAll('.navigation-button');
 
@@ -15,14 +23,12 @@
             button.parentNode.replaceChild(newButton, button);
         });
 
-        // Ensure navigation buttons match container heights
-        adjustNavigationButtonHeights();
-
         // Set up event listeners for all navigation buttons
         document.querySelectorAll('.navigation-button').forEach(button => {
             button.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
+                console.log('Navigation button clicked:', this.className);
 
                 // Find the parent container
                 const container = this.closest('.movie-container');
@@ -32,280 +38,67 @@
                 const moviesBox = container.querySelector('.movies-box');
                 if (!moviesBox) return;
 
-                // Calculate scroll amount based on device and container width
-                const itemWidth = 220; // Base movie item width
-                const gap = 15; // Gap between items
-                const isSmallScreen = window.innerWidth <= 560;
-                const containerWidth = moviesBox.clientWidth;
+                // Calculate scroll amount - 80% of container width for better visual movement
+                const scrollAmount = moviesBox.clientWidth * 0.8;
 
-                // Adjust scroll amount for different screen sizes
-                let scrollAmount;
-
-                if (isSmallScreen) {
-                    // For mobile, use a smaller scroll amount that feels more natural
-                    scrollAmount = containerWidth * 0.85;
-                } else if (window.innerWidth <= 780) {
-                    // For tablets
-                    scrollAmount = containerWidth * 0.7;
-                } else {
-                    // For desktop
-                    scrollAmount = containerWidth * 0.75;
-                }
-
-                // Provide visual feedback
-                this.classList.add('button-active');
-                setTimeout(() => {
-                    this.classList.remove('button-active');
-                }, 200);
-
-                // Apply the scroll
                 if (this.classList.contains('previous')) {
+                    // Scroll left
                     moviesBox.scrollBy({
                         left: -scrollAmount,
-                        behavior: 'auto' // Use 'auto' instead of 'smooth' for better performance with our custom momentum
+                        behavior: 'smooth'
                     });
                 } else if (this.classList.contains('next')) {
+                    // Scroll right
                     moviesBox.scrollBy({
                         left: scrollAmount,
-                        behavior: 'auto'
+                        behavior: 'smooth'
                     });
                 }
             });
         });
     }
 
-    /**
-     * Adjust navigation button heights to match their containers
-     */
-    function adjustNavigationButtonHeights() {
-        // Process each movie container to match button heights
-        document.querySelectorAll('.movie-container').forEach(container => {
-            // Get the actual height of the first movie item (if exists)
-            const movieItem = container.querySelector('.movie-item');
-            if (!movieItem) return;
-
-            const movieHeight = movieItem.offsetHeight;
-
-            // Get navigation buttons in this container
-            const buttons = container.querySelectorAll('.navigation-button');
-
-            // Set the buttons to match the movie height
-            buttons.forEach(button => {
-                button.style.height = `${movieHeight}px`;
-                // Remove any inline max-height that might be restricting the button
-                button.style.maxHeight = 'none';
-
-                // Force the button to be at the correct position (top)
-                button.style.top = '0';
-                button.style.transform = 'none';
-
-                // Make sure it's visible enough
-                button.style.zIndex = '50';
-
-                // For Netflix and Anime sections which might have different styling
-                if (button.classList.contains('netflix-previous') ||
-                    button.classList.contains('netflix-next') ||
-                    button.classList.contains('anime-upcoming-new-previous') ||
-                    button.classList.contains('anime-upcoming-new-next') ||
-                    button.classList.contains('anime-comedy-previous') ||
-                    button.classList.contains('anime-comedy-next') ||
-                    button.classList.contains('anime-romance-previous') ||
-                    button.classList.contains('anime-romance-next') ||
-                    button.classList.contains('anime-popular-previous') ||
-                    button.classList.contains('anime-popular-next') ||
-                    button.classList.contains('anime-top-previous') ||
-                    button.classList.contains('anime-top-next') ||
-                    button.classList.contains('anime-upcoming-previous') ||
-                    button.classList.contains('anime-upcoming-next')) {
-
-                    // These sections might need special handling
-                    // Check if the movie height is sufficient, if not use container height
-                    const containerHeight = container.offsetHeight;
-                    if (containerHeight > movieHeight) {
-                        button.style.height = `${containerHeight}px`;
-                    }
-                }
-            });
-        });
-    }
-
-    /**
-     * Creates the banner indicator dots
-     */
-    function createBannerIndicators() {
-        if (!window.bannerItems || window.bannerItems.length <= 1) return;
-
-        const indicators = document.getElementById('banner-indicators');
-        if (!indicators) return;
-
-        // Clear any existing indicators
-        indicators.innerHTML = '';
-
-        // Create indicator dots for each banner
-        window.bannerItems.forEach((_, index) => {
-            const dot = document.createElement('div');
-            dot.className = 'banner-dot';
-            dot.setAttribute('data-index', index);
-
-            // Add click event to navigate to specific banner
-            dot.addEventListener('click', function() {
-                const targetIndex = parseInt(this.getAttribute('data-index'));
-
-                // Show navigation buttons when indicator dots are clicked
-                const prevButton = document.getElementById('banner-prev');
-                const nextButton = document.getElementById('banner-next');
-                if (prevButton) prevButton.classList.add('active');
-                if (nextButton) nextButton.classList.add('active');
-
-                // Check if we're on mobile
-                const isMobile = window.innerWidth <= 480;
-
-                // Hide buttons after delay - longer on mobile for better touch interaction
-                setTimeout(() => {
-                    if (prevButton) prevButton.classList.remove('active');
-                    if (nextButton) nextButton.classList.remove('active');
-                }, isMobile ? 2500 : 1500);
-
-                // Update current banner index
-                window.currentBannerIndex = targetIndex;
-
-                // Update banner using the appropriate function
-                if (typeof window.showBannerAtIndex === 'function') {
-                    window.showBannerAtIndex(targetIndex);
-                } else if (typeof window.updateBanner === 'function' && window.bannerItems[targetIndex]) {
-                    window.updateBanner(window.bannerItems[targetIndex]);
-                }
-
-                // Reset any auto-rotation
-                if (window.bannerInterval) {
-                    clearInterval(window.bannerInterval);
-                    if (typeof window.startBannerSlideshow === 'function') {
-                        window.startBannerSlideshow();
-                    } else if (typeof window.startBannerRotation === 'function') {
-                        window.startBannerRotation();
-                    }
-                }
-
-                // Update active indicator
-                updateActiveIndicator();
-            });
-
-            indicators.appendChild(dot);
-        });
-
-        // Initialize with current active indicator
-        updateActiveIndicator();
-    }
-
-    /**
-     * Updates which indicator dot is active based on current banner index
-     */
-    function updateActiveIndicator() {
-        if (window.currentBannerIndex === undefined) return;
-
-        const indicators = document.querySelectorAll('.banner-dot');
-
-        // Remove active class from all dots
-        indicators.forEach(dot => {
-            dot.classList.remove('active');
-        });
-
-        // Add active class to current dot
-        const activeDot = document.querySelector(`.banner-dot[data-index="${window.currentBannerIndex}"]`);
-        if (activeDot) {
-            activeDot.classList.add('active');
-        }
-
-        // Make sure buttons are visible
-        const prevButton = document.getElementById('banner-prev');
-        const nextButton = document.getElementById('banner-next');
-
-        if (prevButton && nextButton) {
-            // Ensure buttons are displayed and styled correctly
-            prevButton.style.display = 'flex';
-            nextButton.style.display = 'flex';
-        }
-    }
-
-    /**
-     * Set up banner navigation with improved touch handling
-     */
+    // Improved banner navigation setup
     function setupBannerNavigation() {
+        console.log("Setting up banner navigation buttons");
         const prevButton = document.getElementById('banner-prev');
         const nextButton = document.getElementById('banner-next');
 
-        // Only proceed if we have banner items
+        // Make sure bannerItems array is not empty
         if (!window.bannerItems || window.bannerItems.length <= 1) {
+            console.log("Not enough banner items to enable navigation");
+            // Hide navigation if we don't have multiple items
             if (prevButton) prevButton.style.display = 'none';
             if (nextButton) nextButton.style.display = 'none';
-            document.getElementById('banner-indicators').style.display = 'none';
             return;
         }
 
-        // Show navigation buttons but keep them initially hidden with CSS opacity
-        if (prevButton) {
-            prevButton.style.display = 'flex';
-            prevButton.classList.remove('active');
-        }
-        if (nextButton) {
-            nextButton.style.display = 'flex';
-            nextButton.classList.remove('active');
-        }
+        // Show navigation buttons
+        if (prevButton) prevButton.style.display = 'flex';
+        if (nextButton) nextButton.style.display = 'flex';
 
-        // Set up event handlers with clean replacement to avoid duplicates
+        // Remove any existing event listeners to avoid duplicates
         if (prevButton) {
             prevButton.replaceWith(prevButton.cloneNode(true));
             const newPrevButton = document.getElementById('banner-prev');
 
             if (newPrevButton) {
+                console.log("Adding event listener to banner prev button");
                 newPrevButton.addEventListener('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
+                    console.log("Banner prev button clicked");
 
-                    // Show both navigation buttons when one is clicked
-                    const prevButton = document.getElementById('banner-prev');
-                    const nextButton = document.getElementById('banner-next');
-                    if (prevButton) prevButton.classList.add('active');
-                    if (nextButton) nextButton.classList.add('active');
+                    // Move to previous banner
+                    window.currentBannerIndex = (window.currentBannerIndex - 1 + window.bannerItems.length) % window.bannerItems.length;
 
-                    // Check if we're on mobile
-                    const isMobile = window.innerWidth <= 480;
+                    // Show the banner
+                    updateBanner(window.bannerItems[window.currentBannerIndex]);
 
-                    // Hide the buttons after a delay - longer on mobile for better accessibility
-                    setTimeout(() => {
-                        if (prevButton) prevButton.classList.remove('active');
-                        if (nextButton) nextButton.classList.remove('active');
-                    }, isMobile ? 2500 : 1500);
-
-                    // Show visual feedback
-                    this.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-                    setTimeout(() => {
-                        this.style.backgroundColor = '';
-                    }, 150);
-
-                    // Navigate to previous banner
-                    if (window.currentBannerIndex !== undefined && window.bannerItems) {
-                        window.currentBannerIndex = (window.currentBannerIndex - 1 + window.bannerItems.length) % window.bannerItems.length;
-
-                        // Use the existing function if available, otherwise use a simpler approach
-                        if (typeof window.showBannerAtIndex === 'function') {
-                            window.showBannerAtIndex(window.currentBannerIndex);
-                        } else if (typeof window.updateBanner === 'function' && window.bannerItems[window.currentBannerIndex]) {
-                            window.updateBanner(window.bannerItems[window.currentBannerIndex]);
-                        }
-
-                        // Update the indicator dots
-                        updateActiveIndicator();
-
-                        // Reset auto-rotation if needed
-                        if (window.bannerInterval) {
-                            clearInterval(window.bannerInterval);
-                            if (typeof window.startBannerSlideshow === 'function') {
-                                window.startBannerSlideshow();
-                            } else if (typeof window.startBannerRotation === 'function') {
-                                window.startBannerRotation();
-                            }
-                        }
+                    // Reset interval to prevent quick transitions
+                    if (window.bannerInterval) {
+                        clearInterval(window.bannerInterval);
+                        startBannerRotation();
                     }
                 });
             }
@@ -316,283 +109,47 @@
             const newNextButton = document.getElementById('banner-next');
 
             if (newNextButton) {
+                console.log("Adding event listener to banner next button");
                 newNextButton.addEventListener('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
+                    console.log("Banner next button clicked");
 
-                    // Show both navigation buttons when one is clicked
-                    const prevButton = document.getElementById('banner-prev');
-                    const nextButton = document.getElementById('banner-next');
-                    if (prevButton) prevButton.classList.add('active');
-                    if (nextButton) nextButton.classList.add('active');
+                    // Move to next banner
+                    window.currentBannerIndex = (window.currentBannerIndex + 1) % window.bannerItems.length;
 
-                    // Check if we're on mobile
-                    const isMobile = window.innerWidth <= 480;
+                    // Show the banner
+                    updateBanner(window.bannerItems[window.currentBannerIndex]);
 
-                    // Hide the buttons after a delay - longer on mobile for better accessibility
-                    setTimeout(() => {
-                        if (prevButton) prevButton.classList.remove('active');
-                        if (nextButton) nextButton.classList.remove('active');
-                    }, isMobile ? 2500 : 1500);
-
-                    // Show visual feedback
-                    this.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-                    setTimeout(() => {
-                        this.style.backgroundColor = '';
-                    }, 150);
-
-                    // Navigate to next banner
-                    if (window.currentBannerIndex !== undefined && window.bannerItems) {
-                        window.currentBannerIndex = (window.currentBannerIndex + 1) % window.bannerItems.length;
-
-                        // Use the existing function if available, otherwise use a simpler approach
-                        if (typeof window.showBannerAtIndex === 'function') {
-                            window.showBannerAtIndex(window.currentBannerIndex);
-                        } else if (typeof window.updateBanner === 'function' && window.bannerItems[window.currentBannerIndex]) {
-                            window.updateBanner(window.bannerItems[window.currentBannerIndex]);
-                        }
-
-                        // Update the indicator dots
-                        updateActiveIndicator();
-
-                        // Reset auto-rotation if needed
-                        if (window.bannerInterval) {
-                            clearInterval(window.bannerInterval);
-                            if (typeof window.startBannerSlideshow === 'function') {
-                                window.startBannerSlideshow();
-                            } else if (typeof window.startBannerRotation === 'function') {
-                                window.startBannerRotation();
-                            }
-                        }
+                    // Reset interval to prevent quick transitions
+                    if (window.bannerInterval) {
+                        clearInterval(window.bannerInterval);
+                        startBannerRotation();
                     }
                 });
             }
         }
-
-        // Create the banner indicators
-        createBannerIndicators();
     }
 
-    /**
-     * Briefly show and then hide banner navigation buttons
-     * This gives users a hint that navigation is available
-     */
-    function showNavigationButtonsHint() {
-        const prevButton = document.getElementById('banner-prev');
-        const nextButton = document.getElementById('banner-next');
-
-        // Only proceed if we have buttons and banner items
-        if ((!prevButton || !nextButton) || !window.bannerItems || window.bannerItems.length <= 1) {
-            return;
-        }
-
-        // Check if we're on mobile
-        const isMobile = window.innerWidth <= 480;
-
-        // Briefly show the buttons
-        if (prevButton) prevButton.classList.add('active');
-        if (nextButton) nextButton.classList.add('active');
-
-        // Hide them after a delay - longer on mobile for better accessibility
-        setTimeout(() => {
-            if (prevButton) prevButton.classList.remove('active');
-            if (nextButton) nextButton.classList.remove('active');
-        }, isMobile ? 2500 : 1500);
-    }
-
-    /**
-     * Add CSS for better navigation button feedback
-     */
-    function addNavigationButtonStyles() {
-        const styleElement = document.createElement('style');
-        styleElement.textContent = `
-            .navigation-button {
-                transition: background-color 0.15s ease-out, opacity 0.2s ease !important;
-            }
-            .navigation-button:active,
-            .button-active {
-                background-color: rgba(0, 0, 0, 0.8) !important;
-                opacity: 1 !important;
-            }
-            @media only screen and (max-width: 780px) {
-                .navigation-button {
-                    opacity: 0.6 !important;
-                    background-color: rgba(0, 0, 0, 0.7) !important;
-                    width: 40px !important;
-                }
-                .movie-container:hover .navigation-button {
-                    opacity: 0.75 !important;
-                }
-            }
-
-            /* Fix for mobile navigation buttons to match container heights */
-            @media only screen and (max-width: 560px) {
-                .navigation-button {
-                    height: auto !important; /* Use auto to allow the actual height set by JS */
-                    min-height: 100% !important; /* Ensure the button covers the entire height */
-                    top: 0 !important;
-                    transform: none !important;
-                    width: 40px !important; /* Consistent width */
-                    z-index: 50 !important; /* Ensure buttons are above content */
-                    display: flex !important;
-                    align-items: center !important;
-                    justify-content: center !important;
-                    opacity: 0.7 !important; /* Always show buttons on mobile */
-                }
-
-                /* Ensure movie container positions are correct for navigation buttons */
-                .movie-container {
-                    position: relative !important;
-                    overflow: visible !important; /* Ensure buttons are not cut off */
-                }
-
-                /* Ensure movies-box properly contains movie items */
-                .movies-box {
-                    position: relative !important;
-                    display: flex !important;
-                    align-items: stretch !important;
-                }
-
-                /* Netflix and Anime sections might need special handling */
-                .netflix-previous, .netflix-next,
-                .anime-previous, .anime-next,
-                .anime-upcoming-new-previous, .anime-upcoming-new-next,
-                .anime-comedy-previous, .anime-comedy-next,
-                .anime-romance-previous, .anime-romance-next,
-                .anime-popular-previous, .anime-popular-next,
-                .anime-top-previous, .anime-top-next,
-                .anime-upcoming-previous, .anime-upcoming-next {
-                    height: 100% !important; /* Ensure full height */
-                }
-            }
-        `;
-        document.head.appendChild(styleElement);
-    }
-
-    // Initialize everything when the document is ready
+    // When document is ready
     document.addEventListener('DOMContentLoaded', function() {
-        // Setup section navigation buttons
-        setupSectionNavigation();
+        console.log("DOM loaded - setting up navigation");
+        // Setup all navigation buttons
+        setupAllNavigationButtons();
 
-        // Make sure navigation button heights are set correctly
-        adjustNavigationButtonHeights();
-
-        // Run the height adjustment again after a short delay to ensure all content is loaded
-        setTimeout(adjustNavigationButtonHeights, 500);
-        setTimeout(adjustNavigationButtonHeights, 1000);
-        setTimeout(adjustNavigationButtonHeights, 2000);
-
-        // Setup banner navigation
-        setupBannerNavigation();
-
-        // Add styles for navigation buttons
-        addNavigationButtonStyles();
-
-        // Show a hint about navigation buttons after a short delay
-        setTimeout(() => {
-            showNavigationButtonsHint();
-        }, 2000);
-
-        // Fix any window-level functions
-        if (window.startBannerRotation && typeof window.startBannerRotation === 'function') {
-            const originalFn = window.startBannerRotation;
-            window.startBannerRotation = function() {
-                if (typeof originalFn === 'function') {
-                    originalFn.apply(this, arguments);
-                }
-                setupBannerNavigation();
-            };
-        }
-
-        if (window.startBannerSlideshow && typeof window.startBannerSlideshow === 'function') {
-            const originalFn = window.startBannerSlideshow;
-            window.startBannerSlideshow = function() {
-                if (typeof originalFn === 'function') {
-                    originalFn.apply(this, arguments);
-                }
-                setupBannerNavigation();
-            };
-        }
-
-        // Also update the original update banner function to update indicators
-        if (window.updateBanner && typeof window.updateBanner === 'function') {
-            const originalUpdateBanner = window.updateBanner;
-            window.updateBanner = function(banner) {
-                if (typeof originalUpdateBanner === 'function') {
-                    originalUpdateBanner.apply(this, arguments);
-                }
-                updateActiveIndicator();
-
-                // Show navigation buttons briefly when banner updates automatically
-                const prevButton = document.getElementById('banner-prev');
-                const nextButton = document.getElementById('banner-next');
-
-                if (prevButton && nextButton && window.bannerItems && window.bannerItems.length > 1) {
-                    prevButton.classList.add('active');
-                    nextButton.classList.add('active');
-
-                    // Check if we're on mobile
-                    const isMobile = window.innerWidth <= 480;
-
-                    setTimeout(() => {
-                        prevButton.classList.remove('active');
-                        nextButton.classList.remove('active');
-                    }, isMobile ? 2500 : 1500);
-                }
-            };
-        }
-
-        // Add window resize listener to adjust button heights when screen size changes
-        let resizeTimeout;
-        window.addEventListener('resize', function() {
-            // Debounce to avoid excessive calls
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(function() {
-                adjustNavigationButtonHeights();
-
-                // Handle mobile vs desktop view for banner buttons
-                const isMobile = window.innerWidth <= 480;
-                const prevButton = document.getElementById('banner-prev');
-                const nextButton = document.getElementById('banner-next');
-
-                if (prevButton && nextButton) {
-                    // On resize to mobile, ensure buttons are not showing unless active
-                    if (isMobile) {
-                        prevButton.classList.remove('active');
-                        nextButton.classList.remove('active');
-                    }
-                }
-            }, 200);
-        });
-
-        // Use MutationObserver to detect when new content is loaded or images are loaded
-        // This ensures button heights are adjusted whenever the UI updates
-        const observer = new MutationObserver(function(mutations) {
-            adjustNavigationButtonHeights();
-        });
-
-        // Start observing the document body for changes
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true,
-            attributes: true,
-            attributeFilter: ['src', 'style', 'class']
-        });
-
-        // Also adjust heights when images load as this affects container sizes
-        window.addEventListener('load', function() {
-            adjustNavigationButtonHeights();
-        });
-
-        // Periodically check and adjust heights for the first minute after page load
-        // to catch any delayed content loading
-        let checkCount = 0;
-        const intervalId = setInterval(function() {
-            adjustNavigationButtonHeights();
-            checkCount++;
-            if (checkCount >= 12) { // Stop after approx. 1 minute (12 * 5s)
-                clearInterval(intervalId);
+        // Override the original startBannerRotation to include our enhanced navigation
+        const originalStartBannerRotation = window.startBannerRotation;
+        window.startBannerRotation = function() {
+            if (typeof originalStartBannerRotation === 'function') {
+                originalStartBannerRotation();
             }
-        }, 5000);
+            // Make sure banner navigation works
+            setupBannerNavigation();
+        };
     });
+
+    // Make functions available globally
+    window.setupAllNavigationButtons = setupAllNavigationButtons;
+    window.setupBannerNavigation = setupBannerNavigation;
+    window.setupSectionNavigation = setupSectionNavigation;
 })();

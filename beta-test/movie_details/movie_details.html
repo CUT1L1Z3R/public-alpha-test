@@ -19,57 +19,53 @@
     <div class="movie-details">
 
         <!-- Movie poster section -->
-        <div class="movie-poster" style="position: relative;">
-            <img id="moviePoster" src="https://via.placeholder.com/500x281?text=No+Image+Available" alt="Movie Poster">
-            <iframe id="iframe" frameborder="0" allowfullscreen style="display: none; width: 100%; height: 450px;"
+        <div class="movie-poster">
+            <img id="moviePoster" src="" alt="Movie Poster">
+            <iframe id="iframe" frameborder="0" allowfullscreen
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"></iframe>
 
-            <!-- Desktop Season Selector - Only visible on desktop screens -->
-            <div class="desktop-seasons-container">
-                <!-- Season selector (visible only for TV shows) -->
-                <div id="desktop-seasons-container" class="seasons-container" style="display: none;">
-                    <div class="season-dropdown">
-                        <div class="season-selector">
-                            <span>Season</span>
-                            <select id="desktop-season-select" class="season-select">
-                                <!-- Seasons will be populated here -->
-                            </select>
-                        </div>
-                    </div>
-
-                    <div id="desktop-episodes-list" class="episodes-list">
-                        <!-- Episodes will be populated here -->
+            <!-- Season selector (visible only for TV shows) -->
+            <div id="seasons-container" class="seasons-container">
+                <div class="season-dropdown">
+                    <div class="season-selector">
+                        <span>Season</span>
+                        <select id="season-select" class="season-select">
+                            <!-- Seasons will be populated here -->
+                        </select>
                     </div>
                 </div>
-            </div>
 
+                <div id="episodes-list" class="episodes-list">
+                    <!-- Episodes will be populated here -->
+                </div>
+            </div>
         </div>
 
         <!-- Movie information section -->
         <div class="movie-info">
             <h1 id="movieTitle"></h1>
-            <p id="plot">No description available</p>
+            <p id="plot"></p>
 
             <div class="movie-data">
                 <div class="design">
                     <span>Released :</span>
-                    <p id="movieYear">Unknown</p>
+                    <p id="movieYear"></p>
                 </div>
 
                 <div class="design">
                     <span>Language :</span>
-                    <p id="language">Unknown</p>
+                    <p id="language"></p>
                 </div>
             </div>
 
             <div class="movie-data rating-data">
                 <div class="design">
                     <span>Rating :</span>
-                    <p id="rating">N/A</p>
+                    <p id="rating"></p>
                 </div>
                 <div class="design">
                     <span>Genre :</span>
-                    <p id="genre">Unknown</p>
+                    <p id="genre"></p>
                 </div>
             </div>
 
@@ -88,7 +84,7 @@
                     <span class="dropdown-arrow">▼</span>
                 </div>
                 <div class="server-dropdown-content">
-                    <div class="server-option active" data-server="player.videasy.net">
+                    <div class="server-option" data-server="player.videasy.net">
                         <span class="server-name">MAFUYU</span>
                         <span class="server-tag tag-recommended">Recommended</span>
                         <span class="server-tag tag-stable">Stable</span>
@@ -117,6 +113,7 @@
             </div>
 
             <!-- Old Server selector dropdown - hidden, kept for backward compatibility -->
+            <button id="change-server-btn" class="change-server-btn" style="display: none;"><b>CHANGE SERVER</b></button>
             <div id="server-selector" class="server-selector-dropdown" style="display: none;">
                 <label for="server">Select Server:</label>
                 <select id="server" class="server-selector-select">
@@ -128,22 +125,6 @@
                     <option value="2embed">OTORI 720P SLOW</option>
                 </select>
                 <button class="close-button" style="position: absolute; top: 10px; right: 10px;">Close</button>
-            </div>
-
-            <!-- Season selector (visible only for TV shows) -->
-            <div id="seasons-container" class="seasons-container" style="display: none;">
-                <div class="season-dropdown">
-                    <div class="season-selector">
-                        <span>Season</span>
-                        <select id="season-select" class="season-select">
-                            <!-- Seasons will be populated here -->
-                        </select>
-                    </div>
-                </div>
-
-                <div id="episodes-list" class="episodes-list">
-                    <!-- Episodes will be populated here -->
-                </div>
             </div>
         </div>
     </div>

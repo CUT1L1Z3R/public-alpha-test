@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let velocityTracking = [];
     let lastTimestamp = 0;
     let initialTouchY = 0;
+    let dragging = false;
 
     // Add touch event listeners
     element.addEventListener('touchstart', function(e) {
@@ -36,6 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
       // Reset tracking
       velocityTracking = [];
       isDown = true;
+      dragging = false;
       startX = e.touches[0].pageX;
       startY = e.touches[0].pageY;
       initialTouchY = startY;
@@ -54,14 +56,23 @@ document.addEventListener('DOMContentLoaded', function() {
       const now = Date.now();
       const timeElapsed = now - lastTimestamp;
 
-      // Check if scrolling more vertically than horizontally
       const deltaY = Math.abs(y - initialTouchY);
       const deltaX = Math.abs(x - startX);
 
-      // If more vertical movement, let the browser handle it
-      if (deltaY > deltaX * 1.5) {
+      // Improved: dynamically lock to scrolling direction
+      if (!dragging) {
+        if (deltaX > 8 || deltaY > 8) {
+          dragging = (deltaX > deltaY); // Drag if more X than Y
+        }
+      }
+      if (dragging === false && (deltaY > deltaX)) {
+        isDown = false; // Let the browser do default scrolling
+        element.classList.remove('active-scrolling');
         return;
       }
+
+      // Prevent vertical scroll when dragging horizontally
+      e.preventDefault();
 
       // Actual scrolling
       const walk = (startX - x);
@@ -85,9 +96,9 @@ document.addEventListener('DOMContentLoaded', function() {
       startX = x;
       scrollLeft = element.scrollLeft;
       lastTimestamp = now;
-    }, { passive: true });
+    }, { passive: false });
 
-    element.addEventListener('touchend', function(e) {
+    element.addEventListener('touchend', function() {
       if (!isDown) return;
       isDown = false;
       element.classList.remove('active-scrolling');
@@ -117,6 +128,19 @@ document.addEventListener('DOMContentLoaded', function() {
       if (Math.abs(avgVelocity) > 0.1) {
         applyMomentum(element, avgVelocity);
       }
+      dragging = false;
+    }, { passive: true });
+
+    // Ensure isDown and dragging are reset on document-level touchend/touchcancel
+    document.addEventListener('touchend', function() {
+      isDown = false;
+      dragging = false;
+      element.classList.remove('active-scrolling');
+    }, { passive: true });
+    document.addEventListener('touchcancel', function() {
+      isDown = false;
+      dragging = false;
+      element.classList.remove('active-scrolling');
     }, { passive: true });
 
     element.addEventListener('touchcancel', function() {
@@ -126,6 +150,7 @@ document.addEventListener('DOMContentLoaded', function() {
         cancelAnimationFrame(momentumID);
         momentumID = null;
       }
+      dragging = false;
     }, { passive: true });
 
     /**

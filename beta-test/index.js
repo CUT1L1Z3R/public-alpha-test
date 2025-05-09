@@ -139,24 +139,12 @@ function startBannerSlideshow() {
 
             // Show the banner
             showBannerAtIndex(currentBannerIndex);
-
-            // This will be implemented in custom-navigation.js
-            if (typeof updateActiveIndicator === 'function') {
-                updateActiveIndicator();
-            }
         }, 8000); // Change banner every 8 seconds
     }
-
-    // Make banner items available to custom-navigation.js
-    window.bannerItems = bannerItems;
-    window.currentBannerIndex = currentBannerIndex;
-    window.bannerInterval = bannerInterval;
 }
 
 // Function to show banner at specific index with enhanced styling
 function showBannerAtIndex(index) {
-    if (index < 0 || index >= bannerItems.length) return;
-
     const item = bannerItems[index];
     if (item && item.backdrop_path) {
         const banner = document.getElementById('banner');
@@ -321,16 +309,9 @@ function showBannerAtIndex(index) {
             }, {passive: false});
         });
 
-        // Update the current index
+        // Update current index
         currentBannerIndex = index;
-
-        // Make current index available to custom-navigation.js
-        window.currentBannerIndex = currentBannerIndex;
-
-        // This will be implemented in custom-navigation.js
-        if (typeof updateActiveIndicator === 'function') {
-            updateActiveIndicator();
-        }
+        updateBannerIndicators();
     }
 }
 
@@ -499,6 +480,21 @@ function fetchAnime(containerClass, genreOrKeyword) {
         } else if (genreOrKeyword === 'sci_fi') {
             // Sci-Fi anime
             endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,878&with_keywords=210024&sort_by=popularity.desc`;
+        } else if (genreOrKeyword === 'movie') {
+            // Anime movies: animation genre (16) + movie type
+            endpoint = `discover/movie?api_key=${api_Key}&with_genres=16&sort_by=popularity.desc`;
+        } else if (genreOrKeyword === 'top_rated_anime_movies') {
+            // Top rated anime movies
+            endpoint = `discover/movie?api_key=${api_Key}&with_genres=16&sort_by=vote_average.desc&vote_count.gte=100`;
+        } else if (genreOrKeyword === 'adventure') {
+            // Adventure anime (update genre ID to 10759 for TV genre)
+            endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,10759&with_keywords=210024&sort_by=popularity.desc`;
+        } else if (genreOrKeyword === 'drama') {
+            // Drama anime
+            endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,18&with_keywords=210024&sort_by=popularity.desc`;
+        } else if (genreOrKeyword === 'sports') {
+            // Sports anime (no direct sports TV genre; fallback to use keyword 210024 for anime, or another approach if available)
+            endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024,sports&sort_by=popularity.desc`;
         } else {
             // Default endpoint for general anime
             endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&sort_by=popularity.desc`;
@@ -539,7 +535,13 @@ function fetchAnime(containerClass, genreOrKeyword) {
                                       containerClass === 'anime-romance-container' ||
                                       containerClass === 'anime-popular-container' ||
                                       containerClass === 'anime-top-container' ||
-                                      containerClass === 'anime-upcoming-container';
+                                      containerClass === 'anime-upcoming-container' ||
+                                      containerClass === 'anime-container' ||
+                                      containerClass === 'anime-movie-container' ||
+                                      containerClass === 'top-rated-anime-movie-container' ||
+                                      containerClass === 'adventure-anime-container' ||
+                                      containerClass === 'drama-anime-container' ||
+                                      containerClass === 'sports-anime-container';
 
                     const imageUrl = useBackdrop && anime.backdrop_path
                         ? `https://image.tmdb.org/t/p/w780${anime.backdrop_path}` // Use higher quality for landscape
@@ -559,7 +561,12 @@ function fetchAnime(containerClass, genreOrKeyword) {
                         itemElement.style.height = '170px'; // Landscape height (16:9 aspect ratio)
                     }
 
-                    itemElement.dataset.mediaType = 'tv'; // Using TV since most anime are TV shows in TMDB
+                    // For anime-movie-container and top-rated-anime-movie-container, set mediaType to 'movie', else 'tv'
+                    if (containerClass === 'anime-movie-container' || containerClass === 'top-rated-anime-movie-container') {
+                        itemElement.dataset.mediaType = 'movie';
+                    } else {
+                        itemElement.dataset.mediaType = 'tv'; // Using TV since most anime are TV shows in TMDB
+                    }
                     itemElement.dataset.id = anime.id;
 
                     // Create a wrapper for the image
@@ -584,7 +591,11 @@ function fetchAnime(containerClass, genreOrKeyword) {
 
                     // Add click event to navigate to details page
                     itemElement.addEventListener('click', () => {
-                        window.location.href = `movie_details/movie_details.html?media=tv&id=${anime.id}`;
+                        if (containerClass === 'anime-movie-container' || containerClass === 'top-rated-anime-movie-container') {
+                            window.location.href = `movie_details/movie_details.html?media=movie&id=${anime.id}`;
+                        } else {
+                            window.location.href = `movie_details/movie_details.html?media=tv&id=${anime.id}`;
+                        }
                     });
 
                     // Create overlay with title and rating
@@ -664,11 +675,21 @@ fetchAnime('anime-top-container', 'top_rated'); // Top rated anime
 fetchAnime('anime-upcoming-container', 'upcoming'); // Ongoing anime (keeping the same container name)
 fetchAnime('anime-upcoming-new-container', 'truly_upcoming'); // Latest anime
 
+// Top rated anime movies
+fetchAnime('top-rated-anime-movie-container', 'top_rated_anime_movies');
+setupScroll('top-rated-anime-movie-container', 'top-rated-anime-movie-previous', 'top-rated-anime-movie-next');
+
+// Adventure anime
+fetchAnime('adventure-anime-container', 'adventure');
+setupScroll('adventure-anime-container', 'adventure-anime-previous', 'adventure-anime-next');
+
+// Drama anime
+fetchAnime('drama-anime-container', 'drama');
+setupScroll('drama-anime-container', 'drama-anime-previous', 'drama-anime-next');
+
 // Additional anime genres (removed the ones not needed)
 fetchAnime('anime-comedy-container', 'comedy'); // Comedy anime
 fetchAnime('anime-romance-container', 'romance'); // Romance anime
-
-// The generic anime container has been removed
 
 // Function to fetch search results from TMDB API
 async function fetchSearchResults(query) {
@@ -802,6 +823,15 @@ setupScroll('anime-upcoming-container', 'anime-upcoming-previous', 'anime-upcomi
 setupScroll('anime-upcoming-new-container', 'anime-upcoming-new-previous', 'anime-upcoming-new-next');
 setupScroll('anime-comedy-container', 'anime-comedy-previous', 'anime-comedy-next');
 setupScroll('anime-romance-container', 'anime-romance-previous', 'anime-romance-next');
+
+// Top rated anime movies scroll
+setupScroll('top-rated-anime-movie-container', 'top-rated-anime-movie-previous', 'top-rated-anime-movie-next');
+
+// Adventure anime scroll
+setupScroll('adventure-anime-container', 'adventure-anime-previous', 'adventure-anime-next');
+
+// Drama anime scroll
+setupScroll('drama-anime-container', 'drama-anime-previous', 'drama-anime-next');
 
 // Event listener to navigate to WatchList page
 goToWatchlistBtn.addEventListener('click', () => {
@@ -1187,148 +1217,50 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Improved touch swipe functionality for movie sections
+// Add touch swipe functionality for movie sections
 const movieContainers = document.querySelectorAll('.movies-box');
 
 movieContainers.forEach(container => {
-    let startX, startY;
+    let startX, startTime;
     let isDragging = false;
-    let lastX;
     let scrollLeft;
-    let velocityX = 0;
-    let lastTimestamp = 0;
-    let isTouchScrolling = false;
-    let rafId = null;
-    let lastTouchPosition = { x: 0, y: 0 };
 
-    // Prevent default browser handling of all panning and zooming gestures
-    container.addEventListener('gesturestart', function(e) {
-        e.preventDefault();
-    }, { passive: false });
-
-    // Reset function
-    function resetTouchState() {
-        isDragging = false;
-        isTouchScrolling = false;
-        if (rafId) {
-            cancelAnimationFrame(rafId);
-            rafId = null;
-        }
-    }
-
-    // Touch start handler with passive option
+    // Touch event handlers
     container.addEventListener('touchstart', (e) => {
-        // Cancel any existing momentum scrolling
-        if (rafId) {
-            cancelAnimationFrame(rafId);
-            rafId = null;
-        }
-
-        if (e.touches.length === 1) {
-            isDragging = true;
-            isTouchScrolling = true;
-            startX = e.touches[0].pageX;
-            startY = e.touches[0].pageY;
-            lastX = startX;
-            lastTouchPosition.x = startX;
-            lastTouchPosition.y = startY;
-            scrollLeft = container.scrollLeft;
-            lastTimestamp = Date.now();
-            velocityX = 0;
-        }
+        isDragging = true;
+        startX = e.touches[0].pageX;
+        startTime = new Date().getTime();
+        scrollLeft = container.scrollLeft;
     }, { passive: true });
 
-    // Touch move handler
     container.addEventListener('touchmove', (e) => {
-        if (!isDragging || !isTouchScrolling) return;
-
-        const touch = e.touches[0];
-        const x = touch.pageX;
-        const y = touch.pageY;
-        const now = Date.now();
-        const elapsed = now - lastTimestamp;
-
-        // Calculate horizontal and vertical movement
-        const deltaX = lastTouchPosition.x - x;
-        const deltaY = lastTouchPosition.y - y;
-
-        // If vertical scrolling is more significant, let the browser handle it
-        if (Math.abs(deltaY) > Math.abs(deltaX) * 1.5) {
-            isTouchScrolling = false;
-            return;
-        }
-
-        // Prevent default to disable browser overscroll
-        if (e.cancelable) {
-            e.preventDefault();
-        }
-
-        // Calculate velocity (pixels per millisecond)
-        if (elapsed > 0) {
-            velocityX = (lastX - x) / elapsed;
-        }
-
-        // Update scroll position
-        container.scrollLeft = scrollLeft + (startX - x);
-
-        // Store last position and timestamp
-        lastX = x;
-        lastTouchPosition.x = x;
-        lastTouchPosition.y = y;
-        lastTimestamp = now;
-    }, { passive: false });
-
-    // Touch end handler
-    container.addEventListener('touchend', (e) => {
-        if (!isDragging || !isTouchScrolling) {
-            resetTouchState();
-            return;
-        }
-
-        // Calculate final momentum scroll
-        const vx = velocityX * 1000; // Convert to pixels per second
-        const distance = Math.abs(vx);
-
-        // Apply momentum scrolling only if there was enough velocity
-        if (Math.abs(vx) > 0.5) {
-            // Determine scroll distance based on velocity
-            // Use a deceleration factor to slow down naturally
-            const momentumDistance = vx * 0.7;
-
-            // Setting up momentum scrolling with requestAnimationFrame for smoother animation
-            let startTime = null;
-            const momentumDuration = Math.min(Math.abs(momentumDistance) * 4, 800); // Cap duration
-
-            function momentumScroll(timestamp) {
-                if (!startTime) startTime = timestamp;
-                const elapsed = timestamp - startTime;
-                const progress = Math.min(elapsed / momentumDuration, 1);
-
-                // Apply easing for natural deceleration
-                const easeOutQuad = function(t) { return t * (2 - t); };
-                const easedProgress = easeOutQuad(progress);
-
-                // Calculate the new scroll position with easing
-                const scrollDistance = momentumDistance * (1 - easedProgress);
-                container.scrollBy({ left: scrollDistance, behavior: 'auto' });
-
-                // Continue animation if not complete
-                if (progress < 1) {
-                    rafId = requestAnimationFrame(momentumScroll);
-                } else {
-                    rafId = null;
-                }
-            }
-
-            // Start momentum scrolling animation
-            rafId = requestAnimationFrame(momentumScroll);
-        }
-
-        resetTouchState();
+        if (!isDragging) return;
+        const x = e.touches[0].pageX;
+        const dragDistance = startX - x;
+        container.scrollLeft = scrollLeft + dragDistance;
     }, { passive: true });
 
-    // Cancel momentum scrolling if user touches screen again
-    container.addEventListener('touchcancel', resetTouchState, { passive: true });
+    container.addEventListener('touchend', (e) => {
+        if (!isDragging) return;
+
+        const endX = e.changedTouches[0].pageX;
+        const endTime = new Date().getTime();
+        const dragDistance = startX - endX;
+        const dragDuration = endTime - startTime;
+
+        // If swipe is quick enough and long enough, add momentum
+        if (dragDuration < 300 && Math.abs(dragDistance) > 50) {
+            // Calculate momentum based on drag speed and distance
+            const momentum = (dragDistance * 1.5) * (300 / dragDuration);
+
+            container.scrollBy({
+                left: momentum,
+                behavior: 'smooth'
+            });
+        }
+
+        isDragging = false;
+    }, { passive: true });
 });
 
 // Add fade-in/fade-out CSS classes for smooth transitions if not already present

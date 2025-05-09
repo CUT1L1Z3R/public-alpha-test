@@ -437,34 +437,6 @@ input::-webkit-input-placeholder {
   pointer-events: none; /* Allow clicks to pass through */
 }
 
-/* ---- Banner indicator dots ---- */
-.banner-indicators {
-    position: absolute;
-    bottom: 30px;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    z-index: 11;
-}
-
-.banner-dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.4);
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.banner-dot.active {
-    background-color: rgba(255, 255, 255, 0.9);
-    transform: scale(1.2);
-    box-shadow: 0 0 8px rgba(141, 22, 201, 0.6);
-}
-
 /* ----Common Design all Sections---- */
 
 /* Smooth transitions for sections */
@@ -514,18 +486,13 @@ input::-webkit-input-placeholder {
   display: flex;
   flex-direction: row;
   gap: 20px;
-  overflow-x: auto;
+  overflow-x: scroll;
   scrollbar-width: none; /* Firefox: hide scrollbar */
   -ms-overflow-style: none; /* IE and Edge: hide scrollbar */
   width: 100%;
   min-height: 210px;
-  scroll-behavior: auto; /* Changed from smooth to auto for better performance */
+  scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
-  scroll-snap-type: none; /* Removed snap points for smoother scrolling */
-  overscroll-behavior-x: none; /* Allow natural inertia */
-  -webkit-transform: translateZ(0); /* Force GPU acceleration */
-  transform: translateZ(0);
-  will-change: transform; /* Hint for browser to optimize */
 }
 
 /* Hide scrollbars for all browsers */
@@ -562,7 +529,7 @@ input::-webkit-input-placeholder {
 
 /* Special heights for anime section navigation buttons */
 .anime-section .navigation-button {
-  height: 100% !important; /* Match container height */
+  height: 170px !important;
 }
 
 /* Adjust height for all anime containers */
@@ -685,6 +652,17 @@ input::-webkit-input-placeholder {
     font-size: 10px;
     font-weight: 600;
   }
+
+  /* ADDED: Make Top Rated Anime Movies, Drama Anime, and Adventure Anime titles match Ongoing Anime on mobile */
+  #top-rated-anime-movies h1,
+  #drama-anime h1,
+  #adventure-anime h1 {
+    font-size: 0.85rem;
+    max-width: 95%;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
 }
 
 .image-wrapper:hover .movie-overlay {
@@ -732,15 +710,15 @@ input::-webkit-input-placeholder {
 /* Navigation button styling */
 .navigation-button {
   width: 60px;
-  height: 100%; /* Match container height */
+  height: 170px;
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: 5px;
   font-size: 2.5rem;
   font-weight: 600;
   cursor: pointer;
   position: absolute;
-  top: 0; /* Align to top of container */
-  transform: none; /* Remove vertical transform */
+  top: 50%;
+  transform: translateY(-50%);
   border: none;
   display: flex;
   align-items: center;
@@ -751,13 +729,12 @@ input::-webkit-input-placeholder {
   color: white;
 }
 
-/* Custom heights no longer needed as buttons will match container height */
 .netflix-previous, .netflix-next {
-  /* height will be inherited from parent container */
+  height: 340px;
 }
 
 .anime-previous, .anime-next {
-  /* height will be inherited from parent container */
+  height: 340px;
 }
 
 .movie-container:hover .navigation-button {
@@ -1049,6 +1026,17 @@ input::-webkit-input-placeholder {
     letter-spacing: 0.5px;
   }
 
+  /* ADDED: Make Top Rated Anime Movies, Drama Anime, and Adventure Anime titles match Ongoing Anime on mobile */
+  #top-rated-anime-movies h1,
+  #drama-anime h1,
+  #adventure-anime h1 {
+    font-size: 0.85rem;
+    max-width: 95%;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+
   /* Scrolling containers */
   .movies-box {
     gap: 15px;
@@ -1059,12 +1047,7 @@ input::-webkit-input-placeholder {
     -ms-overflow-style: none;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    scroll-snap-type: none;
-    overscroll-behavior-x: none;
-    will-change: transform;
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-    scroll-behavior: auto;
+    scroll-snap-type: x mandatory;
   }
 
   .movies-box::-webkit-scrollbar {
@@ -1079,12 +1062,7 @@ input::-webkit-input-placeholder {
     height: 130px;
     margin: 10px 0;
     box-sizing: border-box;
-    scroll-snap-align: none; /* Removed snap points for smooth scrolling */
-    -webkit-transform: translateZ(0); /* Force GPU acceleration */
-    transform: translateZ(0);
-    will-change: transform;
-    transition: transform 0.2s ease;
-    backface-visibility: hidden; /* Prevent flickering */
+    scroll-snap-align: start;
   }
 
   /* Netflix and anime containers - standardized to same size as other containers */
@@ -1339,10 +1317,10 @@ input::-webkit-input-placeholder {
 
   .navigation-button {
     width: 40px;
-    height: 100%; /* Match container height */
+    height: 120px;
     font-size: 1.8rem;
-    top: 0; /* Align to top of container */
-    transform: none; /* Remove vertical transform */
+    top: 50%;
+    transform: translateY(-50%);
     opacity: 0.7;
   }
 
@@ -1351,11 +1329,11 @@ input::-webkit-input-placeholder {
   }
 
   .netflix-previous, .netflix-next {
-    /* height will be inherited from parent container */
+    height: 120px;
   }
 
   .anime-previous, .anime-next {
-    /* height will be inherited from parent container */
+    height: 120px;
   }
 
   .movies-box::-webkit-scrollbar {
@@ -1377,7 +1355,7 @@ input::-webkit-input-placeholder {
   }
 
   .anime-section .navigation-button {
-    height: 100% !important; /* Match container height */
+    height: 140px !important;
   }
 }
 
@@ -1468,19 +1446,19 @@ input::-webkit-input-placeholder {
   }
 
   .navigation-button {
-    width: 40px; /* Reduced width for better mobile experience */
-    height: 100%; /* Match container height */
+    width: 55px;
+    height: 160px;
     font-size: 2.3rem;
-    top: 0; /* Align to top of container */
-    transform: none; /* Remove vertical transform */
+    top: 50%;
+    transform: translateY(-50%);
   }
 
   .netflix-previous, .netflix-next {
-    /* height will be inherited from parent container */
+    height: 260px;
   }
 
   .anime-previous, .anime-next {
-    /* height will be inherited from parent container */
+    height: 260px;
   }
 
   .movies-box::-webkit-scrollbar {
@@ -1507,18 +1485,16 @@ input::-webkit-input-placeholder {
     color: white;
     border: none;
     border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    font-size: 24px;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: background-color 0.3s, opacity 0.3s;
     z-index: 10;
     display: flex;
     align-items: center;
     justify-content: center;
-    opacity: 0; /* Start with hidden buttons */
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+    opacity: 0;
 }
 
 #banner-prev {
@@ -1529,27 +1505,12 @@ input::-webkit-input-placeholder {
     right: 20px;
 }
 
-/* Banner container hover effect */
-#banner-container {
-    position: relative;
-    overflow: hidden;
+#banner-container:hover .banner-nav-button {
+    opacity: 1;
 }
 
-/* Show buttons when hovering over the banner container - only on non-mobile devices */
-@media only screen and (min-width: 481px) {
-    #banner-container:hover .banner-nav-button {
-        opacity: 1; /* Show buttons when hovering over the banner */
-    }
-}
-
-/* Enhanced styles for buttons when interacting with them */
-.banner-nav-button:hover,
-.banner-nav-button:focus,
-.banner-nav-button.active {
-    opacity: 1 !important;
+.banner-nav-button:hover {
     background-color: rgba(0, 0, 0, 0.8);
-    transform: translateY(-50%) scale(1.1);
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
 }
 
 /* Style section headings to make them more visible and properly spaced */
@@ -1707,46 +1668,4 @@ html::-webkit-scrollbar-thumb:hover {
     font-weight: 700;
     letter-spacing: 0.3px;
   }
-}
-
-/* Make banner navigation controls more visible on mobile */
-@media only screen and (max-width: 768px) {
-    .banner-nav-button {
-        opacity: 0.8;
-        width: 50px;
-        height: 50px;
-    }
-
-    .banner-indicators {
-        bottom: 20px;
-    }
-
-    .banner-dot {
-        width: 10px;
-        height: 10px;
-    }
-}
-
-@media only screen and (max-width: 480px) {
-    #banner-prev {
-        left: 10px;
-    }
-
-    #banner-next {
-        right: 10px;
-    }
-
-    /* Default state for mobile: transparent but visible */
-    .banner-nav-button {
-        opacity: 0.3 !important; /* Transparent but visible on mobile */
-        background-color: rgba(0, 0, 0, 0.5) !important;
-        transition: opacity 0.3s ease;
-        width: 40px;
-        height: 40px;
-    }
-
-    /* Show buttons with higher opacity when explicitly made active via JS */
-    .banner-nav-button.active {
-        opacity: 0.7 !important;
-    }
 }
