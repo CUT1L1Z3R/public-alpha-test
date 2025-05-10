@@ -28,13 +28,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Add touch event listeners
     element.addEventListener('touchstart', function(e) {
-      // Stop any ongoing momentum scrolling
+      // Prevent nested scrolling glitches, always reset momentum animation
       if (momentumID) {
         cancelAnimationFrame(momentumID);
         momentumID = null;
       }
-
-      // Reset tracking
+      // IMPORTANT: Reset only on primary touch
+      if (e.touches.length !== 1) return;
       velocityTracking = [];
       isDown = true;
       dragging = false;
@@ -43,8 +43,6 @@ document.addEventListener('DOMContentLoaded', function() {
       initialTouchY = startY;
       scrollLeft = element.scrollLeft;
       lastTimestamp = Date.now();
-
-      // Add active class for styling if needed
       element.classList.add('active-scrolling');
     }, { passive: true });
 
@@ -59,19 +57,18 @@ document.addEventListener('DOMContentLoaded', function() {
       const deltaY = Math.abs(y - initialTouchY);
       const deltaX = Math.abs(x - startX);
 
-      // Improved: dynamically lock to scrolling direction
+      // Improved: dynamically lock to scrolling direction, with stronger vertical lock and micro-jank removal
       if (!dragging) {
-        if (deltaX > 8 || deltaY > 8) {
-          dragging = (deltaX > deltaY); // Drag if more X than Y
+        if (deltaX > 5 && deltaX > deltaY * 1.4) dragging = true; // earlier, sharper lock on X
+        else if (deltaY > 9 && deltaY > deltaX * 1.2) {
+          isDown = false;
+          dragging = false;
+          element.classList.remove('active-scrolling');
+          return;
         }
       }
-      if (dragging === false && (deltaY > deltaX)) {
-        isDown = false; // Let the browser do default scrolling
-        element.classList.remove('active-scrolling');
-        return;
-      }
-
-      // Prevent vertical scroll when dragging horizontally
+      if (!dragging) return;
+      // Only scroll horizontally when lock is active
       e.preventDefault();
 
       // Actual scrolling
@@ -176,16 +173,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // Calculate the deceleration factor with exponential decay
         const delta = Math.exp(-elapsed / timeConstant);
 
-        // Calculate how much to scroll
-        const moveAmount = amplitude * delta;
-
-        if (Math.abs(moveAmount) > 0.5) {
-          // Update scroll position
-          element.scrollLeft = startPosition + (amplitude * (1 - delta));
-          momentumID = requestAnimationFrame(momentumStep);
-        } else {
-          momentumID = null;
-        }
+        // Calculate projected scroll position
+        const projected = startPosition + (amplitude * (1 - delta));
+        // Clamp to valid scroll range
+        element.scrollLeft = Math.max(0, Math.min(projected, element.scrollWidth - element.clientWidth));
+        momentumID = Math.abs(amplitude * delta) > 0.5 ? requestAnimationFrame(momentumStep) : null;
       }
 
       // Start the momentum animation
