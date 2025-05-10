@@ -486,16 +486,16 @@ input::-webkit-input-placeholder {
   display: flex;
   flex-direction: row;
   gap: 20px;
-  overflow-x: auto;
+  overflow-x: scroll;
   scrollbar-width: none; /* Firefox: hide scrollbar */
   -ms-overflow-style: none; /* IE and Edge: hide scrollbar */
   width: 100%;
   min-height: 210px;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
-  scroll-snap-type: x mandatory;
 }
 
+/* Hide scrollbars for all browsers */
 .movies-box::-webkit-scrollbar {
   display: none;
   width: 0;
@@ -1046,9 +1046,9 @@ input::-webkit-input-placeholder {
     scrollbar-width: none;
     -ms-overflow-style: none;
     overflow-x: auto;
+    scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
   }
 
   .movies-box::-webkit-scrollbar {
@@ -1282,8 +1282,6 @@ input::-webkit-input-placeholder {
     -ms-overflow-style: none;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
   }
 
   .movies-box::-webkit-scrollbar {
