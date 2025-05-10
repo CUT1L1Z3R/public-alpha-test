@@ -286,8 +286,12 @@ async function changeServer() {
     // Log the URL for debugging
     console.log(`Loading ${type} from: ${embedURL}`);
 
-    // Update the iframe source with the correct video URL
-    iframe.src = embedURL;
+    // Update the iframe source with the correct video URL and set attributes
+    iframe.setAttribute('src', embedURL);
+    iframe.setAttribute('playsinline', '');
+    iframe.setAttribute('webkit-playsinline', 'true');
+    iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen');
+    iframe.setAttribute('allowfullscreen', '');
 
     // Ensure iframe is visible and sized correctly
     iframe.style.display = "block";  // Show the iframe
@@ -331,8 +335,13 @@ function playEpisode(tvId, seasonNumber, episodeNumber) {
         // Log the URL for debugging
         console.log(`Loading TV episode from: ${embedURL}`);
 
-        // Update the iframe source with the episode URL
-        iframe.src = embedURL;
+        // Update the iframe source with the episode URL and set attributes
+        iframe.setAttribute('src', embedURL);
+        iframe.setAttribute('playsinline', '');
+        iframe.setAttribute('webkit-playsinline', 'true');
+        iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen');
+        iframe.setAttribute('allowfullscreen', '');
+
         iframe.style.display = "block";
         moviePoster.style.display = "none";
 
