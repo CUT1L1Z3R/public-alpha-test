@@ -9,6 +9,21 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Smooth and performant scrolling for all scrollable containers */
+.movies-box, .movie-container, #searchResults {
+  scroll-behavior: smooth !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+@media (pointer: coarse) {
+  .movies-box, .movie-container, #searchResults {
+    scroll-behavior: smooth !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior: contain !important;
+    touch-action: pan-x !important;
+  }
+}
+
 /* Header styles */
 .header {
   width: 100vw;
