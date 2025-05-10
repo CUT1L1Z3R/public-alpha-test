@@ -506,29 +506,77 @@ input::-webkit-input-placeholder {
   background: transparent !important;
   pointer-events: none;
 }
-.movies-box > * {
-  scroll-snap-align: start;
-  flex: 0 0 auto !important;
-  will-change: transform !important;
-  backface-visibility: hidden !important;
-  transition: none !important;
-  min-width: 60vw !important;
-  max-width: 80vw !important;
+
+/* --- FreeFlixx Poster Restyle --- */
+.movies-box > *, .movie-item {
+  background: #18181b !important;
+  border-radius: 14px !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  box-shadow: none !important;
   margin-bottom: 0 !important;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  min-width: 48vw !important;
+  max-width: 66vw !important;
+  height: 114px !important;
+  justify-content: flex-end;
+  transition: filter 0.14s cubic-bezier(.4,0,.2,1);
 }
-@media (max-width: 600px) {
-  .movies-box {
-    gap: 8px !important;
-    padding: 2px 0 12px 4px !important;
-    min-height: 152px !important;
-    max-height: 208px !important;
+@media (min-width: 600px) {
+  .movies-box > *, .movie-item {
+    min-width: 200px !important;
+    max-width: 265px !important;
+    height: 170px !important;
   }
-  .movies-box > * {
-    min-width: 74vw !important;
-    max-width: 85vw !important;
-    height: 120px !important;
-    margin-bottom: 0 !important;
+}
+@media (hover: hover) and (pointer: fine) {
+  .movies-box >:hover, .movie-item:hover {
+    filter: brightness(1.07);
+    cursor: pointer;
   }
+}
+.movie-item img, .movies-box > * img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: 14px 14px 14px 14px !important;
+  pointer-events: none;
+}
+.movie-poster-meta, .movie-item .poster-meta {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  padding: 10px 14px 5px 10px;
+  background: linear-gradient(to top, #090909 92%, transparent 100%);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+}
+.movie-poster-meta .title, .movie-item .poster-meta .title {
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-shadow: 0 2px 4px #000b;
+  margin: 0;
+  max-width: 76%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.movie-poster-meta .meta, .movie-item .poster-meta .meta {
+  color: #e0e0e0;
+  font-size: 12px;
+  opacity: 0.84;
+  margin-left: 8px;
+  font-weight: 500;
+  text-shadow: 0 1px 3px #000a;
 }
 
 /* Remove the anime-specific height since all containers now use landscape */
@@ -571,148 +619,22 @@ input::-webkit-input-placeholder {
   min-height: 380px;
 }
 
-/* Movie item styling - Fixed rectangular dimensions */
-.movie-item {
-  flex: 0 0 auto;
-  width: 290px;
-  height: 170px;
-  cursor: pointer;
-  margin: 20px 0;
-  transition: none !important;
-  position: relative;
-  box-sizing: border-box;
-  background: none !important;
-  box-shadow: none !important;
-}
-
-/* Remove hover/transition/box-shadow for buttery smoothness and mobile perf */
-.movie-item:hover {
-  transform: none !important;
-  box-shadow: none !important;
-  z-index: 5;
-}
-
-.movie-item::after,
-.image-wrapper:hover .movie-overlay {
+/* Movie info overlay styling (legacy, now replaced by .movie-poster-meta) */
+.movie-overlay {
   display: none !important;
 }
 
-/* Netflix Originals section with taller posters */
-.netflix-container .movie-item {
-  width: 250px;
-  height: 340px;
-}
-
-.image-wrapper {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  border-radius: 5px;
-  position: relative;
-}
-
-.movies-box .movie-item:hover .image-wrapper img {
-  transform: none !important;
-}
-
-.movies-box img {
-  width: 100%;
-  height: 100%;
-  border-radius: 5px;
-  transition: none !important;
-  object-fit: cover;
-}
-
-/* Movie info overlay styling */
-.movie-overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.95) 70%);
-  color: white;
-  padding: 10px 12px;
-  border-radius: 0 0 5px 5px;
-  border-top: 2px solid rgba(141, 22, 201, 0.6);
-  box-sizing: border-box;
-  z-index: 10;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: auto;
-  pointer-events: none;
-  opacity: 1 !important;
-  visibility: visible !important;
-  transition: none !important;
-  background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.95) 70%) !important;
-  box-shadow: none !important;
-}
-
-@media only screen and (max-width: 560px) {
-  .movie-overlay {
-    padding: 8px 10px;
-    background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.9) 90%) !important;
-    border-top: 2px solid rgba(141, 22, 201, 0.7);
-  }
-
-  .movie-title {
-    font-size: 11px;
-    font-weight: 600;
-    max-width: 75%;
-    letter-spacing: 0.3px;
-  }
-
-  .rating-star {
-    font-size: 11px;
-  }
-
-  .rating-value {
-    font-size: 10px;
-    font-weight: 600;
-  }
-
-  #top-rated-anime-movies h1,
-  #drama-anime h1,
-  #adventure-anime h1 {
-    font-size: 0.85rem;
-    max-width: 95%;
-    text-transform: uppercase;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-  }
-}
-
 .movie-title {
-  font-size: 14px;
-  font-weight: bold;
-  margin: 0;
-  max-width: 70%;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 1);
-  letter-spacing: 0.5px;
-  color: white;
+  display: none;
 }
-
 .movie-rating {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  margin-left: auto;
+  display: none;
 }
-
 .rating-star {
-  color: #8d16c9;
-  font-size: 15px;
-  text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.8);
+  display: none;
 }
-
 .rating-value {
-  font-size: 13px;
-  font-weight: bold;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 1);
-  color: white;
+  display: none;
 }
 
 .movie-container img {
@@ -1085,9 +1007,17 @@ input::-webkit-input-placeholder {
     margin: 10px 0;
     box-sizing: border-box;
     scroll-snap-align: start;
-    background: none !important;
+    background: #18181b !important;
+    border-radius: 14px !important;
+    overflow: hidden !important;
+    padding: 0 !important;
     box-shadow: none !important;
-    transition: none !important;
+    margin-bottom: 0 !important;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    justify-content: flex-end;
+    transition: filter 0.14s cubic-bezier(.4,0,.2,1);
   }
 
   .netflix-container .movie-item, .anime-container .movie-item {
@@ -1099,19 +1029,16 @@ input::-webkit-input-placeholder {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    border-radius: 14px !important;
     transition: none !important;
   }
 
   .movie-title {
-    font-size: 12px;
-    max-width: 70%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    display: none;
   }
 
   .rating-star, .rating-value {
-    font-size: 12px;
+    display: none;
   }
 
   .navigation-button {
@@ -1328,9 +1255,17 @@ input::-webkit-input-placeholder {
     height: 120px;
     margin: 10px 0;
     box-sizing: border-box;
-    background: none !important;
+    background: #18181b !important;
+    border-radius: 14px !important;
+    overflow: hidden !important;
+    padding: 0 !important;
     box-shadow: none !important;
-    transition: none !important;
+    margin-bottom: 0 !important;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    justify-content: flex-end;
+    transition: filter 0.14s cubic-bezier(.4,0,.2,1);
   }
 
   .netflix-container .movie-item, .anime-container .movie-item {
@@ -1341,16 +1276,16 @@ input::-webkit-input-placeholder {
   .movies-box img {
     width: 100%;
     height: 100%;
+    border-radius: 14px !important;
     transition: none !important;
   }
 
   .movie-title {
-    font-size: 11px;
-    max-width: 70%;
+    display: none;
   }
 
   .rating-star, .rating-value {
-    font-size: 10px;
+    display: none;
   }
 
   .navigation-button {
@@ -1463,9 +1398,17 @@ input::-webkit-input-placeholder {
     height: 160px;
     margin: 15px 0;
     box-sizing: border-box;
-    background: none !important;
+    background: #18181b !important;
+    border-radius: 14px !important;
+    overflow: hidden !important;
+    padding: 0 !important;
     box-shadow: none !important;
-    transition: none !important;
+    margin-bottom: 0 !important;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    justify-content: flex-end;
+    transition: filter 0.14s cubic-bezier(.4,0,.2,1);
   }
 
   .netflix-container .movie-item, .anime-container .movie-item {
@@ -1476,16 +1419,16 @@ input::-webkit-input-placeholder {
   .movies-box img {
     width: 100%;
     height: 100%;
+    border-radius: 14px !important;
     transition: none !important;
   }
 
   .movie-title {
-    font-size: 12px;
-    max-width: 68%;
+    display: none;
   }
 
   .rating-star, .rating-value {
-    font-size: 11px;
+    display: none;
   }
 
   .navigation-button {
