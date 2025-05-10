@@ -199,13 +199,12 @@ async function loadEpisodes(tvId, seasonNumber) {
     }
 }
 
-// Only refresh video src on server change if necessary
-function changeServer() {
-    const server = document.getElementById('server').value;
-    const type = media === "movie" ? "movie" : (media === "anime" ? "anime" : "tv");
-    let embedURL = "";
-    const currentEmbedUrl = iframe.src;
+// Function to handle video source change based on selected server
+async function changeServer() {
+    const server = document.getElementById('server').value; // Get the selected server
+    const type = media === "movie" ? "movie" : (media === "anime" ? "anime" : "tv"); // Movie, TV, or Anime type
 
+    // Check if we're viewing a TV show with episode selected
     if (type === "tv" && seasonsContainer.style.display === "flex") {
         // If an episode is already selected (playing), update it with the new server
         const activeEpisode = document.querySelector('.episode-item.active');
@@ -216,6 +215,8 @@ function changeServer() {
             return;
         }
     }
+
+    let embedURL = "";  // URL to embed video from the selected server
 
     // Set the video URL depending on the selected server and media type
     if (type === "anime") {
@@ -285,12 +286,14 @@ function changeServer() {
     // Log the URL for debugging
     console.log(`Loading ${type} from: ${embedURL}`);
 
-    // At the update point:
-    if (currentEmbedUrl !== embedURL) {
-        iframe.src = embedURL;
-    }
-    iframe.style.display = "block";
-    moviePoster.style.display = "none";
+    // Update the iframe source with the correct video URL
+    iframe.src = embedURL;
+
+    // Ensure iframe is visible and sized correctly
+    iframe.style.display = "block";  // Show the iframe
+
+    // Hide the movie poster when the video is playing
+    moviePoster.style.display = "none";  // Hide the movie poster image
 }
 
 // Function to play a specific episode
@@ -325,10 +328,11 @@ function playEpisode(tvId, seasonNumber, episodeNumber) {
     }
 
     if (embedURL) {
-        // Only set src if different to avoid playback interruption
-        if (iframe.src !== embedURL) {
-            iframe.src = embedURL;
-        }
+        // Log the URL for debugging
+        console.log(`Loading TV episode from: ${embedURL}`);
+
+        // Update the iframe source with the episode URL
+        iframe.src = embedURL;
         iframe.style.display = "block";
         moviePoster.style.display = "none";
 
@@ -344,16 +348,12 @@ function playEpisode(tvId, seasonNumber, episodeNumber) {
             episodesList.scrollTop = currentEpisode.offsetTop - episodesList.offsetTop - 10;
         }
 
-        // Scroll to top of video for better mobile experience only if not already in view
+        // Scroll to top of video for better mobile experience
         if (window.innerWidth <= 740) {
-            const rect = iframe.getBoundingClientRect();
-            const isVisible = rect.top >= 0 && rect.bottom <= window.innerHeight;
-            if (!isVisible) {
-                window.scrollTo({
-                    top: iframe.offsetTop - 20,
-                    behavior: 'smooth'
-                });
-            }
+            window.scrollTo({
+                top: iframe.offsetTop - 20,
+                behavior: 'smooth'
+            });
         }
     }
 }
@@ -509,15 +509,12 @@ document.getElementById('server').addEventListener('change', () => {
     changeServer();
 });
 
-// Prevent reload on scroll/resize: Remove or comment iframe.src update from resize listener
-//window.addEventListener('resize', () => {
-//    if (iframe.style.display === "block") {
-//        changeServer();
-//    }
-//});
-// Instead, only adjust sizing as needed:
+// Add window resize listener to ensure responsive video size
 window.addEventListener('resize', () => {
-    // Optionally adjust iframe height responsively here if needed
+    // Only update if iframe is visible
+    if (iframe.style.display === "block") {
+        changeServer();
+    }
 });
 
 // Initialize everything when the window loads
