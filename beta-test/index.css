@@ -186,7 +186,7 @@ body {
   height: 100%;
   background: linear-gradient(to top, rgba(0,0,0,0.7) 10%, rgba(0,0,0,0.3) 40%, rgba(0,0,0,0.1) 80%);
   z-index: 1;
-  pointer-events: none; /* This allows clicks to pass through to elements below */
+  pointer-events: none;
 }
 
 /* input styles - updated for better consistency */
@@ -331,7 +331,6 @@ input::-webkit-input-placeholder {
   z-index: 1;
 }
 
-/* Add proper spacing between banner and section headings */
 #banner-container {
     margin-bottom: 40px !important;
     position: relative;
@@ -351,7 +350,7 @@ input::-webkit-input-placeholder {
   display: flex;
   flex-direction: column;
   gap: 25px;
-  z-index: 2; /* Increased from 1 to 2 to be above the overlay */
+  z-index: 2;
 }
 
 #banner-title {
@@ -365,7 +364,7 @@ input::-webkit-input-placeholder {
   display: flex;
   gap: 15px;
   position: relative;
-  z-index: 3; /* Higher than the details container */
+  z-index: 3;
 }
 
 #more-info,
@@ -381,8 +380,8 @@ input::-webkit-input-placeholder {
   cursor: pointer;
   transition: 0.2s;
   position: relative;
-  z-index: 3; /* Higher than the details container */
-  pointer-events: auto; /* Ensure click events are captured */
+  z-index: 3;
+  pointer-events: auto;
   box-shadow: 0 2px 8px rgba(141, 22, 201, 0.08);
   outline: none;
   min-width: 120px;
@@ -449,12 +448,11 @@ input::-webkit-input-placeholder {
   background-image: linear-gradient(180deg, transparent, rgba(37, 37, 37, .5), #111);
   position: absolute;
   bottom: 0;
-  pointer-events: none; /* Allow clicks to pass through */
+  pointer-events: none;
 }
 
 /* ----Common Design all Sections---- */
 
-/* Smooth transitions for sections */
 .movie-section {
   margin-bottom: 30px;
   transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
@@ -486,35 +484,51 @@ input::-webkit-input-placeholder {
   border-radius: 4px;
 }
 
-/* Movies box styling */
-.movie-container {
-  position: relative;
-  width: 100%;
-  overflow: hidden; /* Ensure content doesn't spill out */
-  margin-bottom: 20px;
-}
-
-/* Consolidated scrollbar styling - hide all movie container scrollbars */
+/* Movies box styling - HORIZONTAL CAROUSEL STYLES */
 .movies-box {
-  padding-left: 20px;
-  padding-right: 20px;
   display: flex;
-  flex-direction: row;
-  gap: 20px;
-  overflow-x: scroll;
-  scrollbar-width: none; /* Firefox: hide scrollbar */
-  -ms-overflow-style: none; /* IE and Edge: hide scrollbar */
-  width: 100%;
-  min-height: 210px;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
+  overflow-x: auto !important;
+  gap: 10px !important;
+  padding: 4px 0 16px 8px !important;
+  scroll-snap-type: x mandatory !important;
+  -webkit-overflow-scrolling: touch !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+  white-space: nowrap !important;
+  mask-image: linear-gradient(to right, transparent 0px, black 30px, black calc(100% - 30px), transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0px, black 30px, black calc(100% - 30px), transparent 100%);
+  overscroll-behavior-x: contain !important;
+  touch-action: pan-x !important;
 }
-
-/* Hide scrollbars for all browsers */
 .movies-box::-webkit-scrollbar {
-  display: none;
-  width: 0;
-  height: 0;
+  display: none !important;
+  height: 0 !important;
+  background: transparent !important;
+  pointer-events: none;
+}
+.movies-box > * {
+  scroll-snap-align: start;
+  flex: 0 0 auto !important;
+  will-change: transform !important;
+  backface-visibility: hidden !important;
+  transition: none !important;
+  min-width: 60vw !important;
+  max-width: 80vw !important;
+  margin-bottom: 0 !important;
+}
+@media (max-width: 600px) {
+  .movies-box {
+    gap: 8px !important;
+    padding: 2px 0 12px 4px !important;
+    min-height: 152px !important;
+    max-height: 208px !important;
+  }
+  .movies-box > * {
+    min-width: 74vw !important;
+    max-width: 85vw !important;
+    height: 120px !important;
+    margin-bottom: 0 !important;
+  }
 }
 
 /* Remove the anime-specific height since all containers now use landscape */
@@ -564,36 +578,23 @@ input::-webkit-input-placeholder {
   height: 170px;
   cursor: pointer;
   margin: 20px 0;
-  transition: all 0.5s ease-in-out, transform 0.3s ease, box-shadow 0.3s ease;
+  transition: none !important;
   position: relative;
   box-sizing: border-box;
+  background: none !important;
+  box-shadow: none !important;
 }
 
-/* Add hover effect to all movie items like the upcoming anime section */
+/* Remove hover/transition/box-shadow for buttery smoothness and mobile perf */
 .movie-item:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 15px 25px rgba(141, 22, 201, 0.4);
-  z-index: 5; /* Ensure hovered items appear above others */
+  transform: none !important;
+  box-shadow: none !important;
+  z-index: 5;
 }
 
-/* Add a subtle glow effect on hover */
-.movie-item::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: 5px;
-  box-shadow: 0 0 0 0 rgba(141, 22, 201, 0);
-  opacity: 0;
-  transition: all 0.3s ease;
-  pointer-events: none;
-}
-
-.movie-item:hover::after {
-  opacity: 1;
-  box-shadow: 0 0 15px 3px rgba(141, 22, 201, 0.3);
+.movie-item::after,
+.image-wrapper:hover .movie-overlay {
+  display: none !important;
 }
 
 /* Netflix Originals section with taller posters */
@@ -611,14 +612,14 @@ input::-webkit-input-placeholder {
 }
 
 .movies-box .movie-item:hover .image-wrapper img {
-  transform: scale(1.05);
+  transform: none !important;
 }
 
 .movies-box img {
   width: 100%;
   height: 100%;
   border-radius: 5px;
-  transition: all 0.5s ease-in-out;
+  transition: none !important;
   object-fit: cover;
 }
 
@@ -642,13 +643,15 @@ input::-webkit-input-placeholder {
   pointer-events: none;
   opacity: 1 !important;
   visibility: visible !important;
-  transition: opacity 0.3s ease;
+  transition: none !important;
+  background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.95) 70%) !important;
+  box-shadow: none !important;
 }
 
 @media only screen and (max-width: 560px) {
   .movie-overlay {
     padding: 8px 10px;
-    background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.9) 90%);
+    background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.9) 90%) !important;
     border-top: 2px solid rgba(141, 22, 201, 0.7);
   }
 
@@ -668,7 +671,6 @@ input::-webkit-input-placeholder {
     font-weight: 600;
   }
 
-  /* ADDED: Make Top Rated Anime Movies, Drama Anime, and Adventure Anime titles match Ongoing Anime on mobile */
   #top-rated-anime-movies h1,
   #drama-anime h1,
   #adventure-anime h1 {
@@ -678,10 +680,6 @@ input::-webkit-input-placeholder {
     font-weight: 700;
     letter-spacing: 0.5px;
   }
-}
-
-.image-wrapper:hover .movie-overlay {
-  opacity: 1;
 }
 
 .movie-title {
@@ -798,23 +796,21 @@ input::-webkit-input-placeholder {
 }
 
 #anime-upcoming-new .movie-item {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: none !important;
 }
 
 /* ----Media Query---- */
 
 @media only screen and (max-width: 560px) {
-  /* Adjust hover effect for mobile devices */
   .movie-item:hover {
-    transform: translateY(-5px); /* Smaller lift effect for mobile */
-    box-shadow: 0 8px 15px rgba(141, 22, 201, 0.4);
+    transform: none !important;
+    box-shadow: none !important;
   }
 
   .movie-item::after {
-    display: none; /* Disable glow effect on mobile for better performance */
+    display: none !important;
   }
 
-  /* Fixed header positioning */
   .header {
     flex-direction: row;
     height: 60px;
@@ -843,7 +839,7 @@ input::-webkit-input-placeholder {
     font-size: 14px;
     height: 32px;
     width: auto;
-    min-width: 100px; /* Ensure minimum width for text */
+    min-width: 100px;
     background-color: rgb(141, 22, 201);
     border: none;
     border-radius: 6px;
@@ -888,7 +884,6 @@ input::-webkit-input-placeholder {
     transform: translateX(-50%);
   }
 
-  /* Fixed nav menu positioning */
   .nav-menu {
     top: 60px;
     height: 45px;
@@ -926,12 +921,11 @@ input::-webkit-input-placeholder {
     animation: pulse-purple 0.5s cubic-bezier(0.4, 0, 0.6, 1);
   }
 
-  /* Banner adjustments */
   #banner-container {
     width: 100vw;
     height: 60vh;
-    margin-top: 105px; /* Adjusted for fixed header + nav */
-    margin-bottom: 15px !important; /* Override the global important value */
+    margin-top: 105px;
+    margin-bottom: 15px !important;
     position: relative;
   }
 
@@ -945,14 +939,14 @@ input::-webkit-input-placeholder {
     bottom: 15%;
     gap: 12px;
     padding: 0 15px;
-    z-index: 2; /* Ensure z-index is consistent with desktop */
+    z-index: 2;
   }
 
   #empty {
     width: 100vw;
     height: 7rem;
     background-image: linear-gradient(180deg, transparent, rgba(37, 37, 37, .4), #111);
-    pointer-events: none; /* Allow clicks to pass through */
+    pointer-events: none;
   }
 
   #button-container {
@@ -982,39 +976,36 @@ input::-webkit-input-placeholder {
     background-color: rgba(141, 22, 201, 0.1);
   }
 
-  /* Section adjustments */
   .movie-section {
     margin-bottom: 30px;
     padding-bottom: 10px;
     position: relative;
   }
 
-  /* Specific styling for Netflix Originals section to fix spacing */
   #netflix-originals {
     margin-top: 5px;
   }
 
   .movie-section h1 {
-    font-size: 0.85rem; /* Consistent sizing with Documentary TV Shows */
+    font-size: 0.85rem;
     margin-left: 10px;
     margin-bottom: 8px;
     margin-top: 12px;
     padding: 5px 10px;
     text-transform: uppercase;
-    font-weight: 600; /* Slightly reduced weight */
-    letter-spacing: 0.3px; /* Reduced letter spacing */
+    font-weight: 600;
+    letter-spacing: 0.3px;
     background-color: rgba(0, 0, 0, 0.8);
     display: inline-block;
     border: 1px solid rgba(141, 22, 201, 0.5);
-    border-left: 3px solid #8d16c9; /* Thinner left border */
+    border-left: 3px solid #8d16c9;
     border-radius: 4px;
-    max-width: 90%; /* Prevent overflow */
+    max-width: 90%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
-  /* All section headers now use the same font style as Netflix Originals */
   #netflix-originals h1,
   #trending-now h1,
   #top-rated-movies h1,
@@ -1034,14 +1025,13 @@ input::-webkit-input-placeholder {
   #anime-top-rated h1,
   #anime-ongoing h1,
   #anime-upcoming-new h1 {
-    font-size: 0.85rem; /* Consistent size for all section headers */
+    font-size: 0.85rem;
     max-width: 95%;
     text-transform: uppercase;
     font-weight: 700;
     letter-spacing: 0.5px;
   }
 
-  /* ADDED: Make Top Rated Anime Movies, Drama Anime, and Adventure Anime titles match Ongoing Anime on mobile */
   #top-rated-anime-movies h1,
   #drama-anime h1,
   #adventure-anime h1 {
@@ -1052,25 +1042,42 @@ input::-webkit-input-placeholder {
     letter-spacing: 0.5px;
   }
 
-  /* Scrolling containers */
   .movies-box {
-    gap: 15px;
-    min-height: 160px;
-    padding-left: 12px;
-    padding-right: 12px;
+    gap: 8px !important;
+    padding: 2px 0 12px 4px !important;
+    min-height: 152px !important;
+    max-height: 208px !important;
     scrollbar-width: none;
     -ms-overflow-style: none;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scroll-snap-type: x mandatory;
+    white-space: nowrap !important;
+    mask-image: linear-gradient(to right, transparent 0px, black 30px, black calc(100% - 30px), transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0px, black 30px, black calc(100% - 30px), transparent 100%);
+    overscroll-behavior-x: contain !important;
+    touch-action: pan-x !important;
   }
 
   .movies-box::-webkit-scrollbar {
-    display: none;
-    height: 0;
+    display: none !important;
+    height: 0 !important;
+    background: transparent !important;
+    pointer-events: none;
   }
 
-  /* Movie items */
+  .movies-box > * {
+    min-width: 74vw !important;
+    max-width: 85vw !important;
+    height: 120px !important;
+    margin-bottom: 0 !important;
+    scroll-snap-align: start;
+    flex: 0 0 auto !important;
+    will-change: transform !important;
+    backface-visibility: hidden !important;
+    transition: none !important;
+  }
+
   .movie-item {
     flex: 0 0 auto;
     width: 220px;
@@ -1078,9 +1085,11 @@ input::-webkit-input-placeholder {
     margin: 10px 0;
     box-sizing: border-box;
     scroll-snap-align: start;
+    background: none !important;
+    box-shadow: none !important;
+    transition: none !important;
   }
 
-  /* Netflix and anime containers - standardized to same size as other containers */
   .netflix-container .movie-item, .anime-container .movie-item {
     width: 220px;
     height: 130px;
@@ -1090,6 +1099,7 @@ input::-webkit-input-placeholder {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: none !important;
   }
 
   .movie-title {
@@ -1104,7 +1114,6 @@ input::-webkit-input-placeholder {
     font-size: 12px;
   }
 
-  /* Navigation buttons */
   .navigation-button {
     width: 36px;
     height: 130px;
@@ -1116,7 +1125,7 @@ input::-webkit-input-placeholder {
   }
 
   .netflix-previous, .netflix-next {
-    height: 130px; /* Match the standard height */
+    height: 130px;
   }
 
   .anime-section .movie-item {
@@ -1132,12 +1141,10 @@ input::-webkit-input-placeholder {
     min-height: 150px;
   }
 
-  /* Set Netflix container to same height as other containers in mobile */
   .netflix-container {
     min-height: 150px;
   }
 
-  /* Back to top button */
   #back-to-top-btn {
     width: 36px;
     height: 36px;
@@ -1149,19 +1156,12 @@ input::-webkit-input-placeholder {
     width: 18px;
     height: 18px;
   }
-
-  /* Custom small scrollbars for mobile */
-  .movies-box::-webkit-scrollbar {
-    display: none;
-    height: 0;
-  }
 }
 
 @media only screen and (min-width: 561px) and (max-width: 780px) {
-  /* Adjust hover effect for tablets */
   .movie-item:hover {
-    transform: translateY(-7px); /* Medium lift effect for tablets */
-    box-shadow: 0 10px 20px rgba(141, 22, 201, 0.4);
+    transform: none !important;
+    box-shadow: none !important;
   }
 
   .header {
@@ -1181,7 +1181,7 @@ input::-webkit-input-placeholder {
     padding: 6px 12px;
     font-size: 18px;
     height: 36px;
-    min-width: 120px; /* Ensure minimum width for text */
+    min-width: 120px;
     font-weight: 700;
     letter-spacing: 0.4px;
     box-shadow: 0 1px 4px rgba(141, 22, 201, 0.08);
@@ -1272,7 +1272,7 @@ input::-webkit-input-placeholder {
 
   #empty {
     width: 100vw;
-    pointer-events: none; /* Allow clicks to pass through */
+    pointer-events: none;
   }
 
   .movie-section {
@@ -1288,19 +1288,38 @@ input::-webkit-input-placeholder {
   }
 
   .movies-box {
-    gap: 15px;
+    gap: 10px !important;
     min-height: 140px;
     padding-left: 15px;
     padding-right: 15px;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scroll-snap-type: x mandatory !important;
+    white-space: nowrap !important;
+    mask-image: linear-gradient(to right, transparent 0px, black 30px, black calc(100% - 30px), transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0px, black 30px, black calc(100% - 30px), transparent 100%);
+    overscroll-behavior-x: contain !important;
+    touch-action: pan-x !important;
   }
 
   .movies-box::-webkit-scrollbar {
-    display: none;
-    height: 0;
+    display: none !important;
+    height: 0 !important;
+    background: transparent !important;
+    pointer-events: none;
+  }
+
+  .movies-box > * {
+    min-width: 60vw !important;
+    max-width: 80vw !important;
+    margin-bottom: 0 !important;
+    scroll-snap-align: start;
+    flex: 0 0 auto !important;
+    will-change: transform !important;
+    backface-visibility: hidden !important;
+    transition: none !important;
   }
 
   .movie-item {
@@ -1309,6 +1328,9 @@ input::-webkit-input-placeholder {
     height: 120px;
     margin: 10px 0;
     box-sizing: border-box;
+    background: none !important;
+    box-shadow: none !important;
+    transition: none !important;
   }
 
   .netflix-container .movie-item, .anime-container .movie-item {
@@ -1319,6 +1341,7 @@ input::-webkit-input-placeholder {
   .movies-box img {
     width: 100%;
     height: 100%;
+    transition: none !important;
   }
 
   .movie-title {
@@ -1352,9 +1375,10 @@ input::-webkit-input-placeholder {
   }
 
   .movies-box::-webkit-scrollbar {
-    display: none;
-    height: 0;
-    background: transparent;
+    display: none !important;
+    height: 0 !important;
+    background: transparent !important;
+    pointer-events: none;
   }
 
   #anime-upcoming-new h1 {
@@ -1439,6 +1463,9 @@ input::-webkit-input-placeholder {
     height: 160px;
     margin: 15px 0;
     box-sizing: border-box;
+    background: none !important;
+    box-shadow: none !important;
+    transition: none !important;
   }
 
   .netflix-container .movie-item, .anime-container .movie-item {
@@ -1449,6 +1476,7 @@ input::-webkit-input-placeholder {
   .movies-box img {
     width: 100%;
     height: 100%;
+    transition: none !important;
   }
 
   .movie-title {
@@ -1477,10 +1505,11 @@ input::-webkit-input-placeholder {
   }
 
   .movies-box::-webkit-scrollbar {
-    display: none;
-    width: 0;
-    height: 0;
-    background: transparent;
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    background: transparent !important;
+    pointer-events: none;
   }
 
   #anime-upcoming-new h1 {
@@ -1613,8 +1642,8 @@ html::-webkit-scrollbar-thumb:hover {
 
 /* Hide scrollbars but keep functionality */
 .movies-box {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
 }
 
 /* Custom small scrollbars for mobile */
@@ -1632,23 +1661,27 @@ html::-webkit-scrollbar-thumb:hover {
     }
 
     .movies-box::-webkit-scrollbar {
-        display: none;
-        height: 0;
+        display: none !important;
+        height: 0 !important;
+        background: transparent !important;
+        pointer-events: none;
     }
 }
 
 /* Update tablet styles to hide scrollbars while keeping swipe functionality */
 @media only screen and (min-width: 561px) and (max-width: 780px) {
     .movies-box::-webkit-scrollbar {
-        display: none;
-        height: 0;
+        display: none !important;
+        height: 0 !important;
+        background: transparent !important;
+        pointer-events: none;
     }
 }
 
 /* Additional styles for very small screens */
 @media only screen and (max-width: 375px) {
   .movie-section h1 {
-    font-size: 0.75rem; /* Consistent size for all headers on very small screens */
+    font-size: 0.75rem;
     padding: 4px 8px;
     margin-left: 8px;
     margin-top: 10px;
@@ -1657,7 +1690,6 @@ html::-webkit-scrollbar-thumb:hover {
     border-left: 2px solid #8d16c9;
   }
 
-  /* All section headers now use the same font style as Netflix Originals */
   #netflix-originals h1,
   #trending-now h1,
   #top-rated-movies h1,
