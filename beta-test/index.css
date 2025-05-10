@@ -1726,8 +1726,8 @@ html::-webkit-scrollbar-thumb:hover {
 
 /* Slimmer right-side navigation button */
 .navigation-button.next {
-  width: 30px !important;
+  width: 20px !important;
 }
 .navigation-button.netflix-next {
-  width: 30px !important;
+  width: 20px !important;
 }
