@@ -59,6 +59,14 @@ h1 {
     flex-direction: column;
 }
 
+/* Make iframe sticky inside .movie-poster */
+.movie-poster iframe {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 70px;
+    z-index: 10;
+}
+
 /* iframe sizing */
 iframe {
     width: 100%;
@@ -707,6 +715,16 @@ p {
         height: 240px !important;
         width: 100%;
         margin: 0 auto 20px auto;
+    }
+
+    .movie-poster iframe {
+        position: fixed;
+        top: 60px;
+        left: 0;
+        right: 0;
+        width: 100vw;
+        height: 200px;
+        z-index: 10;
     }
 
     .seasons-container {
