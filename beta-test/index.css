@@ -1723,3 +1723,11 @@ html::-webkit-scrollbar-thumb:hover {
 .banner-nav-button:hover {
   opacity: 1;
 }
+
+/* Slimmer right-side navigation button */
+.navigation-button.next {
+  width: 30px !important;
+}
+.navigation-button.netflix-next {
+  width: 30px !important;
+}
