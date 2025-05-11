@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="description" content="Stream Your Favorite Anime For Free on FreeFlixx">
+    <meta name="keywords" content="free anime, streaming, FreeFlixx, watch online, entertainment, free streaming, anime streaming">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="../../index.css">
+    <link rel="stylesheet" href="anime.css">
+    <link rel="icon" href="../../assests/netflix.ico">
+    <title>FreeFlixx - Stream Anime For Free</title>
+</head>
+
+<body>
+    <!-- Header container -->
+    <header class="header">
+        <a href="../../index.html"><img src="../../assests/netflix.png" alt="logo" id="netflix-logo"></a>
+        <div class="input-container">
+            <input type="text" id="searchInput" placeholder="Search anime...">
+            <div id="searchResults"></div>
+        </div>
+        <button id="goToWatchlist" class="watchList-Btn">WatchList</button>
+    </header>
+
+    <!-- Navigation Menu -->
+    <nav class="nav-menu">
+        <ul class="nav-list">
+            <li class="nav-item"><a href="../../index.html" data-section="all">All</a></li>
+            <li class="nav-item"><a href="../movies/index.html" data-section="movies">Movies</a></li>
+            <li class="nav-item"><a href="../tvshows/index.html" data-section="tv">TV Shows</a></li>
+            <li class="nav-item active"><a href="#" data-section="anime">Anime</a></li>
+        </ul>
+    </nav>
+
+    <!-- Banner container -->
+    <div id="banner-container">
+        <img id="banner" src="" alt="banner" />
+        <div id="details-container">
+            <h1 id="banner-title"></h1>
+            <div id="button-container">
+                <button id="play-button">
+                    <img style="width: 0.8rem; height: 0.8rem;" src="../../assests/play.png" />
+                    <span>Play</span>
+                </button>
+                <button id="more-info">
+                    <img id="info-icon" src="../../assests/info.png" />
+                    <span>More Information</span>
+                </button>
+            </div>
+        </div>
+        <div id="empty"></div>
+        <div id="banner-overlay"></div>
+
+        <!-- Banner navigation arrows -->
+        <button id="banner-prev" class="banner-nav-button">&#10094;</button>
+        <button id="banner-next" class="banner-nav-button">&#10095;</button>
+    </div>
+
+    <!-- Main content container for sections -->
+    <div class="sections-container" style="max-width: 1400px; margin: 0 auto; padding: 2rem 1rem;">
+        <!-- Latest Anime container -->
+        <section class="movie-section anime-section" id="anime-upcoming-new">
+            <h1>LATEST ANIME</h1>
+
+            <div class="movie-container">
+                <button class="navigation-button previous anime-upcoming-new-previous">&lt;</button>
+                <div class="movies-box anime-upcoming-new-container"></div>
+                <button class="navigation-button next anime-upcoming-new-next">&gt;</button>
+            </div>
+        </section>
+
+        <!-- Top Rated Anime Movies -->
+        <section class="movie-section anime-section" id="top-rated-anime-movies">
+            <h1>Top Rated Anime Movies</h1>
+            <div class="movie-container">
+                <button class="navigation-button previous top-rated-anime-movie-previous">&lt;</button>
+                <div class="movies-box top-rated-anime-movie-container"></div>
+                <button class="navigation-button next top-rated-anime-movie-next">&gt;</button>
+            </div>
+        </section>
+
+        <!-- Popular Anime container -->
+        <section class="movie-section anime-section" id="anime-popular">
+            <h1>Popular Anime</h1>
+            <div class="movie-container">
+                <button class="navigation-button previous anime-popular-previous">&lt;</button>
+                <div class="movies-box anime-popular-container"></div>
+                <button class="navigation-button next anime-popular-next">&gt;</button>
+            </div>
+        </section>
+
+        <!-- Top Rated Anime container -->
+        <section class="movie-section anime-section" id="anime-top-rated">
+            <h1>Top Rated Anime</h1>
+            <div class="movie-container">
+                <button class="navigation-button previous anime-top-previous">&lt;</button>
+                <div class="movies-box anime-top-container"></div>
+                <button class="navigation-button next anime-top-next">&gt;</button>
+            </div>
+        </section>
+
+        <!-- Ongoing Anime container -->
+        <section class="movie-section anime-section" id="anime-ongoing">
+            <h1>Ongoing Anime</h1>
+            <div class="movie-container">
+                <button class="navigation-button previous anime-upcoming-previous">&lt;</button>
+                <div class="movies-box anime-upcoming-container"></div>
+                <button class="navigation-button next anime-upcoming-next">&gt;</button>
+            </div>
+        </section>
+
+        <!-- Adventure Anime -->
+        <section class="movie-section anime-section" id="adventure-anime">
+            <h1>Adventure Anime</h1>
+            <div class="movie-container">
+                <button class="navigation-button previous adventure-anime-previous">&lt;</button>
+                <div class="movies-box adventure-anime-container"></div>
+                <button class="navigation-button next adventure-anime-next">&gt;</button>
+            </div>
+        </section>
+
+        <!-- Drama Anime -->
+        <section class="movie-section anime-section" id="drama-anime">
+            <h1>Drama Anime</h1>
+            <div class="movie-container">
+                <button class="navigation-button previous drama-anime-previous">&lt;</button>
+                <div class="movies-box drama-anime-container"></div>
+                <button class="navigation-button next drama-anime-next">&gt;</button>
+            </div>
+        </section>
+
+        <!-- Comedy Anime container -->
+        <section class="movie-section anime-section" id="anime-comedy">
+            <h1>Comedy Anime</h1>
+
+            <div class="movie-container">
+                <button class="navigation-button previous anime-comedy-previous">&lt;</button>
+                <div class="movies-box anime-comedy-container"></div>
+                <button class="navigation-button next anime-comedy-next">&gt;</button>
+            </div>
+        </section>
+
+        <!-- Romance Anime container -->
+        <section class="movie-section anime-section" id="anime-romance">
+            <h1>Romance Anime</h1>
+
+            <div class="movie-container">
+                <button class="navigation-button previous anime-romance-previous">&lt;</button>
+                <div class="movies-box anime-romance-container"></div>
+                <button class="navigation-button next anime-romance-next">&gt;</button>
+            </div>
+        </section>
+    </div>
+
+    <!-- Back to top button -->
+    <button id="back-to-top-btn" aria-label="Back to top">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 19V5M5 12l7-7 7 7"/>
+        </svg>
+    </button>
+
+    <!-- Load script at the end for better performance -->
+    <script src="anime.js"></script>
+</body>
+
+</html>

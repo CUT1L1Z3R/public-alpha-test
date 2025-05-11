@@ -1,0 +1,10 @@
+{
+  "name": "freeflix-website",
+  "version": "1.0.0",
+  "description": "FreeFlix Movie Streaming Website",
+  "scripts": {
+    "dev": "bunx --bun serve -p 3000 --cors -s ."
+  },
+  "author": "",
+  "license": "ISC"
+}
