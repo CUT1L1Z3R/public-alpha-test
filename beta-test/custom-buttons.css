@@ -1,69 +1,99 @@
-/* Custom Button Styling for FreeFlix - inspired by andoks.cc */
+/**
+ * Custom button styles for FreeFlixx
+ * Improves button appearance and touchability
+ */
 
-/* Navigation Button Base Styling */
+/* Improved button styling for navigation and controls */
 .navigation-button {
+  width: 40px; /* thinner than default */
+  height: 170px !important; /* consistent height for all buttons */
+  font-size: 1.8rem; /* smaller arrow */
+  color: #8d16c9; /* purple arrow color */
+  background-color: rgba(0,0,0,0.3); /* lighter background */
+  border-radius: 5px;
+  font-weight: 600;
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 45px;
-  height: 180px; /* Will be overridden by JavaScript for proper sizing */
-  background-color: rgba(12, 12, 12, 0.7);
-  color: white;
-  border: none;
-  font-size: 22px;
-  cursor: pointer;
-  z-index: 5;
-  transition: all 0.2s ease;
   opacity: 0;
-  outline: none;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
-  border-radius: 2px;
+  transition: opacity 0.3s ease-in-out, background-color 0.3s;
+  z-index: 10 !important; /* ensure buttons are above all content */
+  /* Prevent any unwanted movement or scaling when hovering/clicking */
+  transform-origin: center center;
 }
 
-/* Button hover effects */
-.navigation-button:hover {
-  background-color: rgba(141, 22, 201, 0.8);
-  width: 48px;
-  opacity: 1 !important;
-  transform: scale(1.05);
-  box-shadow: 0 0 12px rgba(141, 22, 201, 0.5);
-  font-weight: bold;
-}
-
-/* Button active/pressed state */
+.navigation-button:hover,
 .navigation-button:active,
-.button-active {
-  background-color: rgba(141, 22, 201, 1) !important;
-  transform: scale(0.98);
+.navigation-button:focus {
   opacity: 1 !important;
+  background-color: rgba(0,0,0,0.5);
+  /* Keep the button in place */
+  transform: translateY(-50%);
+  top: 50%;
 }
 
-/* Show navigation buttons when hovering over the container */
+/* Special height for Netflix/portrait containers if needed */
+.netflix-previous, .netflix-next {
+  height: 340px !important;
+}
+
+/* Fixed styling for all sections - overriding any specific styles */
 .movie-container:hover .navigation-button {
   opacity: 0.8;
 }
 
-/* Banner Navigation Buttons */
+.previous {
+  left: 0;
+  border-radius: 0 5px 5px 0;
+}
+
+.next {
+  right: 0;
+  border-radius: 5px 0 0 5px;
+}
+
+/* Fix for anime, movies and tvshows sections */
+/* Ensure consistent styling and visibility */
+.movie-section .navigation-button,
+.tv-section .navigation-button,
+.anime-section .navigation-button {
+  height: 170px !important;
+  opacity: 0; /* Start hidden */
+  z-index: 10 !important;
+}
+
+.movie-section .movie-container:hover .navigation-button,
+.tv-section .movie-container:hover .navigation-button,
+.anime-section .movie-container:hover .navigation-button {
+  opacity: 0.8 !important;
+}
+
+/* Banner navigation buttons */
 .banner-nav-button {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.5);
   color: white;
   border: none;
-  width: 50px;
-  height: 50px;
-  font-size: 24px;
   border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
   z-index: 10;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: all 0.3s ease;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-  outline: none;
+  opacity: 0.7;
+  transition: opacity 0.3s, background-color 0.3s;
+  /* Ensure stable positioning */
+  transform-origin: center center;
 }
 
 #banner-prev {
@@ -74,100 +104,128 @@
   right: 20px;
 }
 
-/* Banner button hover effects */
-.banner-nav-button:hover {
-  background-color: rgba(141, 22, 201, 0.8);
-  transform: translateY(-50%) scale(1.1);
-  opacity: 1 !important;
-  box-shadow: 0 0 20px rgba(141, 22, 201, 0.5);
+.banner-nav-button:hover,
+.banner-nav-button:active,
+.banner-nav-button:focus {
+  opacity: 1;
+  background-color: rgba(141, 22, 201, 0.9);
+  /* Keep the button in place */
+  transform: translateY(-50%);
 }
 
-/* Banner button active state */
-.banner-nav-button:active {
-  transform: translateY(-50%) scale(0.95);
+/* Back to Top button */
+#back-to-top-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(141, 22, 201, 0.8);
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s, background-color 0.2s;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+#back-to-top-btn:hover {
   background-color: rgba(141, 22, 201, 1);
 }
 
-/* Show banner buttons when banner is hovered or when they have active class */
-#banner-container:hover .banner-nav-button,
-.banner-nav-button.active {
-  opacity: 0.8;
-}
-
-/* Banner indicators styling */
-.banner-indicators {
-  position: absolute;
-  bottom: 30px;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  z-index: 11;
-}
-
-.banner-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.4);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.banner-dot:hover {
-  background-color: rgba(255, 255, 255, 0.8);
-  transform: scale(1.1);
-}
-
-.banner-dot.active {
-  background-color: rgba(141, 22, 201, 0.9);
-  transform: scale(1.2);
-  box-shadow: 0 0 8px rgba(141, 22, 201, 0.6);
-}
-
-/* Media Queries for Responsive Design */
-@media only screen and (max-width: 780px) {
-  .navigation-button {
-    opacity: 0.4;
-    background-color: rgba(0, 0, 0, 0.7);
-    width: 40px;
-  }
-
-  .movie-container:hover .navigation-button {
-    opacity: 0.75;
-  }
-
-  .banner-nav-button {
-    width: 40px;
-    height: 40px;
-    font-size: 20px;
-  }
-
-  #banner-prev {
-    left: 10px;
-  }
-
-  #banner-next {
-    right: 10px;
-  }
-
-  .banner-dot {
-    width: 10px;
-    height: 10px;
-  }
-}
-
-@media only screen and (max-width: 560px) {
+/* Media queries for responsive design */
+@media (max-width: 768px) {
   .navigation-button {
     width: 35px;
-    opacity: 0.5;
+    height: 150px !important;
+    font-size: 1.5rem;
+    opacity: 0.7; /* Make more visible on mobile */
+    z-index: 15 !important; /* Ensure buttons are above content */
   }
 
-  .banner-nav-button {
-    width: 35px;
-    height: 35px;
-    font-size: 18px;
+  /* Fix for smaller movie containers on mobile - ensure buttons are positioned correctly */
+  .movie-container {
+    padding-left: 20px;
+    padding-right: 20px;
+    position: relative;
+  }
+
+  /* Fix for Netflix Originals portrait containers in mobile */
+  .netflix-previous, .netflix-next {
+    height: 260px !important;
+    width: 32px;
+    top: 50%;
+    z-index: 15;
+  }
+
+  .netflix-previous {
+    left: 0;
+  }
+
+  .netflix-next {
+    right: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  #back-to-top-btn {
+    width: 36px;
+    height: 36px;
+    bottom: 15px;
+    right: 15px;
+  }
+
+  .navigation-button {
+    width: 30px;
+    height: 130px !important;
+    font-size: 1.2rem;
+  }
+
+  /* Ensure Netflix Originals navigation buttons are visible and properly sized */
+  .netflix-previous, .netflix-next {
+    height: 260px !important;
+    width: 30px;
+    opacity: 0.7;
+  }
+
+  /* Set position for navigation buttons to ensure they're visible */
+  .netflix-previous {
+    left: 0px;
+  }
+
+  .netflix-next {
+    right: 0px;
+  }
+}
+
+/* Fix for containers overflow issues */
+.movies-box {
+  min-height: 190px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+/* Ensure containers have proper sizing */
+.movie-container {
+  position: relative;
+  overflow: visible; /* Allow navigation buttons to be visible */
+  margin-bottom: 20px;
+}
+
+/* Ensure navigation buttons are visible on tablets/mobile with touch */
+@media (hover: none) {
+  .navigation-button {
+    opacity: 0.6;
+  }
+
+  /* Make Netflix Originals buttons more visible on touch devices */
+  .netflix-previous, .netflix-next {
+    opacity: 0.7;
   }
 }

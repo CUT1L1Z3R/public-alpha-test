@@ -1,0 +1,170 @@
+/**
+ * TV Shows section-specific fixes for FreeFlixx
+ * Ensures correct button placement and portrait banner navigation
+ */
+
+/* Override any conflicting styles and ensure navigation buttons work correctly */
+.tv-section .navigation-button,
+.movie-section .navigation-button {
+  height: 170px !important;
+  width: 40px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 15 !important;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out, background-color 0.3s;
+}
+
+.tv-section .movie-container:hover .navigation-button,
+.movie-section .movie-container:hover .navigation-button {
+  opacity: 0.8 !important;
+}
+
+.tv-section .navigation-button:hover,
+.movie-section .navigation-button:hover {
+  opacity: 1 !important;
+  background-color: rgba(0,0,0,0.5);
+}
+
+.tv-section .previous,
+.movie-section .previous {
+  left: 0;
+}
+
+.tv-section .next,
+.movie-section .next {
+  right: 0;
+}
+
+/* Netflix Originals/Portrait container navigation buttons */
+.netflix-previous, .netflix-next {
+  height: 340px !important;
+  z-index: 15;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: opacity 0.3s, background-color 0.3s;
+}
+
+.netflix-previous {
+  left: 0;
+}
+
+.netflix-next {
+  right: 0;
+}
+
+.netflix-previous:hover,
+.netflix-next:hover {
+  opacity: 1 !important;
+  background-color: rgba(0,0,0,0.5);
+}
+
+/* Ensure containers have proper sizing */
+.tv-section .movie-container,
+.movie-section .movie-container,
+.movie-container {
+  position: relative;
+  overflow: visible;
+  margin-bottom: 20px;
+}
+
+/* Ensure navigation buttons are properly aligned */
+.navigation-button {
+  z-index: 15;
+}
+
+.previous {
+  left: 0;
+}
+
+.next {
+  right: 0;
+}
+
+.tv-section .movies-box,
+.movie-section .movies-box {
+  min-height: 190px;
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.tv-section .movies-box::-webkit-scrollbar,
+.movie-section .movies-box::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+/* Consistent item sizing */
+.tv-section .movie-item,
+.movie-section .movie-item {
+  width: 290px;
+  height: 170px;
+}
+
+/* Additional fix for mobile view */
+@media (max-width: 768px) {
+  .tv-section .navigation-button,
+  .movie-section .navigation-button {
+    width: 35px;
+    height: 150px !important;
+    opacity: 0.7;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 15 !important;
+  }
+
+  /* Ensure Netflix Originals navigation buttons are visible and positioned correctly in mobile */
+  .netflix-previous, .netflix-next {
+    height: 260px !important;
+    width: 32px;
+    top: 50%;
+    z-index: 15;
+    opacity: 0.7;
+    transform: translateY(-50%);
+  }
+
+  .netflix-previous {
+    left: 0;
+  }
+
+  .netflix-next {
+    right: 0;
+  }
+
+  /* Extra space for movie containers so buttons aren't cut off */
+  .tv-section .movie-container,
+  .movie-section .movie-container,
+  .movie-container {
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .tv-section .navigation-button,
+  .movie-section .navigation-button {
+    width: 30px;
+    height: 130px !important;
+    font-size: 1.2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 15 !important;
+  }
+
+  .netflix-previous, .netflix-next {
+    height: 260px !important;
+    width: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+/* Style fix for active navigation items */
+.nav-item.active {
+  background-color: rgb(141, 22, 201);
+}

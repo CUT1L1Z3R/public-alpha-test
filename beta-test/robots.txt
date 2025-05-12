@@ -1,0 +1,19 @@
+User-agent: *
+Allow: /
+Disallow: /assets/
+Disallow: /assests/
+Disallow: /*.js$
+Disallow: /*.css$
+
+# Specific directories
+Allow: /movies/
+Allow: /tvshows/
+Allow: /anime/
+Allow: /movie_details/
+Allow: /watchList/
+Allow: /sitemap.html
+
+# Sitemaps
+Sitemap: https://freeflixx.pages.dev/sitemap-index.xml
+Sitemap: https://freeflixx.pages.dev/sitemap.xml
+Sitemap: https://freeflixx.pages.dev/sitemap.txt

@@ -1,11 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
+    <!-- Homepage -->
     <url>
         <loc>https://freeflixx.pages.dev/</loc>
-        <priority>1.00</priority>
+        <lastmod>2023-05-11</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+        <image:image>
+            <image:loc>https://freeflixx.pages.dev/assets/freeflixx.png</image:loc>
+            <image:title>FreeFlixx - Stream Movies &amp; TV Shows For Free</image:title>
+        </image:image>
     </url>
+
+    <!-- Movies Page -->
+    <url>
+        <loc>https://freeflixx.pages.dev/movies/index.html</loc>
+        <lastmod>2023-05-11</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.9</priority>
+        <image:image>
+            <image:loc>https://freeflixx.pages.dev/assets/freeflixx.png</image:loc>
+            <image:title>FreeFlixx Movies</image:title>
+        </image:image>
+    </url>
+
+    <!-- TV Shows Page -->
+    <url>
+        <loc>https://freeflixx.pages.dev/tvshows/index.html</loc>
+        <lastmod>2023-05-11</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.9</priority>
+        <image:image>
+            <image:loc>https://freeflixx.pages.dev/assets/freeflixx.png</image:loc>
+            <image:title>FreeFlixx TV Shows</image:title>
+        </image:image>
+    </url>
+
+    <!-- Anime Page -->
+    <url>
+        <loc>https://freeflixx.pages.dev/anime/index.html</loc>
+        <lastmod>2023-05-11</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.9</priority>
+        <image:image>
+            <image:loc>https://freeflixx.pages.dev/assets/freeflixx.png</image:loc>
+            <image:title>FreeFlixx Anime</image:title>
+        </image:image>
+    </url>
+
+    <!-- Movie Details Page -->
     <url>
         <loc>https://freeflixx.pages.dev/movie_details/movie_details.html</loc>
-        <priority>0.80</priority>
+        <lastmod>2023-05-11</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- Watchlist Page -->
+    <url>
+        <loc>https://freeflixx.pages.dev/watchList/watchlist.html</loc>
+        <lastmod>2023-05-11</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+        <image:image>
+            <image:loc>https://freeflixx.pages.dev/assets/freeflixx.png</image:loc>
+            <image:title>FreeFlixx Watchlist</image:title>
+        </image:image>
     </url>
 </urlset>

@@ -1,0 +1,141 @@
+/**
+ * Anime section specific fixes
+ * Ensures correct button placement and portrait banner navigation
+ */
+
+/* Fix for navigation buttons visibility and positioning */
+.navigation-button {
+  z-index: 15 !important;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out, background-color 0.3s;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 170px !important;
+  font-size: 1.8rem;
+  color: #8d16c9;
+  background-color: rgba(0,0,0,0.3);
+  border-radius: 5px;
+}
+
+.previous {
+  left: 0;
+}
+
+.next {
+  right: 0;
+}
+
+/* Special height for portrait containers */
+.netflix-previous, .netflix-next {
+  height: 340px !important;
+  z-index: 15;
+}
+
+.netflix-previous {
+  left: 0;
+}
+
+.netflix-next {
+  right: 0;
+}
+
+.movie-container:hover .navigation-button {
+  opacity: 0.8;
+}
+
+.navigation-button:hover {
+  opacity: 1 !important;
+  background-color: rgba(0,0,0,0.5);
+}
+
+/* Ensure consistent styling across sections */
+.anime-section .movie-container,
+.movie-container {
+  position: relative;
+  overflow: visible;
+  padding-left: 0px;
+  padding-right: 0px;
+  margin-bottom: 20px;
+}
+
+/* Consistent item sizing */
+.anime-section .movie-item {
+  width: 290px;
+  height: 170px;
+}
+
+.anime-section .movies-box {
+  min-height: 190px;
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.anime-section .movies-box::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+/* Mobile specific fixes */
+@media (max-width: 768px) {
+  /* Adjusted size and position for mobile navigation buttons */
+  .navigation-button {
+    width: 32px;
+    height: 150px !important;
+    font-size: 1.5rem;
+    opacity: 0.7;
+    z-index: 15 !important;
+  }
+
+  /* Portrait container fix for mobile */
+  .netflix-previous, .netflix-next {
+    height: 260px !important;
+    width: 32px;
+    top: 50%;
+    z-index: 15;
+    opacity: 0.7;
+  }
+
+  .netflix-previous {
+    left: 0;
+  }
+
+  .netflix-next {
+    right: 0;
+  }
+
+  /* Proper spacing around movie containers for mobile */
+  .anime-section .movie-container,
+  .movie-container {
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-left: 0;
+    margin-right: 0;
+    position: relative;
+  }
+}
+
+@media (max-width: 480px) {
+  .navigation-button {
+    width: 30px;
+    height: 130px !important;
+    font-size: 1.2rem;
+  }
+
+  .netflix-previous, .netflix-next {
+    height: 260px !important;
+    width: 30px;
+  }
+}
+
+/* Ensure navigation buttons are visible on touch devices */
+@media (hover: none) {
+  .navigation-button {
+    opacity: 0.6;
+  }
+
+  .netflix-previous, .netflix-next {
+    opacity: 0.7;
+  }
+}

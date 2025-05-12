@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="0;url=index.html">
+    <title>Redirecting...</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding-top: 50px;
+        }
+        h1 {
+            color: #8d16c9;
+        }
+        p {
+            font-size: 16px;
+            margin: 20px 0;
+        }
+        a {
+            color: #8d16c9;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Redirecting to FreeFlixx</h1>
+    <p>If you are not redirected automatically, <a href="index.html">click here</a>.</p>
+    <script>
+        // Check if we're in a subdirectory
+        const path = window.location.pathname;
+        if (path.includes('/anime/') || path.includes('/movies/') || path.includes('/tvshows/')) {
+            // We're in a subdirectory, redirect to the parent directory's index
+            window.location.href = '../index.html';
+        } else {
+            // We're at the root, redirect to index.html
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

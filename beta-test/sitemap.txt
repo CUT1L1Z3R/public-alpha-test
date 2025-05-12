@@ -1,0 +1,7 @@
+https://freeflixx.pages.dev/
+https://freeflixx.pages.dev/movies/index.html
+https://freeflixx.pages.dev/tvshows/index.html
+https://freeflixx.pages.dev/anime/index.html
+https://freeflixx.pages.dev/movie_details/movie_details.html
+https://freeflixx.pages.dev/watchList/watchlist.html
+https://freeflixx.pages.dev/sitemap.html

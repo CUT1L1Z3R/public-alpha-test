@@ -1,0 +1,22 @@
+{
+  "name": "FreeFlixx - Stream Movies & TV Shows For Free",
+  "short_name": "FreeFlixx",
+  "description": "Stream Your Favorite Movies And TV Shows For Free on FreeFlixx",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "./assets/freeflixx.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./assets/freeflixx.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

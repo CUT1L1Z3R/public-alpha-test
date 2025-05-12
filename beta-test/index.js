@@ -3,6 +3,19 @@
  * Handles fetching, displaying, and UI interactions for movies, TV shows, and anime.
  */
 
+// Register Service Worker for better performance and offline capability
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+            .then(registration => {
+                console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            })
+            .catch(error => {
+                console.log('ServiceWorker registration failed: ', error);
+            });
+    });
+}
+
 // Get references to HTML elements
 const searchInput = document.getElementById('searchInput');
 const searchResults = document.getElementById('searchResults');
@@ -336,7 +349,16 @@ function fetchMedia(containerClass, endpoint, mediaType, usePosterPath = false) 
     const containers = document.querySelectorAll(`.${containerClass}`);
 
     containers.forEach((container) => {
-        fetch(`https://api.themoviedb.org/3/${endpoint}api_key=${api_Key}`)
+        // Fix: Ensure only one '?' in the URL, and always append api_key as a parameter
+        let url = `https://api.themoviedb.org/3/${endpoint}`;
+        if (url.includes('?')) {
+            // Already has '?', so just append with '&'
+            url += `&api_key=${api_Key}`;
+        } else {
+            // No '?', so add it
+            url += `?api_key=${api_Key}`;
+        }
+        fetch(url)
             .then(response => response.json())
             .then(data => {
                 const movies = data.results || [];
@@ -344,17 +366,38 @@ function fetchMedia(containerClass, endpoint, mediaType, usePosterPath = false) 
                 container.innerHTML = ''; // Clear the container
 
                 movies.forEach(movie => {
-                    // Skip if no image is available
-                    const imageUrl = usePosterPath
-                        ? movie.poster_path
-                        : movie.backdrop_path;
-                    if (!imageUrl) return;
+                    // Check which path to use:
+                    // - Use poster_path for Netflix originals
+                    // - For all others, prefer backdrop_path but fall back to poster_path if needed
+                    let useBackdropStyle = false;
+                    let pathToUse;
 
-                    let pathToUse = usePosterPath ? movie.poster_path : movie.backdrop_path;
+                    if (containerClass === 'netflix-container') {
+                        // Netflix originals use portrait format (poster_path)
+                        pathToUse = movie.poster_path;
+                    } else {
+                        // All other containers use landscape format (backdrop_path)
+                        pathToUse = movie.backdrop_path || movie.poster_path;
+                        useBackdropStyle = movie.backdrop_path != null;
+                    }
+
+                    // Skip if no image is available
+                    if (!pathToUse) return;
                     // Create item element
                     const itemElement = document.createElement('div');
                     itemElement.className = 'movie-item';
                     itemElement.dataset.mediaType = mediaType || 'movie';
+
+                    // Set appropriate dimensions based on image type
+                    if (containerClass === 'netflix-container') {
+                        // Portrait dimensions for Netflix originals
+                        itemElement.style.width = '250px';  // Portrait width
+                        itemElement.style.height = '340px'; // Portrait height
+                    } else if (useBackdropStyle) {
+                        // Landscape dimensions for everything else using backdrop images
+                        itemElement.style.width = '290px';  // Landscape width
+                        itemElement.style.height = '170px'; // Landscape height (16:9 aspect ratio)
+                    }
 
                     // Using a wrapper for the image to maintain aspect ratio
                     const imgWrapper = document.createElement('div');
@@ -428,6 +471,40 @@ function fetchMedia(containerClass, endpoint, mediaType, usePosterPath = false) 
 // Set up scroll distance
 const scrollDistance = 1200;
 
+// Fix for navigation buttons in all containers
+function fixNavigationButtons() {
+    const allPrevButtons = document.querySelectorAll('.navigation-button.previous');
+    const allNextButtons = document.querySelectorAll('.navigation-button.next');
+
+    // Make sure all navigation buttons work by directly adding event listeners
+    allPrevButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const container = this.nextElementSibling;
+            if (container && container.classList.contains('movies-box')) {
+                container.scrollBy({
+                    left: -scrollDistance,
+                    behavior: 'smooth',
+                });
+            }
+        });
+    });
+
+    allNextButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const container = this.previousElementSibling;
+            if (container && container.classList.contains('movies-box')) {
+                container.scrollBy({
+                    left: scrollDistance,
+                    behavior: 'smooth',
+                });
+            }
+        });
+    });
+}
+
+// Call the fix function when DOM is loaded
+document.addEventListener('DOMContentLoaded', fixNavigationButtons);
+
 // Get references to the header and other elements
 // (header and navMenu are now defined below for scroll behavior)
 
@@ -440,20 +517,21 @@ function fetchAnime(containerClass, genreOrKeyword) {
     const containers = document.querySelectorAll(`.${containerClass}`);
 
     containers.forEach((container) => {
-        // Determine which TMDB endpoint to use based on the input
-        let endpoint = '';
+        // Build the base URL with the API key
+        const baseUrl = "https://api.themoviedb.org/3/";
+        let url = "";
 
         if (genreOrKeyword === 'popular') {
             // For popular anime, use discover with animation genre + anime keyword and sort by popularity
-            endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&sort_by=popularity.desc`;
+            url = `${baseUrl}discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&sort_by=popularity.desc`;
         } else if (genreOrKeyword === 'top_rated') {
             // For top rated anime, use discover with animation genre + anime keyword sorted by rating
-            endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&sort_by=vote_average.desc&vote_count.gte=100`;
+            url = `${baseUrl}discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&sort_by=vote_average.desc&vote_count.gte=100`;
         } else if (genreOrKeyword === 'upcoming') {
             // For ongoing anime (renamed from upcoming), use discover with recent and ongoing air dates
             const today = new Date();
             const dateStr = today.toISOString().split('T')[0]; // Format as YYYY-MM-DD
-            endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&air_date.lte=${dateStr}&with_status=0&sort_by=popularity.desc`;
+            url = `${baseUrl}discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&air_date.lte=${dateStr}&with_status=0&sort_by=popularity.desc`;
         } else if (genreOrKeyword === 'truly_upcoming') {
             // For truly upcoming anime, use discover with future air dates
             const today = new Date();
@@ -464,45 +542,45 @@ function fetchAnime(containerClass, genreOrKeyword) {
             const futureDateStr = futureDate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
 
             // Get anime that will air after today but before 6 months from now
-            endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&air_date.gte=${todayStr}&air_date.lte=${futureDateStr}&sort_by=primary_release_date.asc`;
+            url = `${baseUrl}discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&air_date.gte=${todayStr}&air_date.lte=${futureDateStr}&sort_by=primary_release_date.asc`;
         } else if (genreOrKeyword === 'action') {
             // Action anime
-            endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,28&with_keywords=210024&sort_by=popularity.desc`;
+            url = `${baseUrl}discover/tv?api_key=${api_Key}&with_genres=16,28&with_keywords=210024&sort_by=popularity.desc`;
         } else if (genreOrKeyword === 'romance') {
             // Romance anime
-            endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,10749&with_keywords=210024&sort_by=popularity.desc`;
+            url = `${baseUrl}discover/tv?api_key=${api_Key}&with_genres=16,10749&with_keywords=210024&sort_by=popularity.desc`;
         } else if (genreOrKeyword === 'comedy') {
             // Comedy anime
-            endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,35&with_keywords=210024&sort_by=popularity.desc`;
+            url = `${baseUrl}discover/tv?api_key=${api_Key}&with_genres=16,35&with_keywords=210024&sort_by=popularity.desc`;
         } else if (genreOrKeyword === 'fantasy') {
             // Fantasy anime
-            endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,14&with_keywords=210024&sort_by=popularity.desc`;
+            url = `${baseUrl}discover/tv?api_key=${api_Key}&with_genres=16,14&with_keywords=210024&sort_by=popularity.desc`;
         } else if (genreOrKeyword === 'sci_fi') {
             // Sci-Fi anime
-            endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,878&with_keywords=210024&sort_by=popularity.desc`;
+            url = `${baseUrl}discover/tv?api_key=${api_Key}&with_genres=16,878&with_keywords=210024&sort_by=popularity.desc`;
         } else if (genreOrKeyword === 'movie') {
             // Anime movies: animation genre (16) + movie type
-            endpoint = `discover/movie?api_key=${api_Key}&with_genres=16&sort_by=popularity.desc`;
+            url = `${baseUrl}discover/movie?api_key=${api_Key}&with_genres=16&sort_by=popularity.desc`;
         } else if (genreOrKeyword === 'top_rated_anime_movies') {
             // Top rated anime movies
-            endpoint = `discover/movie?api_key=${api_Key}&with_genres=16&sort_by=vote_average.desc&vote_count.gte=100`;
+            url = `${baseUrl}discover/movie?api_key=${api_Key}&with_genres=16&sort_by=vote_average.desc&vote_count.gte=100`;
         } else if (genreOrKeyword === 'adventure') {
             // Adventure anime (update genre ID to 10759 for TV genre)
-            endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,10759&with_keywords=210024&sort_by=popularity.desc`;
+            url = `${baseUrl}discover/tv?api_key=${api_Key}&with_genres=16,10758&with_keywords=210024&sort_by=popularity.desc`;
         } else if (genreOrKeyword === 'drama') {
             // Drama anime
-            endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,18&with_keywords=210024&sort_by=popularity.desc`;
+            url = `${baseUrl}discover/tv?api_key=${api_Key}&with_genres=16,18&with_keywords=210024&sort_by=popularity.desc`;
         } else if (genreOrKeyword === 'sports') {
             // Sports anime (no direct sports TV genre; fallback to use keyword 210024 for anime, or another approach if available)
-            endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024,sports&sort_by=popularity.desc`;
+            url = `${baseUrl}discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024,sports&sort_by=popularity.desc`;
         } else {
             // Default endpoint for general anime
-            endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&sort_by=popularity.desc`;
+            url = `${baseUrl}discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&sort_by=popularity.desc`;
         }
 
         // Fetch anime data from TMDB
-        console.log(`Fetching anime from TMDB with endpoint: https://api.themoviedb.org/3/${endpoint}`);
-        fetch(`https://api.themoviedb.org/3/${endpoint}`)
+        console.log(`Fetching anime from TMDB with endpoint: ${url}`);
+        fetch(url)
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`TMDB API responded with status: ${response.status}`);
@@ -649,36 +727,36 @@ function fetchAnime(containerClass, genreOrKeyword) {
 }
 
 // Initial fetch of movies
-fetchMedia('netflix-container', 'discover/tv?with_networks=213&', 'tv', true); // Netflix originals with poster_path
-fetchMedia('trending-container', 'trending/movie/week?&', 'movie');
-fetchMedia('top-container', 'movie/top_rated?&', 'movie');
-fetchMedia('horror-container', 'discover/movie?with_genres=27&', 'movie');
-fetchMedia('comedy-container', 'discover/movie?with_genres=35&', 'movie');
-fetchMedia('action-container', 'discover/movie?with_genres=28&', 'movie');
-fetchMedia('drama-container', 'discover/movie?with_genres=18&', 'movie');
-fetchMedia('fantasy-container', 'discover/movie?with_genres=14&', 'movie');
-fetchMedia('romance-container', 'discover/movie?with_genres=10749&', 'movie');
-fetchMedia('mystery-container', 'discover/movie?with_genres=9648&', 'movie');
+fetchMedia('netflix-container', 'discover/tv?with_networks=213', 'tv', true); // Netflix originals with poster_path
+fetchMedia('trending-container', 'trending/movie/week', 'movie');
+fetchMedia('top-container', 'movie/top_rated', 'movie');
+fetchMedia('horror-container', 'discover/movie?with_genres=27', 'movie');
+fetchMedia('comedy-container', 'discover/movie?with_genres=35', 'movie');
+fetchMedia('action-container', 'discover/movie?with_genres=28', 'movie');
+fetchMedia('drama-container', 'discover/movie?with_genres=18', 'movie');
+fetchMedia('fantasy-container', 'discover/movie?with_genres=14', 'movie');
+fetchMedia('romance-container', 'discover/movie?with_genres=10749', 'movie');
+fetchMedia('mystery-container', 'discover/movie?with_genres=9648', 'movie');
 
 // Additional movie genres
-fetchMedia('thriller-container', 'discover/movie?with_genres=53&', 'movie'); // Thriller movies
-fetchMedia('adventure-container', 'discover/movie?with_genres=12&', 'movie'); // Adventure movies
-fetchMedia('fantasy-movie-container', 'discover/movie?with_genres=14&', 'movie'); // Fantasy movies
-fetchMedia('scifi-movie-container', 'discover/movie?with_genres=878&', 'movie'); // Sci-Fi movies
+fetchMedia('thriller-container', 'discover/movie?with_genres=53', 'movie'); // Thriller movies
+fetchMedia('adventure-container', 'discover/movie?with_genres=12', 'movie'); // Adventure movies
+fetchMedia('fantasy-movie-container', 'discover/movie?with_genres=14', 'movie'); // Fantasy movies
+fetchMedia('scifi-movie-container', 'discover/movie?with_genres=878', 'movie'); // Sci-Fi movies
 
 // Initial fetch of TV shows by genre
-fetchMedia('drama-tv-container', 'discover/tv?with_genres=18&', 'tv'); // Drama (18)
-fetchMedia('crime-tv-container', 'discover/tv?with_genres=80&', 'tv'); // Crime (80)
-fetchMedia('scifi-tv-container', 'discover/tv?with_genres=10765&', 'tv'); // Sci-Fi & Fantasy (10765)
-fetchMedia('comedy-tv-container', 'discover/tv?with_genres=35&', 'tv'); // Comedy TV (35)
-fetchMedia('documentary-tv-container', 'discover/tv?with_genres=99&', 'tv'); // Documentary (99)
+fetchMedia('drama-tv-container', 'discover/tv?with_genres=18', 'tv'); // Drama (18)
+fetchMedia('crime-tv-container', 'discover/tv?with_genres=80', 'tv'); // Crime (80)
+fetchMedia('scifi-tv-container', 'discover/tv?with_genres=10765', 'tv'); // Sci-Fi & Fantasy (10765)
+fetchMedia('comedy-tv-container', 'discover/tv?with_genres=35', 'tv'); // Comedy TV (35)
+fetchMedia('documentary-tv-container', 'discover/tv?with_genres=99', 'tv'); // Documentary (99)
 
 // Fetch contents for Disney+ and new TV Show containers
-fetchMedia('disney-container', 'discover/tv?with_networks=2739&sort_by=popularity.desc&', 'tv'); // Disney+ network ID: 2739
-fetchMedia('actionadventure-container', 'discover/tv?with_genres=10759&sort_by=popularity.desc&', 'tv'); // Genre 10759: Action & Adventure
-fetchMedia('mystery-container', 'discover/tv?with_genres=9648&sort_by=popularity.desc&', 'tv'); // Genre 9648: Mystery
-fetchMedia('fantasy-container', 'discover/tv?with_genres=10765&sort_by=popularity.desc&', 'tv'); // Genre 10765: Sci-Fi & Fantasy (most include Fantasy shows)
-fetchMedia('reality-container', 'discover/tv?with_genres=10764&sort_by=popularity.desc&', 'tv'); // Genre 10764: Reality
+fetchMedia('disney-container', 'discover/tv?with_networks=2739&sort_by=popularity.desc', 'tv'); // Disney+ network ID: 2739
+fetchMedia('actionadventure-container', 'discover/tv?with_genres=10759&sort_by=popularity.desc', 'tv'); // Genre 10759: Action & Adventure
+fetchMedia('mystery-container', 'discover/tv?with_genres=9648&sort_by=popularity.desc', 'tv'); // Genre 9648: Mystery
+fetchMedia('fantasy-container', 'discover/tv?with_genres=10765&sort_by=popularity.desc', 'tv'); // Genre 10765: Sci-Fi & Fantasy (most include Fantasy shows)
+fetchMedia('reality-container', 'discover/tv?with_genres=10764&sort_by=popularity.desc', 'tv'); // Genre 10764: Reality
 
 // Initial fetch of anime using TMDB API with appropriate genres/keywords
 fetchAnime('anime-popular-container', 'popular'); // Popular anime
@@ -930,115 +1008,32 @@ addBackToTopButton();
 
 // Navigation menu functionality
 navItems.forEach(item => {
-    item.addEventListener('click', () => {
-        // Remove active class from all items
-        navItems.forEach(navItem => navItem.classList.remove('active'));
+    item.addEventListener('click', (event) => {
+        // Get the section to navigate to
+        const link = item.querySelector('a');
+        const section = link.getAttribute('data-section');
+        const href = link.getAttribute('href');
 
-        // Add active class to clicked item
-        item.classList.add('active');
+        // Check if we're already on this page - prevent navigation to avoid the error
+        const currentPath = window.location.pathname;
+        const onIndexPage = currentPath === '/' || currentPath.endsWith('/index.html') || currentPath === '';
 
-        // Get the section to show
-        const section = item.querySelector('a').getAttribute('data-section');
-        currentSection = section; // Update the current section
+        // If clicking "All" while already on index page, prevent navigation
+        if (section === 'all' && onIndexPage) {
+            event.preventDefault();
+            return false;
+        }
 
-        // Update the banner slideshow for the selected section
-        updateBannerForSection(section);
-
-        // First, fade out all sections
-        movieSections.forEach(section => {
-            section.classList.add('fade-out');
-            section.classList.remove('fade-in');
-        });
-
-        // Wait for fade out to complete, then update visibility and fade in
-        setTimeout(() => {
-            // Show/hide sections based on selection
-            if (section === 'all') {
-                // Show all sections
-                movieSections.forEach(section => {
-                    section.style.display = 'block';
-                    // Stagger the animations for a cascade effect
-                    setTimeout(() => {
-                        section.classList.remove('fade-out');
-                        section.classList.add('fade-in');
-                    }, Math.random() * 200); // Random delay between 0-200ms for natural feel
-                });
-            } else if (section === 'anime') {
-                // Show only anime sections
-                movieSections.forEach(section => {
-                    if (section.classList.contains('anime-section')) {
-                        section.style.display = 'block';
-                        // Stagger the animations
-                        setTimeout(() => {
-                            section.classList.remove('fade-out');
-                            section.classList.add('fade-in');
-                        }, Math.random() * 200);
-                    } else {
-                        section.style.display = 'none';
-                    }
-                });
-
-                // Adjust the scroll position to show the first anime section
-                const firstAnimeSection = document.querySelector('.anime-section');
-                if (firstAnimeSection) {
-                    setTimeout(() => {
-                        window.scrollTo({
-                            top: firstAnimeSection.offsetTop - 150,
-                            behavior: 'smooth'
-                        });
-                    }, 300);
-                }
-            } else if (section === 'movies') {
-                // Show only movie sections (not TV or anime)
-                movieSections.forEach(section => {
-                    if (section.classList.contains('anime-section')) {
-                        section.style.display = 'none';
-                    } else if (section.id && section.id.includes('tv')) {
-                        section.style.display = 'none';
-                    } else {
-                        // Check if the section contains "Netflix" which is TV shows
-                        const sectionTitle = section.querySelector('h1');
-                        if (sectionTitle && sectionTitle.textContent.includes('NETFLIX ORIGINALS')) {
-                            section.style.display = 'none';
-                        } else {
-                            section.style.display = 'block';
-                            // Stagger the animations
-                            setTimeout(() => {
-                                section.classList.remove('fade-out');
-                                section.classList.add('fade-in');
-                            }, Math.random() * 200);
-                        }
-                    }
-                });
-            } else if (section === 'tv') {
-                // Show only TV show sections (not movies or anime)
-                movieSections.forEach(section => {
-                    if (section.classList.contains('anime-section')) {
-                        section.style.display = 'none';
-                    } else {
-                        // Check if the section contains "Netflix" which is TV shows
-                        const sectionTitle = section.querySelector('h1');
-                        if (sectionTitle && sectionTitle.textContent.includes('NETFLIX ORIGINALS')) {
-                            section.style.display = 'block';
-                            // Stagger the animations
-                            setTimeout(() => {
-                                section.classList.remove('fade-out');
-                                section.classList.add('fade-in');
-                            }, Math.random() * 200);
-                        } else if (section.classList.contains('tv-section')) {
-                            section.style.display = 'block';
-                            // Stagger the animations
-                            setTimeout(() => {
-                                section.classList.remove('fade-out');
-                                section.classList.add('fade-in');
-                            }, Math.random() * 200);
-                        } else {
-                            section.style.display = 'none';
-                        }
-                    }
-                });
-            }
-        }, 400); // Wait for fade out animation to complete
+        // Update URL based on selected section
+        if (section === 'movies') {
+            window.location.href = 'movies/index.html';
+        } else if (section === 'tv') {
+            window.location.href = 'tvshows/index.html';
+        } else if (section === 'anime') {
+            window.location.href = 'anime/index.html';
+        } else if (section === 'all') {
+            window.location.href = 'index.html';
+        }
     });
 });
 

@@ -3,8 +3,12 @@
   "version": "1.0.0",
   "description": "FreeFlix Movie Streaming Website",
   "scripts": {
-    "dev": "bunx --bun serve -p 3000 --cors -s ."
+    "dev": "bunx --bun serve -p 3000 --cors -s .",
+    "start": "npx http-server -a 0.0.0.0 -p 3000 -c-1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "http-server": "^14.1.1"
+  }
 }
