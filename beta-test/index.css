@@ -1039,8 +1039,8 @@ input::-webkit-input-placeholder {
   .movies-box {
     gap: 15px;
     min-height: 160px;
-    padding-left: 12px;
-    padding-right: 12px;
+    padding-left: 0;
+    padding-right: 0;
     scrollbar-width: none;
     -ms-overflow-style: none;
     overflow-x: auto;

@@ -151,8 +151,8 @@
 
   /* Fix for smaller movie containers on mobile - ensure buttons are positioned correctly */
   .movie-container {
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: 0;
+    padding-right: 0;
     position: relative;
   }
 
@@ -185,22 +185,33 @@
     width: 30px;
     height: 130px !important;
     font-size: 1.2rem;
+    opacity: 0.8;
+    z-index: 15;
   }
 
   /* Ensure Netflix Originals navigation buttons are visible and properly sized */
   .netflix-previous, .netflix-next {
     height: 260px !important;
     width: 30px;
-    opacity: 0.7;
+    opacity: 0.8;
   }
 
   /* Set position for navigation buttons to ensure they're visible */
   .netflix-previous {
-    left: 0px;
+    left: 0;
   }
 
   .netflix-next {
-    right: 0px;
+    right: 0;
+  }
+
+  /* Fix for all movie sections to ensure navigation buttons are visible */
+  .movie-section .navigation-button.previous {
+    left: 0;
+  }
+
+  .movie-section .navigation-button.next {
+    right: 0;
   }
 }
 
@@ -216,16 +227,37 @@
   position: relative;
   overflow: visible; /* Allow navigation buttons to be visible */
   margin-bottom: 20px;
+  display: flex;
+  align-items: center;
 }
 
 /* Ensure navigation buttons are visible on tablets/mobile with touch */
 @media (hover: none) {
   .navigation-button {
-    opacity: 0.6;
+    opacity: 0.7;
   }
 
   /* Make Netflix Originals buttons more visible on touch devices */
   .netflix-previous, .netflix-next {
-    opacity: 0.7;
+    opacity: 0.8;
+  }
+
+  /* Ensure movie containers have proper structure on touch devices */
+  .movie-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding: 0;
+  }
+
+  /* Position the navigation buttons correctly on the sides */
+  .navigation-button.previous {
+    left: 0;
+    margin-right: 0;
+  }
+
+  .navigation-button.next {
+    right: 0;
+    margin-left: 0;
   }
 }
