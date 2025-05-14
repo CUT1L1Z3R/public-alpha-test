@@ -1,0 +1,49 @@
+/**
+ * Custom search styling
+ * Ensures consistent search results positioning across all pages
+ */
+
+/* Search results container */
+#searchResults {
+  position: absolute !important;
+  top: 70px !important; /* Position it below the search input */
+  left: 50% !important; /* Center it horizontally */
+  transform: translateX(-50%) !important; /* Ensure perfect centering */
+  width: 300px !important;
+  background-color: #141414 !important;
+  color: white !important;
+  border-radius: 5px !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5) !important;
+  z-index: 1000 !important;
+  max-height: 80vh !important;
+  overflow-y: auto !important;
+  border: 1px solid #8d16c9 !important;
+}
+
+/* Search results items */
+.movie-list {
+  padding: 10px;
+  border-bottom: 1px solid #333;
+  display: flex;
+  align-items: center;
+  background-color: #1a1a1a;
+  cursor: pointer;
+}
+
+.movie-list:hover {
+  background-color: #2a2a2a;
+}
+
+#searchResults p {
+  color: #fff;
+  text-align: center;
+  margin: 10px 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  #searchResults {
+    width: 80% !important; /* Wider on mobile */
+    max-width: 300px !important;
+  }
+}

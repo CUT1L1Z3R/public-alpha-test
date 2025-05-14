@@ -201,9 +201,10 @@ input::-webkit-input-placeholder {
 
 /* Add styles for search results container */
 #searchResults {
-  position: fixed !important;
-  top: 60px !important;
-  right: 20px !important;
+  position: absolute !important;
+  top: 70px !important; /* Position it below the search input */
+  left: 50% !important; /* Center it horizontally */
+  transform: translateX(-50%) !important; /* Ensure perfect centering */
   width: 300px !important;
   background-color: #141414 !important;
   color: white !important;
@@ -1371,16 +1372,16 @@ input::-webkit-input-placeholder {
 @media only screen and (min-width: 781px) {
   #searchResults {
     z-index: 1000 !important;
-    position: fixed !important;
-    top: 60px !important;
-    right: 20px !important;
+    position: absolute !important;
+    top: 70px !important;
+    left: 50% !important;
+    right: auto !important;
     width: 300px !important;
     max-width: 300px !important;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8) !important;
     border: 1px solid #8d16c9 !important;
     margin-top: 0 !important;
-    left: auto !important;
-    transform: none !important;
+    transform: translateX(-50%) !important;
   }
 
   /* Critical fix: Make sure the input container is independent */
@@ -1392,15 +1393,15 @@ input::-webkit-input-placeholder {
   /* Additional fix to ensure search results are properly isolated and appear above all elements */
   .header .input-container #searchResults {
     isolation: isolate; /* Create a new stacking context */
-    position: fixed !important;
+    position: absolute !important;
     z-index: 1000 !important;
-    right: 20px !important;
-    left: auto !important;
-    top: 60px !important;
+    left: 50% !important;
+    right: auto !important;
+    top: 70px !important;
     width: 300px !important;
     max-width: 300px !important;
     margin-top: 0 !important;
-    transform: none !important;
+    transform: translateX(-50%) !important;
   }
 
   /* Make search items more compact on desktop */
