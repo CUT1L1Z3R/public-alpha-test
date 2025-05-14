@@ -419,11 +419,111 @@ if (bannerElement) {
     }
 }
 
-// Set up search functionality
-if (searchInput) {
-    searchInput.addEventListener('input', function() {
-        // Add search functionality if needed
+// Function to handle search
+function initSearch() {
+    if (searchInput) {
+        searchInput.addEventListener('input', () => {
+            handleSearchInput();
+        });
+
+        // Hide search results when clicking outside
+        document.addEventListener('click', (event) => {
+            if (!searchInput.contains(event.target) && !searchResults.contains(event.target)) {
+                searchResults.style.display = 'none';
+            }
+        });
+    }
+}
+
+// Function to handle search input
+async function handleSearchInput() {
+    const query = searchInput.value;
+    if (query.length > 2) {
+        const results = await fetchSearchResults(query);
+        if (results.length !== 0) {
+            displaySearchResults(results);
+        } else {
+            searchResults.innerHTML = '<p>No results found</p>';
+            searchResults.style.display = 'block';
+        }
+    } else {
+        searchResults.style.display = 'none';
+    }
+}
+
+// Function to fetch search results
+async function fetchSearchResults(query) {
+    try {
+        const response = await fetch(`https://api.themoviedb.org/3/search/tv?api_key=${api_Key}&query=${query}`);
+        const data = await response.json();
+        // Filter results to only TV shows with valid poster/backdrop images
+        return data.results.filter(item =>
+            (item.poster_path || item.backdrop_path)
+        ).slice(0, 6); // Limit to 6 results
+    } catch (error) {
+        console.error('Error fetching search results:', error);
+        return [];
+    }
+}
+
+// Function to display search results
+function displaySearchResults(results) {
+    searchResults.innerHTML = '';
+
+    if (results.length === 0) {
+        searchResults.style.display = 'none';
+        return;
+    }
+
+    results.forEach(result => {
+        const resultItem = document.createElement('div');
+        resultItem.className = 'search-result-item';
+
+        const img = document.createElement('img');
+        img.src = result.poster_path
+            ? `https://image.tmdb.org/t/p/w92${result.poster_path}`
+            : result.backdrop_path
+                ? `https://image.tmdb.org/t/p/w300${result.backdrop_path}`
+                : 'https://via.placeholder.com/92x138?text=No+Image';
+        img.alt = result.name || 'TV Show';
+
+        const textContainer = document.createElement('div');
+        textContainer.className = 'search-result-text';
+
+        const title = document.createElement('h3');
+        title.textContent = result.name || 'Unknown Title';
+
+        const details = document.createElement('p');
+
+        // Add year if available
+        let year = '';
+        if (result.first_air_date) {
+            year = new Date(result.first_air_date).getFullYear();
+        }
+
+        details.textContent = year ? `${year}` : '';
+
+        // Add rating if available
+        if (result.vote_average) {
+            details.textContent += details.textContent ? ` • ⭐ ${result.vote_average.toFixed(1)}` : `⭐ ${result.vote_average.toFixed(1)}`;
+        }
+
+        textContainer.appendChild(title);
+        textContainer.appendChild(details);
+
+        resultItem.appendChild(img);
+        resultItem.appendChild(textContainer);
+
+        // Add click event
+        resultItem.addEventListener('click', () => {
+            searchResults.style.display = 'none';
+            window.location.href = `../movie_details/movie_details.html?media=tv&id=${result.id}`;
+        });
+
+        searchResults.appendChild(resultItem);
     });
+
+    searchResults.style.display = 'block';
 }
 
 // Set up watchlist button
@@ -432,6 +532,9 @@ if (goToWatchlistBtn) {
         window.location.href = '../watchList/watchlist.html';
     });
 }
+
+// Initialize search functionality
+initSearch();
 
 // Function to load all content
 function loadContent() {
