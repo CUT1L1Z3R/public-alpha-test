@@ -7,7 +7,7 @@
 #searchResults {
   position: absolute;
   top: 60px;
-  left: 45%; /* Move slightly to left from center */
+  left: 48.5%; /* Move slightly to left from center */
   transform: translateX(-50%); /* Center perfectly */
   width: 500px; /* Match max-width of input container */
   background-color: #141414;
