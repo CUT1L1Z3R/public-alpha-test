@@ -9,7 +9,7 @@
   top: 60px;
   left: 50%; /* Center horizontally */
   transform: translateX(-50%); /* Center perfectly */
-  width: 600px; /* Make wider */
+  width: 500px; /* Match max-width of input container */
   background-color: #141414;
   color: white;
   border-radius: 5px;
@@ -17,7 +17,8 @@
   z-index: 1000;
   max-height: 80vh;
   overflow-y: auto;
-  border: 1px solid #8d16c9;
+  /* Remove the purple border */
+  border: none;
 }
 
 #searchResults p {
