@@ -1374,7 +1374,7 @@ input::-webkit-input-placeholder {
     z-index: 1000 !important;
     position: fixed !important;
     top: 60px !important;
-    left: 45% !important;
+    left: 47% !important;
     transform: translateX(-50%) !important;
     width: 500px !important;
     max-width: 500px !important;
@@ -1395,7 +1395,7 @@ input::-webkit-input-placeholder {
     isolation: isolate; /* Create a new stacking context */
     position: fixed !important;
     z-index: 1000 !important;
-    left: 45% !important;
+    left: 47% !important;
     right: auto !important;
     top: 60px !important;
     width: 500px !important;
