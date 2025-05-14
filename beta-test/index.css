@@ -203,9 +203,9 @@ input::-webkit-input-placeholder {
 #searchResults {
   position: fixed !important;
   top: 60px !important;
-  left: 50% !important; /* Position from the left 50% of the viewport */
-  transform: translateX(-50%) !important; /* Center the container horizontally */
-  width: 300px !important;
+  left: 50% !important; /* Center horizontally */
+  transform: translateX(-50%) !important; /* Center perfectly */
+  width: 600px !important; /* Make wider */
   background-color: #141414 !important;
   color: white !important;
   border-radius: 5px !important;
@@ -818,7 +818,6 @@ input::-webkit-input-placeholder {
     border-radius: 6px;
   }
 
-  /* For mobile screens, ensure search results are properly centered */
   #searchResults {
     width: 90vw !important;
     max-width: 90vw !important;
@@ -1202,9 +1201,9 @@ input::-webkit-input-placeholder {
     width: 45vw !important;
     max-width: 45vw !important;
     z-index: 1000 !important;
-    left: 50% !important;
-    right: auto !important;
-    transform: translateX(-50%) !important;
+    left: auto !important;
+    right: 20px !important;
+    transform: none !important;
   }
 
   .nav-menu {
@@ -1377,11 +1376,12 @@ input::-webkit-input-placeholder {
     top: 60px !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
-    width: 300px !important;
-    max-width: 300px !important;
+    width: 600px !important;
+    max-width: 600px !important;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8) !important;
     border: 1px solid #8d16c9 !important;
     margin-top: 0 !important;
+    right: auto !important;
   }
 
   /* Critical fix: Make sure the input container is independent */
@@ -1396,11 +1396,12 @@ input::-webkit-input-placeholder {
     position: fixed !important;
     z-index: 1000 !important;
     left: 50% !important;
-    transform: translateX(-50%) !important;
+    right: auto !important;
     top: 60px !important;
-    width: 300px !important;
-    max-width: 300px !important;
+    width: 600px !important;
+    max-width: 600px !important;
     margin-top: 0 !important;
+    transform: translateX(-50%) !important;
   }
 
   /* Make search items more compact on desktop */
