@@ -5,18 +5,19 @@
 
 /* Add search results styling */
 #searchResults {
-  position: absolute;
-  top: 60px;
-  right: 20px;
-  width: 300px;
-  background-color: #141414;
-  color: white;
-  border-radius: 5px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-  z-index: 1000;
-  max-height: 80vh;
-  overflow-y: auto;
-  border: 1px solid #8d16c9;
+  position: fixed !important;
+  top: 60px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: 300px !important;
+  background-color: #141414 !important;
+  color: white !important;
+  border-radius: 5px !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5) !important;
+  z-index: 1000 !important;
+  max-height: 80vh !important;
+  overflow-y: auto !important;
+  border: 1px solid #8d16c9 !important;
 }
 
 #searchResults p {
@@ -216,6 +217,13 @@
 
 /* Additional fix for mobile view */
 @media (max-width: 768px) {
+  /* Mobile specific search results styling */
+  #searchResults {
+    width: 90vw !important;
+    max-width: 90vw !important;
+    max-height: 300px !important;
+  }
+
   .tv-section .navigation-button,
   .movie-section .navigation-button {
     width: 35px;

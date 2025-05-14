@@ -77,6 +77,24 @@
   display: none; /* Chrome, Safari, Opera */
 }
 
+/* Center search results for anime section */
+#searchResults {
+  position: fixed !important;
+  top: 60px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: 300px !important;
+  max-width: 300px !important;
+  background-color: #141414 !important;
+  color: white !important;
+  border-radius: 5px !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5) !important;
+  z-index: 1000 !important;
+  max-height: 80vh !important;
+  overflow-y: auto !important;
+  border: 1px solid #8d16c9 !important;
+}
+
 /* Mobile specific fixes */
 @media (max-width: 768px) {
   /* Adjusted size and position for mobile navigation buttons */
@@ -113,6 +131,13 @@
     margin-left: 0;
     margin-right: 0;
     position: relative;
+  }
+
+  /* Mobile specific overrides for search results in anime section */
+  #searchResults {
+    width: 90vw !important;
+    max-width: 90vw !important;
+    max-height: 300px !important;
   }
 }
 

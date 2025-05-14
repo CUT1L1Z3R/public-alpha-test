@@ -487,10 +487,8 @@ function initSearch() {
     if (searchResults) {
         // Initialize the search results container
         searchResults.style.position = "absolute";
-        searchResults.style.top = "70px";  // Position it below the search input
-        searchResults.style.left = "50%";  // Center it horizontally
-        searchResults.style.right = "auto"; // Override any right positioning
-        searchResults.style.transform = "translateX(-50%)"; // Ensure perfect centering
+        searchResults.style.top = "60px";
+        searchResults.style.right = "20px";
         searchResults.style.width = "300px";
         searchResults.style.backgroundColor = "#141414";
         searchResults.style.color = "white";
