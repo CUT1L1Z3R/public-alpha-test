@@ -203,7 +203,7 @@ input::-webkit-input-placeholder {
 #searchResults {
   position: fixed !important;
   top: 60px !important;
-  left: 48% !important; /* Move slightly to left from center */
+  left: 48.5% !important; /* Move slightly to left from center */
   transform: translateX(-50%) !important; /* Center perfectly */
   width: 500px !important; /* Match max-width of input container */
   background-color: #141414 !important;
@@ -1374,7 +1374,7 @@ input::-webkit-input-placeholder {
     z-index: 1000 !important;
     position: fixed !important;
     top: 60px !important;
-    left: 48% !important;
+    left: 48.5% !important;
     transform: translateX(-50%) !important;
     width: 500px !important;
     max-width: 500px !important;
@@ -1395,7 +1395,7 @@ input::-webkit-input-placeholder {
     isolation: isolate; /* Create a new stacking context */
     position: fixed !important;
     z-index: 1000 !important;
-    left: 48% !important;
+    left: 48.5% !important;
     right: auto !important;
     top: 60px !important;
     width: 500px !important;
