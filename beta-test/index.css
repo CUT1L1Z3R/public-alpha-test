@@ -199,114 +199,83 @@ input::-webkit-input-placeholder {
   color: rgba(255, 255, 255, 0.7);
 }
 
-/* --- PATCH: Refined search results for desktop and mobile --- */
+/* Add styles for search results container */
 #searchResults {
-  width: 100%; /* Full width of parent container */
-  max-width: 100%;
-  max-height: 460px;
-  overflow-y: auto;
-  position: absolute;
-  top: 45px;
-  left: 0;
-  visibility: hidden;
-  border-radius: 6px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-  background-color: #111;
-  z-index: 25; /* Increased above nav-menu (20) and header (22) */
+  position: fixed !important;
+  top: 60px !important;
+  right: 20px !important;
+  width: 300px !important;
+  background-color: #141414 !important;
+  color: white !important;
+  border-radius: 5px !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5) !important;
+  z-index: 1000 !important;
+  max-height: 80vh !important;
+  overflow-y: auto !important;
+  border: 1px solid #8d16c9 !important;
 }
 
-#searchResults::-webkit-scrollbar {
-  width: 8px;
-  border-radius: 5px;
-  background-color: lightgrey;
+#searchResults p {
+  color: #fff;
+  text-align: center;
+  margin: 10px 0;
 }
 
-#searchResults::-webkit-scrollbar-thumb {
-  background-color: #555;
-  border-radius: 5px;
-}
-
-#searchResults::-webkit-scrollbar-thumb:hover {
-  background-color: #444444;
-}
-
+/* Also add styles for search results items */
 .movie-list {
-  width: 100%;
-  height: 20%;
-  box-sizing: border-box;
-  padding: 5px;
-  border-bottom: 1px solid lightgray;
-  background: #000;
+  padding: 10px;
+  border-bottom: 1px solid #333;
   display: flex;
-  gap: 20px;
   align-items: center;
-  position: relative;
-}
-
-.movie-list:hover {
-  background-color: #181818;
+  background-color: #1a1a1a;
   cursor: pointer;
 }
 
-/* Thumbnail styles */
+.movie-list:hover {
+  background-color: #2a2a2a;
+}
+
 .search-item-thumbnail {
-  width: 10%;
-  height: 100%;
+  width: 50px;
+  height: 75px;
+  overflow: hidden;
+  margin-right: 10px;
 }
 
 .search-item-thumbnail img {
   width: 100%;
   height: 100%;
+  object-fit: cover;
 }
 
-/* Search item information styles */
 .search-item-info {
-  width: 48%;
-  height: 100%;
-  color: white;
-  text-transform: capitalize;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
+  flex: 1;
 }
 
 .search-item-info h3 {
-  font-size: 16px;
-  margin: 0;
-  padding: 0;
+  font-size: 14px;
+  margin: 0 0 5px 0;
 }
 
 .search-item-info p {
+  font-size: 12px;
+  color: #999;
   margin: 0;
-  padding: 0;
 }
 
-/* WatchList button styles */
 .watchListBtn {
-  position: absolute;
-  top: 30%;
-  right: 10px;
-  background-color: rgb(154, 14, 224);
+  background-color: #8d16c9;
   color: white;
-  border: 1px solid black;
-  padding: 7px 16px;
-  border-radius: 7px;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
   cursor: pointer;
-  font-size: 17px;
-  font-weight: bold;
-  letter-spacing: 0.2px;
-  box-shadow: 0 2px 8px rgba(154, 14, 224, 0.08);
-  transition: background 0.2s, color 0.2s, border 0.2s, box-shadow 0.2s, transform 0.1s;
+  font-size: 12px;
+  white-space: nowrap;
 }
 
-.watchListBtn:hover,
-.watchListBtn:focus {
-  background-color: black;
-  border: 1.5px solid rgb(154, 14, 224);
-  color: rgb(154, 14, 224);
-  box-shadow: 0 4px 16px rgba(154, 14, 224, 0.18);
-  transform: translateY(-2px) scale(1.04);
-  outline: none;
+.watchListBtn:hover {
+  background-color: #a428e6;
 }
 
 /* ----Banner---- */
@@ -849,12 +818,13 @@ input::-webkit-input-placeholder {
   }
 
   #searchResults {
-    width: 90vw;
-    max-width: 90vw;
-    max-height: 300px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 25; /* Use same z-index as desktop */
+    width: 90vw !important;
+    max-width: 90vw !important;
+    max-height: 300px !important;
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+    z-index: 1000 !important;
   }
 
   /* Fixed nav menu positioning */
@@ -1227,9 +1197,12 @@ input::-webkit-input-placeholder {
   }
 
   #searchResults {
-    width: 45vw;
-    max-width: 45vw;
-    z-index: 25;
+    width: 45vw !important;
+    max-width: 45vw !important;
+    z-index: 1000 !important;
+    left: auto !important;
+    right: 20px !important;
+    transform: none !important;
   }
 
   .nav-menu {
@@ -1397,15 +1370,17 @@ input::-webkit-input-placeholder {
 /* Desktop layout search fixes - Added to fix search results display */
 @media only screen and (min-width: 781px) {
   #searchResults {
-    z-index: 25; /* Match the main #searchResults z-index */
-    position: absolute;
-    top: 45px;
-    left: 0;
-    width: 100%; /* Take up full width of input-container */
-    max-width: 100%;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8); /* Enhanced shadow for better visibility */
-    border: 1px solid rgba(141, 22, 201, 0.5); /* Add a subtle border to match site style */
-    margin-top: 5px; /* Extra space below search input */
+    z-index: 1000 !important;
+    position: fixed !important;
+    top: 60px !important;
+    right: 20px !important;
+    width: 300px !important;
+    max-width: 300px !important;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8) !important;
+    border: 1px solid #8d16c9 !important;
+    margin-top: 0 !important;
+    left: auto !important;
+    transform: none !important;
   }
 
   /* Critical fix: Make sure the input container is independent */
@@ -1417,31 +1392,38 @@ input::-webkit-input-placeholder {
   /* Additional fix to ensure search results are properly isolated and appear above all elements */
   .header .input-container #searchResults {
     isolation: isolate; /* Create a new stacking context */
-    position: absolute;
-    z-index: 9999; /* Ultra high z-index to force it above everything */
+    position: fixed !important;
+    z-index: 1000 !important;
+    right: 20px !important;
+    left: auto !important;
+    top: 60px !important;
+    width: 300px !important;
+    max-width: 300px !important;
+    margin-top: 0 !important;
+    transform: none !important;
   }
 
   /* Make search items more compact on desktop */
   #searchResults .movie-list {
     padding: 10px;
-    background-color: #111; /* Ensure consistent background */
-    position: relative; /* Needed for proper stacking */
-    z-index: 26; /* Make sure each item is above container */
-    border-bottom: 1px solid rgba(141, 22, 201, 0.3); /* Styled separator */
+    background-color: #1a1a1a;
+    position: relative;
+    z-index: 1001;
+    border-bottom: 1px solid #333;
   }
 
   /* Ensure buttons in search results remain visible */
   #searchResults .movie-list .watchListBtn {
-    z-index: 27; /* Keep buttons above everything */
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
+    z-index: 1002;
+    position: static;
+    right: auto;
+    top: auto;
+    transform: none;
   }
 
   /* Add a subtle hover effect */
   #searchResults .movie-list:hover {
-    background-color: #1a1a1a;
+    background-color: #2a2a2a;
   }
 }
 

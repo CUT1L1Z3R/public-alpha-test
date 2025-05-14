@@ -476,14 +476,79 @@ function getRatingColor(rating) {
 
 // Function to handle search
 function initSearch() {
+    if (!searchInput) {
+        console.error('Search input element not found!');
+        return;
+    }
+
+    console.log('Initializing search functionality');
+
+    // Make sure the search results container exists and is properly configured
+    if (searchResults) {
+        // Initialize the search results container
+        searchResults.style.position = "absolute";
+        searchResults.style.top = "60px";
+        searchResults.style.right = "20px";
+        searchResults.style.width = "300px";
+        searchResults.style.backgroundColor = "#141414";
+        searchResults.style.color = "white";
+        searchResults.style.borderRadius = "5px";
+        searchResults.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.5)";
+        searchResults.style.zIndex = "1000";
+        searchResults.style.maxHeight = "80vh";
+        searchResults.style.overflowY = "auto";
+        searchResults.style.border = "1px solid #8d16c9";
+        searchResults.innerHTML = '';
+    } else {
+        console.error('Search results container not found!');
+    }
+
+    // Add a click event to ensure the search input is visible and focused
+    searchInput.addEventListener('click', () => {
+        searchInput.focus();
+    });
+
+    // Input event for real-time search
     searchInput.addEventListener('input', () => {
+        console.log('Input event triggered with query:', searchInput.value);
         handleSearchInput();
     });
 
+    // Add event listener for Enter key press in search input
+    searchInput.addEventListener('keyup', async event => {
+        if (event.key === 'Enter') {
+            console.log('Enter key pressed with query:', searchInput.value);
+            handleSearchInput();
+        }
+    });
+
+    // Event listener for search input focus to reshow results if there was a query
+    searchInput.addEventListener('focus', () => {
+        const query = searchInput.value;
+        if (query.length > 2) {
+            // Re-show search results if they were previously hidden
+            fetchSearchResults(query).then(results => {
+                console.log('Focus triggered search, found results:', results.length);
+                displaySearchResults(results);
+            });
+        }
+    });
+
     // Hide search results when clicking outside
-    document.addEventListener('click', (event) => {
-        if (!searchInput.contains(event.target) && !searchResults.contains(event.target)) {
-            searchResults.style.display = 'none';
+    document.addEventListener('click', event => {
+        // Check if the click is on search input - don't close if it is
+        if (event.target === searchInput) {
+            return;
+        }
+
+        // Don't close search if clicking on search results or one of their children
+        if (searchResults && searchResults.contains(event.target)) {
+            return;
+        }
+
+        // Close the search results if clicking elsewhere
+        if (searchResults) {
+            searchResults.innerHTML = '';
         }
     });
 }
@@ -491,16 +556,18 @@ function initSearch() {
 // Function to handle search input
 async function handleSearchInput() {
     const query = searchInput.value;
+    console.log(`Handling search input: "${query}"`);
+
     if (query.length > 2) {
+        console.log('Query is long enough, fetching results...');
         const results = await fetchSearchResults(query);
-        if (results.length !== 0) {
-            displaySearchResults(results);
-        } else {
-            searchResults.innerHTML = '<p>No results found</p>';
-            searchResults.style.display = 'block';
-        }
+        console.log(`Got ${results.length} search results`);
+
+        // Display the results
+        displaySearchResults(results);
     } else {
-        searchResults.style.display = 'none';
+        console.log('Query too short, hiding results');
+        searchResults.innerHTML = '';
     }
 }
 
@@ -509,6 +576,7 @@ async function fetchSearchResults(query) {
     try {
         const response = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${api_Key}&query=${query}`);
         const data = await response.json();
+        console.log('Search results:', data.results);
         // Filter results to only movies, with valid poster/backdrop images
         return data.results.filter(item =>
             item.media_type === 'movie' && (item.poster_path || item.backdrop_path)
@@ -523,62 +591,87 @@ async function fetchSearchResults(query) {
 function displaySearchResults(results) {
     searchResults.innerHTML = '';
 
+    // Always make search results visible first
+    searchResults.style.display = "block";
+    searchResults.style.visibility = "visible";
+
     if (results.length === 0) {
-        searchResults.style.display = 'none';
+        searchResults.innerHTML = '<p>No results found</p>';
         return;
     }
 
     results.forEach(result => {
-        const resultItem = document.createElement('div');
-        resultItem.className = 'search-result-item';
-
-        const img = document.createElement('img');
-        img.src = result.poster_path
-            ? `https://image.tmdb.org/t/p/w92${result.poster_path}`
-            : result.backdrop_path
-                ? `https://image.tmdb.org/t/p/w300${result.backdrop_path}`
-                : 'https://via.placeholder.com/92x138?text=No+Image';
-        img.alt = result.title || result.name;
-
-        const textContainer = document.createElement('div');
-        textContainer.className = 'search-result-text';
-
-        const title = document.createElement('h3');
-        title.textContent = result.title || result.name;
-
-        const details = document.createElement('p');
-
-        // Add year if available
+        const shortenedTitle = result.title || result.name || 'Unknown Title';
+        const date = result.release_date || result.first_air_date || '';
         let year = '';
-        if (result.release_date) {
-            year = new Date(result.release_date).getFullYear();
-        } else if (result.first_air_date) {
-            year = new Date(result.first_air_date).getFullYear();
+        if (date) {
+            year = new Date(date).getFullYear();
         }
 
-        details.textContent = year ? `${year}` : '';
+        const movieItem = document.createElement('div');
+        // Create HTML structure for each item
+        movieItem.innerHTML = `<div class="search-item-thumbnail">
+                                <img src="${result.poster_path
+                                    ? `https://image.tmdb.org/t/p/w92${result.poster_path}`
+                                    : result.backdrop_path
+                                        ? `https://image.tmdb.org/t/p/w300${result.backdrop_path}`
+                                        : 'https://via.placeholder.com/92x138?text=No+Image'}">
+                            </div>
+                            <div class="search-item-info">
+                                <h3>${shortenedTitle}</h3>
+                                <p>movie <span> &nbsp; ${year}</span></p>
+                            </div>
+                            <button class="watchListBtn" id="${result.id}">Add to WatchList</button>`;
 
-        // Add rating if available
-        if (result.vote_average) {
-            details.textContent += details.textContent ? ` • ⭐ ${result.vote_average.toFixed(1)}` : `⭐ ${result.vote_average.toFixed(1)}`;
-        }
+        const watchListBtn = movieItem.querySelector('.watchListBtn');
 
-        textContainer.appendChild(title);
-        textContainer.appendChild(details);
+        // Add event listener to WatchList button
+        watchListBtn.addEventListener('click', () => {
+            // Get the watchlist from local storage
+            const watchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
 
-        resultItem.appendChild(img);
-        resultItem.appendChild(textContainer);
+            // Check if the movie is not already in the WatchList list
+            if (!watchlist.find(item => item.id === result.id)) {
+                watchlist.push({
+                    id: result.id,
+                    title: shortenedTitle,
+                    poster_path: result.poster_path
+                        ? `https://image.tmdb.org/t/p/w500${result.poster_path}`
+                        : result.backdrop_path
+                            ? `https://image.tmdb.org/t/p/w500${result.backdrop_path}`
+                            : 'https://via.placeholder.com/500x750?text=No+Image',
+                    media_type: 'movie',
+                    release_date: date
+                });
+                localStorage.setItem('watchlist', JSON.stringify(watchlist)); // Store in Local Storage
+                watchListBtn.textContent = "Go to WatchList";
+                watchListBtn.addEventListener('click', () => {
+                    window.location.href = '../watchList/watchlist.html'; // Navigate to the WatchList page
+                });
+            } else {
+                window.location.href = '../watchList/watchlist.html'; // Navigate to the WatchList page
+            }
+        });
 
-        // Add click event
-        resultItem.addEventListener('click', () => {
-            searchResults.style.display = 'none';
+        const thumbnail = movieItem.querySelector('.search-item-thumbnail');
+        const info = movieItem.querySelector('.search-item-info');
+
+        // Add event listener to navigate to details page
+        thumbnail.addEventListener('click', () => {
             window.location.href = `../movie_details/movie_details.html?media=movie&id=${result.id}`;
         });
 
-        searchResults.appendChild(resultItem);
+        info.addEventListener('click', () => {
+            window.location.href = `../movie_details/movie_details.html?media=movie&id=${result.id}`;
+        });
+
+        movieItem.setAttribute('class', 'movie-list');
+
+        // Append movie item to search results
+        searchResults.appendChild(movieItem);
     });
 
-    searchResults.style.display = 'block';
+    searchResults.style.visibility = "visible";
 }
 
 // Function to add back to top button

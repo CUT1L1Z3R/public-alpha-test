@@ -1,19 +1,16 @@
 // TMDB API key
 const api_Key = '84259f99204eeb7d45c7e3d8e36c6123';
 
-// Check for banner element
 const bannerElement = document.getElementById('banner');
 const bannerTitleElement = document.getElementById('banner-title');
 const searchInput = document.getElementById('searchInput');
 const searchResults = document.getElementById('searchResults');
 const goToWatchlistBtn = document.getElementById('goToWatchlist');
 
-// Banner slideshow variables
-let bannerItems = []; // Will store banner items
-let currentBannerIndex = 0; // Current index in the slideshow
-let bannerInterval; // Interval for auto-rotation
+let bannerItems = [];
+let currentBannerIndex = 0;
+let bannerInterval;
 
-// Function to fetch TV shows from TMDB API
 function fetchTVShows(containerClass, type) {
     const containers = document.querySelectorAll(`.${containerClass}`);
 
@@ -26,12 +23,9 @@ function fetchTVShows(containerClass, type) {
 
     let endpoint = '';
 
-    // Determine which endpoint to use based on TV show type
     if (type === 'netflix_originals') {
-        // For Netflix Originals, use discover with Netflix as network (213 is Netflix's network ID)
         endpoint = `discover/tv?api_key=${api_Key}&with_networks=213&sort_by=popularity.desc`;
     } else if (type === 'disney_plus') {
-        // For Disney+, use discover with Disney+ as network (2739 is Disney+'s network ID)
         endpoint = `discover/tv?api_key=${api_Key}&with_networks=2739&sort_by=popularity.desc`;
     } else if (type === 'trending') {
         endpoint = `trending/tv/week?api_key=${api_Key}`;
@@ -42,7 +36,6 @@ function fetchTVShows(containerClass, type) {
     } else if (type === 'on_the_air') {
         endpoint = `tv/on_the_air?api_key=${api_Key}`;
     } else {
-        // Genre-specific endpoint
         let genreId;
         switch (type) {
             case 'comedy':
@@ -61,19 +54,19 @@ function fetchTVShows(containerClass, type) {
                 genreId = 10751;
                 break;
             case 'action':
-                genreId = 10759; // Action & Adventure for TV
+                genreId = 10759;
                 break;
             case 'scifi':
-                genreId = 10765; // Sci-Fi & Fantasy for TV
+                genreId = 10765;
                 break;
             case 'reality':
-                genreId = 10764; // Reality
+                genreId = 10764;
                 break;
             case 'mystery':
                 genreId = 9648;
                 break;
             case 'fantasy':
-                genreId = 10765; // Sci-Fi & Fantasy for TV, but we'll use it just for fantasy
+                genreId = 10765;
                 break;
             default:
                 genreId = null;
@@ -87,7 +80,6 @@ function fetchTVShows(containerClass, type) {
         }
     }
 
-    // Fetch data from TMDB API
     fetch(`https://api.themoviedb.org/3/${endpoint}`)
         .then(response => {
             if (!response.ok) {
@@ -100,121 +92,95 @@ function fetchTVShows(containerClass, type) {
             const tvResults = data.results || [];
 
             containers.forEach(container => {
-                container.innerHTML = ''; // Clear the container first to prevent duplicates
+                container.innerHTML = '';
 
-                // Process each TV show item
                 if (tvResults.length === 0) {
                     container.innerHTML = '<div style="color: white; padding: 20px; text-align: center;">No TV shows available at this time. Please try again later.</div>';
                     return;
                 }
 
-                // Filter out items without poster or backdrop images
                 const validResults = tvResults.filter(item => item.poster_path || item.backdrop_path);
 
                 validResults.forEach(show => {
-                    // Special handling for different containers:
-                    // - Netflix originals: Use poster_path for portrait format
-                    // - Disney+ and all others: Use backdrop_path for landscape format
                     const usePoster = containerClass === 'netflix-container';
                     let useBackdropStyle = false;
 
                     let imageUrl;
                     if (usePoster && show.poster_path) {
-                        // Use poster images for Netflix originals (portrait format)
                         imageUrl = `https://image.tmdb.org/t/p/w500${show.poster_path}`;
                     } else if (show.backdrop_path) {
-                        // Use backdrop images for all other containers (landscape format)
                         imageUrl = `https://image.tmdb.org/t/p/w780${show.backdrop_path}`;
                         useBackdropStyle = true;
                     } else {
-                        // Fallback to poster path if backdrop is not available
                         imageUrl = `https://image.tmdb.org/t/p/w500${show.poster_path}`;
                     }
 
-                    // Create TV show item element
                     const itemElement = document.createElement('div');
                     itemElement.className = 'movie-item';
 
-                    // Apply landscape dimensions for all containers using backdrop images
                     if (useBackdropStyle) {
-                        itemElement.style.width = '290px';  // Landscape width
-                        itemElement.style.height = '170px'; // Landscape height (16:9 aspect ratio)
+                        itemElement.style.width = '290px';
+                        itemElement.style.height = '170px';
                     }
 
-                    // Apply portrait dimensions for Netflix originals
                     if (usePoster) {
-                        itemElement.style.width = '250px';  // Portrait width
-                        itemElement.style.height = '340px'; // Portrait height (movie poster ratio)
+                        itemElement.style.width = '250px';
+                        itemElement.style.height = '340px';
                     }
 
                     itemElement.dataset.mediaType = 'tv';
                     itemElement.dataset.id = show.id;
 
-                    // Create image wrapper
                     const imgWrapper = document.createElement('div');
                     imgWrapper.className = 'image-wrapper';
 
-                    // Create and add the image
                     const img = document.createElement('img');
                     img.src = imageUrl;
                     img.alt = show.name || 'TV Show';
                     img.loading = 'lazy';
 
-                    // Error handling for image loading
                     img.onerror = function() {
                         this.onerror = null;
                         this.src = 'https://via.placeholder.com/500x750?text=Image+Error';
                     };
 
-                    // Create overlay
                     const overlay = document.createElement('div');
                     overlay.className = 'movie-overlay';
 
-                    // Create title
                     const titleElement = document.createElement('div');
                     titleElement.className = 'movie-title';
                     titleElement.textContent = show.name || 'Unknown Title';
 
-                    // Create rating
                     const rating = document.createElement('div');
                     rating.className = 'movie-rating';
 
-                    // Add star icon
                     const star = document.createElement('span');
                     star.className = 'rating-star';
                     star.innerHTML = '★';
 
-                    // Add vote average
                     const voteAverage = show.vote_average || 0;
                     const formattedRating = voteAverage !== 0 ? voteAverage.toFixed(1) : 'N/A';
                     const ratingValue = document.createElement('span');
                     ratingValue.className = 'rating-value';
                     ratingValue.textContent = formattedRating;
 
-                    // Set color based on rating
                     if (formattedRating !== 'N/A') {
                         star.style.color = getRatingColor(voteAverage);
                     }
 
-                    // Build the rating element
                     rating.appendChild(star);
                     rating.appendChild(ratingValue);
 
-                    // Build the overlay
                     overlay.appendChild(titleElement);
                     overlay.appendChild(rating);
 
-                    // Add overlay to the image wrapper
                     imgWrapper.appendChild(img);
                     imgWrapper.appendChild(overlay);
 
-                    // Add the wrapper to the item
                     itemElement.appendChild(imgWrapper);
 
-                    // Add the item to the container
                     container.appendChild(itemElement);
 
-                    // Add click event to navigate to details page
                     itemElement.addEventListener('click', () => {
                         window.location.href = `../movie_details/movie_details.html?media=tv&id=${show.id}`;
                     });
@@ -226,96 +192,71 @@ function fetchTVShows(containerClass, type) {
         });
 }
 
-// Function to determine rating color based on score
 function getRatingColor(rating) {
     if (rating >= 8) {
-        return '#4CAF50'; // Green for high ratings
+        return '#4CAF50';
     } else if (rating >= 6) {
-        return '#FFC107'; // Yellow/amber for decent ratings
+        return '#FFC107';
     } else if (rating >= 4) {
-        return '#FF9800'; // Orange for mediocre ratings
+        return '#FF9800';
     } else {
-        return '#F44336'; // Red for low ratings
+        return '#F44336';
     }
 }
 
-// Function to update banner slideshow based on section
 function updateBannerForSection() {
     if (!bannerElement) return;
 
-    // Clear current banner
     bannerElement.src = '';
     if (bannerTitleElement) bannerTitleElement.textContent = '';
 
-    // Clear existing interval if any
     if (bannerInterval) {
         clearInterval(bannerInterval);
     }
 
-    // Reset banner items array
     bannerItems = [];
     currentBannerIndex = 0;
 
-    // For TV Shows section, use trending TV shows
     fetch(`https://api.themoviedb.org/3/trending/tv/week?api_key=${api_Key}`)
         .then(response => response.json())
         .then(data => {
             const shows = data.results || [];
-            // Filter to shows with backdrop images
             bannerItems = shows.filter(show => show.backdrop_path).slice(0, 9);
 
             if (bannerItems.length > 0) {
-                // Show first banner
                 showBannerAtIndex(0);
-                // Start auto-rotation
                 startBannerSlideshow();
             }
         })
         .catch(error => console.error('Error updating banner:', error));
 }
 
-// Function to start auto-rotation of banner items
 function startBannerSlideshow() {
-    // Clear any existing interval
     if (bannerInterval) {
         clearInterval(bannerInterval);
     }
 
-    // Only start if we have multiple items
     if (bannerItems.length > 1) {
         bannerInterval = setInterval(() => {
-            // Move to next banner
             currentBannerIndex = (currentBannerIndex + 1) % bannerItems.length;
-
-            // Show the banner
             showBannerAtIndex(currentBannerIndex);
-        }, 8000); // Change banner every 8 seconds
+        }, 8000);
     }
 }
 
-// Function to show banner at specific index with enhanced styling
 function showBannerAtIndex(index) {
     const item = bannerItems[index];
     if (item && item.backdrop_path && bannerElement) {
-
-        // Set banner image with high quality
         bannerElement.src = `https://image.tmdb.org/t/p/original${item.backdrop_path}`;
 
         if (bannerTitleElement) {
-            // Create a more detailed title with additional info
             const title = item.name;
-
-            // Add subtitle information if available
             const extraInfo = [];
             if (item.first_air_date) {
                 extraInfo.push(new Date(item.first_air_date).getFullYear());
             }
-
-            // Add media type (TV Show)
             extraInfo.push('Latest');
             extraInfo.push('TV Show');
-
-            // Add rating if available
             if (item.vote_average) {
                 extraInfo.push(`⭐ ${parseFloat(item.vote_average).toFixed(1)}`);
             }
@@ -326,7 +267,6 @@ function showBannerAtIndex(index) {
                     <div class="banner-subtitle">${extraInfo.join(' • ')}</div>
                 `;
 
-                // Add some CSS to the subtitle for better appearance
                 const subtitleElement = bannerTitleElement.querySelector('.banner-subtitle');
                 if (subtitleElement) {
                     subtitleElement.style.fontSize = '0.85rem';
@@ -334,19 +274,16 @@ function showBannerAtIndex(index) {
                     subtitleElement.style.marginTop = '8px';
                     subtitleElement.style.fontWeight = 'normal';
 
-                    // Style all "Latest" tags
                     const latestTag = 'Latest';
                     if (subtitleElement.textContent.includes(latestTag)) {
-                        // Create a span to style just the "Latest" text
                         subtitleElement.innerHTML = subtitleElement.innerHTML.replace(
                             latestTag,
                             `<span class="latest-badge">${latestTag}</span>`
                         );
 
-                        // Style the badge
                         const badge = subtitleElement.querySelector('.latest-badge');
                         if (badge) {
-                            badge.style.backgroundColor = 'rgba(231, 76, 60, 0.85)'; // Red for trending content
+                            badge.style.backgroundColor = 'rgba(231, 76, 60, 0.85)';
                             badge.style.padding = '2px 6px';
                             badge.style.borderRadius = '4px';
                             badge.style.color = 'white';
@@ -362,10 +299,8 @@ function showBannerAtIndex(index) {
             }
         }
 
-        // Update the banner image to have better display
         bannerElement.style.objectFit = 'cover';
 
-        // Add click event listeners to the play and more info buttons
         const playButton = document.getElementById('play-button');
         const moreInfoButton = document.getElementById('more-info');
 
@@ -383,7 +318,6 @@ function showBannerAtIndex(index) {
     }
 }
 
-// Initialize banner navigation
 if (bannerElement) {
     const prevButton = document.getElementById('banner-prev');
     const nextButton = document.getElementById('banner-next');
@@ -391,11 +325,9 @@ if (bannerElement) {
     if (prevButton && nextButton) {
         prevButton.addEventListener('click', () => {
             if (bannerItems.length > 1) {
-                // Move to previous banner
                 currentBannerIndex = (currentBannerIndex - 1 + bannerItems.length) % bannerItems.length;
                 showBannerAtIndex(currentBannerIndex);
 
-                // Reset auto-rotation timer
                 if (bannerInterval) {
                     clearInterval(bannerInterval);
                 }
@@ -405,11 +337,9 @@ if (bannerElement) {
 
         nextButton.addEventListener('click', () => {
             if (bannerItems.length > 1) {
-                // Move to next banner
                 currentBannerIndex = (currentBannerIndex + 1) % bannerItems.length;
                 showBannerAtIndex(currentBannerIndex);
 
-                // Reset auto-rotation timer
                 if (bannerInterval) {
                     clearInterval(bannerInterval);
                 }
@@ -421,45 +351,111 @@ if (bannerElement) {
 
 // Function to handle search
 function initSearch() {
-    if (searchInput) {
-        searchInput.addEventListener('input', () => {
-            handleSearchInput();
-        });
-
-        // Hide search results when clicking outside
-        document.addEventListener('click', (event) => {
-            if (!searchInput.contains(event.target) && !searchResults.contains(event.target)) {
-                searchResults.style.display = 'none';
-            }
-        });
+    if (!searchInput) {
+        console.error('Search input element not found!');
+        return;
     }
+
+    console.log('Initializing search functionality for TV shows');
+
+    // Make sure the search results container exists and is properly configured
+    if (searchResults) {
+        // Initialize the search results container
+        searchResults.style.position = "absolute";
+        searchResults.style.top = "60px";
+        searchResults.style.right = "20px";
+        searchResults.style.width = "300px";
+        searchResults.style.backgroundColor = "#141414";
+        searchResults.style.color = "white";
+        searchResults.style.borderRadius = "5px";
+        searchResults.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.5)";
+        searchResults.style.zIndex = "1000";
+        searchResults.style.maxHeight = "80vh";
+        searchResults.style.overflowY = "auto";
+        searchResults.style.border = "1px solid #8d16c9";
+        searchResults.innerHTML = '';
+    } else {
+        console.error('Search results container not found!');
+    }
+
+    // Add a click event to ensure the search input is visible and focused
+    searchInput.addEventListener('click', () => {
+        searchInput.focus();
+    });
+
+    // Input event for real-time search
+    searchInput.addEventListener('input', () => {
+        console.log('Input event triggered with query:', searchInput.value);
+        handleSearchInput();
+    });
+
+    // Add event listener for Enter key press in search input
+    searchInput.addEventListener('keyup', async event => {
+        if (event.key === 'Enter') {
+            console.log('Enter key pressed with query:', searchInput.value);
+            handleSearchInput();
+        }
+    });
+
+    // Event listener for search input focus to reshow results if there was a query
+    searchInput.addEventListener('focus', () => {
+        const query = searchInput.value;
+        if (query.length > 2) {
+            // Re-show search results if they were previously hidden
+            fetchSearchResults(query).then(results => {
+                console.log('Focus triggered search, found results:', results.length);
+                displaySearchResults(results);
+            });
+        }
+    });
+
+    // Hide search results when clicking outside
+    document.addEventListener('click', event => {
+        // Check if the click is on search input - don't close if it is
+        if (event.target === searchInput) {
+            return;
+        }
+
+        // Don't close search if clicking on search results or one of their children
+        if (searchResults && searchResults.contains(event.target)) {
+            return;
+        }
+
+        // Close the search results if clicking elsewhere
+        if (searchResults) {
+            searchResults.innerHTML = '';
+        }
+    });
 }
 
 // Function to handle search input
 async function handleSearchInput() {
     const query = searchInput.value;
+    console.log(`Handling search input: "${query}"`);
+
     if (query.length > 2) {
+        console.log('Query is long enough, fetching results...');
         const results = await fetchSearchResults(query);
-        if (results.length !== 0) {
-            displaySearchResults(results);
-        } else {
-            searchResults.innerHTML = '<p>No results found</p>';
-            searchResults.style.display = 'block';
-        }
+        console.log(`Got ${results.length} search results`);
+
+        // Display the results
+        displaySearchResults(results);
     } else {
-        searchResults.style.display = 'none';
+        console.log('Query too short, hiding results');
+        if (searchResults) {
+            searchResults.innerHTML = '';
+        }
     }
 }
 
 // Function to fetch search results
 async function fetchSearchResults(query) {
     try {
-        const response = await fetch(`https://api.themoviedb.org/3/search/tv?api_key=${api_Key}&query=${query}`);
+        const response = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${api_Key}&query=${query}`);
         const data = await response.json();
-        // Filter results to only TV shows with valid poster/backdrop images
         return data.results.filter(item =>
-            (item.poster_path || item.backdrop_path)
-        ).slice(0, 6); // Limit to 6 results
+            item.media_type === 'tv' && (item.poster_path || item.backdrop_path)
+        ).slice(0, 6);
     } catch (error) {
         console.error('Error fetching search results:', error);
         return [];
@@ -468,82 +464,97 @@ async function fetchSearchResults(query) {
 
 // Function to display search results
 function displaySearchResults(results) {
+    if (!searchResults) return;
+
     searchResults.innerHTML = '';
+    searchResults.style.display = "block";
+    searchResults.style.visibility = "visible";
 
     if (results.length === 0) {
-        searchResults.style.display = 'none';
+        searchResults.innerHTML = '<p>No results found</p>';
         return;
     }
 
     results.forEach(result => {
-        const resultItem = document.createElement('div');
-        resultItem.className = 'search-result-item';
-
-        const img = document.createElement('img');
-        img.src = result.poster_path
-            ? `https://image.tmdb.org/t/p/w92${result.poster_path}`
-            : result.backdrop_path
-                ? `https://image.tmdb.org/t/p/w300${result.backdrop_path}`
-                : 'https://via.placeholder.com/92x138?text=No+Image';
-        img.alt = result.name || 'TV Show';
-
-        const textContainer = document.createElement('div');
-        textContainer.className = 'search-result-text';
-
-        const title = document.createElement('h3');
-        title.textContent = result.name || 'Unknown Title';
-
-        const details = document.createElement('p');
-
-        // Add year if available
+        const shortenedTitle = result.name || 'Unknown Title';
+        const date = result.first_air_date || '';
         let year = '';
-        if (result.first_air_date) {
-            year = new Date(result.first_air_date).getFullYear();
+        if (date) {
+            year = new Date(date).getFullYear();
         }
 
-        details.textContent = year ? `${year}` : '';
+        const movieItem = document.createElement('div');
+        movieItem.innerHTML = `<div class="search-item-thumbnail">
+                                <img src="${result.poster_path
+                                    ? `https://image.tmdb.org/t/p/w92${result.poster_path}`
+                                    : result.backdrop_path
+                                        ? `https://image.tmdb.org/t/p/w300${result.backdrop_path}`
+                                        : 'https://via.placeholder.com/92x138?text=No+Image'}">
+                            </div>
+                            <div class="search-item-info">
+                                <h3>${shortenedTitle}</h3>
+                                <p>tv <span> &nbsp; ${year}</span></p>
+                            </div>
+                            <button class="watchListBtn" id="${result.id}">Add to WatchList</button>`;
 
-        // Add rating if available
-        if (result.vote_average) {
-            details.textContent += details.textContent ? ` • ⭐ ${result.vote_average.toFixed(1)}` : `⭐ ${result.vote_average.toFixed(1)}`;
-        }
+        const watchListBtn = movieItem.querySelector('.watchListBtn');
 
-        textContainer.appendChild(title);
-        textContainer.appendChild(details);
+        watchListBtn.addEventListener('click', () => {
+            const watchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
+            if (!watchlist.find(item => item.id === result.id)) {
+                watchlist.push({
+                    id: result.id,
+                    title: shortenedTitle,
+                    poster_path: result.poster_path
+                        ? `https://image.tmdb.org/t/p/w500${result.poster_path}`
+                        : result.backdrop_path
+                            ? `https://image.tmdb.org/t/p/w500${result.backdrop_path}`
+                            : 'https://via.placeholder.com/500x750?text=No+Image',
+                    media_type: 'tv',
+                    release_date: date
+                });
+                localStorage.setItem('watchlist', JSON.stringify(watchlist));
+                watchListBtn.textContent = "Go to WatchList";
+                watchListBtn.addEventListener('click', () => {
+                    window.location.href = '../watchList/watchlist.html';
+                });
+            } else {
+                window.location.href = '../watchList/watchlist.html';
+            }
+        });
 
-        resultItem.appendChild(img);
-        resultItem.appendChild(textContainer);
+        const thumbnail = movieItem.querySelector('.search-item-thumbnail');
+        const info = movieItem.querySelector('.search-item-info');
 
-        // Add click event
-        resultItem.addEventListener('click', () => {
-            searchResults.style.display = 'none';
+        thumbnail.addEventListener('click', () => {
             window.location.href = `../movie_details/movie_details.html?media=tv&id=${result.id}`;
         });
 
-        searchResults.appendChild(resultItem);
+        info.addEventListener('click', () => {
+            window.location.href = `../movie_details/movie_details.html?media=tv&id=${result.id}`;
+        });
+
+        movieItem.setAttribute('class', 'movie-list');
+
+        searchResults.appendChild(movieItem);
     });
 
-    searchResults.style.display = 'block';
+    searchResults.style.visibility = "visible";
 }
 
-// Set up watchlist button
 if (goToWatchlistBtn) {
     goToWatchlistBtn.addEventListener('click', function() {
         window.location.href = '../watchList/watchlist.html';
     });
 }
 
-// Initialize search functionality
 initSearch();
 
-// Function to load all content
 function loadContent() {
     console.log('Loading TV show content...');
 
-    // Update banner
     updateBannerForSection();
 
-    // Fetch TV content for each section
     fetchTVShows('netflix-container', 'netflix_originals');
     fetchTVShows('disney-container', 'disney_plus');
     fetchTVShows('drama-tv-container', 'drama');
@@ -556,18 +567,14 @@ function loadContent() {
     fetchTVShows('scifi-tv-container', 'scifi');
     fetchTVShows('documentary-tv-container', 'documentary');
 
-    // Adjust navigation button heights for all containers
     setTimeout(() => {
-        // Netflix originals (portrait format)
         const netflixPrevBtn = document.querySelector('.netflix-previous');
         const netflixNextBtn = document.querySelector('.netflix-next');
         const netflixContainer = document.querySelector('.netflix-container');
 
         if (netflixPrevBtn && netflixNextBtn) {
-            // Set the correct height for Netflix navigation buttons
             netflixPrevBtn.style.height = '340px';
             netflixNextBtn.style.height = '340px';
-            // Add click event listeners to ensure they work properly
             netflixPrevBtn.addEventListener('click', function() {
                 const container = document.querySelector('.netflix-container');
                 if (container) {
@@ -592,31 +599,25 @@ function loadContent() {
             netflixContainer.style.minHeight = '380px';
         }
 
-        // Set landscape height for other navigation buttons
         const navButtons = document.querySelectorAll('.navigation-button:not(.netflix-previous):not(.netflix-next)');
         navButtons.forEach(button => {
-            button.style.height = '170px'; // Match the height of backdrop images
+            button.style.height = '170px';
         });
 
-        // Ensure proper min-height for other containers
         const otherContainers = document.querySelectorAll('.movies-box:not(.netflix-container)');
         otherContainers.forEach(container => {
-            container.style.minHeight = '190px'; // Allow space for the items plus margin
+            container.style.minHeight = '190px';
         });
-    }, 1000); // Small delay to ensure content is loaded
+    }, 1000);
 }
 
-// Initialize content loading when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', function() {
     loadContent();
 
-    // Implement back to top button functionality
     const backToTopBtn = document.getElementById('back-to-top-btn');
     if (backToTopBtn) {
-        // Initially hide the button
         backToTopBtn.style.display = 'none';
 
-        // Show/hide button based on scroll position
         window.addEventListener('scroll', function() {
             if (window.scrollY > 300) {
                 backToTopBtn.style.display = 'flex';
@@ -625,7 +626,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Scroll to top when clicked
         backToTopBtn.addEventListener('click', function() {
             window.scrollTo({
                 top: 0,
