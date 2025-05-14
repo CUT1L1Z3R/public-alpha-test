@@ -558,11 +558,42 @@ function initSearch() {
         handleSearchInput();
     });
 
-    // Hide search results when clicking outside
-    document.addEventListener('click', (event) => {
-        if (!searchInput.contains(event.target) && !searchResults.contains(event.target)) {
-            searchResults.style.display = 'none';
+    // Add event listener for Enter key press in search input
+    searchInput.addEventListener('keyup', async event => {
+        if (event.key === 'Enter') {
+            handleSearchInput();
         }
+    });
+
+    // Event listener for search input focus to reshow results if there was a query
+    searchInput.addEventListener('focus', () => {
+        const query = searchInput.value;
+        if (query.length > 2) {
+            // Re-show search results if they were previously hidden
+            fetchSearchResults(query).then(results => {
+                if (results.length !== 0) {
+                    displaySearchResults(results);
+                    searchResults.style.visibility = "visible";
+                }
+            });
+        }
+    });
+
+    // Hide search results when clicking outside
+    document.addEventListener('click', event => {
+        // Check if the click is on search input - don't close if it is
+        if (event.target === searchInput) {
+            return;
+        }
+
+        // Don't close search if clicking on search results or one of their children
+        if (searchResults.contains(event.target)) {
+            return;
+        }
+
+        // Close the search results if clicking elsewhere
+        searchResults.innerHTML = '';
+        searchResults.style.visibility = "hidden";
     });
 }
 
@@ -572,13 +603,12 @@ async function handleSearchInput() {
     if (query.length > 2) {
         const results = await fetchSearchResults(query);
         if (results.length !== 0) {
-            displaySearchResults(results);
-        } else {
-            searchResults.innerHTML = '<p>No results found</p>';
-            searchResults.style.display = 'block';
+            searchResults.style.visibility = "visible";
         }
+        displaySearchResults(results);
     } else {
-        searchResults.style.display = 'none';
+        searchResults.innerHTML = '';
+        searchResults.style.visibility = "hidden";
     }
 }
 
@@ -603,61 +633,83 @@ function displaySearchResults(results) {
     searchResults.innerHTML = '';
 
     if (results.length === 0) {
-        searchResults.style.display = 'none';
+        searchResults.innerHTML = '<p>No results found</p>';
+        searchResults.style.visibility = "visible";
         return;
     }
 
     results.forEach(result => {
-        const resultItem = document.createElement('div');
-        resultItem.className = 'search-result-item';
-
-        const img = document.createElement('img');
-        img.src = result.poster_path
-            ? `https://image.tmdb.org/t/p/w92${result.poster_path}`
-            : result.backdrop_path
-                ? `https://image.tmdb.org/t/p/w300${result.backdrop_path}`
-                : 'https://via.placeholder.com/92x138?text=No+Image';
-        img.alt = result.name || result.title || 'Untitled';
-
-        const textContainer = document.createElement('div');
-        textContainer.className = 'search-result-text';
-
-        const title = document.createElement('h3');
-        title.textContent = result.name || result.title || 'Untitled';
-
-        const details = document.createElement('p');
-
-        // Add year if available
+        const shortenedTitle = result.name || result.title || 'Unknown Title';
+        const date = result.first_air_date || result.release_date || '';
         let year = '';
-        if (result.first_air_date) {
-            year = new Date(result.first_air_date).getFullYear();
-        } else if (result.release_date) {
-            year = new Date(result.release_date).getFullYear();
+        if (date) {
+            year = new Date(date).getFullYear();
         }
 
-        details.textContent = year ? `${year}` : '';
+        const movieItem = document.createElement('div');
+        // Create HTML structure for each item
+        movieItem.innerHTML = `<div class="search-item-thumbnail">
+                                <img src="${result.poster_path
+                                    ? `https://image.tmdb.org/t/p/w92${result.poster_path}`
+                                    : result.backdrop_path
+                                        ? `https://image.tmdb.org/t/p/w300${result.backdrop_path}`
+                                        : 'https://via.placeholder.com/92x138?text=No+Image'}">
+                            </div>
+                            <div class="search-item-info">
+                                <h3>${shortenedTitle}</h3>
+                                <p>anime <span> &nbsp; ${year}</span></p>
+                            </div>
+                            <button class="watchListBtn" id="${result.id}">Add to WatchList</button>`;
 
-        // Add rating if available
-        if (result.vote_average) {
-            details.textContent += details.textContent ? ` • ⭐ ${result.vote_average.toFixed(1)}` : `⭐ ${result.vote_average.toFixed(1)}`;
-        }
+        const watchListBtn = movieItem.querySelector('.watchListBtn');
 
-        textContainer.appendChild(title);
-        textContainer.appendChild(details);
+        // Add event listener to WatchList button
+        watchListBtn.addEventListener('click', () => {
+            // Get the watchlist from local storage
+            const watchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
 
-        resultItem.appendChild(img);
-        resultItem.appendChild(textContainer);
+            // Check if the movie is not already in the WatchList list
+            if (!watchlist.find(item => item.id === result.id)) {
+                watchlist.push({
+                    id: result.id,
+                    title: shortenedTitle,
+                    poster_path: result.poster_path
+                        ? `https://image.tmdb.org/t/p/w500${result.poster_path}`
+                        : result.backdrop_path
+                            ? `https://image.tmdb.org/t/p/w500${result.backdrop_path}`
+                            : 'https://via.placeholder.com/500x750?text=No+Image',
+                    media_type: 'tv',
+                    release_date: date
+                });
+                localStorage.setItem('watchlist', JSON.stringify(watchlist)); // Store in Local Storage
+                watchListBtn.textContent = "Go to WatchList";
+                watchListBtn.addEventListener('click', () => {
+                    window.location.href = '../watchList/watchlist.html'; // Navigate to the WatchList page
+                });
+            } else {
+                window.location.href = '../watchList/watchlist.html'; // Navigate to the WatchList page
+            }
+        });
 
-        // Add click event
-        resultItem.addEventListener('click', () => {
-            searchResults.style.display = 'none';
+        const thumbnail = movieItem.querySelector('.search-item-thumbnail');
+        const info = movieItem.querySelector('.search-item-info');
+
+        // Add event listener to navigate to details page
+        thumbnail.addEventListener('click', () => {
             window.location.href = `../movie_details/movie_details.html?media=tv&id=${result.id}`;
         });
 
-        searchResults.appendChild(resultItem);
+        info.addEventListener('click', () => {
+            window.location.href = `../movie_details/movie_details.html?media=tv&id=${result.id}`;
+        });
+
+        movieItem.setAttribute('class', 'movie-list');
+
+        // Append movie item to search results
+        searchResults.appendChild(movieItem);
     });
 
-    searchResults.style.display = 'block';
+    searchResults.style.visibility = "visible";
 }
 
 // Function to add back to top button
