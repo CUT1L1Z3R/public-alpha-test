@@ -20,7 +20,7 @@ body {
   background: rgba(0, 0, 0, 0.9);
   position: fixed;
   top: 0;
-  z-index: 20;
+  z-index: 22; /* Higher than nav-menu but lower than search results */
   backdrop-filter: blur(10px);
   transition: top 0.4s;
   border-bottom: 1px solid rgba(141, 22, 201, 0.5);
@@ -161,6 +161,7 @@ body {
   position: relative;
   flex: 1;
   max-width: 500px;
+  z-index: 24; /* Higher z-index to ensure search results display properly */
 }
 
 #banner-overlay {
@@ -211,7 +212,7 @@ input::-webkit-input-placeholder {
   border-radius: 6px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   background-color: #111;
-  z-index: 2000;
+  z-index: 25; /* Increased above nav-menu (20) and header (22) */
 }
 
 #searchResults::-webkit-scrollbar {
@@ -793,7 +794,7 @@ input::-webkit-input-placeholder {
     padding: 0 10px;
     width: 100%;
     box-sizing: border-box;
-    z-index: 30;
+    z-index: 22; /* Higher than nav-menu but lower than search results */
     border-bottom: 1px solid rgba(141, 22, 201, 0.3);
   }
 
@@ -853,7 +854,7 @@ input::-webkit-input-placeholder {
     max-height: 300px;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 2000;
+    z-index: 25; /* Use same z-index as desktop */
   }
 
   /* Fixed nav menu positioning */
@@ -868,7 +869,7 @@ input::-webkit-input-placeholder {
     border-bottom: 1px solid rgba(141, 22, 201, 0.3);
     padding: 0;
     position: fixed;
-    z-index: 25;
+    z-index: 20;
   }
 
   .nav-list {
@@ -1228,7 +1229,7 @@ input::-webkit-input-placeholder {
   #searchResults {
     width: 45vw;
     max-width: 45vw;
-    z-index: 2000;
+    z-index: 25;
   }
 
   .nav-menu {
@@ -1396,7 +1397,7 @@ input::-webkit-input-placeholder {
 /* Desktop layout search fixes - Added to fix search results display */
 @media only screen and (min-width: 781px) {
   #searchResults {
-    z-index: 2000; /* Higher z-index to ensure it appears above all elements */
+    z-index: 25; /* Match the main #searchResults z-index */
     position: absolute;
     top: 45px;
     left: 0;
@@ -1404,10 +1405,20 @@ input::-webkit-input-placeholder {
     max-width: 100%;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8); /* Enhanced shadow for better visibility */
     border: 1px solid rgba(141, 22, 201, 0.5); /* Add a subtle border to match site style */
+    margin-top: 5px; /* Extra space below search input */
   }
 
+  /* Critical fix: Make sure the input container is independent */
   .input-container {
     position: relative;
+    z-index: 24; /* Make sure the container is above other elements but below results */
+  }
+
+  /* Additional fix to ensure search results are properly isolated and appear above all elements */
+  .header .input-container #searchResults {
+    isolation: isolate; /* Create a new stacking context */
+    position: absolute;
+    z-index: 9999; /* Ultra high z-index to force it above everything */
   }
 
   /* Make search items more compact on desktop */
@@ -1415,13 +1426,13 @@ input::-webkit-input-placeholder {
     padding: 10px;
     background-color: #111; /* Ensure consistent background */
     position: relative; /* Needed for proper stacking */
-    z-index: 2001; /* Make sure each item is above container */
+    z-index: 26; /* Make sure each item is above container */
     border-bottom: 1px solid rgba(141, 22, 201, 0.3); /* Styled separator */
   }
 
   /* Ensure buttons in search results remain visible */
   #searchResults .movie-list .watchListBtn {
-    z-index: 2002; /* Keep buttons above everything */
+    z-index: 27; /* Keep buttons above everything */
     position: absolute;
     right: 10px;
     top: 50%;
