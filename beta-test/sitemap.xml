@@ -1,72 +1,141 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
 
     <!-- Homepage -->
     <url>
-        <loc>https://freeflixx.pages.dev/</loc>
-        <lastmod>2023-05-11</lastmod>
+        <loc>https://www.freeflix.top/</loc>
+        <lastmod>2025-05-14</lastmod>
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
         <image:image>
-            <image:loc>https://freeflixx.pages.dev/assets/freeflixx.png</image:loc>
+            <image:loc>https://www.freeflix.top/assets/freeflixx.png</image:loc>
             <image:title>FreeFlixx - Stream Movies &amp; TV Shows For Free</image:title>
+            <image:caption>Watch free movies and TV shows on FreeFlixx</image:caption>
         </image:image>
+    </url>
+
+    <!-- HTML Sitemap -->
+    <url>
+        <loc>https://www.freeflix.top/sitemap.html</loc>
+        <lastmod>2025-05-14</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
     </url>
 
     <!-- Movies Page -->
     <url>
-        <loc>https://freeflixx.pages.dev/movies/index.html</loc>
-        <lastmod>2023-05-11</lastmod>
+        <loc>https://www.freeflix.top/movies/index.html</loc>
+        <lastmod>2025-05-14</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.9</priority>
         <image:image>
-            <image:loc>https://freeflixx.pages.dev/assets/freeflixx.png</image:loc>
+            <image:loc>https://www.freeflix.top/assets/freeflixx.png</image:loc>
             <image:title>FreeFlixx Movies</image:title>
+            <image:caption>Browse all movies on FreeFlixx</image:caption>
         </image:image>
     </url>
 
     <!-- TV Shows Page -->
     <url>
-        <loc>https://freeflixx.pages.dev/tvshows/index.html</loc>
-        <lastmod>2023-05-11</lastmod>
+        <loc>https://www.freeflix.top/tvshows/index.html</loc>
+        <lastmod>2025-05-14</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.9</priority>
         <image:image>
-            <image:loc>https://freeflixx.pages.dev/assets/freeflixx.png</image:loc>
+            <image:loc>https://www.freeflix.top/assets/freeflixx.png</image:loc>
             <image:title>FreeFlixx TV Shows</image:title>
+            <image:caption>Browse all TV shows on FreeFlixx</image:caption>
         </image:image>
     </url>
 
     <!-- Anime Page -->
     <url>
-        <loc>https://freeflixx.pages.dev/anime/index.html</loc>
-        <lastmod>2023-05-11</lastmod>
+        <loc>https://www.freeflix.top/anime/index.html</loc>
+        <lastmod>2025-05-14</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.9</priority>
         <image:image>
-            <image:loc>https://freeflixx.pages.dev/assets/freeflixx.png</image:loc>
+            <image:loc>https://www.freeflix.top/assets/freeflixx.png</image:loc>
             <image:title>FreeFlixx Anime</image:title>
+            <image:caption>Browse all anime on FreeFlixx</image:caption>
         </image:image>
     </url>
 
     <!-- Movie Details Page -->
     <url>
-        <loc>https://freeflixx.pages.dev/movie_details/movie_details.html</loc>
-        <lastmod>2023-05-11</lastmod>
+        <loc>https://www.freeflix.top/movie_details/movie_details.html</loc>
+        <lastmod>2025-05-14</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
+        <image:image>
+            <image:loc>https://www.freeflix.top/assets/freeflixx.png</image:loc>
+            <image:title>Movie Details on FreeFlixx</image:title>
+            <image:caption>Detailed information about movies and shows</image:caption>
+        </image:image>
     </url>
 
     <!-- Watchlist Page -->
     <url>
-        <loc>https://freeflixx.pages.dev/watchList/watchlist.html</loc>
-        <lastmod>2023-05-11</lastmod>
+        <loc>https://www.freeflix.top/watchList/watchlist.html</loc>
+        <lastmod>2025-05-14</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.7</priority>
         <image:image>
-            <image:loc>https://freeflixx.pages.dev/assets/freeflixx.png</image:loc>
+            <image:loc>https://www.freeflix.top/assets/freeflixx.png</image:loc>
             <image:title>FreeFlixx Watchlist</image:title>
+            <image:caption>Manage your watchlist of favorite movies and shows</image:caption>
         </image:image>
+    </url>
+
+    <!-- Category Pages (for better SEO) -->
+    <url>
+        <loc>https://www.freeflix.top/index.html#trending-now</loc>
+        <lastmod>2025-05-14</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://www.freeflix.top/index.html#top-rated-movies</loc>
+        <lastmod>2025-05-14</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://www.freeflix.top/index.html#netflix-originals</loc>
+        <lastmod>2025-05-14</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <url>
+        <loc>https://www.freeflix.top/index.html#horror-movies</loc>
+        <lastmod>2025-05-14</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <url>
+        <loc>https://www.freeflix.top/index.html#comedy-movies</loc>
+        <lastmod>2025-05-14</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <url>
+        <loc>https://www.freeflix.top/index.html#anime-popular</loc>
+        <lastmod>2025-05-14</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <url>
+        <loc>https://www.freeflix.top/index.html#drama-tv</loc>
+        <lastmod>2025-05-14</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
     </url>
 </urlset>

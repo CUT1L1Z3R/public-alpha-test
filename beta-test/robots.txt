@@ -1,19 +1,37 @@
 User-agent: *
 Allow: /
-Disallow: /assets/
-Disallow: /assests/
-Disallow: /*.js$
-Disallow: /*.css$
-
-# Specific directories
+Allow: /index.html
 Allow: /movies/
 Allow: /tvshows/
 Allow: /anime/
 Allow: /movie_details/
 Allow: /watchList/
 Allow: /sitemap.html
+Allow: /sitemap.xml
+Allow: /sitemap-index.xml
+Allow: /sitemap.txt
 
-# Sitemaps
-Sitemap: https://freeflixx.pages.dev/sitemap-index.xml
-Sitemap: https://freeflixx.pages.dev/sitemap.xml
-Sitemap: https://freeflixx.pages.dev/sitemap.txt
+# Disallow asset directories to save crawl budget
+Disallow: /assets/
+Disallow: /assests/
+
+# Disallow specific file types to save crawl budget
+Disallow: /*.js$
+Disallow: /*.css$
+Disallow: /*.lock$
+Disallow: /*.json$
+
+# Allow specific scripts and required files
+Allow: /service-worker.js
+Allow: /manifest.json
+
+# Rate limiting guideline (optional for bots)
+Crawl-delay: 1
+
+# Sitemaps (provide both absolute and relative URLs for better compatibility)
+Sitemap: https://www.freeflix.top/sitemap-index.xml
+Sitemap: https://www.freeflix.top/sitemap.xml
+Sitemap: https://www.freeflix.top/sitemap.txt
+Sitemap: /sitemap-index.xml
+Sitemap: /sitemap.xml
+Sitemap: /sitemap.txt

@@ -14,6 +14,14 @@
   z-index: 15 !important;
   opacity: 0;
   transition: opacity 0.3s ease-in-out, background-color 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  color: #8d16c9;
+  background-color: rgba(0,0,0,0.3);
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .tv-section .movie-container:hover .navigation-button,
@@ -46,6 +54,15 @@
   transform: translateY(-50%);
   opacity: 0;
   transition: opacity 0.3s, background-color 0.3s;
+  background-color: rgba(0,0,0,0.3);
+  color: #8d16c9;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  width: 40px;
 }
 
 .netflix-previous {
@@ -54,6 +71,16 @@
 
 .netflix-next {
   right: 0;
+}
+
+/* Ensure buttons are always visible on hover */
+.netflix-container:hover + .netflix-next,
+.netflix-container:hover ~ .netflix-previous,
+.netflix-previous:hover,
+.netflix-next:hover,
+.movie-container:hover .netflix-previous,
+.movie-container:hover .netflix-next {
+  opacity: 0.8 !important;
 }
 
 .netflix-previous:hover,
@@ -82,6 +109,12 @@
 
 .next {
   right: 0;
+}
+
+/* Make sure Netflix Originals buttons are visible when container is hovered */
+.movie-container:hover .netflix-previous,
+.movie-container:hover .netflix-next {
+  opacity: 0.8 !important;
 }
 
 .tv-section .movies-box,
@@ -114,6 +147,7 @@
     top: 50%;
     transform: translateY(-50%);
     z-index: 15 !important;
+    font-size: 1.5rem;
   }
 
   /* Ensure Netflix Originals navigation buttons are visible and positioned correctly in mobile */
@@ -124,6 +158,7 @@
     z-index: 15;
     opacity: 0.7;
     transform: translateY(-50%);
+    font-size: 1.5rem;
   }
 
   .netflix-previous {
@@ -161,6 +196,7 @@
     width: 30px;
     top: 50%;
     transform: translateY(-50%);
+    font-size: 1.2rem;
   }
 }
 

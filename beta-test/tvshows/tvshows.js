@@ -364,6 +364,22 @@ function showBannerAtIndex(index) {
 
         // Update the banner image to have better display
         bannerElement.style.objectFit = 'cover';
+
+        // Add click event listeners to the play and more info buttons
+        const playButton = document.getElementById('play-button');
+        const moreInfoButton = document.getElementById('more-info');
+
+        if (playButton) {
+            playButton.onclick = () => {
+                window.location.href = `../movie_details/movie_details.html?media=tv&id=${item.id}`;
+            };
+        }
+
+        if (moreInfoButton) {
+            moreInfoButton.onclick = () => {
+                window.location.href = `../movie_details/movie_details.html?media=tv&id=${item.id}`;
+            };
+        }
     }
 }
 
@@ -445,8 +461,28 @@ function loadContent() {
         const netflixContainer = document.querySelector('.netflix-container');
 
         if (netflixPrevBtn && netflixNextBtn) {
+            // Set the correct height for Netflix navigation buttons
             netflixPrevBtn.style.height = '340px';
             netflixNextBtn.style.height = '340px';
+            // Add click event listeners to ensure they work properly
+            netflixPrevBtn.addEventListener('click', function() {
+                const container = document.querySelector('.netflix-container');
+                if (container) {
+                    container.scrollBy({
+                        left: -800,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+            netflixNextBtn.addEventListener('click', function() {
+                const container = document.querySelector('.netflix-container');
+                if (container) {
+                    container.scrollBy({
+                        left: 800,
+                        behavior: 'smooth'
+                    });
+                }
+            });
         }
 
         if (netflixContainer) {

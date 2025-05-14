@@ -2,46 +2,202 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="refresh" content="0;url=index.html">
-    <title>Redirecting...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="description" content="Page not found - FreeFlixx streaming service. Find your way back to our extensive library of movies, TV shows, and anime.">
+    <meta name="robots" content="noindex, follow">
+    <title>Page Not Found | FreeFlixx - Stream Movies & TV Shows For Free</title>
+    <link rel="canonical" href="https://www.freeflix.top/404.html">
+    <link rel="stylesheet" href="./index.css?v=1.0.1">
+    <link rel="icon" href="./assets/freeflixx.ico">
     <style>
-        body {
-            background-color: #000;
-            color: #fff;
-            font-family: Arial, sans-serif;
+        .error-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             text-align: center;
-            padding-top: 50px;
+            padding: 0 2rem;
+            color: #ffffff;
+            background-color: #141414;
+            background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(20, 20, 20, 1)),
+                              url('./assets/freeflixx.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-blend-mode: darken;
         }
-        h1 {
-            color: #8d16c9;
+
+        .error-code {
+            font-size: 8rem;
+            font-weight: bold;
+            margin: 0;
+            color: #e50914;
+            text-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
         }
-        p {
-            font-size: 16px;
-            margin: 20px 0;
+
+        .error-message {
+            font-size: 2rem;
+            margin: 1rem 0 2rem;
         }
-        a {
-            color: #8d16c9;
+
+        .error-description {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin-bottom: 2rem;
+            opacity: 0.8;
+        }
+
+        .back-button {
+            background-color: #e50914;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            font-size: 1.2rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            margin-right: 1rem;
+        }
+
+        .back-button:hover {
+            background-color: #b20710;
+            transform: translateY(-2px);
+        }
+
+        .secondary-button {
+            background-color: transparent;
+            color: white;
+            border: 2px solid white;
+            padding: 0.8rem 1.5rem;
+            font-size: 1.2rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
             text-decoration: none;
         }
-        a:hover {
-            text-decoration: underline;
+
+        .secondary-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .suggestions {
+            margin-top: 3rem;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .suggestions h3 {
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            color: #e50914;
+        }
+
+        .suggestion-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .suggestion-link {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .suggestion-link:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .error-code {
+                font-size: 5rem;
+            }
+
+            .error-message {
+                font-size: 1.5rem;
+            }
+
+            .buttons {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .back-button, .secondary-button {
+                margin-right: 0;
+            }
         }
     </style>
 </head>
+
 <body>
-    <h1>Redirecting to FreeFlixx</h1>
-    <p>If you are not redirected automatically, <a href="index.html">click here</a>.</p>
+    <div class="error-container">
+        <h1 class="error-code">404</h1>
+        <h2 class="error-message">Page Not Found</h2>
+        <p class="error-description">The page you are looking for might have been removed, had its name changed, or is temporarily unavailable. Don't worry, there's still plenty to watch!</p>
+
+        <div class="buttons">
+            <a href="/" class="back-button">Go to Homepage</a>
+            <a href="javascript:history.back()" class="secondary-button">Go Back</a>
+        </div>
+
+        <div class="suggestions">
+            <h3>Popular Sections</h3>
+            <div class="suggestion-links">
+                <a href="/movies/index.html" class="suggestion-link">Movies</a>
+                <a href="/tvshows/index.html" class="suggestion-link">TV Shows</a>
+                <a href="/anime/index.html" class="suggestion-link">Anime</a>
+                <a href="/watchList/watchlist.html" class="suggestion-link">My Watchlist</a>
+                <a href="/sitemap.html" class="suggestion-link">Sitemap</a>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Check if we're in a subdirectory
-        const path = window.location.pathname;
-        if (path.includes('/anime/') || path.includes('/movies/') || path.includes('/tvshows/')) {
-            // We're in a subdirectory, redirect to the parent directory's index
-            window.location.href = '../index.html';
-        } else {
-            // We're at the root, redirect to index.html
-            window.location.href = 'index.html';
+        // Track 404 errors for analytics
+        if (typeof gtag === 'function') {
+            gtag('event', 'page_not_found', {
+                'event_category': 'error',
+                'event_label': window.location.pathname,
+                'non_interaction': true
+            });
         }
+
+        // Suggest relevant content based on URL
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get the path that caused the 404
+            const path = window.location.pathname;
+
+            // Simple suggestion logic based on URL path
+            if (path.includes('movie') || path.includes('film')) {
+                document.querySelector('.suggestion-links').prepend(
+                    createLink('/movies/index.html', 'All Movies')
+                );
+            } else if (path.includes('tv') || path.includes('show') || path.includes('series')) {
+                document.querySelector('.suggestion-links').prepend(
+                    createLink('/tvshows/index.html', 'All TV Shows')
+                );
+            } else if (path.includes('anime') || path.includes('manga')) {
+                document.querySelector('.suggestion-links').prepend(
+                    createLink('/anime/index.html', 'All Anime')
+                );
+            }
+
+            function createLink(href, text) {
+                const link = document.createElement('a');
+                link.href = href;
+                link.className = 'suggestion-link';
+                link.textContent = text;
+                return link;
+            }
+        });
     </script>
 </body>
 </html>
