@@ -198,29 +198,20 @@ input::-webkit-input-placeholder {
   color: rgba(255, 255, 255, 0.7);
 }
 
-/* --- Enhanced Search Results Styles --- */
+/* --- PATCH: Refined search results for desktop and mobile --- */
 #searchResults {
-  width: 100%; /* Match width of input container */
+  width: 100%; /* Full width of parent container */
+  max-width: 100%;
   max-height: 460px;
   overflow-y: auto;
   position: absolute;
   top: 45px;
-  left: 0; /* Align with input */
+  left: 0;
   visibility: hidden;
   border-radius: 6px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   background-color: #111;
-  z-index: 30; /* Higher than nav-menu to ensure it appears above everything */
-  opacity: 0;
-  transform: translateY(-10px);
-  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
-  padding: 5px 0;
-}
-
-#searchResults.visible {
-  visibility: visible;
-  opacity: 1;
-  transform: translateY(0);
+  z-index: 2000;
 }
 
 #searchResults::-webkit-scrollbar {
@@ -236,23 +227,6 @@ input::-webkit-input-placeholder {
 
 #searchResults::-webkit-scrollbar-thumb:hover {
   background-color: #444444;
-}
-
-/* CSS modifications for search results on desktop */
-@media screen and (min-width: 768px) {
-  #searchResults {
-    position: absolute;
-    top: 45px;
-    z-index: 30; /* Higher z-index to ensure it appears above everything */
-    max-width: 500px;
-    width: 100%;
-    left: 0;
-    padding: 5px 0;
-  }
-
-  #searchResults.visible {
-    transform: translateY(0);
-  }
 }
 
 .movie-list {
@@ -874,12 +848,12 @@ input::-webkit-input-placeholder {
   }
 
   #searchResults {
-    width: 100vw;
-    max-width: 95vw;
+    width: 90vw;
+    max-width: 90vw;
+    max-height: 300px;
     left: 50%;
     transform: translateX(-50%);
-    top: 40px;
-    padding: 5px 0;
+    z-index: 2000;
   }
 
   /* Fixed nav menu positioning */
@@ -1253,8 +1227,8 @@ input::-webkit-input-placeholder {
 
   #searchResults {
     width: 45vw;
-    left: 0;
-    padding: 5px 0;
+    max-width: 45vw;
+    z-index: 2000;
   }
 
   .nav-menu {
@@ -1416,6 +1390,47 @@ input::-webkit-input-placeholder {
 
   .anime-section .navigation-button {
     height: 140px !important;
+  }
+}
+
+/* Desktop layout search fixes - Added to fix search results display */
+@media only screen and (min-width: 781px) {
+  #searchResults {
+    z-index: 2000; /* Higher z-index to ensure it appears above all elements */
+    position: absolute;
+    top: 45px;
+    left: 0;
+    width: 100%; /* Take up full width of input-container */
+    max-width: 100%;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8); /* Enhanced shadow for better visibility */
+    border: 1px solid rgba(141, 22, 201, 0.5); /* Add a subtle border to match site style */
+  }
+
+  .input-container {
+    position: relative;
+  }
+
+  /* Make search items more compact on desktop */
+  #searchResults .movie-list {
+    padding: 10px;
+    background-color: #111; /* Ensure consistent background */
+    position: relative; /* Needed for proper stacking */
+    z-index: 2001; /* Make sure each item is above container */
+    border-bottom: 1px solid rgba(141, 22, 201, 0.3); /* Styled separator */
+  }
+
+  /* Ensure buttons in search results remain visible */
+  #searchResults .movie-list .watchListBtn {
+    z-index: 2002; /* Keep buttons above everything */
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  /* Add a subtle hover effect */
+  #searchResults .movie-list:hover {
+    background-color: #1a1a1a;
   }
 }
 

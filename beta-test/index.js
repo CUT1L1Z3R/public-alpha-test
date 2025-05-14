@@ -1054,12 +1054,12 @@ async function handleSearchInput() {
     if (query.length > 2) {
         const results = await fetchSearchResults(query);
         if (results.length !== 0) {
-            searchResults.classList.add('visible');
+            searchResults.style.visibility = "visible";
         }
         displaySearchResults(results);
     } else {
         searchResults.innerHTML = '';
-        searchResults.classList.remove('visible');
+        searchResults.style.visibility = "hidden";
     }
 }
 
@@ -1145,6 +1145,20 @@ function addToWatchList(movie) {
 // Event listener for search input changes
 searchInput.addEventListener('input', handleSearchInput);
 
+// Event listener for search input focus to reshow results if there was a query
+searchInput.addEventListener('focus', () => {
+    const query = searchInput.value;
+    if (query.length > 2) {
+        // Re-show search results if they were previously hidden
+        fetchSearchResults(query).then(results => {
+            if (results.length !== 0) {
+                displaySearchResults(results);
+                searchResults.style.visibility = "visible";
+            }
+        });
+    }
+});
+
 // Event listener for Enter key press in search input
 searchInput.addEventListener('keyup', async event => {
     if (event.key === 'Enter') {
@@ -1154,10 +1168,28 @@ searchInput.addEventListener('keyup', async event => {
 
 // Event listener to close search results when clicking outside
 document.addEventListener('click', event => {
-    if (!searchResults.contains(event.target) && event.target !== searchInput) {
-        searchResults.innerHTML = '';
-        searchResults.classList.remove('visible');
+    // Check if the click is on search input - don't close if it is
+    if (event.target === searchInput) {
+        return;
     }
+
+    // Don't close search if clicking on search results or one of their children
+    if (searchResults.contains(event.target)) {
+        return;
+    }
+
+    // Don't close search if clicking on the nav-menu items for desktop
+    const navMenu = document.querySelector('.nav-menu');
+    if (navMenu && navMenu.contains(event.target)) {
+        // Only keep search results open on desktop (width > 780px)
+        if (window.innerWidth > 780) {
+            return;
+        }
+    }
+
+    // Close the search results if clicking elsewhere
+    searchResults.innerHTML = '';
+    searchResults.style.visibility = "hidden";
 });
 
 // Initialize the banner when the page loads
