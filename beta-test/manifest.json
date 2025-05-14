@@ -1,74 +1,22 @@
 {
   "name": "FreeFlixx - Stream Movies & TV Shows For Free",
   "short_name": "FreeFlixx",
-  "description": "Stream Your Favorite Movies And TV Shows For Free on FreeFlixx. Watch the latest blockbusters, classic films, trending TV series, and popular anime without subscription fees.",
+  "description": "Stream Your Favorite Movies And TV Shows For Free on FreeFlixx",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#000000",
-  "theme_color": "#e50914",
+  "theme_color": "#000000",
   "orientation": "any",
-  "categories": ["entertainment", "video", "streaming", "movies", "tv"],
-  "lang": "en-US",
-  "dir": "ltr",
-  "prefer_related_applications": false,
-  "related_applications": [],
-  "screenshots": [
-    {
-      "src": "./assets/freeflixx.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "platform": "wide",
-      "label": "FreeFlixx Homepage"
-    }
-  ],
   "icons": [
     {
       "src": "./assets/freeflixx.png",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     },
     {
       "src": "./assets/freeflixx.png",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "./assets/freeflixx.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    }
-  ],
-  "shortcuts": [
-    {
-      "name": "Movies",
-      "short_name": "Movies",
-      "description": "Browse all movies",
-      "url": "/movies/index.html",
-      "icons": [{ "src": "./assets/freeflixx.png", "sizes": "192x192" }]
-    },
-    {
-      "name": "TV Shows",
-      "short_name": "TV",
-      "description": "Browse all TV shows",
-      "url": "/tvshows/index.html",
-      "icons": [{ "src": "./assets/freeflixx.png", "sizes": "192x192" }]
-    },
-    {
-      "name": "Anime",
-      "short_name": "Anime",
-      "description": "Browse all anime",
-      "url": "/anime/index.html",
-      "icons": [{ "src": "./assets/freeflixx.png", "sizes": "192x192" }]
-    },
-    {
-      "name": "Watchlist",
-      "short_name": "Watchlist",
-      "description": "View your saved content",
-      "url": "/watchList/watchlist.html",
-      "icons": [{ "src": "./assets/freeflixx.png", "sizes": "192x192" }]
+      "type": "image/png"
     }
   ]
 }

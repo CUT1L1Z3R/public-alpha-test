@@ -2,200 +2,81 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <meta name="description" content="Sitemap for FreeFlixx - All movies, TV shows, and anime available on our platform">
-    <meta name="robots" content="index, follow">
-    <title>FreeFlixx - Complete Sitemap | Find All Content</title>
-    <link rel="canonical" href="https://www.freeflix.top/sitemap.html">
-    <link rel="stylesheet" href="./index.css?v=1.0.1">
-    <link rel="icon" href="./assets/freeflixx.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FreeFlixx - Sitemap</title>
     <style>
-        .sitemap-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #141414;
             color: #fff;
         }
-
-        .sitemap-section {
-            margin-bottom: 2rem;
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
         }
-
-        .sitemap-section h2 {
+        h1 {
             color: #e50914;
             border-bottom: 1px solid #333;
-            padding-bottom: 0.5rem;
-            margin-bottom: 1rem;
+            padding-bottom: 10px;
         }
-
-        .sitemap-list {
-            list-style: none;
+        ul {
+            list-style-type: none;
             padding: 0;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 1rem;
         }
-
-        .sitemap-list li {
-            padding: 0.5rem;
-            transition: all 0.3s ease;
+        li {
+            margin-bottom: 10px;
         }
-
-        .sitemap-list li:hover {
-            background-color: rgba(255,255,255,0.1);
-            border-radius: 4px;
-        }
-
-        .sitemap-list a {
-            color: #fff;
-            text-decoration: none;
-            display: block;
-            padding: 0.5rem;
-        }
-
-        .sitemap-list a:hover {
+        a {
             color: #e50914;
-        }
-
-        .main-sections {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .main-sections a {
-            background-color: #e50914;
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: 4px;
             text-decoration: none;
-            transition: all 0.3s ease;
         }
-
-        .main-sections a:hover {
-            background-color: #b20710;
-            transform: translateY(-2px);
+        a:hover {
+            text-decoration: underline;
         }
-
-        @media (max-width: 768px) {
-            .sitemap-list {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            }
-
-            .main-sections {
-                flex-direction: column;
-            }
-
-            .main-sections a {
-                text-align: center;
-            }
+        .section {
+            margin-bottom: 30px;
+            background-color: #1a1a1a;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .section h2 {
+            margin-top: 0;
+            color: #e50914;
         }
     </style>
 </head>
 <body>
-    <!-- Header container -->
-    <header class="header">
-        <img src="assests/netflix.png" alt="logo" id="netflix-logo">
-        <div class="input-container">
-            <input type="text" id="searchInput" placeholder="Search movies...">
-            <div id="searchResults"></div>
+    <div class="container">
+        <h1>FreeFlixx Sitemap</h1>
+
+        <div class="section">
+            <h2>Main Pages</h2>
+            <ul>
+                <li><a href="https://freeflixx.pages.dev/">Home</a> - Stream Movies & TV Shows For Free</li>
+                <li><a href="https://freeflixx.pages.dev/movies/index.html">Movies</a> - Browse all movies by category</li>
+                <li><a href="https://freeflixx.pages.dev/tvshows/index.html">TV Shows</a> - Browse all TV series</li>
+                <li><a href="https://freeflixx.pages.dev/anime/index.html">Anime</a> - Browse anime content</li>
+            </ul>
         </div>
-        <button id="goToWatchlist" class="watchList-Btn">WatchList</button>
-    </header>
 
-    <!-- Navigation Menu -->
-    <nav class="nav-menu">
-        <ul class="nav-list">
-            <li class="nav-item"><a href="index.html" data-section="all">All</a></li>
-            <li class="nav-item"><a href="movies/index.html" data-section="movies">Movies</a></li>
-            <li class="nav-item"><a href="tvshows/index.html" data-section="tv">TV Shows</a></li>
-            <li class="nav-item"><a href="anime/index.html" data-section="anime">Anime</a></li>
-        </ul>
-    </nav>
-
-    <div class="sitemap-container">
-        <h1>FreeFlixx Complete Sitemap</h1>
-        <p>Welcome to our sitemap! This page lists all sections and content available on FreeFlixx.</p>
-
-        <section class="sitemap-section">
-            <h2>Main Sections</h2>
-            <div class="main-sections">
-                <a href="index.html">Home</a>
-                <a href="movies/index.html">Movies</a>
-                <a href="tvshows/index.html">TV Shows</a>
-                <a href="anime/index.html">Anime</a>
-                <a href="watchList/watchlist.html">My Watchlist</a>
-            </div>
-        </section>
-
-        <section class="sitemap-section">
-            <h2>Movie Categories</h2>
-            <ul class="sitemap-list">
-                <li><a href="index.html#trending-now">Trending Movies</a></li>
-                <li><a href="index.html#top-rated-movies">Top Rated Movies</a></li>
-                <li><a href="index.html#horror-movies">Horror Movies</a></li>
-                <li><a href="index.html#comedy-movies">Comedy Movies</a></li>
-                <li><a href="index.html#thriller-movies">Thriller Movies</a></li>
-                <li><a href="index.html#adventure-movies">Adventure Movies</a></li>
-                <li><a href="index.html#action-movies">Action Movies</a></li>
-                <li><a href="index.html#drama-movies">Drama Movies</a></li>
-                <li><a href="index.html#fantasy-movies">Fantasy Movies</a></li>
-                <li><a href="index.html#romance-movies">Romance Movies</a></li>
-                <li><a href="index.html#mystery-movies">Mystery Movies</a></li>
+        <div class="section">
+            <h2>Additional Pages</h2>
+            <ul>
+                <li><a href="https://freeflixx.pages.dev/movie_details/movie_details.html">Movie Details</a> - View detailed information about movies</li>
+                <li><a href="https://freeflixx.pages.dev/watchList/watchlist.html">Watchlist</a> - Your saved movies and shows</li>
             </ul>
-        </section>
+        </div>
 
-        <section class="sitemap-section">
-            <h2>TV Show Categories</h2>
-            <ul class="sitemap-list">
-                <li><a href="index.html#netflix-originals">Netflix Originals</a></li>
-                <li><a href="index.html#disney-popular">Popular on Disney+</a></li>
-                <li><a href="index.html#drama-tv">Drama TV Shows</a></li>
-                <li><a href="index.html#crime-tv">Crime TV Shows</a></li>
-                <li><a href="index.html#comedy-tv">Comedy TV Shows</a></li>
-                <li><a href="index.html#action-adventure-tv">Action & Adventure TV</a></li>
-                <li><a href="index.html#mystery-tv">Mystery TV Shows</a></li>
-                <li><a href="index.html#fantasy-tv">Fantasy TV Shows</a></li>
-                <li><a href="index.html#reality-tv">Reality TV</a></li>
-                <li><a href="index.html#scifi-tv">SciFi & Fantasy TV</a></li>
-                <li><a href="index.html#documentary-tv">Documentary TV</a></li>
+        <div class="section">
+            <h2>XML Sitemaps</h2>
+            <ul>
+                <li><a href="https://freeflixx.pages.dev/sitemap-index.xml">Sitemap Index</a> - XML Sitemap Index</li>
+                <li><a href="https://freeflixx.pages.dev/sitemap.xml">Full Sitemap</a> - Complete XML Sitemap</li>
             </ul>
-        </section>
-
-        <section class="sitemap-section">
-            <h2>Anime Categories</h2>
-            <ul class="sitemap-list">
-                <li><a href="index.html#anime-upcoming-new">Latest Anime</a></li>
-                <li><a href="index.html#top-rated-anime-movies">Top Rated Anime Movies</a></li>
-                <li><a href="index.html#anime-popular">Popular Anime</a></li>
-                <li><a href="index.html#anime-top-rated">Top Rated Anime</a></li>
-                <li><a href="index.html#anime-ongoing">Ongoing Anime</a></li>
-                <li><a href="index.html#adventure-anime">Adventure Anime</a></li>
-                <li><a href="index.html#drama-anime">Drama Anime</a></li>
-                <li><a href="index.html#anime-comedy">Comedy Anime</a></li>
-                <li><a href="index.html#anime-romance">Romance Anime</a></li>
-            </ul>
-        </section>
-
-        <section class="sitemap-section">
-            <h2>Important Pages</h2>
-            <ul class="sitemap-list">
-                <li><a href="movie_details/movie_details.html">Movie Details</a></li>
-                <li><a href="watchList/watchlist.html">Watchlist</a></li>
-                <li><a href="sitemap.xml">XML Sitemap</a></li>
-            </ul>
-        </section>
+        </div>
     </div>
-
-    <!-- Back to top button -->
-    <button id="back-to-top-btn" aria-label="Back to top">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 19V5M5 12l7-7 7 7"/>
-        </svg>
-    </button>
-
-    <script src="./custom-navigation.js?v=1.0.1"></script>
-    <script src="./navigation-fix.js?v=1.0.1"></script>
 </body>
 </html>

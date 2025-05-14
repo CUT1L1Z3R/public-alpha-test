@@ -1054,12 +1054,12 @@ async function handleSearchInput() {
     if (query.length > 2) {
         const results = await fetchSearchResults(query);
         if (results.length !== 0) {
-            searchResults.style.visibility = "visible";
+            searchResults.classList.add('visible');
         }
         displaySearchResults(results);
     } else {
         searchResults.innerHTML = '';
-        searchResults.style.visibility = "hidden";
+        searchResults.classList.remove('visible');
     }
 }
 
@@ -1154,9 +1154,9 @@ searchInput.addEventListener('keyup', async event => {
 
 // Event listener to close search results when clicking outside
 document.addEventListener('click', event => {
-    if (!searchResults.contains(event.target)) {
+    if (!searchResults.contains(event.target) && event.target !== searchInput) {
         searchResults.innerHTML = '';
-        searchResults.style.visibility = "hidden";
+        searchResults.classList.remove('visible');
     }
 });
 

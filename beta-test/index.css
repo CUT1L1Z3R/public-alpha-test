@@ -198,17 +198,29 @@ input::-webkit-input-placeholder {
   color: rgba(255, 255, 255, 0.7);
 }
 
+/* --- Enhanced Search Results Styles --- */
 #searchResults {
-  width: 40vw;
+  width: 100%; /* Match width of input container */
   max-height: 460px;
   overflow-y: auto;
   position: absolute;
   top: 45px;
+  left: 0; /* Align with input */
   visibility: hidden;
   border-radius: 6px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   background-color: #111;
-  z-index: 1000;
+  z-index: 30; /* Higher than nav-menu to ensure it appears above everything */
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+  padding: 5px 0;
+}
+
+#searchResults.visible {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
 }
 
 #searchResults::-webkit-scrollbar {
@@ -224,6 +236,23 @@ input::-webkit-input-placeholder {
 
 #searchResults::-webkit-scrollbar-thumb:hover {
   background-color: #444444;
+}
+
+/* CSS modifications for search results on desktop */
+@media screen and (min-width: 768px) {
+  #searchResults {
+    position: absolute;
+    top: 45px;
+    z-index: 30; /* Higher z-index to ensure it appears above everything */
+    max-width: 500px;
+    width: 100%;
+    left: 0;
+    padding: 5px 0;
+  }
+
+  #searchResults.visible {
+    transform: translateY(0);
+  }
 }
 
 .movie-list {
@@ -845,11 +874,12 @@ input::-webkit-input-placeholder {
   }
 
   #searchResults {
-    width: 90vw;
-    max-height: 300px;
-    top: 40px;
+    width: 100vw;
+    max-width: 95vw;
     left: 50%;
     transform: translateX(-50%);
+    top: 40px;
+    padding: 5px 0;
   }
 
   /* Fixed nav menu positioning */
@@ -1223,6 +1253,8 @@ input::-webkit-input-placeholder {
 
   #searchResults {
     width: 45vw;
+    left: 0;
+    padding: 5px 0;
   }
 
   .nav-menu {
