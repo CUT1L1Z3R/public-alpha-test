@@ -1,19 +1,35 @@
 User-agent: *
 Allow: /
-Disallow: /assets/
-Disallow: /assests/
 Disallow: /*.js$
 Disallow: /*.css$
+Disallow: /*?*
 
-# Specific directories
-Allow: /movies/
-Allow: /tvshows/
-Allow: /anime/
-Allow: /movie_details/
-Allow: /watchList/
-Allow: /sitemap.html
+# Allow all major search engines optimal crawling
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
 
-# Sitemaps
-Sitemap: https://freeflixx.pages.dev/sitemap-index.xml
-Sitemap: https://freeflixx.pages.dev/sitemap.xml
-Sitemap: https://freeflixx.pages.dev/sitemap.txt
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Slurp
+Allow: /
+Crawl-delay: 1
+
+User-agent: DuckDuckBot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Baiduspider
+Allow: /
+Crawl-delay: 1
+
+User-agent: YandexBot
+Allow: /
+Crawl-delay: 1
+
+# Primary sitemap
+Sitemap: https://freeflix.top/sitemap.xml
+Sitemap: https://freeflix.top/sitemap-index.xml
+Sitemap: https://freeflix.top/google-sitemap.xml

@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <sitemap>
-    <loc>https://freeflixx.pages.dev/sitemap.xml</loc>
-    <lastmod>2023-05-11</lastmod>
+    <loc>https://freeflix.top/sitemap.xml</loc>
+    <lastmod>2025-05-15</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://freeflix.top/movies-sitemap.xml</loc>
+    <lastmod>2025-05-15</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://freeflix.top/tvshows-sitemap.xml</loc>
+    <lastmod>2025-05-15</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://freeflix.top/anime-sitemap.xml</loc>
+    <lastmod>2025-05-15</lastmod>
   </sitemap>
 </sitemapindex>

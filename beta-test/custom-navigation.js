@@ -10,6 +10,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Set the active navigation item based on the current page
     const currentPath = window.location.pathname;
 
+    // Handle active state for genres page
+    const isGenresPage = currentPath.includes('/genres.html');
+
     // Fix navigation links to handle Cloudflare Pages routing
     navItems.forEach(item => {
         const link = item.querySelector('a');
@@ -26,25 +29,98 @@ document.addEventListener('DOMContentLoaded', function() {
             item.classList.add('active');
         } else if (currentPath.includes('/anime/') && section === 'anime') {
             item.classList.add('active');
+        } else if (isGenresPage && section === 'genres') {
+            item.classList.add('active');
         }
 
-        // Enhance navigation with error handling
-        link.addEventListener('click', function(e) {
-            // Check if we're already on this page - prevent navigation to avoid the error
-            const isIndexPage = currentPath === '/' || currentPath.endsWith('/index.html') || currentPath === '';
-
-            // If we're already on the index page and clicking "All", prevent the navigation
-            if (href === 'index.html' && isIndexPage && section === 'all') {
+        // Add special handling for genre dropdown
+        if (section === 'genres') {
+            // Handle dropdown toggling on click for both mobile and desktop
+            link.addEventListener('click', function(e) {
                 e.preventDefault();
-                return false;
-            }
+                const dropdown = this.nextElementSibling;
+                if (dropdown) {
+                    // Toggle dropdown display
+                    const isOpen = dropdown.classList.contains('active');
 
-            // Always ensure the link isn't broken for sub-pages
-            if (href === 'index.html' && (currentPath === '/anime/' || currentPath === '/movies/' || currentPath === '/tvshows/')) {
-                e.preventDefault();
-                window.location.href = '../index.html';
-            }
-        });
+                    if (isOpen) {
+                        // Close the dropdown
+                        dropdown.classList.remove('active');
+                        dropdown.style.display = 'none';
+                        dropdown.style.opacity = '0';
+                        dropdown.style.pointerEvents = 'none';
+                        if (window.innerWidth <= 768) {
+                            dropdown.style.transform = 'translateY(10px)';
+                        } else {
+                            dropdown.style.transform = 'translateX(-50%) translateY(10px)';
+                        }
+                    } else {
+                        // Open the dropdown
+                        dropdown.classList.add('active');
+                        dropdown.style.display = 'flex';
+                        dropdown.style.opacity = '1';
+                        dropdown.style.pointerEvents = 'auto';
+                        if (window.innerWidth <= 768) {
+                            dropdown.style.transform = 'translateY(0)';
+                        } else {
+                            dropdown.style.transform = 'translateX(-50%) translateY(0)';
+                        }
+
+                        // Position dropdown properly
+                        const rect = item.getBoundingClientRect();
+                        dropdown.style.top = '100%';
+
+                        // Close dropdown when clicking outside of it
+                        const closeDropdown = function(event) {
+                            if (!dropdown.contains(event.target) && !link.contains(event.target)) {
+                                dropdown.classList.remove('active');
+                                dropdown.style.display = 'none';
+                                dropdown.style.opacity = '0';
+                                dropdown.style.pointerEvents = 'none';
+                                if (window.innerWidth <= 768) {
+                                    dropdown.style.transform = 'translateY(10px)';
+                                } else {
+                                    dropdown.style.transform = 'translateX(-50%) translateY(10px)';
+                                }
+                                document.removeEventListener('click', closeDropdown);
+                            }
+                        };
+
+                        // Add event listener with a small delay to prevent immediate closing
+                        setTimeout(() => {
+                            document.addEventListener('click', closeDropdown);
+                        }, 100);
+                    }
+                }
+            });
+
+            // Close dropdown when clicking on a genre link
+            const dropdownLinks = item.querySelectorAll('.dropdown-content a');
+            dropdownLinks.forEach(dropLink => {
+                dropLink.addEventListener('click', function(e) {
+                    // Allow normal navigation for genre links
+                    // The dropdown will close because of the click outside handler
+                });
+            });
+        } else {
+            // Enhance navigation with error handling
+            link.addEventListener('click', function(e) {
+                // Check if we're already on this page - prevent navigation to avoid the error
+                const isIndexPage = currentPath === '/' || currentPath.endsWith('/index.html') || currentPath === '';
+
+                // If we're already on the index page and clicking "All", prevent the navigation
+                if (href === 'index.html' && isIndexPage && section === 'all') {
+                    e.preventDefault();
+                    return false;
+                }
+
+                // Always ensure the link isn't broken for sub-pages
+                if (href === 'index.html' && (currentPath === '/anime/' || currentPath === '/movies/' || currentPath === '/tvshows/')) {
+                    e.preventDefault();
+                    window.location.href = '../index.html';
+                }
+            });
+        }
 
         // Add touch-friendly navigation
         item.addEventListener('touchstart', function() {

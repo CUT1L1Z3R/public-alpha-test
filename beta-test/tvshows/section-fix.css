@@ -1,3 +1,111 @@
+/* Dropdown styles for genre navigation */
+.dropdown {
+  position: relative;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(20, 20, 20, 0.95);
+  min-width: 700px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+  padding: 20px;
+  z-index: 30;
+  border: 1px solid rgba(141, 22, 201, 0.5);
+  backdrop-filter: blur(15px);
+  transition: opacity 0.3s, transform 0.3s;
+  opacity: 0;
+  transform: translateX(-50%) translateY(10px);
+  pointer-events: none;
+  flex-wrap: wrap;
+}
+
+/* Remove hover-based display since we're using JS instead */
+/*
+.dropdown:hover .dropdown-content {
+  display: flex;
+  flex-wrap: wrap;
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
+}
+*/
+
+.dropdown-column {
+  flex: 1;
+  min-width: 150px;
+  padding: 0 15px;
+}
+
+.dropdown-column h3 {
+  color: #8d16c9;
+  margin-bottom: 12px;
+  font-size: 18px;
+  border-bottom: 1px solid rgba(141, 22, 201, 0.3);
+  padding-bottom: 5px;
+}
+
+.dropdown-content a {
+  color: #fff;
+  text-decoration: none;
+  padding: 8px 0;
+  display: block;
+  font-size: 16px;
+  transition: all 0.2s;
+}
+
+.dropdown-content a:hover {
+  color: #8d16c9;
+  transform: translateX(5px);
+}
+
+.dropdown-footer {
+  width: 100%;
+  text-align: center;
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(141, 22, 201, 0.3);
+}
+
+.view-all-genres {
+  display: inline-block !important;
+  background-color: rgba(141, 22, 201, 0.2);
+  padding: 8px 20px !important;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.view-all-genres:hover {
+  background-color: rgba(141, 22, 201, 0.5);
+  transform: translateY(-2px) !important;
+}
+
+/* Mobile dropdown adjustments */
+@media screen and (max-width: 768px) {
+  .dropdown-content {
+    min-width: 90vw;
+    left: 0;
+    right: 0;
+    transform: none;
+  }
+
+  /* Remove hover-based display since we're using JS instead */
+  /*
+  .dropdown:hover .dropdown-content {
+    transform: translateY(0);
+  }
+  */
+
+  .dropdown-column {
+    flex-basis: 100%;
+    margin-bottom: 15px;
+  }
+}
+
 /**
  * TV Shows section-specific fixes for FreeFlixx
  * Ensures correct button placement and portrait banner navigation
