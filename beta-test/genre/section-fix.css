@@ -161,7 +161,7 @@
 .genre-grid-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 25px;
+    gap: 35px; /* Increased from 25px to 35px to add more space between cards */
     padding: 0 5%;
     margin-bottom: 40px;
     min-height: 300px; /* Ensure container has some height even when empty */
@@ -350,7 +350,7 @@
 @media (max-width: 1200px) {
     .genre-grid-container {
         grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-        gap: 20px;
+        gap: 30px; /* Increased from 20px to 30px */
     }
 }
 
@@ -406,7 +406,7 @@
 
     .genre-grid-container {
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 15px;
+        gap: 25px; /* Increased from 15px to 25px */
         padding: 0 3%;
     }
 
@@ -461,7 +461,7 @@
 
     .genre-grid-container {
         grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 12px;
+        gap: 20px; /* Increased from 12px to 20px */
         padding: 0 2%;
     }
 
