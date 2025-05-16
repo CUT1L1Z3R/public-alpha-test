@@ -175,36 +175,36 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Updated genre categories based on the user's specifications
                 const genreCategories = {
                     'Movies': [
-                        { title: 'Action', url: 'genre/index.html?genre=action&type=movie' },
-                        { title: 'Comedy', url: 'genre/index.html?genre=comedy&type=movie' },
-                        { title: 'Horror', url: 'genre/index.html?genre=horror&type=movie' },
-                        { title: 'Thriller', url: 'genre/index.html?genre=thriller&type=movie' },
-                        { title: 'Drama', url: 'genre/index.html?genre=drama&type=movie' },
-                        { title: 'Romance', url: 'genre/index.html?genre=romance&type=movie' },
-                        { title: 'Fantasy', url: 'genre/index.html?genre=fantasy&type=movie' },
-                        { title: 'Mystery', url: 'genre/index.html?genre=mystery&type=movie' }
+                        { title: 'Action', url: '/genre/index.html?genre=action&type=movie' },
+                        { title: 'Comedy', url: '/genre/index.html?genre=comedy&type=movie' },
+                        { title: 'Horror', url: '/genre/index.html?genre=horror&type=movie' },
+                        { title: 'Thriller', url: '/genre/index.html?genre=thriller&type=movie' },
+                        { title: 'Drama', url: '/genre/index.html?genre=drama&type=movie' },
+                        { title: 'Romance', url: '/genre/index.html?genre=romance&type=movie' },
+                        { title: 'Fantasy', url: '/genre/index.html?genre=fantasy&type=movie' },
+                        { title: 'Mystery', url: '/genre/index.html?genre=mystery&type=movie' }
                     ],
                     'TV Shows': [
-                        { title: 'Drama', url: 'genre/index.html?genre=drama&type=tv' },
-                        { title: 'Comedy', url: 'genre/index.html?genre=comedy&type=tv' },
-                        { title: 'Crime', url: 'genre/index.html?genre=crime&type=tv' },
-                        { title: 'Action & Adventure', url: 'genre/index.html?genre=action-adventure&type=tv' },
-                        { title: 'Mystery', url: 'genre/index.html?genre=mystery&type=tv' },
-                        { title: 'Fantasy', url: 'genre/index.html?genre=fantasy&type=tv' },
-                        { title: 'Reality TV', url: 'genre/index.html?genre=reality&type=tv' },
-                        { title: 'Sci-Fi', url: 'genre/index.html?genre=sci-fi&type=tv' },
-                        { title: 'Documentary', url: 'genre/index.html?genre=documentary&type=tv' }
+                        { title: 'Drama', url: '/genre/index.html?genre=drama&type=tv' },
+                        { title: 'Comedy', url: '/genre/index.html?genre=comedy&type=tv' },
+                        { title: 'Crime', url: '/genre/index.html?genre=crime&type=tv' },
+                        { title: 'Action & Adventure', url: '/genre/index.html?genre=action-adventure&type=tv' },
+                        { title: 'Mystery', url: '/genre/index.html?genre=mystery&type=tv' },
+                        { title: 'Fantasy', url: '/genre/index.html?genre=fantasy&type=tv' },
+                        { title: 'Reality TV', url: '/genre/index.html?genre=reality&type=tv' },
+                        { title: 'Sci-Fi', url: '/genre/index.html?genre=sci-fi&type=tv' },
+                        { title: 'Documentary', url: '/genre/index.html?genre=documentary&type=tv' }
                     ],
                     'Anime': [
-                        { title: 'Action', url: 'genre/index.html?genre=action&type=anime' },
-                        { title: 'Adventure', url: 'genre/index.html?genre=adventure&type=anime' },
-                        { title: 'Comedy', url: 'genre/index.html?genre=comedy&type=anime' },
-                        { title: 'Drama', url: 'genre/index.html?genre=drama&type=anime' },
-                        { title: 'Romance', url: 'genre/index.html?genre=romance&type=anime' },
-                        { title: 'Fantasy', url: 'genre/index.html?genre=fantasy&type=anime' },
-                        { title: 'Sci-Fi', url: 'genre/index.html?genre=sci-fi&type=anime' },
-                        { title: 'Horror', url: 'genre/index.html?genre=horror&type=anime' },
-                        { title: 'Mystery', url: 'genre/index.html?genre=mystery&type=anime' }
+                        { title: 'Action', url: '/genre/index.html?genre=action&type=anime' },
+                        { title: 'Adventure', url: '/genre/index.html?genre=adventure&type=anime' },
+                        { title: 'Comedy', url: '/genre/index.html?genre=comedy&type=anime' },
+                        { title: 'Drama', url: '/genre/index.html?genre=drama&type=anime' },
+                        { title: 'Romance', url: '/genre/index.html?genre=romance&type=anime' },
+                        { title: 'Fantasy', url: '/genre/index.html?genre=fantasy&type=anime' },
+                        { title: 'Sci-Fi', url: '/genre/index.html?genre=sci-fi&type=anime' },
+                        { title: 'Horror', url: '/genre/index.html?genre=horror&type=anime' },
+                        { title: 'Mystery', url: '/genre/index.html?genre=mystery&type=anime' }
                     ]
                 };
 
