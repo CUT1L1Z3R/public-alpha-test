@@ -16,10 +16,15 @@
         .header {
             padding: 0 30px !important;
             justify-content: space-between !important;
+            display: flex !important;
+            align-items: center !important;
         }
         .watch-list-button {
-            margin-right: 15px !important;
-            min-width: 100px !important;
+            position: relative !important;
+            right: auto !important;
+            margin-left: 20px !important;
+            margin-right: 30px !important; /* Add space on the right side */
+            min-width: 120px !important;
         }
         .genre-title {
             text-align: center !important;
@@ -32,8 +37,15 @@
         .movie-title {
             font-size: 0.8rem !important;
             line-height: 1.2 !important;
-            max-width: 95% !important;
+            max-width: 70% !important;
         }
+        .movie-overlay {
+            border: none !important;
+        }
+        .movie-item, .image-wrapper, .image-wrapper img {
+            border: none !important;
+        }
+        /* Remove watch-now-button styles since we're not using it anymore */
     </style>
 </head>
 <body>

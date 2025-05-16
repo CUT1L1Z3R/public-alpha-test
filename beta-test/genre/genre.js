@@ -407,7 +407,7 @@ function displayResults(results, mediaType) {
         const overlay = document.createElement('div');
         overlay.className = 'movie-overlay';
 
-        // Create title-rating container to make them appear side by side
+        // Create title-rating container for side-by-side layout
         const titleRatingContainer = document.createElement('div');
         titleRatingContainer.className = 'title-rating-container';
 
@@ -445,22 +445,8 @@ function displayResults(results, mediaType) {
         titleRatingContainer.appendChild(titleElement);
         titleRatingContainer.appendChild(rating);
 
-        // Create watch button
-        const watchButton = document.createElement('button');
-        watchButton.className = 'watch-now-button';
-        watchButton.textContent = 'Watch';
-        watchButton.title = `Watch ${item.title || item.name}`;
-
-        // Prevent the click event from bubbling up to the container
-        watchButton.addEventListener('click', (event) => {
-            event.stopPropagation();
-            const mediaId = item.id;
-            window.location.href = `../movie_details/movie_details.html?media=${mediaType === 'anime' ? 'tv' : mediaType}&id=${mediaId}&action=watch`;
-        });
-
-        // Build the overlay with title-rating container and watch button
+        // Build the overlay with title-rating container
         overlay.appendChild(titleRatingContainer);
-        overlay.appendChild(watchButton);
 
         // Add overlay to the image wrapper
         imgWrapper.appendChild(overlay);
