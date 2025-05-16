@@ -229,7 +229,7 @@ function fetchGenreContent(genre, mediaType, sortBy, page) {
     // Get genre ID from genreMap based on media type
     let genreId;
 
-    // Check if we need to handle special cases for sci-fi in both TV shows and movies
+    // Check if we need to handle special cases for genres in both TV shows and movies
     if (genre.toLowerCase() === 'sci-fi' || genre.toLowerCase() === 'science-fiction') {
         if (mediaType === 'tv') {
             genreId = 10765; // Sci-Fi & Fantasy genre ID for TV shows
@@ -240,6 +240,15 @@ function fetchGenreContent(genre, mediaType, sortBy, page) {
         } else {
             genreId = genreMap[genre.toLowerCase()];
         }
+    } else if (genre.toLowerCase() === 'western') {
+        genreId = 37; // Western genre ID (same for both movies and TV)
+        console.log(`Using western genre ID: ${genreId}`);
+    } else if (genre.toLowerCase() === 'war') {
+        genreId = 10752; // War genre ID for movies
+        console.log(`Using war genre ID: ${genreId}`);
+    } else if (genre.toLowerCase() === 'tv-movie') {
+        genreId = 10770; // TV Movie genre ID
+        console.log(`Using TV Movie genre ID: ${genreId}`);
     } else {
         genreId = genreMap[genre.toLowerCase()];
     }
@@ -279,6 +288,10 @@ function fetchGenreContent(genre, mediaType, sortBy, page) {
             tvGenreId = 16; // Animation genre ID is the same for TV and movies
         } else if (genre.toLowerCase() === 'western') {
             tvGenreId = 37; // Western genre ID is the same for TV and movies
+        } else if (genre.toLowerCase() === 'war') {
+            tvGenreId = 10752; // War genre ID is the same for TV and movies
+        } else if (genre.toLowerCase() === 'tv-movie') {
+            tvGenreId = 10770; // TV Movie genre ID
         }
 
         endpoint = `discover/tv?api_key=${api_Key}&with_genres=${tvGenreId}&sort_by=${sortBy}&page=${page}`;
