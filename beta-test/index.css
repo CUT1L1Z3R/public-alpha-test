@@ -651,6 +651,10 @@ input::-webkit-input-placeholder {
   transition: all 0.5s ease-in-out, transform 0.3s ease, box-shadow 0.3s ease;
   position: relative;
   box-sizing: border-box;
+  background-color: #0e0e0e;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
 
 /* Add hover effect to all movie items like the upcoming anime section */
@@ -684,14 +688,19 @@ input::-webkit-input-placeholder {
 .netflix-container .movie-item {
   width: 250px;
   height: 340px;
+  background-color: #0e0e0e;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
 
 .image-wrapper {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  border-radius: 5px;
+  border-radius: 8px;
   position: relative;
+  background-color: #0e0e0e;
 }
 
 .movies-box .movie-item:hover .image-wrapper img {
@@ -701,9 +710,10 @@ input::-webkit-input-placeholder {
 .movies-box img {
   width: 100%;
   height: 100%;
-  border-radius: 5px;
+  border-radius: 8px;
   transition: all 0.5s ease-in-out;
   object-fit: cover;
+  opacity: 0.95;
 }
 
 /* Movie info overlay styling */
@@ -712,11 +722,10 @@ input::-webkit-input-placeholder {
   bottom: 0;
   left: 0;
   width: 100%;
-  background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.95) 70%);
+  background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.7) 80%);
   color: white;
   padding: 10px 12px;
-  border-radius: 0 0 5px 5px;
-  border-top: 2px solid rgba(141, 22, 201, 0.6);
+  border-radius: 0 0 8px 8px;
   box-sizing: border-box;
   z-index: 10;
   display: flex;
@@ -732,8 +741,8 @@ input::-webkit-input-placeholder {
 @media only screen and (max-width: 560px) {
   .movie-overlay {
     padding: 8px 10px;
-    background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.9) 90%);
-    border-top: 2px solid rgba(141, 22, 201, 0.7);
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.65) 90%);
+    /* Removed purple border-top */
   }
 
   .movie-title {
