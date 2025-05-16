@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="description" content="Watch 100% FREE movie streaming on FreeFlix - the ultimate platform for unlimited free movies, TV shows and anime. No subscription, no signup, just instant streaming!">
+    <meta name="keywords" content="free movie streaming, watch movies free, free tv shows, no subscription streaming, free streaming sites, free movies online, free anime streaming">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="author" content="FreeFlix">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://freeflix.top/free-movie-streaming.html">
+    <meta property="og:title" content="FREE Movie Streaming | Watch Movies & TV Shows Online Free">
+    <meta property="og:description" content="Stream thousands of movies and TV shows 100% free. No subscription fees, no signups, just unlimited free streaming at FreeFlix.">
+    <meta property="og:image" content="https://freeflix.top/assets/freeflixx.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://freeflix.top/free-movie-streaming.html">
+    <meta property="twitter:title" content="FREE Movie Streaming | Watch Movies & TV Shows Online Free">
+    <meta property="twitter:description" content="Stream thousands of movies and TV shows 100% free. No subscription fees, no signups, just unlimited free streaming at FreeFlix.">
+    <meta property="twitter:image" content="https://freeflix.top/assets/freeflixx.png">
+
+    <link rel="canonical" href="https://freeflix.top/free-movie-streaming.html">
+    <link rel="icon" href="./assets/freeflixx.ico" type="image/x-icon">
+    <link rel="stylesheet" href="./index.css?v=1.0.1">
+    <title>FREE Movie Streaming | Watch Movies & TV Shows Online | FreeFlix</title>
+
+    <style>
+        .hero-section {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url('/assets/freeflixx.png');
+            background-size: cover;
+            background-position: center;
+            padding: 80px 20px;
+            text-align: center;
+            color: white;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+            color: #e50914;
+            margin-bottom: 20px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background-color: #e50914;
+            color: white;
+            font-weight: bold;
+            padding: 12px 30px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .cta-button:hover {
+            background-color: #f40612;
+            transform: scale(1.05);
+        }
+
+        .features-section {
+            padding: 60px 20px;
+            background-color: #141414;
+        }
+
+        .section-title {
+            text-align: center;
+            color: #e50914;
+            font-size: 2rem;
+            margin-bottom: 40px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background-color: rgba(0,0,0,0.5);
+            padding: 30px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: #e50914;
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .feature-description {
+            color: #cccccc;
+            line-height: 1.6;
+        }
+
+        .categories-section {
+            padding: 60px 20px;
+            background-color: #0a0a0a;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .category-card {
+            background-color: rgba(229, 9, 20, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .category-card:hover {
+            background-color: rgba(229, 9, 20, 0.3);
+            transform: translateY(-5px);
+        }
+
+        .category-title {
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .category-link {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+        }
+
+        .faq-section {
+            padding: 60px 20px;
+            background-color: #141414;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 20px;
+        }
+
+        .faq-question {
+            font-size: 1.2rem;
+            color: white;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .faq-answer {
+            color: #cccccc;
+            line-height: 1.6;
+        }
+
+        .testimonials-section {
+            padding: 60px 20px;
+            background-color: #0a0a0a;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .testimonial-card {
+            background-color: rgba(0,0,0,0.5);
+            padding: 30px;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .testimonial-text {
+            color: #cccccc;
+            font-style: italic;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .testimonial-text::before,
+        .testimonial-text::after {
+            content: '"';
+            color: #e50914;
+            font-size: 2rem;
+            position: absolute;
+        }
+
+        .testimonial-text::before {
+            top: -10px;
+            left: -15px;
+        }
+
+        .testimonial-text::after {
+            bottom: -20px;
+            right: -15px;
+        }
+
+        .testimonial-author {
+            color: white;
+            font-weight: bold;
+        }
+
+        .cta-section {
+            padding: 80px 20px;
+            text-align: center;
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('/assets/freeflixx.png');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .cta-title {
+            color: white;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .cta-description {
+            color: #cccccc;
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        footer {
+            background-color: #000;
+            color: #666;
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        .footer-links {
+            margin-bottom: 20px;
+        }
+
+        .footer-link {
+            color: #999;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        .footer-link:hover {
+            color: #e50914;
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <img src="assets/freeflixx.png" alt="FreeFlix logo" id="netflix-logo">
+        <div class="input-container">
+            <input type="text" id="searchInput" placeholder="Search free movies...">
+            <div id="searchResults"></div>
+        </div>
+        <button id="goToWatchlist" class="watchList-Btn">WatchList</button>
+    </header>
+
+    <!-- Navigation Menu -->
+    <nav class="nav-menu">
+        <ul class="nav-list">
+            <li class="nav-item"><a href="index.html" data-section="all">All</a></li>
+            <li class="nav-item"><a href="movies/index.html" data-section="movies">Movies</a></li>
+            <li class="nav-item"><a href="tvshows/index.html" data-section="tv">TV Shows</a></li>
+            <li class="nav-item"><a href="anime/index.html" data-section="anime">Anime</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <h1 class="hero-title">Free Movie Streaming - No Subscription Required</h1>
+        <p class="hero-subtitle">Welcome to FreeFlix - the ultimate destination for free movie streaming online. Watch thousands of movies, TV shows, and anime completely free with no subscription, no signup, and no hidden fees.</p>
+        <a href="index.html" class="cta-button">Start Streaming Now</a>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+        <h2 class="section-title">Why Choose FreeFlix for Free Movie Streaming?</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🎬</div>
+                <h3 class="feature-title">100% Free Streaming</h3>
+                <p class="feature-description">Unlike other platforms that claim to be free but require credit cards or hidden payments, FreeFlix is completely free with no strings attached.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3 class="feature-title">Watch Anywhere</h3>
+                <p class="feature-description">Stream free movies and TV shows on any device - smartphone, tablet, laptop, or desktop. Our platform is fully responsive for the best viewing experience.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔄</div>
+                <h3 class="feature-title">Daily Updates</h3>
+                <p class="feature-description">We update our library daily with the latest releases, trending TV shows, and popular anime series so you never run out of content to watch.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔍</div>
+                <h3 class="feature-title">Easy Discovery</h3>
+                <p class="feature-description">Find new content easily with our intuitive categories, search functionality, and personalized recommendations.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📋</div>
+                <h3 class="feature-title">Create Watchlists</h3>
+                <p class="feature-description">Save your favorite movies and TV shows to watch later with our convenient watchlist feature.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🚫</div>
+                <h3 class="feature-title">No Account Required</h3>
+                <p class="feature-description">Start streaming immediately without signing up, creating accounts, or providing any personal information.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="categories-section">
+        <h2 class="section-title">Explore Our Free Streaming Categories</h2>
+        <div class="categories-grid">
+            <div class="category-card">
+                <h3 class="category-title">Popular Movies</h3>
+                <a href="/?collection=trending" class="category-link">Trending Now</a>
+                <a href="/?collection=top-rated" class="category-link">Top Rated</a>
+                <a href="/?collection=netflix-originals" class="category-link">Netflix Originals</a>
+                <a href="/?collection=disney-popular" class="category-link">Disney+ Popular</a>
+            </div>
+            <div class="category-card">
+                <h3 class="category-title">Movie Genres</h3>
+                <a href="/?genre=action" class="category-link">Action</a>
+                <a href="/?genre=comedy" class="category-link">Comedy</a>
+                <a href="/?genre=horror" class="category-link">Horror</a>
+                <a href="/?genre=thriller" class="category-link">Thriller</a>
+                <a href="/?genre=romance" class="category-link">Romance</a>
+            </div>
+            <div class="category-card">
+                <h3 class="category-title">TV Shows</h3>
+                <a href="/tvshows/?genre=drama" class="category-link">Drama TV Shows</a>
+                <a href="/tvshows/?genre=comedy" class="category-link">Comedy TV Shows</a>
+                <a href="/tvshows/?genre=crime" class="category-link">Crime TV Shows</a>
+                <a href="/tvshows/?genre=action-adventure" class="category-link">Action & Adventure</a>
+            </div>
+            <div class="category-card">
+                <h3 class="category-title">Anime</h3>
+                <a href="/anime/?category=latest" class="category-link">Latest Anime</a>
+                <a href="/anime/?category=popular" class="category-link">Popular Anime</a>
+                <a href="/anime/?category=top-rated" class="category-link">Top Rated Anime</a>
+                <a href="/anime/?category=ongoing" class="category-link">Ongoing Anime</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <h2 class="section-title">Frequently Asked Questions</h2>
+        <div class="faq-item">
+            <h3 class="faq-question">Is FreeFlix really 100% free?</h3>
+            <p class="faq-answer">Yes! FreeFlix is completely free to use. We don't require credit cards, subscriptions, or even account creation. You can start streaming immediately without any financial commitment.</p>
+        </div>
+        <div class="faq-item">
+            <h3 class="faq-question">How can I watch movies on FreeFlix?</h3>
+            <p class="faq-answer">Simply visit our website, browse through our library or use the search function to find what you want to watch, click on it, and start streaming right away. No downloads, installations, or signups required.</p>
+        </div>
+        <div class="faq-item">
+            <h3 class="faq-question">Does FreeFlix have new releases?</h3>
+            <p class="faq-answer">Absolutely! We regularly update our library with the latest movies, TV shows, and anime. Our trending section features the newest and most popular content.</p>
+        </div>
+        <div class="faq-item">
+            <h3 class="faq-question">Can I use FreeFlix on my mobile device?</h3>
+            <p class="faq-answer">Yes, FreeFlix is fully responsive and works perfectly on all devices including smartphones, tablets, laptops, and desktop computers.</p>
+        </div>
+        <div class="faq-item">
+            <h3 class="faq-question">How does FreeFlix compare to paid streaming services?</h3>
+            <p class="faq-answer">While paid services like Netflix, Disney+, and Hulu require monthly subscriptions, FreeFlix offers a vast library of content completely free. We aggregate content from various sources to provide you with a premium streaming experience without the cost.</p>
+        </div>
+        <div class="faq-item">
+            <h3 class="faq-question">Is there a limit to how much I can watch?</h3>
+            <p class="faq-answer">No, there are no limits! You can stream as many movies and TV shows as you want, whenever you want, for as long as you want.</p>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials-section">
+        <h2 class="section-title">What Our Users Say About Free Streaming</h2>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <p class="testimonial-text">I can't believe I've been paying for streaming services all this time when FreeFlix offers so much content for free! I've found all my favorite movies and shows here.</p>
+                <p class="testimonial-author">- Michael T.</p>
+            </div>
+            <div class="testimonial-card">
+                <p class="testimonial-text">As a college student on a budget, FreeFlix has been a lifesaver. I can watch all the latest movies and TV shows without spending a penny. The interface is super easy to use too!</p>
+                <p class="testimonial-author">- Sarah K.</p>
+            </div>
+            <div class="testimonial-card">
+                <p class="testimonial-text">The quality of streams on FreeFlix is amazing considering it's completely free. I've recommended it to all my friends who were paying for multiple subscription services.</p>
+                <p class="testimonial-author">- David R.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <h2 class="cta-title">Start Your Free Movie Streaming Journey Today!</h2>
+        <p class="cta-description">Join millions of satisfied users who have discovered the joy of free, unlimited streaming. No credit card, no subscription, no strings attached.</p>
+        <a href="index.html" class="cta-button">Stream Now For Free</a>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-links">
+            <a href="index.html" class="footer-link">Home</a>
+            <a href="movies/index.html" class="footer-link">Movies</a>
+            <a href="tvshows/index.html" class="footer-link">TV Shows</a>
+            <a href="anime/index.html" class="footer-link">Anime</a>
+            <a href="sitemap.html" class="footer-link">Sitemap</a>
+        </div>
+        <p class="copyright">&copy; 2025 FreeFlix - The #1 Free Streaming Platform | All Rights Reserved</p>
+    </footer>
+
+    <!-- Schema Markup for SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is FreeFlix really 100% free?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes! FreeFlix is completely free to use. We don't require credit cards, subscriptions, or even account creation. You can start streaming immediately without any financial commitment."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How can I watch movies on FreeFlix?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Simply visit our website, browse through our library or use the search function to find what you want to watch, click on it, and start streaming right away. No downloads, installations, or signups required."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does FreeFlix have new releases?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Absolutely! We regularly update our library with the latest movies, TV shows, and anime. Our trending section features the newest and most popular content."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I use FreeFlix on my mobile device?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, FreeFlix is fully responsive and works perfectly on all devices including smartphones, tablets, laptops, and desktop computers."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does FreeFlix compare to paid streaming services?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "While paid services like Netflix, Disney+, and Hulu require monthly subscriptions, FreeFlix offers a vast library of content completely free. We aggregate content from various sources to provide you with a premium streaming experience without the cost."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is there a limit to how much I can watch?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No, there are no limits! You can stream as many movies and TV shows as you want, whenever you want, for as long as you want."
+          }
+        }
+      ]
+    }
+    </script>
+</body>
+</html>
