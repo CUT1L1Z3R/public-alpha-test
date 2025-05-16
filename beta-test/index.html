@@ -263,9 +263,7 @@
                         <a href="anime/index.html?genre=fantasy">Fantasy</a>
                         <a href="anime/index.html?genre=romance">Romance</a>
                     </div>
-                    <div class="dropdown-footer">
-                        <a href="genres.html" class="view-all-genres">View All Genres</a>
-                    </div>
+
                 </div>
             </li>
         </ul>
@@ -637,7 +635,7 @@
                 <a href="movies/index.html" style="color: #999; text-decoration: none; margin: 0 10px;">Movies</a>
                 <a href="tvshows/index.html" style="color: #999; text-decoration: none; margin: 0 10px;">TV Shows</a>
                 <a href="anime/index.html" style="color: #999; text-decoration: none; margin: 0 10px;">Anime</a>
-                <a href="genres.html" style="color: #999; text-decoration: none; margin: 0 10px;">Genres</a>
+
                 <a href="free-movie-streaming.html" style="color: #999; text-decoration: none; margin: 0 10px;">Free Movie Streaming</a>
                 <a href="sitemap.html" style="color: #999; text-decoration: none; margin: 0 10px;">Sitemap</a>
             </div>
@@ -689,50 +687,6 @@
 
         // Refresh button has been removed as requested
     })();
-    </script>
-    <script>
-      // This script initializes the dropdown menu for genres
-      document.addEventListener('DOMContentLoaded', function() {
-        const genreDropdown = document.querySelector('.nav-item.dropdown a');
-        const dropdownContent = document.querySelector('.dropdown-content');
-
-        if (genreDropdown && dropdownContent) {
-          genreDropdown.addEventListener('click', function(e) {
-            e.preventDefault();
-            // Toggle the dropdown visibility
-            if (dropdownContent.style.display === 'flex') {
-              dropdownContent.style.display = 'none';
-              dropdownContent.style.opacity = '0';
-              dropdownContent.style.pointerEvents = 'none';
-              dropdownContent.style.transform = window.innerWidth <= 768 ?
-                'translateY(10px)' : 'translateX(-50%) translateY(10px)';
-            } else {
-              dropdownContent.style.display = 'flex';
-              dropdownContent.style.opacity = '1';
-              dropdownContent.style.pointerEvents = 'auto';
-              dropdownContent.style.transform = window.innerWidth <= 768 ?
-                'translateY(0)' : 'translateX(-50%) translateY(0)';
-
-              // Close dropdown when clicking outside
-              const closeDropdown = function(event) {
-                if (!dropdownContent.contains(event.target) && !genreDropdown.contains(event.target)) {
-                  dropdownContent.style.display = 'none';
-                  dropdownContent.style.opacity = '0';
-                  dropdownContent.style.pointerEvents = 'none';
-                  dropdownContent.style.transform = window.innerWidth <= 768 ?
-                    'translateY(10px)' : 'translateX(-50%) translateY(10px)';
-                  document.removeEventListener('click', closeDropdown);
-                }
-              };
-
-              // Add event listener with a small delay to prevent immediate closing
-              setTimeout(() => {
-                document.addEventListener('click', closeDropdown);
-              }, 100);
-            }
-          });
-        }
-      });
     </script>
     <script src="navigation-fix.js"></script>
 </body>

@@ -27,6 +27,18 @@ body {
   padding: 0 5px;
 }
 
+/* --- FreeFlixx Logo Fix --- */
+.logo {
+    margin-right: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    max-height: 40px; /* Reduce logo height */
+    width: auto;
+}
+
 /* Navigation menu styles */
 .nav-menu {
   width: 100%;
@@ -136,36 +148,22 @@ body {
   opacity: 0;
   transform: translateX(-50%) translateY(10px);
   pointer-events: none;
-  flex-wrap: wrap;
-}
-
-/* Remove the hover-based display for dropdown and use JS instead */
-/* We'll keep this commented in case we need to revert
-.dropdown:hover .dropdown-content {
   display: flex;
-  flex-wrap: wrap;
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
-  pointer-events: auto;
+  flex-direction: row;
+  justify-content: space-between; /* Add this to space columns evenly */
 }
-*/
 
-/* Make sure the dropdown content style is set for when JS activates it */
 .dropdown-content {
   flex-wrap: wrap;
-}
-
-.dropdown-content.active {
-  display: flex;
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
-  pointer-events: auto;
 }
 
 .dropdown-column {
   flex: 1;
   min-width: 150px;
   padding: 0 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center the content inside columns */
 }
 
 .dropdown-column h3 {
@@ -174,6 +172,8 @@ body {
   font-size: 18px;
   border-bottom: 1px solid rgba(141, 22, 201, 0.3);
   padding-bottom: 5px;
+  text-align: center; /* Center the category titles */
+  width: 100%;
 }
 
 .dropdown-content a {
@@ -183,6 +183,8 @@ body {
   display: block;
   font-size: 16px;
   transition: all 0.2s;
+  width: 100%; /* Make links full width */
+  text-align: left; /* Align text to the left */
 }
 
 .dropdown-content a:hover {
@@ -220,13 +222,18 @@ body {
     transform: none;
   }
 
-  .dropdown-content.active {
-    transform: translateY(0);
-  }
-
   .dropdown-column {
     flex-basis: 100%;
-    margin-bottom: 15px;
+    margin-bottom: 20px; /* Increased margin for better spacing */
+    padding: 15px; /* Added padding for better spacing */
+    background-color: rgba(20, 20, 20, 0.95); /* Added background color */
+    border-radius: 8px; /* Added border radius for rounded corners */
+    border: 1px solid rgba(141, 22, 201, 0.5); /* Added border to match desktop */
+  }
+
+  /* Set minimum gap between columns on mobile */
+  .dropdown-column + .dropdown-column {
+    margin-top: 20px; /* Add space between columns */
   }
 }
 
@@ -1878,4 +1885,292 @@ html::-webkit-scrollbar-thumb:hover {
 }
 .navigation-button.netflix-next {
   width: 25px !important;
+}
+
+/* Genre Overlay Styles */
+#genre-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.95);
+    z-index: 1000;
+    display: none;
+    overflow-y: auto;
+}
+
+.genre-grid-container {
+    max-width: 1200px;
+    margin: 80px auto 20px;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
+    position: relative;
+}
+
+.genre-grid-container h2 {
+    grid-column: 1 / -1;
+    color: #e50914;
+    margin-bottom: 20px;
+    font-size: 28px;
+}
+
+.genre-grid-container h3 {
+    grid-column: 1 / -1;
+    color: #fff;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #333;
+    padding-bottom: 5px;
+}
+
+.genre-grid-container a {
+    background-color: rgba(229, 9, 20, 0.1);
+    color: #fff;
+    padding: 15px;
+    border-radius: 4px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    text-align: center;
+    font-weight: 500;
+}
+
+.genre-grid-container a:hover {
+    background-color: rgba(229, 9, 20, 0.5);
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .genre-grid-container {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        padding: 15px;
+        margin-top: 60px;
+    }
+
+    .genre-grid-container a {
+        padding: 12px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .genre-grid-container {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        padding: 10px;
+    }
+
+    .genre-grid-container a {
+        padding: 10px;
+        font-size: 12px;
+    }
+}
+
+/* Genre Dropdown Styles */
+#genre-dropdown {
+  position: absolute;
+  background-color: rgba(20, 20, 20, 0.98);
+  width: 500px;
+  box-shadow: 0 8px 20px 0 rgba(0,0,0,0.5);
+  z-index: 1000;
+  display: none;
+  border-radius: 8px;
+  border: 1px solid rgba(141, 22, 201, 0.5);
+  backdrop-filter: blur(10px);
+  padding: 12px;
+  max-height: 70vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  transform-origin: top center;
+  animation: dropdownFadeIn 0.2s ease;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(141, 22, 201, 0.5) rgba(20, 20, 20, 0.2);
+}
+
+/* Mobile dropdown styles */
+@media (max-width: 768px) {
+  #genre-dropdown {
+    width: 90%;
+    max-width: none;
+    left: 5% !important;
+    right: 5%;
+    position: fixed;
+    top: 50% !important;
+    transform: translateY(-50%);
+    max-height: 80vh;
+  }
+
+  .genre-dropdown-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  #genre-dropdown {
+    width: 95%;
+    left: 2.5% !important;
+    max-height: 75vh;
+  }
+
+  .genre-dropdown-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+#genre-dropdown::-webkit-scrollbar {
+  width: 6px;
+  height: 0; /* Remove horizontal scrollbar */
+}
+
+#genre-dropdown::-webkit-scrollbar-track {
+  background: rgba(20, 20, 20, 0.2);
+  border-radius: 10px;
+}
+
+#genre-dropdown::-webkit-scrollbar-thumb {
+  background-color: rgba(141, 22, 201, 0.5);
+  border-radius: 10px;
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.genre-dropdown-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+#genre-dropdown h3 {
+  color: rgb(164, 57, 207);
+  margin-bottom: 10px;
+  font-size: 16px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid rgba(141, 22, 201, 0.3);
+  text-align: center;
+}
+
+#genre-dropdown h4 {
+  color: #fff;
+  margin-top: 0;
+  margin-bottom: 8px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+#genre-dropdown a {
+  color: rgba(255, 255, 255, 0.9);
+  padding: 4px 0;
+  display: block;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  font-size: 13px;
+  position: relative;
+  overflow: hidden;
+}
+
+#genre-dropdown a:hover {
+  color: rgb(164, 57, 207);
+  padding-left: 5px;
+  transform: translateX(2px);
+}
+
+#genre-dropdown a:before {
+  content: "";
+  position: absolute;
+  left: -3px;
+  top: 0;
+  height: 100%;
+  width: 3px;
+  background: rgb(164, 57, 207);
+  transform: scaleY(0);
+  transition: transform 0.2s ease;
+  opacity: 0;
+}
+
+#genre-dropdown a:hover:before {
+  transform: scaleY(1);
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  #genre-dropdown {
+    width: 450px;
+    left: 50% !important;
+    transform: translateX(-50%);
+    transform-origin: top center;
+  }
+  .genre-dropdown-container {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  #genre-dropdown {
+    width: 95%;
+    max-width: 320px;
+    left: 50% !important;
+    transform: translateX(-50%);
+  }
+  .genre-dropdown-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  #genre-dropdown h3 {
+    font-size: 15px;
+  }
+
+  #genre-dropdown h4 {
+    font-size: 13px;
+  }
+
+  #genre-dropdown a {
+    font-size: 12px;
+    padding: 3px 0;
+  }
+}
+
+/* Mobile Genre Dropdown Styles */
+@media (max-width: 768px) {
+  #genre-dropdown {
+    position: fixed !important;
+    width: 90% !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    max-height: 80vh;
+    overflow-y: auto;
+    z-index: 9999;
+    max-width: none !important;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  #genre-dropdown {
+    width: 95% !important;
+    max-height: 70vh;
+  }
+
+  .genre-dropdown-container {
+    grid-template-columns: 1fr !important;
+  }
 }

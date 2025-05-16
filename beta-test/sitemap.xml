@@ -18,18 +18,7 @@
         </image:image>
     </url>
 
-    <!-- Genres Page -->
-    <url>
-        <loc>https://freeflix.top/genres.html</loc>
-        <lastmod>2025-05-15</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.9</priority>
-        <image:image>
-            <image:loc>https://freeflix.top/assets/freeflixx.png</image:loc>
-            <image:title>FreeFlixx Genres - Browse by Category</image:title>
-            <image:caption>Browse all movie, TV show and anime genres on FreeFlix</image:caption>
-        </image:image>
-    </url>
+
 
     <!-- Movies Page -->
     <url>
