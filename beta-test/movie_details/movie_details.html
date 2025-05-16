@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="overflow-x: hidden; max-width: 100%;">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="description" content="Get detailed information about movies and TV shows on FreeFlixx. View ratings, cast, trailers, synopsis and add titles to your watchlist.">
     <meta name="keywords" content="movie details, TV show details, anime details, movie info, cast, ratings, synopsis, trailer, FreeFlixx, streaming info">
 
@@ -29,9 +29,43 @@
     <title>FreeFlixx - Movie & TV Show Details</title>
     <!-- Import Poppins font for aesthetics -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+
+    <!-- Mobile layout fixes -->
+    <style>
+        @media (max-width: 560px) {
+            html, body {
+                overflow-x: hidden;
+                width: 100%;
+                max-width: 100%;
+                position: relative;
+            }
+
+            body {
+                font-size: 14px;
+            }
+
+            /* Prevent any content from creating horizontal overflow */
+            * {
+                max-width: 100vw;
+                box-sizing: border-box;
+            }
+
+            /* Make sure images don't overflow */
+            img {
+                max-width: 100%;
+                height: auto;
+            }
+
+            /* Make sure text elements don't overflow */
+            p, h1, h2, h3, h4, h5, h6, span, div {
+                overflow-wrap: break-word;
+                word-wrap: break-word;
+            }
+        }
+    </style>
 </head>
 
-<body>
+<body style="overflow-x: hidden; max-width: 100%; width: 100%;">
     <!-- Header section -->
     <header class="header">
         <img src="/assests/netflix.png" alt="logo" class="logo">

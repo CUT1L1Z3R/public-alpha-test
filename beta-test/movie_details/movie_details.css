@@ -811,141 +811,237 @@ p {
 
 /* ----Media Queries---- */
 
-/* Media query adjustments for server dropdown */
+/* Mobile viewport scaling fix */
 @media only screen and (max-width: 560px) {
+    /* Core layout fixes to prevent zooming issues */
+    html, body {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-size: 14px;
+    }
+
+    /* Fix for overall container */
     .movie-details {
         flex-direction: column;
         margin-top: 0;
+        gap: 12px;
+        width: 100%;
+        max-width: 100%;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    /* Optimize poster sizing */
+    .movie-poster {
+        width: 100%;
+        margin: 0 auto;
+        padding: 0 8px;
+        box-sizing: border-box;
+    }
+
+    /* Video frame optimization */
+    #iframe,
+    iframe {
+        height: 220px !important;
+        width: 100%;
+        margin: 0 auto 15px auto;
+        box-sizing: border-box;
+    }
+
+    /* Season container adjustments */
+    .seasons-container {
+        margin-top: 15px !important;
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 0 8px;
+        box-sizing: border-box;
+    }
+
+    /* Scroll area for episodes */
+    .episodes-list {
+        max-height: 280px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Movie info section */
+    .movie-info {
+        width: 95%;
+        margin: auto;
+        gap: 12px;
+        overflow-wrap: break-word;
+        word-break: break-word;
+        box-sizing: border-box;
+        word-wrap: break-word;
+    }
+
+    /* Optimize title size */
+    .movie-info h1 {
+        font-size: 24px;
+        line-height: 1.3;
+        margin: 0 0 8px 0;
+    }
+
+    /* Streamline movie data layout */
+    .movie-data {
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Episode items in vertical layout */
+    .episode-item {
+        flex-direction: column;
+        margin-bottom: 12px;
+        box-sizing: border-box;
+    }
+
+    /* Thumbnail adjustments */
+    .episode-thumbnail {
+        width: 100%;
+        height: auto;
+        margin-right: 0;
+        margin-bottom: 8px;
+        box-sizing: border-box;
+    }
+
+    /* Episode info sizing */
+    .episode-info {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Button and dropdown sizing */
+    .server-dropdown,
+    .watchListBtn {
+        max-width: 100%;
+        margin: 8px auto;
+        box-sizing: border-box;
+    }
+
+    /* Server dropdown header */
+    .server-dropdown-header {
+        padding: 6px 12px;
+        font-size: 14px;
+    }
+
+    /* Fix for plot description text */
+    #plot {
+        max-width: 100%;
+        overflow-wrap: break-word;
+        font-size: 14px;
+        line-height: 1.4;
+        box-sizing: border-box;
+    }
+
+    /* Server dropdown content */
+    .server-dropdown-content {
+        min-width: 0;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Header adjustments */
+    .header {
+        height: 50px;
+        padding: 0 8px;
+    }
+
+    /* Logo size adjustment */
+    .logo {
+        width: 100px;
+        margin: 10px 0;
+    }
+
+    /* Reduce padding in general */
+    .movie-details > * {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+}
+
+@media screen and (min-width:561px) and (max-width:740px) {
+    /* Core layout fixes */
+    html, body {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+        box-sizing: border-box;
+    }
+
+    .movie-details {
+        flex-direction: column;
         gap: 15px;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     .movie-poster {
         width: 100%;
-        margin: 0 auto;
+        height: auto;
+        box-sizing: border-box;
         padding: 0 10px;
     }
 
     #iframe,
     iframe {
-        height: 240px !important;
-        width: 100%;
-        margin: 0 auto 20px auto;
-    }
-
-    .seasons-container {
-        margin-top: 20px !important;
-        width: 100%;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .episodes-list {
-        max-height: 300px;
-    }
-
-    .movie-info {
-        width: 90%;
-        margin: auto;
-        gap: 15px;
-        overflow-wrap: break-word;
-        word-wrap: break-word;
-    }
-
-    .movie-info h1 {
-        font-size: 32px;
-    }
-
-    .movie-data {
-        flex-direction: column;
-        gap: 15px;
-    }
-
-    .episode-item {
-        flex-direction: column;
-    }
-
-    .episode-thumbnail {
-        width: 100%;
-        height: auto;
-        margin-right: 0;
-        margin-bottom: 10px;
-    }
-
-    .episode-info {
-        width: 100%;
-    }
-
-    .server-dropdown,
-    .watchListBtn {
-        max-width: 100%;
-        margin: 10px auto;
-    }
-
-    .server-dropdown-header {
-        padding: 8px 16px;
-    }
-
-    /* Fix for movie description overflow */
-    #plot {
-        max-width: 100%;
-        overflow-wrap: break-word;
-    }
-
-    .server-dropdown-content {
-        min-width: 0;
-        max-width: 100%;
-    }
-}
-
-@media screen and (min-width:561px) and (max-width:740px) {
-    .movie-details {
-        flex-direction: column;
-        gap: 15px;
-    }
-
-    .movie-poster {
-        width: 100%;
-        height: auto;
-    }
-
-    #iframe,
-    iframe {
         height: 320px !important;
-        margin: 0;
         width: 95%;
         margin: 0 auto 20px auto;
+        box-sizing: border-box;
     }
 
     .seasons-container {
-        margin-top: 40px;
+        margin-top: 30px;
         width: 95%;
         margin-left: auto;
         margin-right: auto;
+        box-sizing: border-box;
     }
 
     .movie-info {
-        width: 90%;
+        width: 95%;
         margin: auto;
         gap: 15px;
+        box-sizing: border-box;
     }
 
     .movie-data {
         flex-direction: column;
         gap: 15px;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     .episode-item {
         flex-direction: row;
+        box-sizing: border-box;
     }
 
     .server-dropdown,
     .watchListBtn {
         max-width: 100%;
         margin: 10px auto;
+        box-sizing: border-box;
     }
+
     .server-dropdown-content {
         min-width: 0;
         max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Fix for plot description text */
+    #plot {
+        max-width: 100%;
+        overflow-wrap: break-word;
+        box-sizing: border-box;
     }
 }
 
