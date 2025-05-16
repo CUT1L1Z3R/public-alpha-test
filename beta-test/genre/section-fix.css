@@ -486,16 +486,16 @@
     }
 
     .genre-grid-container {
-        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-        gap: 12px; /* Further reduced gap */
-        padding: 0 5px; /* Minimal padding */
-        justify-content: space-evenly;
+        grid-template-columns: repeat(2, 1fr); /* Two columns layout for mobile */
+        gap: 15px; /* Slightly increased gap for better spacing */
+        padding: 0 10px; /* Slightly increased padding */
+        justify-content: space-between;
         width: 100%;
         box-sizing: border-box;
     }
 
     .movie-item {
-        height: 110px;
+        height: 150px; /* Increased height for better visibility */
         margin: 0 auto;
         width: 100%;
     }
