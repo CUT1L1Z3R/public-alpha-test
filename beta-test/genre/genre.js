@@ -49,8 +49,9 @@ const genreMap = {
     'kids': 10762,
     'news': 10763,
     'reality': 10764,
-    'sci-fi': 10765, // Added sci-fi for TV shows
-    'science-fiction': 10765, // Added science-fiction for TV shows
+    'sci-fi': 10765,
+    'science-fiction': 10765,
+    'fantasy': 10765, // Updated to use the same ID as sci-fi for TV shows since they share a genre in TMDB
     'soap': 10766,
     'talk': 10767,
     'politics': 10768,
@@ -227,10 +228,17 @@ function fetchGenreContent(genre, mediaType, sortBy, page) {
     // Get genre ID from genreMap based on media type
     let genreId;
 
-    // Check if we need to handle a special case for sci-fi TV shows
-    if ((genre.toLowerCase() === 'sci-fi' || genre.toLowerCase() === 'science-fiction') && mediaType === 'tv') {
-        genreId = 10765; // Sci-Fi & Fantasy genre ID for TV shows
-        console.log(`Using TV-specific sci-fi genre ID: ${genreId}`);
+    // Check if we need to handle special cases for sci-fi in both TV shows and movies
+    if (genre.toLowerCase() === 'sci-fi' || genre.toLowerCase() === 'science-fiction') {
+        if (mediaType === 'tv') {
+            genreId = 10765; // Sci-Fi & Fantasy genre ID for TV shows
+            console.log(`Using TV-specific sci-fi genre ID: ${genreId}`);
+        } else if (mediaType === 'movie') {
+            genreId = 878; // Science Fiction genre ID for movies
+            console.log(`Using movie-specific sci-fi genre ID: ${genreId}`);
+        } else {
+            genreId = genreMap[genre.toLowerCase()];
+        }
     } else {
         genreId = genreMap[genre.toLowerCase()];
     }
@@ -266,6 +274,8 @@ function fetchGenreContent(genre, mediaType, sortBy, page) {
         // Double check if we need a TV-specific genre ID
         if (genre.toLowerCase() === 'sci-fi' || genre.toLowerCase() === 'science-fiction') {
             tvGenreId = 10765; // Sci-Fi & Fantasy genre ID for TV
+        } else if (genre.toLowerCase() === 'fantasy') {
+            tvGenreId = 10765; // Fantasy is part of the same Sci-Fi & Fantasy genre in TV shows
         }
 
         endpoint = `discover/tv?api_key=${api_Key}&with_genres=${tvGenreId}&sort_by=${sortBy}&page=${page}`;
