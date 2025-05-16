@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="../custom-search.css">
     <link rel="stylesheet" href="./section-fix.css">
     <link rel="stylesheet" href="./enhanced-style.css">
-    <link rel="stylesheet" href="./mobile-header-fix.css">
     <style>
         /* Inline styles to override any conflicts */
         .header {
@@ -78,36 +77,13 @@
                 margin-right: 5px !important; /* Further reduced margin */
             }
         }
-
-        /* Logo responsive styles */
-        .logo .desktop-logo {
-            display: inline-block;
-        }
-        .logo .mobile-logo {
-            display: none;
-            font-weight: bold;
-            font-size: 1.7rem;
-            color: #8d16c9;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            letter-spacing: 1px;
-            vertical-align: middle;
-        }
-        @media (max-width: 420px) {
-            .logo .desktop-logo {
-                display: none;
-            }
-            .logo .mobile-logo {
-                display: inline-block;
-            }
-        }
     </style>
 </head>
 <body>
     <header class="header">
         <div class="logo">
             <a href="../index.html">
-                <img src="../assets/freeflixx.png" alt="FreeFlixx Logo" class="desktop-logo">
-                <span class="mobile-logo">FF</span>
+                <img src="../assets/freeflixx.png" alt="FreeFlixx Logo">
             </a>
         </div>
         <div class="search-container">

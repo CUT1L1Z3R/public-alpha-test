@@ -427,26 +427,11 @@
     }
 
     .logo img {
-        max-height: 25px; /* Reduced from 30px to 25px */
-        max-width: 85px; /* Added max-width to constrain the logo */
+        max-height: 30px;
     }
 
     .search-container {
         max-width: 160px;
-        margin: 0 8px; /* Reduced margins to give more space */
-    }
-
-    #searchInput {
-        height: 30px; /* Reduced height */
-        font-size: 12px; /* Smaller font size */
-        padding: 0 10px; /* Reduced padding */
-    }
-
-    .watch-list-button {
-        min-width: 80px; /* Reduced minimum width */
-        padding: 3px 10px; /* Reduced padding */
-        font-size: 12px; /* Smaller font size */
-        height: 32px; /* Reduced height */
     }
 
     .nav-menu {
@@ -500,46 +485,5 @@
     .pagination-button {
         padding: 6px 10px;
         font-size: 0.8rem;
-    }
-}
-
-/* Extra small devices */
-@media (max-width: 360px) {
-    .logo img {
-        max-height: 22px;
-        max-width: 70px;
-    }
-
-    .search-container {
-        max-width: 130px;
-        margin: 0 5px;
-    }
-
-    #searchInput {
-        height: 28px;
-        font-size: 11px;
-        padding: 0 8px;
-    }
-
-    .watch-list-button {
-        min-width: 70px;
-        padding: 3px 8px;
-        font-size: 11px;
-        height: 28px;
-    }
-
-    .filter-button {
-        padding: 4px 10px;
-        font-size: 0.7rem;
-    }
-
-    .genre-grid-container {
-        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-        gap: 15px;
-        padding: 0 1%;
-    }
-
-    .movie-title {
-        font-size: 0.75rem;
     }
 }
