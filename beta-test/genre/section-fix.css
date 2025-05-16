@@ -40,7 +40,7 @@
     position: fixed;
     top: 60px;
     left: 0;
-    width: 200px;
+    width: 160px; /* Reduced from 200px to 160px */
     bottom: 0;
     background-color: rgba(20, 20, 20, 0.95);
     z-index: 999;
@@ -81,7 +81,7 @@
 
 /* Adjust main content to account for fixed header and nav */
 .main-content {
-    margin-left: 200px;
+    margin-left: 160px; /* Changed from 200px to 160px to match nav-menu width */
     margin-top: 80px;
     padding: 20px;
 }
@@ -160,9 +160,9 @@
 /* Grid container styles */
 .genre-grid-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 35px; /* Increased from 25px to 35px to add more space between cards */
-    padding: 0 5%;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); /* Reduced minmax value to fit more columns */
+    gap: 40px; /* Increased gap even more */
+    padding: 0 4%;
     margin-bottom: 40px;
     min-height: 300px; /* Ensure container has some height even when empty */
 }
@@ -349,8 +349,8 @@
 /* Responsive design */
 @media (max-width: 1200px) {
     .genre-grid-container {
-        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-        gap: 30px; /* Increased from 20px to 30px */
+        grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+        gap: 35px; /* Adjusted for better spacing */
     }
 }
 
@@ -405,8 +405,8 @@
     }
 
     .genre-grid-container {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 25px; /* Increased from 15px to 25px */
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 30px; /* Adjusted for better spacing */
         padding: 0 3%;
     }
 
@@ -460,8 +460,8 @@
     }
 
     .genre-grid-container {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 20px; /* Increased from 12px to 20px */
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 22px; /* Adjusted for better spacing */
         padding: 0 2%;
     }
 
