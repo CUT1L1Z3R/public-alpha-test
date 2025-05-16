@@ -57,15 +57,15 @@ document.addEventListener('DOMContentLoaded', function() {
                         // Mobile centered positioning
                         genreDropdown.style.position = 'fixed';
                         genreDropdown.style.top = '50%';
-                        genreDropdown.style.left = '50%';
+                        genreDropdown.style.left = '45%'; // Shifted to the left from 50%
                         genreDropdown.style.transform = 'translate(-50%, -50%)';
-                        genreDropdown.style.width = window.innerWidth <= 480 ? '80%' : '75%'; // Made width smaller
-                        genreDropdown.style.maxWidth = '390px'; // Reduced max width
+                        genreDropdown.style.width = window.innerWidth <= 480 ? '75%' : '75%'; // Reduced mobile width to 75%
+                        genreDropdown.style.maxWidth = '320px'; // Further reduced max width for mobile
                         genreDropdown.style.maxHeight = '80vh';
                         genreDropdown.style.overflowY = 'auto';
                         genreDropdown.style.zIndex = '9999';
-                        genreDropdown.style.marginRight = '15px'; // Right margin
-                        genreDropdown.style.marginLeft = '15px'; // Added equal left margin
+                        genreDropdown.style.marginRight = '20px'; // Increased right margin for more space
+                        genreDropdown.style.marginLeft = '10px'; // Reduced left margin
                     } else {
                         // Desktop positioning - below genre link and centered
                         const rect = link.getBoundingClientRect();
@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 title.style.backgroundClip = 'text';
                 title.style.textShadow = '0 2px 4px rgba(0,0,0,0.3)';
                 title.style.width = '100%';
-                title.style.maxWidth = window.innerWidth <= 480 ? '250px' : '400px';
+                title.style.maxWidth = window.innerWidth <= 480 ? '200px' : '400px'; // Reduced from 250px to 200px for mobile
                 title.style.position = 'relative';
                 title.style.margin = '0 auto';
                 title.style.textAlign = 'center';
@@ -217,8 +217,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (window.innerWidth <= 480) {
                     container.style.gridTemplateColumns = '1fr';
                     container.style.gap = '15px';
-                    container.style.width = '100%';
-                    container.style.maxWidth = '100%';
+                    container.style.width = '95%'; // Reduced width for mobile
+                    container.style.maxWidth = '95%';
                     container.style.padding = '0';
                     container.style.marginBottom = '15px'; // Add margin at the bottom for spacing
                 } else if (window.innerWidth <= 768) {
@@ -245,9 +245,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     // Adjust padding based on screen size
                     if (window.innerWidth <= 480) {
-                        categoryColumn.style.padding = '15px';
-                        categoryColumn.style.width = '90%';
-                        categoryColumn.style.maxWidth = '90%';
+                        categoryColumn.style.padding = '12px 10px'; // Reduced horizontal padding
+                        categoryColumn.style.width = '85%';  // Reduced width for more space
+                        categoryColumn.style.maxWidth = '85%';
                         categoryColumn.style.minWidth = 'auto';
                         categoryColumn.style.margin = '0 auto';
                     } else if (window.innerWidth <= 768) {
