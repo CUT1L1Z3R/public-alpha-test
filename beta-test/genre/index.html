@@ -19,6 +19,32 @@
             }
         }
 
+        /* Additional fix for genre title centering */
+        #genre-title {
+            width: 100% !important;
+            display: block !important;
+            text-align: center !important;
+            left: 0 !important;
+            transform: none !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+            position: relative !important;
+        }
+
+        #genre-title::after {
+            content: "" !important;
+            position: absolute !important;
+            bottom: -8px !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            width: 100px !important;
+            max-width: 50% !important;
+            height: 3px !important;
+            background: linear-gradient(90deg, rgba(164, 57, 207, 1) 0%, rgba(141, 22, 201, 1) 100%) !important;
+            border-radius: 3px !important;
+            margin: 0 auto !important;
+        }
+
         /* Inline styles to override any conflicts */
         .header {
             padding: 0 15px 0 30px !important; /* Reduced right padding */
@@ -39,10 +65,10 @@
         .genre-title {
             text-align: center !important;
             margin: 1rem auto 1.5rem !important;
-            left: 50% !important;
-            transform: translateX(-50%) !important;
-            display: inline-block !important;
-            width: auto !important;
+            left: 0 !important; /* Remove left positioning */
+            transform: none !important; /* Remove transform */
+            display: block !important; /* Use block display */
+            width: 100% !important; /* Full width */
         }
         .movie-title {
             font-size: 0.8rem !important;
