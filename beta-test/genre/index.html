@@ -20,9 +20,9 @@
             }
         }
 
-        /* Additional fix for genre title centering */
+        /* Additional fix for genre title centering to match screenshot */
         #genre-title {
-            width: 100% !important;
+            width: calc(100% - 160px) !important; /* Adjust for sidebar width */
             display: block !important;
             text-align: center !important;
             left: 0 !important;
@@ -32,7 +32,7 @@
             position: relative !important;
             padding-bottom: 15px !important; /* Added padding for the underline */
             margin-bottom: 20px !important; /* Increased bottom margin */
-            max-width: 100% !important; /* Ensure full width */
+            max-width: calc(100% - 160px) !important; /* Ensure width accounts for sidebar */
         }
 
         /* Fixed underline positioning to match screenshot */

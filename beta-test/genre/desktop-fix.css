@@ -10,14 +10,16 @@
     max-width: 100% !important;
     padding: 0 !important;
     text-align: center !important;
+    margin-left: 160px !important; /* Add margin to account for nav sidebar */
+    box-sizing: border-box !important;
   }
 
-  /* Title fix for desktop - ensure it's properly centered */
+  /* Title fix for desktop - ensure it's properly centered like in the screenshot */
   .genre-title, #genre-title {
     font-size: 2.5rem !important;
     display: block !important;
-    width: 100% !important;
-    max-width: 100% !important;
+    width: calc(100% - 160px) !important; /* Adjust width to account for sidebar */
+    max-width: calc(100% - 160px) !important;
     text-align: center !important;
     margin: 1.5rem auto 2rem !important;
     position: relative !important;
@@ -46,7 +48,7 @@
   #genre-filter-container, .genre-filter-container {
     display: flex !important;
     justify-content: center !important;
-    width: 100% !important;
+    width: calc(100% - 160px) !important; /* Adjust width to account for sidebar */
     margin: 0 auto 1.5rem !important;
   }
 
@@ -55,5 +57,12 @@
     display: flex !important;
     gap: 15px !important;
     justify-content: center !important;
+  }
+
+  /* Grid container adjustment to match the sidebar offset */
+  #genre-grid-container, .genre-grid-container {
+    width: calc(100% - 160px) !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
   }
 }

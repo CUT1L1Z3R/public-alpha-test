@@ -23,6 +23,13 @@
   transform: none; /* Remove any transform */
 }
 
+@media (min-width: 769px) {
+  .genre-title {
+    width: calc(100% - 160px); /* Adjust for sidebar width */
+    max-width: calc(100% - 160px);
+  }
+}
+
 .genre-title::after {
   content: "";
   position: absolute;
@@ -185,6 +192,13 @@
   align-items: center;
   width: 100%;
   text-align: center;
+}
+
+@media (min-width: 769px) {
+  .main-content {
+    margin-left: 160px; /* Add margin to account for nav sidebar */
+    box-sizing: border-box;
+  }
 }
 
 /* Media Queries for Responsive Design */
