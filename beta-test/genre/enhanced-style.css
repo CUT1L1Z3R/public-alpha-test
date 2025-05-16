@@ -243,4 +243,16 @@
     max-width: 200px;
     margin: 0 10px;
   }
+
+  /* Adjusted movie item styles for mobile */
+  .movie-item {
+    width: 100%; /* Take full width of grid cell */
+    margin: 0 auto; /* Center in the grid cell */
+  }
+
+  /* Ensure the overlay fits properly */
+  .movie-overlay {
+    padding: 25px 12px 8px !important; /* Slightly reduced padding */
+    min-height: 90px !important; /* Reduced min-height for mobile */
+  }
 }

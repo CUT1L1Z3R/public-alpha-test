@@ -461,12 +461,15 @@
 
     .genre-grid-container {
         grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-        gap: 22px; /* Adjusted for better spacing */
-        padding: 0 2%;
+        gap: 16px; /* Reduced gap to create more even spacing */
+        padding: 0 8px; /* Reduced padding to utilize more screen space */
+        justify-content: space-evenly; /* Distribute space evenly between columns */
     }
 
     .movie-item {
         height: 120px;
+        margin: 0 auto; /* Center movie items in their grid cells */
+        width: 100%; /* Ensure items take full width of their grid cells */
     }
 
     .filter-options {
