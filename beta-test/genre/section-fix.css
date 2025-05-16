@@ -15,6 +15,17 @@
     display: flex;
     align-items: center;
     padding: 0 20px;
+    justify-content: space-between;
+}
+
+.watch-list-button {
+    margin-left: 10px;
+    min-width: 100px;
+    padding: 8px 15px;
+    border-radius: 20px;
+    transition: background-color 0.3s ease;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 /* Fix navigation menu positioning */
@@ -72,7 +83,10 @@
     font-size: 2rem;
     color: #fff;
     text-align: center;
-    margin: 1rem 0 1.5rem;
+    margin: 1rem auto 1.5rem;
+    width: fit-content;
+    position: relative;
+    padding-bottom: 10px;
     text-transform: capitalize;
     background: linear-gradient(90deg, rgba(164, 57, 207, 1) 0%, rgba(141, 22, 201, 1) 100%);
     -webkit-background-clip: text;
@@ -80,6 +94,19 @@
     background-clip: text;
     text-shadow: 0 2px 4px rgba(0,0,0,0.3);
     letter-spacing: 1px;
+}
+
+.genre-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, rgba(164, 57, 207, 1) 0%, rgba(141, 22, 201, 1) 100%);
+    width: 80%;
+    margin: 0 auto;
+    border-radius: 2px;
 }
 
 /* Filter container styles */
@@ -335,7 +362,10 @@
 
     .genre-title {
         font-size: 1.5rem;
-        margin: 1.5rem 0 1rem;
+        margin: 1.5rem auto 1rem;
+        width: fit-content;
+        position: relative;
+        padding-bottom: 10px;
     }
 
     .genre-grid-container {
@@ -384,7 +414,10 @@
 
     .genre-title {
         font-size: 1.2rem;
-        margin: 1rem 0 0.8rem;
+        margin: 1rem auto 0.8rem;
+        width: fit-content;
+        position: relative;
+        padding-bottom: 10px;
     }
 
     .genre-grid-container {
