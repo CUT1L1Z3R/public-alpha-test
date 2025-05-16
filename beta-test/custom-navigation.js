@@ -181,6 +181,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         { title: 'Thriller', url: '/genre/index.html?genre=thriller&type=movie' },
                         { title: 'Drama', url: '/genre/index.html?genre=drama&type=movie' },
                         { title: 'Romance', url: '/genre/index.html?genre=romance&type=movie' },
+                        { title: 'Sci-Fi', url: '/genre/index.html?genre=sci-fi&type=movie' }, // Added Sci-Fi to movies
                         { title: 'Fantasy', url: '/genre/index.html?genre=fantasy&type=movie' },
                         { title: 'Mystery', url: '/genre/index.html?genre=mystery&type=movie' }
                     ],
