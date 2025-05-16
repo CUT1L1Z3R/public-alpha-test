@@ -8,13 +8,28 @@
         justify-content: space-between !important;
     }
 
-    .logo img {
+    .logo {
+        max-width: 60px !important;
+        overflow: hidden !important;
+    }
+
+    .logo img.desktop-logo {
         max-height: 25px !important;
-        max-width: 85px !important;
+        max-width: 60px !important;
+    }
+
+    .logo .mobile-logo {
+        font-size: 1.5rem !important;
+        background: linear-gradient(90deg, #a710e0 0%, #8a14ca 100%) !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        background-clip: text !important;
+        text-shadow: 0 1px 2px rgba(141, 22, 201, 0.3) !important;
+        font-weight: bold !important;
     }
 
     .search-container {
-        max-width: 140px !important;
+        max-width: 170px !important; /* Increased now that we have FF logo */
         margin: 0 5px !important;
         flex: 1 !important;
     }
@@ -38,13 +53,16 @@
 
 /* Extra small devices */
 @media (max-width: 360px) {
-    .logo img {
-        max-height: 22px !important;
-        max-width: 70px !important;
+    .logo {
+        max-width: 40px !important;
+    }
+
+    .logo .mobile-logo {
+        font-size: 1.3rem !important;
     }
 
     .search-container {
-        max-width: 110px !important;
+        max-width: 130px !important;
         margin: 0 4px !important;
     }
 
