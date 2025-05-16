@@ -19,6 +19,8 @@
   padding: 5px 0 15px 0; /* Added padding at bottom for the underline */
   border-radius: 0; /* Removed rounded corners */
   width: 100%; /* Full width for proper centering */
+  left: 0; /* Reset any left positioning */
+  transform: none; /* Remove any transform */
 }
 
 .genre-title::after {
@@ -182,6 +184,7 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
+  text-align: center;
 }
 
 /* Media Queries for Responsive Design */

@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="../custom-search.css">
     <link rel="stylesheet" href="./section-fix.css">
     <link rel="stylesheet" href="./enhanced-style.css">
+    <link rel="stylesheet" href="./desktop-fix.css">
     <style>
         /* Mobile viewport scaling fix */
         @media (max-width: 480px) {
@@ -31,6 +32,7 @@
             position: relative !important;
             padding-bottom: 15px !important; /* Added padding for the underline */
             margin-bottom: 20px !important; /* Increased bottom margin */
+            max-width: 100% !important; /* Ensure full width */
         }
 
         /* Fixed underline positioning to match screenshot */
@@ -69,9 +71,12 @@
             text-align: center !important;
             margin: 1rem auto 1.5rem !important;
             left: 0 !important; /* Remove left positioning */
+            right: 0 !important; /* Ensure horizontal centering */
             transform: none !important; /* Remove transform */
             display: block !important; /* Use block display */
             width: 100% !important; /* Full width */
+            max-width: 100% !important; /* Ensure full width */
+            position: relative !important; /* Maintain position for the underline */
         }
         .movie-title {
             font-size: 0.8rem !important;
