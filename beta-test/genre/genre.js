@@ -251,8 +251,8 @@ function fetchGenreContent(genre, mediaType, sortBy, page) {
     if (mediaType === 'tv') {
         endpoint = `discover/tv?api_key=${api_Key}&with_genres=${genreId}&sort_by=${sortBy}&page=${page}`;
     } else if (mediaType === 'anime') {
-        // For anime, use both animation genre and Japan as origin country for approximation
-        endpoint = `discover/tv?api_key=${api_Key}&with_genres=${genreId}&with_keywords=anime&sort_by=${sortBy}&page=${page}`;
+        // For anime, use animation genre (16) + specified genre + anime keyword (210024)
+        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,${genreId}&with_keywords=210024&sort_by=${sortBy}&page=${page}`;
     } else {
         // Default to movies
         endpoint = `discover/movie?api_key=${api_Key}&with_genres=${genreId}&sort_by=${sortBy}&page=${page}`;
@@ -275,7 +275,49 @@ function fetchGenreContent(genre, mediaType, sortBy, page) {
 
             console.log(`API response data:`, data);
             const results = data.results || [];
-            console.log(`Found ${results.length} results`);
+            console.log(`Found ${results.length} results for ${genre} ${mediaType}`);
+
+            if (results.length === 0) {
+                if (mediaType === 'anime') {
+                    // For anime, try with just the animation genre (16) if no results with combined genres
+                    console.log('No anime results with combined genres, trying with just animation genre');
+                    const fallbackEndpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&sort_by=${sortBy}&page=${page}`;
+                    fetch(`https://api.themoviedb.org/3/${fallbackEndpoint}`)
+                        .then(response => response.json())
+                        .then(fallbackData => {
+                            const fallbackResults = fallbackData.results || [];
+                            if (fallbackResults.length > 0) {
+                                console.log(`Found ${fallbackResults.length} fallback anime results`);
+                                currentPage = fallbackData.page || 1;
+                                totalPages = fallbackData.total_pages || 1;
+                                totalPages = Math.min(totalPages, 500);
+                                updatePaginationUI(currentPage, totalPages);
+                                displayResults(fallbackResults, mediaType);
+                            } else {
+                                console.log('No fallback anime results found, showing demo content');
+                                displayResults(demoContent, mediaType);
+                                currentPage = 1;
+                                totalPages = 1;
+                                updatePaginationUI(currentPage, totalPages);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error fetching fallback anime content:', error);
+                            displayResults(demoContent, mediaType);
+                            currentPage = 1;
+                            totalPages = 1;
+                            updatePaginationUI(currentPage, totalPages);
+                        });
+                    return;
+                } else {
+                    // For non-anime, show no results
+                    noResults.style.display = 'block';
+                    currentPage = 1;
+                    totalPages = 1;
+                    updatePaginationUI(currentPage, totalPages);
+                    return;
+                }
+            }
 
             // Update pagination information
             currentPage = data.page || 1;
