@@ -14,18 +14,25 @@
     height: 60px;
     display: flex;
     align-items: center;
-    padding: 0 20px;
+    padding: 0 30px;
     justify-content: space-between;
 }
 
 .watch-list-button {
     margin-left: 10px;
-    min-width: 100px;
-    padding: 8px 15px;
+    min-width: 110px;
+    padding: 8px 16px;
     border-radius: 20px;
     transition: background-color 0.3s ease;
     white-space: nowrap;
     overflow: hidden;
+    margin-right: 20px;
+    position: relative;
+    right: 0;
+}
+
+.watch-list-button .button-text {
+    font-size: 0.95rem;
 }
 
 /* Fix navigation menu positioning */
@@ -79,12 +86,13 @@
     padding: 20px;
 }
 
+/* Genre title styling with improved centering */
 .genre-title {
     font-size: 2rem;
     color: #fff;
     text-align: center;
     margin: 1rem auto 1.5rem;
-    width: fit-content;
+    width: auto;
     position: relative;
     padding-bottom: 10px;
     text-transform: capitalize;
@@ -94,6 +102,9 @@
     background-clip: text;
     text-shadow: 0 2px 4px rgba(0,0,0,0.3);
     letter-spacing: 1px;
+    display: table;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .genre-title::after {
@@ -104,7 +115,7 @@
     right: 0;
     height: 3px;
     background: linear-gradient(90deg, rgba(164, 57, 207, 1) 0%, rgba(141, 22, 201, 1) 100%);
-    width: 80%;
+    width: 60%;
     margin: 0 auto;
     border-radius: 2px;
 }
@@ -197,13 +208,16 @@
     transition: opacity 0.3s ease;
 }
 
+/* Movie title styling */
 .movie-title {
-    font-size: 0.9rem;
+    font-size: 0.75rem;
     font-weight: bold;
     margin-bottom: 5px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    max-width: 95%;
+    line-height: 1.2;
 }
 
 .movie-rating {
@@ -363,9 +377,12 @@
     .genre-title {
         font-size: 1.5rem;
         margin: 1.5rem auto 1rem;
-        width: fit-content;
+        width: auto;
         position: relative;
         padding-bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: table;
     }
 
     .genre-grid-container {
@@ -415,9 +432,12 @@
     .genre-title {
         font-size: 1.2rem;
         margin: 1rem auto 0.8rem;
-        width: fit-content;
+        width: auto;
         position: relative;
         padding-bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: table;
     }
 
     .genre-grid-container {
