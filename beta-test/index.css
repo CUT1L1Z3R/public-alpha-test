@@ -692,6 +692,34 @@ input::-webkit-input-placeholder {
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  transition: all 0.5s ease-in-out, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Add hover effect to Netflix Originals */
+.netflix-container .movie-item:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 25px rgba(141, 22, 201, 0.4);
+  z-index: 5; /* Ensure hovered items appear above others */
+}
+
+/* Add the purple glow effect for Netflix Originals on hover */
+.netflix-container .movie-item::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  box-shadow: 0 0 0 0 rgba(141, 22, 201, 0);
+  opacity: 0;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.netflix-container .movie-item:hover::after {
+  opacity: 1;
+  box-shadow: 0 0 15px 3px rgba(141, 22, 201, 0.3);
 }
 
 .image-wrapper {
@@ -722,9 +750,9 @@ input::-webkit-input-placeholder {
   bottom: 0;
   left: 0;
   width: 100%;
-  background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.7) 80%);
+  background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.7) 60%, transparent 100%);
   color: white;
-  padding: 10px 12px;
+  padding: 12px 15px;
   border-radius: 0 0 8px 8px;
   box-sizing: border-box;
   z-index: 10;
@@ -736,13 +764,50 @@ input::-webkit-input-placeholder {
   opacity: 1 !important;
   visibility: visible !important;
   transition: opacity 0.3s ease;
+  border-top: 1px solid rgba(141, 22, 201, 0.3);
+  box-shadow: 0 -5px 15px rgba(141, 22, 201, 0.1);
+}
+
+/* Movie title styling */
+.movie-title {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  max-width: 75%;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Rating styling */
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background-color: rgba(141, 22, 201, 0.2);
+  padding: 3px 6px;
+  border-radius: 4px;
+  border: 1px solid rgba(141, 22, 201, 0.3);
+}
+
+.rating-star {
+  color: #8d16c9;
+  font-size: 12px;
+}
+
+.rating-value {
+  font-size: 12px;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
 }
 
 @media only screen and (max-width: 560px) {
   .movie-overlay {
     padding: 8px 10px;
-    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.65) 90%);
-    /* Removed purple border-top */
+    background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.65) 80%, transparent 100%);
+    border-top: 1px solid rgba(141, 22, 201, 0.2);
   }
 
   .movie-title {
@@ -752,8 +817,12 @@ input::-webkit-input-placeholder {
     letter-spacing: 0.3px;
   }
 
+  .rating {
+    padding: 2px 4px;
+  }
+
   .rating-star {
-    font-size: 11px;
+    font-size: 10px;
   }
 
   .rating-value {
