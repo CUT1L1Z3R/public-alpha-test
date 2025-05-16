@@ -206,45 +206,64 @@
 }
 
 @media (max-width: 480px) {
+  /* Optimize for mobile full view */
   .genre-title {
-    font-size: 1.5rem;
-    padding: 5px 10px;
+    font-size: 1.3rem;
+    padding: 4px 8px;
+    margin-bottom: 0.5rem;
   }
 
   .movie-title {
-    font-size: 0.9rem;
-    max-width: 60%;
+    font-size: 0.8rem;
+    max-width: 65%;
   }
 
   .movie-rating {
-    font-size: 0.8rem;
-    padding: 2px 6px;
+    font-size: 0.7rem;
+    padding: 2px 5px;
   }
 
   .rating-star {
-    font-size: 1rem;
+    font-size: 0.85rem;
+    margin-right: 3px;
   }
 
   .watch-list-button {
-    min-width: 90px;
-    font-size: 13px;
-    padding: 4px 12px;
-    height: 36px;
-    margin-right: 5px; /* Further reduced margin for smaller screens */
+    min-width: 80px;
+    font-size: 12px;
+    padding: 4px 8px;
+    height: 34px;
+    margin-right: 3px;
   }
 
   #searchInput {
-    height: 32px;
-    font-size: 13px;
-    padding: 0 15px;
+    height: 30px;
+    font-size: 12px;
+    padding: 0 10px;
   }
 
   .search-container {
-    max-width: 200px;
-    margin: 0 10px;
+    max-width: 140px;
+    margin: 0 5px;
   }
 
-  /* Adjusted movie item styles for mobile */
+  /* Optimized movie item styles for mobile */
+  .movie-item {
+    width: 100%;
+    margin: 0 auto;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Streamlined overlay to fit small screens */
+  .movie-overlay {
+    padding: 20px 8px 6px !important;
+    min-height: 75px !important;
+  }
+
+  .title-rating-container {
+    margin-bottom: 2px;
+    margin-top: 5px;
+  }
   .movie-item {
     width: 100%; /* Take full width of grid cell */
     margin: 0 auto; /* Center in the grid cell */

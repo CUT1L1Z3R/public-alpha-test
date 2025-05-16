@@ -421,72 +421,108 @@
 }
 
 @media (max-width: 480px) {
+    /* Core layout fixes to prevent zooming issues */
+    html, body {
+        width: 100%;
+        overflow-x: hidden;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        position: relative;
+        min-height: 100vh;
+    }
+
     .header {
-        padding: 0 10px;
+        padding: 0 8px;
         height: 45px;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     .logo img {
-        max-height: 30px;
+        max-height: 28px;
     }
 
     .search-container {
-        max-width: 160px;
+        max-width: 140px;
+        margin: 0 5px;
     }
 
     .nav-menu {
         top: 45px;
+        width: 100vw; /* Full viewport width */
+        box-sizing: border-box;
+        overflow-x: auto;
+    }
+
+    .nav-items {
+        padding: 0 5px;
+        width: max-content; /* Allow horizontal scrolling */
     }
 
     .nav-item a {
-        padding: 10px 12px;
-        font-size: 0.8rem;
+        padding: 8px 10px;
+        font-size: 0.75rem;
     }
 
     .main-content {
-        margin-top: 100px;
-        padding: 10px;
+        margin-top: 95px;
+        padding: 5px;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     .genre-title {
         font-size: 1.2rem;
-        margin: 1rem auto 0.8rem;
+        margin: 0.8rem auto 0.7rem;
         width: auto;
         position: relative;
-        padding-bottom: 10px;
+        padding-bottom: 8px;
         left: 50%;
         transform: translateX(-50%);
         display: table;
     }
 
     .genre-grid-container {
-        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-        gap: 16px; /* Reduced gap to create more even spacing */
-        padding: 0 8px; /* Reduced padding to utilize more screen space */
-        justify-content: space-evenly; /* Distribute space evenly between columns */
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+        gap: 12px; /* Further reduced gap */
+        padding: 0 5px; /* Minimal padding */
+        justify-content: space-evenly;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     .movie-item {
-        height: 120px;
-        margin: 0 auto; /* Center movie items in their grid cells */
-        width: 100%; /* Ensure items take full width of their grid cells */
+        height: 110px;
+        margin: 0 auto;
+        width: 100%;
     }
 
     .filter-options {
-        gap: 8px;
+        gap: 6px;
     }
 
     .filter-button {
-        padding: 5px 12px;
-        font-size: 0.75rem;
+        padding: 4px 10px;
+        font-size: 0.7rem;
     }
 
     .pagination-container {
-        gap: 10px;
+        gap: 8px;
+        margin: 20px 0;
     }
 
     .pagination-button {
-        padding: 6px 10px;
-        font-size: 0.8rem;
+        padding: 5px 8px;
+        font-size: 0.75rem;
+    }
+
+    .footer {
+        padding: 15px 10px;
+        font-size: 0.7rem;
+        width: 100%;
+        box-sizing: border-box;
     }
 }

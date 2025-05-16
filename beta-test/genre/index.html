@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="overflow-x: hidden; max-width: 100%;">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="description" content="Browse movies and TV shows by genre on FreeFlixx.">
     <title>Genre Results - FreeFlixx</title>
     <link rel="icon" href="../assets/freeflixx.ico" type="image/x-icon">
@@ -12,6 +12,13 @@
     <link rel="stylesheet" href="./section-fix.css">
     <link rel="stylesheet" href="./enhanced-style.css">
     <style>
+        /* Mobile viewport scaling fix */
+        @media (max-width: 480px) {
+            html {
+                font-size: 14px;
+            }
+        }
+
         /* Inline styles to override any conflicts */
         .header {
             padding: 0 15px 0 30px !important; /* Reduced right padding */
@@ -72,24 +79,58 @@
         }
 
         @media (max-width: 480px) {
-            .watch-list-button {
-                min-width: 90px !important;
-                margin-right: 5px !important; /* Further reduced margin */
+            /* Responsive layout fixes for mobile */
+            html, body {
+                width: 100% !important;
+                max-width: 100% !important;
+                overflow-x: hidden !important;
             }
 
-            /* Additional mobile grid adjustments */
+            .header {
+                width: 100% !important;
+                padding: 0 8px !important;
+            }
+
+            .watch-list-button {
+                min-width: 80px !important;
+                margin-right: 3px !important;
+                padding: 4px 8px !important;
+                height: 34px !important;
+                font-size: 12px !important;
+            }
+
+            /* Optimized grid for mobile */
             .genre-grid-container {
-                justify-content: space-evenly !important; /* Distribute items evenly */
-                padding: 0 8px !important; /* Use more screen real estate */
+                justify-content: space-evenly !important;
+                padding: 0 5px !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+                max-width: 100vw !important;
             }
 
             .movie-item {
-                margin: 0 auto !important; /* Center in grid cell */
+                margin: 0 auto !important;
+                max-width: 100% !important;
+            }
+
+            /* Streamlined overlay for mobile */
+            .movie-overlay {
+                padding: 20px 8px 6px !important;
+                min-height: 75px !important;
+            }
+
+            .title-rating-container {
+                margin-bottom: 2px !important;
+                margin-top: 5px !important;
+            }
+
+            .movie-title {
+                font-size: 0.8rem !important;
             }
         }
     </style>
 </head>
-<body>
+<body style="overflow-x: hidden; max-width: 100%; width: 100%">
     <header class="header">
         <div class="logo">
             <a href="../index.html">
