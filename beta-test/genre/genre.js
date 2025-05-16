@@ -49,6 +49,8 @@ const genreMap = {
     'kids': 10762,
     'news': 10763,
     'reality': 10764,
+    'sci-fi': 10765, // Added sci-fi for TV shows
+    'science-fiction': 10765, // Added science-fiction for TV shows
     'soap': 10766,
     'talk': 10767,
     'politics': 10768,
@@ -222,8 +224,16 @@ function fetchGenreContent(genre, mediaType, sortBy, page) {
 
     console.log(`Fetching content for genre: ${genre}, mediaType: ${mediaType}, sort: ${sortBy}, page: ${page}`);
 
-    // Get genre ID from genreMap
-    const genreId = genreMap[genre.toLowerCase()];
+    // Get genre ID from genreMap based on media type
+    let genreId;
+
+    // Check if we need to handle a special case for sci-fi TV shows
+    if ((genre.toLowerCase() === 'sci-fi' || genre.toLowerCase() === 'science-fiction') && mediaType === 'tv') {
+        genreId = 10765; // Sci-Fi & Fantasy genre ID for TV shows
+        console.log(`Using TV-specific sci-fi genre ID: ${genreId}`);
+    } else {
+        genreId = genreMap[genre.toLowerCase()];
+    }
 
     if (!genreId) {
         console.error(`Genre ID not found for: ${genre}`);
@@ -231,7 +241,7 @@ function fetchGenreContent(genre, mediaType, sortBy, page) {
         return;
     }
 
-    console.log(`Found genre ID: ${genreId} for genre: ${genre}`);
+    console.log(`Found genre ID: ${genreId} for genre: ${genre} and media type: ${mediaType}`);
 
     // Create an array to store demo content in case the API fails
     let demoContent = [];
@@ -249,7 +259,17 @@ function fetchGenreContent(genre, mediaType, sortBy, page) {
     // Determine which API endpoint to use based on media type
     let endpoint = '';
     if (mediaType === 'tv') {
-        endpoint = `discover/tv?api_key=${api_Key}&with_genres=${genreId}&sort_by=${sortBy}&page=${page}`;
+        // For TV shows, ensure we're using the correct genre IDs
+        // Some genres like sci-fi have different IDs for TV vs movies
+        let tvGenreId = genreId;
+
+        // Double check if we need a TV-specific genre ID
+        if (genre.toLowerCase() === 'sci-fi' || genre.toLowerCase() === 'science-fiction') {
+            tvGenreId = 10765; // Sci-Fi & Fantasy genre ID for TV
+        }
+
+        endpoint = `discover/tv?api_key=${api_Key}&with_genres=${tvGenreId}&sort_by=${sortBy}&page=${page}`;
+        console.log(`Using TV endpoint with genre ID: ${tvGenreId}`);
     } else if (mediaType === 'anime') {
         // For anime, use animation genre (16) + specified genre + anime keyword (210024)
         endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,${genreId}&with_keywords=210024&sort_by=${sortBy}&page=${page}`;
@@ -529,19 +549,9 @@ function initSearch() {
 
     // Make sure the search results container exists and is properly configured
     if (searchResults) {
-        // Initialize the search results container
-        searchResults.style.position = "absolute";
-        searchResults.style.top = "60px";
-        searchResults.style.right = "20px";
-        searchResults.style.width = "300px";
-        searchResults.style.backgroundColor = "#141414";
-        searchResults.style.color = "white";
-        searchResults.style.borderRadius = "5px";
-        searchResults.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.5)";
-        searchResults.style.zIndex = "1000";
-        searchResults.style.maxHeight = "80vh";
-        searchResults.style.overflowY = "auto";
-        searchResults.style.border = "1px solid #8d16c9";
+        // Initialize the search results container - use CSS classes instead of inline styles
+        // Let the CSS handle the positioning and styling
+        searchResults.className = "search-results";
         searchResults.innerHTML = '';
     }
 
@@ -587,9 +597,31 @@ function initSearch() {
 
         // Close the search results if clicking elsewhere
         if (searchResults) {
-            searchResults.innerHTML = '';
+            searchResults.style.display = "none";
         }
     });
+
+    // Handle window resize events to ensure search results position correctly
+    window.addEventListener('resize', () => {
+        if (searchResults.style.display === "block" && searchInput.value.length > 2) {
+            // Reposition search results based on current viewport
+            positionSearchResults();
+        }
+    });
+}
+
+// Function to position search results based on device size
+function positionSearchResults() {
+    // Use this function to position search results appropriately for the current device
+    if (window.innerWidth <= 480) {
+        // Mobile view - center under search bar
+        searchResults.style.display = "block";
+        searchResults.style.visibility = "visible";
+    } else {
+        // Desktop view - default positioning from CSS
+        searchResults.style.display = "block";
+        searchResults.style.visibility = "visible";
+    }
 }
 
 // Function to handle search input
@@ -603,6 +635,9 @@ async function handleSearchInput() {
         displaySearchResults(results);
     } else {
         searchResults.innerHTML = '';
+        if (searchResults) {
+            searchResults.style.display = "none";
+        }
     }
 }
 
@@ -627,9 +662,8 @@ async function fetchSearchResults(query) {
 function displaySearchResults(results) {
     searchResults.innerHTML = '';
 
-    // Always make search results visible first
-    searchResults.style.display = "block";
-    searchResults.style.visibility = "visible";
+    // Position search results appropriately for current device
+    positionSearchResults();
 
     if (results.length === 0) {
         searchResults.innerHTML = '<p style="padding: 10px; text-align: center;">No results found</p>';
@@ -659,12 +693,21 @@ function displaySearchResults(results) {
                             <h3>${shortenedTitle}</h3>
                             <p>${mediaType} <span> &nbsp; ${year}</span></p>
                         </div>
-                        <button class="watchListBtn" id="${result.id}">Add to WatchList</button>`;
+                        <button class="watchListBtn" id="${result.id}">Add</button>`;
 
         const watchListBtn = item.querySelector('.watchListBtn');
 
+        // Style the button to be more mobile-friendly
+        if (window.innerWidth <= 480) {
+            watchListBtn.style.padding = "4px 8px";
+            watchListBtn.style.fontSize = "12px";
+            watchListBtn.style.minWidth = "50px";
+        }
+
         // Add event listener to WatchList button
-        watchListBtn.addEventListener('click', () => {
+        watchListBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent click from bubbling to parent elements
+
             // Get the watchlist from local storage
             const watchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
 
@@ -682,8 +725,9 @@ function displaySearchResults(results) {
                     release_date: date
                 });
                 localStorage.setItem('watchlist', JSON.stringify(watchlist)); // Store in Local Storage
-                watchListBtn.textContent = "Go to WatchList";
-                watchListBtn.addEventListener('click', () => {
+                watchListBtn.textContent = "Go";
+                watchListBtn.addEventListener('click', (e) => {
+                    e.stopPropagation(); // Prevent click from bubbling
                     window.location.href = '../watchList/watchlist.html'; // Navigate to the WatchList page
                 });
             } else {

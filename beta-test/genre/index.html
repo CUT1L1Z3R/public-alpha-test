@@ -89,6 +89,7 @@
             .header {
                 width: 100% !important;
                 padding: 0 8px !important;
+                height: 50px !important; /* Increased height */
             }
 
             .watch-list-button {
@@ -99,10 +100,64 @@
                 font-size: 12px !important;
             }
 
-            /* Optimized grid for mobile */
+            /* Enhanced navigation styling */
+            .nav-menu {
+                padding: 8px 0 !important;
+                border-bottom: 2px solid rgba(141, 22, 201, 0.5) !important;
+                background-color: rgba(20, 20, 20, 0.98) !important;
+            }
+
+            .nav-items {
+                height: 40px !important;
+                padding: 0 10px !important;
+            }
+
+            .nav-item {
+                margin-right: 8px !important;
+            }
+
+            .nav-item a {
+                padding: 10px 15px !important;
+                font-size: 0.85rem !important;
+                font-weight: 500 !important;
+                border-radius: 20px !important;
+                border: 1px solid rgba(141, 22, 201, 0.3) !important;
+            }
+
+            .nav-item.active a {
+                background-color: rgba(141, 22, 201, 0.7) !important;
+                border: 1px solid rgba(141, 22, 201, 0.8) !important;
+                font-weight: 600 !important;
+            }
+
+            /* Enhanced genre title */
+            .genre-title {
+                font-size: 1.5rem !important;
+                margin: 1rem auto 1.2rem !important;
+                padding: 5px 15px !important;
+                border-radius: 30px !important;
+            }
+
+            /* Enhanced filter buttons */
+            .filter-options {
+                gap: 10px !important;
+                margin-bottom: 15px !important;
+            }
+
+            .filter-button {
+                padding: 8px 15px !important;
+                font-size: 0.85rem !important;
+                font-weight: 500 !important;
+                letter-spacing: 0.5px !important;
+                min-width: 80px !important;
+            }
+
+            /* Optimized grid for mobile - two columns */
             .genre-grid-container {
-                justify-content: space-evenly !important;
-                padding: 0 5px !important;
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 15px !important;
+                padding: 0 10px !important;
+                justify-content: space-between !important;
                 width: 100% !important;
                 box-sizing: border-box !important;
                 max-width: 100vw !important;
@@ -111,21 +166,30 @@
             .movie-item {
                 margin: 0 auto !important;
                 max-width: 100% !important;
+                height: 150px !important;
             }
 
             /* Streamlined overlay for mobile */
             .movie-overlay {
-                padding: 20px 8px 6px !important;
-                min-height: 75px !important;
+                padding: 25px 10px 8px !important;
+                min-height: 85px !important;
             }
 
             .title-rating-container {
-                margin-bottom: 2px !important;
+                margin-bottom: 3px !important;
                 margin-top: 5px !important;
             }
 
             .movie-title {
+                font-size: 0.9rem !important;
+            }
+
+            .movie-rating {
                 font-size: 0.8rem !important;
+            }
+
+            .rating-star {
+                font-size: 0.9rem !important;
             }
         }
     </style>

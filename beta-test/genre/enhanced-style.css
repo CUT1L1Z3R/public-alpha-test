@@ -214,17 +214,17 @@
   }
 
   .movie-title {
-    font-size: 0.8rem;
+    font-size: 0.9rem; /* Slightly increased for better readability */
     max-width: 65%;
   }
 
   .movie-rating {
-    font-size: 0.7rem;
+    font-size: 0.8rem; /* Slightly increased for better readability */
     padding: 2px 5px;
   }
 
   .rating-star {
-    font-size: 0.85rem;
+    font-size: 0.9rem; /* Slightly increased for better visibility */
     margin-right: 3px;
   }
 
@@ -247,7 +247,7 @@
     margin: 0 5px;
   }
 
-  /* Optimized movie item styles for mobile */
+  /* Optimized movie item styles for mobile two-column layout */
   .movie-item {
     width: 100%;
     margin: 0 auto;
@@ -256,22 +256,12 @@
 
   /* Streamlined overlay to fit small screens */
   .movie-overlay {
-    padding: 20px 8px 6px !important;
-    min-height: 75px !important;
+    padding: 25px 10px 8px !important;
+    min-height: 85px !important;
   }
 
   .title-rating-container {
-    margin-bottom: 2px;
+    margin-bottom: 3px;
     margin-top: 5px;
-  }
-  .movie-item {
-    width: 100%; /* Take full width of grid cell */
-    margin: 0 auto; /* Center in the grid cell */
-  }
-
-  /* Ensure the overlay fits properly */
-  .movie-overlay {
-    padding: 25px 12px 8px !important; /* Slightly reduced padding */
-    min-height: 90px !important; /* Reduced min-height for mobile */
   }
 }
