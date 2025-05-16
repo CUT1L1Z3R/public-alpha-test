@@ -191,10 +191,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         { title: 'Crime', url: '/genre/index.html?genre=crime&type=tv' },
                         { title: 'Action & Adventure', url: '/genre/index.html?genre=action-adventure&type=tv' },
                         { title: 'Mystery', url: '/genre/index.html?genre=mystery&type=tv' },
-                        { title: 'Fantasy', url: '/genre/index.html?genre=fantasy&type=tv' },
+                        { title: 'Animation', url: '/genre/index.html?genre=animation&type=tv' },
                         { title: 'Reality TV', url: '/genre/index.html?genre=reality&type=tv' },
-                        { title: 'Sci-Fi', url: '/genre/index.html?genre=science-fiction&type=tv' }, // Changed sci-fi to science-fiction for TV
-                        { title: 'Documentary', url: '/genre/index.html?genre=documentary&type=tv' }
+                        { title: 'Sci-Fi', url: '/genre/index.html?genre=science-fiction&type=tv' },
+                        { title: 'Documentary', url: '/genre/index.html?genre=documentary&type=tv' },
+                        { title: 'Western', url: '/genre/index.html?genre=western&type=tv' }
                     ],
                     'Anime': [
                         { title: 'Action', url: '/genre/index.html?genre=action&type=anime' },

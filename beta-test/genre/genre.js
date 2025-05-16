@@ -51,7 +51,8 @@ const genreMap = {
     'reality': 10764,
     'sci-fi': 10765,
     'science-fiction': 10765,
-    'fantasy': 10765, // Updated to use the same ID as sci-fi for TV shows since they share a genre in TMDB
+    'animation': 16, // Added animation genre for TV shows
+    'western': 37, // Added western genre for TV shows
     'soap': 10766,
     'talk': 10767,
     'politics': 10768,
@@ -274,8 +275,10 @@ function fetchGenreContent(genre, mediaType, sortBy, page) {
         // Double check if we need a TV-specific genre ID
         if (genre.toLowerCase() === 'sci-fi' || genre.toLowerCase() === 'science-fiction') {
             tvGenreId = 10765; // Sci-Fi & Fantasy genre ID for TV
-        } else if (genre.toLowerCase() === 'fantasy') {
-            tvGenreId = 10765; // Fantasy is part of the same Sci-Fi & Fantasy genre in TV shows
+        } else if (genre.toLowerCase() === 'animation') {
+            tvGenreId = 16; // Animation genre ID is the same for TV and movies
+        } else if (genre.toLowerCase() === 'western') {
+            tvGenreId = 37; // Western genre ID is the same for TV and movies
         }
 
         endpoint = `discover/tv?api_key=${api_Key}&with_genres=${tvGenreId}&sort_by=${sortBy}&page=${page}`;
