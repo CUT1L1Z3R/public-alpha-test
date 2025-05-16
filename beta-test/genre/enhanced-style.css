@@ -42,30 +42,35 @@
   left: 0;
   right: 0;
   width: 100%;
-  padding: 15px;
+  padding: 30px 15px 10px; /* Increased top padding to push content further down */
   background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.5) 80%, rgba(0, 0, 0, 0) 100%);
   color: white;
   display: flex;
   flex-direction: column;
+  justify-content: flex-end; /* Align content to the bottom */
   opacity: 1;
   transition: opacity 0.3s ease, transform 0.3s ease;
   transform: translateY(0);
-  min-height: 80px;
+  min-height: 100px; /* Increased min-height to push content down */
   border: none;
+  z-index: 2; /* Ensure overlay is above image */
 }
 
 .movie-item:hover .movie-overlay {
-  transform: translateY(-5px);
-  background: linear-gradient(to top, rgba(141, 22, 201, 0.8) 0%, rgba(0, 0, 0, 0.8) 80%, rgba(0, 0, 0, 0.2) 100%);
+  transform: translateY(0); /* No transform on hover, keep at bottom */
+  background: linear-gradient(to top, rgba(141, 22, 201, 0.8) 0%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.2) 100%);
+  /* Modified gradient to make purple highlight shorter/less intense */
 }
 
-/* Title and Rating Container - Side by Side */
+/* Title and Rating Container - Side by Side at bottom*/
 .title-rating-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  margin-bottom: 10px;
+  margin-bottom: 0;
+  margin-top: 10px; /* Increased margin to push content down */
+  position: relative; /* Ensure proper positioning */
 }
 
 /* Improved Movie Title */
@@ -114,10 +119,12 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   border-radius: 8px;
   overflow: hidden;
+  position: relative; /* Ensure proper positioning */
 }
 
 .image-wrapper {
   border: none;
+  position: relative; /* Ensure proper positioning */
 }
 
 .image-wrapper img {
@@ -154,13 +161,19 @@
   box-shadow: 0 2px 10px rgba(141, 22, 201, 0.4);
   position: relative;
   overflow: hidden;
-  margin-right: 30px; /* Increased right margin for spacing */
+  margin-left: auto; /* Push to the right */
+  margin-right: 10px; /* Further reduced right margin to move closer to edge */
   letter-spacing: 0.5px;
 }
 
+/* Fixed header styles */
 .header {
-  padding: 0 30px !important;
+  padding: 0 15px 0 30px !important; /* Reduced right padding */
   justify-content: space-between !important;
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
 }
 
 /* Media Queries for Responsive Design */
@@ -179,7 +192,7 @@
     min-width: 100px;
     font-size: 14px;
     padding: 5px 15px;
-    margin-right: 20px; /* Adjust margin for smaller screens */
+    margin-right: 5px; /* Further reduced margin for smaller screens */
   }
 
   #searchInput {
@@ -217,7 +230,7 @@
     font-size: 13px;
     padding: 4px 12px;
     height: 36px;
-    margin-right: 15px; /* Adjust margin for smaller screens */
+    margin-right: 5px; /* Further reduced margin for smaller screens */
   }
 
   #searchInput {

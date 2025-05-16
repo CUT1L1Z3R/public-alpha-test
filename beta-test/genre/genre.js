@@ -403,13 +403,19 @@ function displayResults(results, mediaType) {
             window.location.href = `../movie_details/movie_details.html?media=${mediaType === 'anime' ? 'tv' : mediaType}&id=${mediaId}`;
         });
 
-        // Create overlay
+        // Create overlay with position at bottom
         const overlay = document.createElement('div');
         overlay.className = 'movie-overlay';
+        overlay.style.bottom = '0'; // Ensure it's at the bottom
+        overlay.style.top = 'auto'; // Remove any top positioning
+        overlay.style.padding = '30px 15px 10px'; // Increased top padding to push content further down
+        overlay.style.justifyContent = 'flex-end'; // Align content to bottom
+        overlay.style.minHeight = '100px'; // Increased height to push content down
 
         // Create title-rating container for side-by-side layout
         const titleRatingContainer = document.createElement('div');
         titleRatingContainer.className = 'title-rating-container';
+        titleRatingContainer.style.marginTop = '10px'; // Increased space above container
 
         // Create title element
         const titleElement = document.createElement('div');
@@ -450,6 +456,15 @@ function displayResults(results, mediaType) {
 
         // Add overlay to the image wrapper
         imgWrapper.appendChild(overlay);
+
+        // Add hover effect for the movie item
+        itemElement.addEventListener('mouseenter', () => {
+            overlay.style.background = 'linear-gradient(to top, rgba(141, 22, 201, 0.8) 0%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.2) 100%)';
+        });
+
+        itemElement.addEventListener('mouseleave', () => {
+            overlay.style.background = 'linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.5) 80%, rgba(0, 0, 0, 0) 100%)';
+        });
     });
 
     // Always show the overlay on these genre pages
@@ -458,6 +473,27 @@ function displayResults(results, mediaType) {
         const overlay = item.querySelector('.movie-overlay');
         if (overlay) {
             overlay.style.opacity = '1';
+            overlay.style.bottom = '0'; // Ensure it's at the bottom
+            overlay.style.transform = 'translateY(0)'; // No transform
+            overlay.style.padding = '30px 15px 10px'; // Increased top padding to push content further down
+            overlay.style.justifyContent = 'flex-end'; // Align content to bottom
+            overlay.style.minHeight = '100px'; // Increased height to push content down
+
+            // Also adjust the title-rating container
+            const titleRatingContainer = overlay.querySelector('.title-rating-container');
+            if (titleRatingContainer) {
+                titleRatingContainer.style.marginTop = '10px'; // Increased space above container
+            }
+
+            // Add hover effects programmatically as well
+            const movieItem = item;
+            movieItem.addEventListener('mouseenter', () => {
+                overlay.style.background = 'linear-gradient(to top, rgba(141, 22, 201, 0.8) 0%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.2) 100%)';
+            });
+
+            movieItem.addEventListener('mouseleave', () => {
+                overlay.style.background = 'linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.5) 80%, rgba(0, 0, 0, 0) 100%)';
+            });
         }
     });
 }

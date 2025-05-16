@@ -14,17 +14,20 @@
     <style>
         /* Inline styles to override any conflicts */
         .header {
-            padding: 0 30px !important;
+            padding: 0 15px 0 30px !important; /* Reduced right padding */
             justify-content: space-between !important;
             display: flex !important;
             align-items: center !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
         }
         .watch-list-button {
             position: relative !important;
             right: auto !important;
-            margin-left: 20px !important;
-            margin-right: 30px !important; /* Add space on the right side */
+            margin-left: auto !important;
+            margin-right: 10px !important; /* Further reduced right margin */
             min-width: 120px !important;
+            flex-shrink: 0 !important; /* Prevent button from shrinking */
         }
         .genre-title {
             text-align: center !important;
@@ -41,11 +44,39 @@
         }
         .movie-overlay {
             border: none !important;
+            bottom: 0 !important; /* Ensure overlay is at the bottom */
+            top: auto !important; /* Remove any top positioning */
+            transform: translateY(0) !important; /* No transform */
+            padding: 30px 15px 10px !important; /* Increased top padding to push content further down */
+            justify-content: flex-end !important; /* Align content to bottom */
+            min-height: 100px !important; /* Increased height to push content down */
+        }
+        .movie-item:hover .movie-overlay {
+            background: linear-gradient(to top, rgba(141, 22, 201, 0.8) 0%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.2) 100%) !important;
+            /* Modified gradient to make purple highlight shorter */
+        }
+        .title-rating-container {
+            margin-top: 10px !important; /* Increased space above container */
         }
         .movie-item, .image-wrapper, .image-wrapper img {
             border: none !important;
         }
         /* Remove watch-now-button styles since we're not using it anymore */
+
+        /* Responsive adjustments for watchlist button */
+        @media (max-width: 768px) {
+            .watch-list-button {
+                min-width: 100px !important;
+                margin-right: 5px !important; /* Further reduced margin */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .watch-list-button {
+                min-width: 90px !important;
+                margin-right: 5px !important; /* Further reduced margin */
+            }
+        }
     </style>
 </head>
 <body>
