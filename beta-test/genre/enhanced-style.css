@@ -5,7 +5,7 @@
   font-size: 2.5rem;
   color: #fff;
   text-align: center;
-  margin: 1.5rem auto 2rem;
+  margin: 1.5rem 0 2rem;
   text-transform: capitalize;
   position: relative;
   font-weight: 700;
@@ -15,33 +15,24 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
   text-shadow: 0 2px 10px rgba(141, 22, 201, 0.5);
-  display: block; /* Changed to block for centering */
-  padding: 5px 0 15px 0; /* Added padding at bottom for the underline */
-  border-radius: 0; /* Removed rounded corners */
-  width: 100%; /* Full width for proper centering */
-  left: 0; /* Reset any left positioning */
-  transform: none; /* Remove any transform */
-}
-
-@media (min-width: 769px) {
-  .genre-title {
-    width: calc(100% - 160px); /* Adjust for sidebar width */
-    max-width: calc(100% - 160px);
-  }
+  display: inline-block;
+  padding: 5px 20px;
+  border-radius: 50px;
+  margin-left: auto;
+  margin-right: auto;
+  width: auto;
 }
 
 .genre-title::after {
   content: "";
   position: absolute;
-  bottom: 0; /* Align to bottom of the element */
+  bottom: -10px;
   left: 50%;
   transform: translateX(-50%);
-  width: 140px; /* Width that matches the title better */
-  max-width: 40%; /* Limited width to match the design */
-  height: 3px; /* Slightly thinner line */
+  width: 80px;
+  height: 4px;
   background: linear-gradient(90deg, #a710e0 0%, #8a14ca 100%);
-  border-radius: 3px;
-  margin: 0 auto;
+  border-radius: 4px;
 }
 
 /* Enhanced Movie Overlay */
@@ -185,46 +176,11 @@
   box-sizing: border-box !important;
 }
 
-/* Fix for main content to ensure title is centered properly */
-.main-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  text-align: center;
-}
-
-@media (min-width: 769px) {
-  .main-content {
-    margin-left: 160px; /* Add margin to account for nav sidebar */
-    box-sizing: border-box;
-  }
-}
-
 /* Media Queries for Responsive Design */
 @media (max-width: 768px) {
   .genre-title {
     font-size: 2rem;
     padding: 5px 15px;
-    position: relative;
-    display: inline-block;
-    width: auto;
-    text-align: center;
-    margin-bottom: 1.5rem; /* Increased margin to account for the line */
-  }
-
-  /* Fix for the purple line in tablet */
-  .genre-title::after {
-    content: "";
-    position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 70px; /* Adjusted width for tablet */
-    height: 4px;
-    background: linear-gradient(90deg, #a710e0 0%, #8a14ca 100%);
-    border-radius: 4px;
-    margin: 0 auto;
   }
 
   .movie-title {
@@ -250,44 +206,25 @@
 }
 
 @media (max-width: 480px) {
-  /* Optimize for mobile full view - fully centered */
+  /* Optimize for mobile full view */
   .genre-title {
-    font-size: 1.5rem; /* Slightly larger font size */
-    padding: 4px 0 15px 0; /* Added bottom padding for the underline */
-    margin: 0.8rem auto 1.5rem; /* Added auto margins for horizontal centering */
-    position: relative;
-    display: block; /* Changed to block */
-    width: 100%; /* Full width */
-    text-align: center;
-  }
-
-  /* Fix for the purple line in mobile */
-  .genre-title::after {
-    content: "";
-    position: absolute;
-    bottom: 0; /* Aligned with bottom of title */
-    left: 50%;
-    transform: translateX(-50%);
-    width: 140px; /* Width that matches the title */
-    max-width: 40%; /* Maximum width to match design */
-    height: 3px; /* Slightly thinner for mobile */
-    background: linear-gradient(90deg, #a710e0 0%, #8a14ca 100%);
-    border-radius: 3px;
-    margin: 0 auto;
+    font-size: 1.3rem;
+    padding: 4px 8px;
+    margin-bottom: 0.5rem;
   }
 
   .movie-title {
-    font-size: 0.9rem; /* Slightly increased for better readability */
+    font-size: 0.8rem;
     max-width: 65%;
   }
 
   .movie-rating {
-    font-size: 0.8rem; /* Slightly increased for better readability */
+    font-size: 0.7rem;
     padding: 2px 5px;
   }
 
   .rating-star {
-    font-size: 0.9rem; /* Slightly increased for better visibility */
+    font-size: 0.85rem;
     margin-right: 3px;
   }
 
@@ -310,7 +247,7 @@
     margin: 0 5px;
   }
 
-  /* Optimized movie item styles for mobile two-column layout */
+  /* Optimized movie item styles for mobile */
   .movie-item {
     width: 100%;
     margin: 0 auto;
@@ -319,12 +256,22 @@
 
   /* Streamlined overlay to fit small screens */
   .movie-overlay {
-    padding: 25px 10px 8px !important;
-    min-height: 85px !important;
+    padding: 20px 8px 6px !important;
+    min-height: 75px !important;
   }
 
   .title-rating-container {
-    margin-bottom: 3px;
+    margin-bottom: 2px;
     margin-top: 5px;
+  }
+  .movie-item {
+    width: 100%; /* Take full width of grid cell */
+    margin: 0 auto; /* Center in the grid cell */
+  }
+
+  /* Ensure the overlay fits properly */
+  .movie-overlay {
+    padding: 25px 12px 8px !important; /* Slightly reduced padding */
+    min-height: 90px !important; /* Reduced min-height for mobile */
   }
 }

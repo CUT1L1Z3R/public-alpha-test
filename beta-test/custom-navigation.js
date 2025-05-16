@@ -59,22 +59,13 @@ document.addEventListener('DOMContentLoaded', function() {
                         genreDropdown.style.top = '50%';
                         genreDropdown.style.left = '50%';
                         genreDropdown.style.transform = 'translate(-50%, -50%)';
-
-                        // Narrower dropdown for mobile
-                        if (window.innerWidth <= 480) {
-                            genreDropdown.style.width = '85%'; // Narrower width for smaller screens
-                            genreDropdown.style.maxWidth = '300px'; // Smaller max width
-                        } else {
-                            genreDropdown.style.width = '85%';
-                            genreDropdown.style.maxWidth = '350px';
-                        }
-
-                        genreDropdown.style.maxHeight = '85vh'; // Allow more height
+                        genreDropdown.style.width = window.innerWidth <= 480 ? '80%' : '75%'; // Made width smaller
+                        genreDropdown.style.maxWidth = '390px'; // Reduced max width
+                        genreDropdown.style.maxHeight = '80vh';
                         genreDropdown.style.overflowY = 'auto';
-                        genreDropdown.style.overflowX = 'hidden'; // Prevent horizontal scrolling
                         genreDropdown.style.zIndex = '9999';
-                        genreDropdown.style.margin = '0 auto'; // Center the dropdown
-                        genreDropdown.style.padding = '20px'; // Reduced padding
+                        genreDropdown.style.marginRight = '15px'; // Right margin
+                        genreDropdown.style.marginLeft = '15px'; // Added equal left margin
                     } else {
                         // Desktop positioning - below genre link and centered
                         const rect = link.getBoundingClientRect();
@@ -83,12 +74,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         genreDropdown.style.left = '50%';
                         genreDropdown.style.transform = 'translate(-50%, -50%)';
                         genreDropdown.style.width = '95%';
-                        genreDropdown.style.maxWidth = '1000px';
+                        genreDropdown.style.maxWidth = '1000px'; // Further increased max width for more space
                         genreDropdown.style.zIndex = '9999';
                         genreDropdown.style.display = 'flex';
                         genreDropdown.style.flexDirection = 'column';
                         genreDropdown.style.alignItems = 'center';
-                        genreDropdown.style.overflowX = 'hidden'; // Prevent horizontal scrolling
                     }
 
                     // Add dark overlay when dropdown is shown
@@ -121,13 +111,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 dropdown.style.border = '1px solid rgba(141, 22, 201, 0.5)';
                 dropdown.style.backdropFilter = 'blur(15px)';
                 dropdown.style.webkitBackdropFilter = 'blur(15px)';
-                dropdown.style.padding = '22px';  // Reduced padding for better space usage
+                dropdown.style.padding = '28px';  // Increased padding
                 dropdown.style.borderRadius = '16px';
                 dropdown.style.display = 'flex';  // Use flexbox for centering
                 dropdown.style.flexDirection = 'column';
                 dropdown.style.alignItems = 'center';
                 dropdown.style.justifyContent = 'center';
-                dropdown.style.overflowX = 'hidden'; // Prevent horizontal overflow
 
                 // Add CSS styles for the dark background overlay
                 const overlayStyle = document.createElement('style');
@@ -192,7 +181,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         { title: 'Thriller', url: '/genre/index.html?genre=thriller&type=movie' },
                         { title: 'Drama', url: '/genre/index.html?genre=drama&type=movie' },
                         { title: 'Romance', url: '/genre/index.html?genre=romance&type=movie' },
-                        { title: 'Sci-Fi', url: '/genre/index.html?genre=sci-fi&type=movie' }, // Added Sci-Fi to movies
                         { title: 'Fantasy', url: '/genre/index.html?genre=fantasy&type=movie' },
                         { title: 'Mystery', url: '/genre/index.html?genre=mystery&type=movie' }
                     ],
@@ -223,19 +211,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Set grid columns based on screen size
                 if (window.innerWidth <= 480) {
                     container.style.gridTemplateColumns = '1fr';
-                    container.style.gap = '12px'; // Reduced gap for mobile
+                    container.style.gap = '15px';
                     container.style.width = '100%';
                     container.style.maxWidth = '100%';
                     container.style.padding = '0';
-                    container.style.marginBottom = '12px'; // Add margin at the bottom for spacing
-                    container.style.display = 'grid'; // Ensure grid display
+                    container.style.marginBottom = '15px'; // Add margin at the bottom for spacing
                 } else if (window.innerWidth <= 768) {
                     container.style.gridTemplateColumns = '1fr';
-                    container.style.gap = '15px'; // Reduced gap for tablet
+                    container.style.gap = '20px'; // Increased gap for better spacing
                     container.style.width = '100%';
                     container.style.maxWidth = '100%';
                     container.style.padding = '0';
-                    container.style.display = 'grid'; // Ensure grid display
                 } else {
                     container.style.gridTemplateColumns = 'repeat(3, 1fr)';
                     container.style.gap = '30px'; // Increased gap for better spacing
@@ -254,23 +240,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     // Adjust padding based on screen size
                     if (window.innerWidth <= 480) {
-                        categoryColumn.style.padding = '12px';
-                        categoryColumn.style.width = '85%'; // Reduced width for mobile
-                        categoryColumn.style.maxWidth = '85%'; // Reduced max width for mobile
+                        categoryColumn.style.padding = '15px';
+                        categoryColumn.style.width = '90%';
+                        categoryColumn.style.maxWidth = '90%';
                         categoryColumn.style.minWidth = 'auto';
                         categoryColumn.style.margin = '0 auto';
-                        categoryColumn.style.display = 'block'; // Ensure proper display
-                        categoryColumn.style.visibility = 'visible'; // Ensure visibility
-                        categoryColumn.style.opacity = '1'; // Ensure full opacity
                     } else if (window.innerWidth <= 768) {
                         categoryColumn.style.padding = '12px';
-                        categoryColumn.style.width = '85%'; // Reduced width for tablet
-                        categoryColumn.style.maxWidth = '85%'; // Reduced max width for tablet
+                        categoryColumn.style.width = '90%';
+                        categoryColumn.style.maxWidth = '90%';
                         categoryColumn.style.minWidth = 'auto';
                         categoryColumn.style.margin = '0 auto';
-                        categoryColumn.style.display = 'block'; // Ensure proper display
-                        categoryColumn.style.visibility = 'visible'; // Ensure visibility
-                        categoryColumn.style.opacity = '1'; // Ensure full opacity
                     } else {
                         categoryColumn.style.padding = '15px';
                         categoryColumn.style.width = '100%';
@@ -279,8 +259,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         categoryColumn.style.display = 'flex';
                         categoryColumn.style.flexDirection = 'column';
                         categoryColumn.style.margin = '0 auto';
-                        categoryColumn.style.visibility = 'visible'; // Ensure visibility
-                        categoryColumn.style.opacity = '1'; // Ensure full opacity
                     }
 
                     categoryColumn.style.background = 'rgba(30, 30, 30, 0.6)';
@@ -327,8 +305,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     genreList.style.margin = '0';
                     genreList.style.width = '100%';
                     genreList.style.display = 'block';
-                    genreList.style.visibility = 'visible'; // Ensure visibility
-                    genreList.style.opacity = '1'; // Ensure full opacity
 
                     // Add genre links for this category
                     genreCategories[category].forEach(genre => {
@@ -368,17 +344,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             this.style.boxShadow = '0 2px 8px rgba(141, 22, 201, 0.4)';
                             this.style.transform = 'translateX(5px)';
                             this.style.borderLeft = '3px solid rgba(164, 57, 207, 0.8)';
-                            this.style.visibility = 'visible'; // Ensure visibility on hover
-                            this.style.opacity = '1'; // Ensure full opacity on hover
-
-                            // Make sure the parent elements are also visible
-                            let parent = this.parentElement;
-                            while (parent && !parent.classList.contains('genre-dropdown-container')) {
-                                parent.style.visibility = 'visible';
-                                parent.style.opacity = '1';
-                                parent.style.display = parent.tagName.toLowerCase() === 'li' ? 'list-item' : 'block';
-                                parent = parent.parentElement;
-                            }
                         };
 
                         genreLink.onmouseout = function() {
@@ -387,52 +352,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             this.style.boxShadow = 'none';
                             this.style.transform = 'translateX(0)';
                             this.style.borderLeft = '3px solid rgba(141, 22, 201, 0.4)';
-                            this.style.visibility = 'visible'; // Maintain visibility
-                            this.style.opacity = '1'; // Maintain full opacity
                         };
-
-                        // Add touch events for mobile
-                        genreLink.addEventListener('touchstart', function(e) {
-                            // Make sure the category is visible
-                            let currentCategory = this.closest('.dropdown-column');
-                            if (currentCategory) {
-                                currentCategory.style.visibility = 'visible';
-                                currentCategory.style.opacity = '1';
-                                currentCategory.style.display = 'block';
-
-                                // Also make sure the category header and list are visible
-                                let categoryHeader = currentCategory.querySelector('h4');
-                                let genreList = currentCategory.querySelector('ul');
-
-                                if (categoryHeader) {
-                                    categoryHeader.style.visibility = 'visible';
-                                    categoryHeader.style.opacity = '1';
-                                    categoryHeader.style.display = 'block';
-                                }
-
-                                if (genreList) {
-                                    genreList.style.visibility = 'visible';
-                                    genreList.style.opacity = '1';
-                                    genreList.style.display = 'block';
-                                }
-                            }
-
-                            // Apply the hover effect
-                            this.style.color = '#fff';
-                            this.style.background = 'linear-gradient(45deg, rgba(141, 22, 201, 0.7) 0%, rgba(164, 57, 207, 0.7) 100%)';
-                            this.style.boxShadow = '0 2px 8px rgba(141, 22, 201, 0.4)';
-                            this.style.transform = 'translateX(5px)';
-                            this.style.borderLeft = '3px solid rgba(164, 57, 207, 0.8)';
-                        });
-
-                        genreLink.addEventListener('touchend', function(e) {
-                            // Return to normal style but keep visible
-                            this.style.color = '#fff';
-                            this.style.background = 'rgba(30, 30, 30, 0.4)';
-                            this.style.boxShadow = 'none';
-                            this.style.transform = 'translateX(0)';
-                            this.style.borderLeft = '3px solid rgba(141, 22, 201, 0.4)';
-                        });
 
                         genreItem.appendChild(genreLink);
                         genreList.appendChild(genreItem);
@@ -495,19 +415,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 dropdown.style.animation = 'dropdownFadeIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
                 const styleElement = document.createElement('style');
                 styleElement.textContent = `
-                    /* Fix for anime category visibility issues */
-                    .dropdown-column {
-                        display: block !important;
-                        visibility: visible !important;
-                        opacity: 1 !important;
-                    }
-
-                    /* Extra styles to ensure anime category header and links are always visible */
-                    .dropdown-column h4, .dropdown-column ul, .dropdown-column li {
-                        display: block !important;
-                        visibility: visible !important;
-                        opacity: 1 !important;
-                    }
                     @keyframes dropdownFadeIn {
                         from {
                             opacity: 0;
@@ -545,61 +452,36 @@ document.addEventListener('DOMContentLoaded', function() {
                         .genre-dropdown-container {
                             display: grid !important;
                             grid-template-columns: 1fr !important;
-                            gap: 15px !important; /* Reduced gap for smaller screens */
+                            gap: 20px !important; /* Increased gap */
                             padding: 0 !important;
-                            width: 100% !important;
                         }
                         .dropdown-column {
-                            max-width: 85% !important; /* Narrower columns */
+                            max-width: 90% !important;
                             min-width: auto !important;
-                            padding: 12px !important; /* Reduced padding */
-                            margin: 0 auto 12px auto !important; /* Center and add margin */
-                            display: block !important;
-                            visibility: visible !important; /* Ensure visibility */
-                            opacity: 1 !important; /* Ensure full opacity */
+                            padding: 15px !important;
+                            margin: 0 auto 15px auto !important; /* Center and add margin */
                         }
                         #genre-dropdown {
-                            width: 85% !important; /* Reduced width */
-                            max-width: 300px !important; /* Reduced max width */
-                            margin-right: auto !important;
-                            margin-left: auto !important;
-                            padding: 20px !important; /* Reduced padding */
-                        }
-                        /* Fix for anime category */
-                        .dropdown-column h4, .dropdown-column ul {
-                            visibility: visible !important;
-                            opacity: 1 !important;
-                            display: block !important;
+                            margin-right: 15px !important; /* Right margin for mobile */
+                            margin-left: 15px !important; /* Equal left margin for balance */
                         }
                     }
                     @media (min-width: 481px) and (max-width: 768px) {
                         .genre-dropdown-container {
                             display: grid !important;
-                            grid-template-columns: 1fr !important;
-                            gap: 15px !important; /* Reduced gap */
+                            grid-template-columns: 1fr !important; /* Change to 1fr to match mobile layout */
+                            gap: 20px !important; /* Increased gap */
                             padding: 0 !important;
                         }
                         .dropdown-column {
-                            max-width: 85% !important; /* Narrower columns */
+                            max-width: 90% !important;
                             min-width: auto !important;
                             padding: 12px !important;
-                            margin: 0 auto 12px auto !important; /* Center and add margin */
-                            display: block !important;
-                            visibility: visible !important; /* Ensure visibility */
-                            opacity: 1 !important; /* Ensure full opacity */
+                            margin: 0 auto 15px auto !important; /* Center and add margin */
                         }
                         #genre-dropdown {
-                            width: 85% !important; /* Reduced width */
-                            max-width: 350px !important; /* Reduced max width */
-                            margin-right: auto !important;
-                            margin-left: auto !important;
-                            padding: 20px !important; /* Reduced padding */
-                        }
-                        /* Fix for anime category */
-                        .dropdown-column h4, .dropdown-column ul {
-                            visibility: visible !important;
-                            opacity: 1 !important;
-                            display: block !important;
+                            margin-right: 15px !important; /* Right margin for mobile */
+                            margin-left: 15px !important; /* Equal left margin for balance */
                         }
                     }
                     @media (min-width: 769px) {
