@@ -29,16 +29,19 @@
             margin-left: auto !important;
             margin-right: auto !important;
             position: relative !important;
+            padding-bottom: 15px !important; /* Added padding for the underline */
+            margin-bottom: 20px !important; /* Increased bottom margin */
         }
 
+        /* Fixed underline positioning to match screenshot */
         #genre-title::after {
             content: "" !important;
             position: absolute !important;
-            bottom: -8px !important;
+            bottom: 0 !important; /* Moved to bottom of title (with padding) */
             left: 50% !important;
             transform: translateX(-50%) !important;
-            width: 100px !important;
-            max-width: 50% !important;
+            width: 140px !important; /* Width that matches the title better */
+            max-width: 40% !important; /* Reduced max width to match screenshot */
             height: 3px !important;
             background: linear-gradient(90deg, rgba(164, 57, 207, 1) 0%, rgba(141, 22, 201, 1) 100%) !important;
             border-radius: 3px !important;

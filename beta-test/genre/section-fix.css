@@ -92,9 +92,9 @@
     color: #fff;
     text-align: center;
     margin: 1rem auto 1.5rem;
-    width: auto;
+    width: 100%;
     position: relative;
-    padding-bottom: 10px;
+    padding-bottom: 15px;
     text-transform: capitalize;
     background: linear-gradient(90deg, rgba(164, 57, 207, 1) 0%, rgba(141, 22, 201, 1) 100%);
     -webkit-background-clip: text;
@@ -102,22 +102,23 @@
     background-clip: text;
     text-shadow: 0 2px 4px rgba(0,0,0,0.3);
     letter-spacing: 1px;
-    display: table;
-    left: 50%;
-    transform: translateX(-50%);
+    display: block;
+    left: 0;
+    transform: none;
 }
 
 .genre-title::after {
     content: '';
     position: absolute;
     bottom: 0;
-    left: 0;
-    right: 0;
+    left: 50%;
+    transform: translateX(-50%);
     height: 3px;
     background: linear-gradient(90deg, rgba(164, 57, 207, 1) 0%, rgba(141, 22, 201, 1) 100%);
-    width: 60%;
+    width: 140px;
+    max-width: 40%;
     margin: 0 auto;
-    border-radius: 2px;
+    border-radius: 3px;
 }
 
 /* Filter container styles */

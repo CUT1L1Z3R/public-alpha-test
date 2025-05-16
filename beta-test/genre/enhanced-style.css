@@ -16,7 +16,7 @@
   background-clip: text;
   text-shadow: 0 2px 10px rgba(141, 22, 201, 0.5);
   display: block; /* Changed to block for centering */
-  padding: 5px 0; /* Removed horizontal padding */
+  padding: 5px 0 15px 0; /* Added padding at bottom for the underline */
   border-radius: 0; /* Removed rounded corners */
   width: 100%; /* Full width for proper centering */
 }
@@ -24,13 +24,14 @@
 .genre-title::after {
   content: "";
   position: absolute;
-  bottom: -10px;
+  bottom: 0; /* Align to bottom of the element */
   left: 50%;
   transform: translateX(-50%);
-  width: 120px; /* Increased width */
-  height: 4px;
+  width: 140px; /* Width that matches the title better */
+  max-width: 40%; /* Limited width to match the design */
+  height: 3px; /* Slightly thinner line */
   background: linear-gradient(90deg, #a710e0 0%, #8a14ca 100%);
-  border-radius: 4px;
+  border-radius: 3px;
   margin: 0 auto;
 }
 
@@ -234,9 +235,9 @@
 @media (max-width: 480px) {
   /* Optimize for mobile full view - fully centered */
   .genre-title {
-    font-size: 1.3rem;
-    padding: 4px 0; /* Removed horizontal padding */
-    margin: 0.8rem auto 1.2rem; /* Added auto margins for horizontal centering */
+    font-size: 1.5rem; /* Slightly larger font size */
+    padding: 4px 0 15px 0; /* Added bottom padding for the underline */
+    margin: 0.8rem auto 1.5rem; /* Added auto margins for horizontal centering */
     position: relative;
     display: block; /* Changed to block */
     width: 100%; /* Full width */
@@ -247,11 +248,11 @@
   .genre-title::after {
     content: "";
     position: absolute;
-    bottom: -8px;
+    bottom: 0; /* Aligned with bottom of title */
     left: 50%;
     transform: translateX(-50%);
-    width: 100px; /* Fixed width for consistency */
-    max-width: 50%; /* Maximum width */
+    width: 140px; /* Width that matches the title */
+    max-width: 40%; /* Maximum width to match design */
     height: 3px; /* Slightly thinner for mobile */
     background: linear-gradient(90deg, #a710e0 0%, #8a14ca 100%);
     border-radius: 3px;
