@@ -58,17 +58,26 @@
   background: linear-gradient(to top, rgba(141, 22, 201, 0.8) 0%, rgba(0, 0, 0, 0.8) 80%, rgba(0, 0, 0, 0.2) 100%);
 }
 
+/* Title and Rating Container - Side by Side */
+.title-rating-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
 /* Improved Movie Title */
 .movie-title {
   font-size: 1.1rem;
   font-weight: 700;
-  margin-bottom: 8px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
   color: #ffffff;
   letter-spacing: 0.5px;
+  max-width: 70%; /* Allow space for rating */
 }
 
 /* Enhanced Rating Style */
@@ -80,10 +89,10 @@
   padding: 3px 8px;
   border-radius: 20px;
   width: fit-content;
-  margin-top: 2px;
   backdrop-filter: blur(2px);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  margin-left: 10px;
 }
 
 .rating-star {
@@ -96,6 +105,37 @@
 .rating-value {
   font-weight: 700;
   font-size: 0.9rem;
+}
+
+/* Watch Button Style */
+.watch-now-button {
+  background: linear-gradient(135deg, #a710e0 0%, #8a14ca 100%);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 5px 15px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  align-self: flex-end;
+  margin-top: 5px;
+  letter-spacing: 0.5px;
+  position: absolute;
+  right: 15px;
+  bottom: 15px;
+}
+
+.watch-now-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(141, 22, 201, 0.6);
+  background: linear-gradient(135deg, #8a14ca 0%, #a710e0 100%);
+}
+
+.watch-now-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(141, 22, 201, 0.4);
 }
 
 /* Improved Search Input Style */
@@ -194,6 +234,12 @@
 
   .movie-title {
     font-size: 1rem;
+    max-width: 65%;
+  }
+
+  .watch-now-button {
+    font-size: 0.8rem;
+    padding: 4px 12px;
   }
 
   .watch-list-button {
@@ -220,6 +266,7 @@
 
   .movie-title {
     font-size: 0.9rem;
+    max-width: 60%;
   }
 
   .movie-rating {
@@ -229,6 +276,13 @@
 
   .rating-star {
     font-size: 1rem;
+  }
+
+  .watch-now-button {
+    font-size: 0.75rem;
+    padding: 3px 10px;
+    right: 10px;
+    bottom: 10px;
   }
 
   .watch-list-button {

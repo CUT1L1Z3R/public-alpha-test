@@ -199,24 +199,33 @@
     bottom: 0;
     left: 0;
     width: 100%;
-    padding: 10px;
+    padding: 10px 15px;
     background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.6) 60%, transparent 100%);
     color: white;
     display: flex;
     flex-direction: column;
     opacity: 1; /* Always show the overlay */
     transition: opacity 0.3s ease;
+    min-height: 80px; /* Increase min-height to accommodate watch button */
+}
+
+/* Title-rating container for side-by-side layout */
+.title-rating-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 8px;
 }
 
 /* Movie title styling */
 .movie-title {
     font-size: 0.75rem;
     font-weight: bold;
-    margin-bottom: 5px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 95%;
+    max-width: 70%;
     line-height: 1.2;
 }
 
@@ -224,6 +233,30 @@
     display: flex;
     align-items: center;
     font-size: 0.8rem;
+    margin-left: auto;
+}
+
+/* Watch button styling */
+.watch-now-button {
+    position: absolute;
+    bottom: 10px;
+    right: 15px;
+    background: linear-gradient(135deg, #a710e0 0%, #8a14ca 100%);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.watch-now-button:hover {
+    background: linear-gradient(135deg, #8a14ca 0%, #a710e0 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(141, 22, 201, 0.6);
 }
 
 .rating-star {
