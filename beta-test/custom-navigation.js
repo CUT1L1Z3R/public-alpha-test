@@ -141,9 +141,10 @@ document.addEventListener('DOMContentLoaded', function() {
             content.style.gap = '30px';
             content.style.justifyItems = 'center';
         } else {
-            // Mobile: single column
+            // Mobile: single column with adaptive width
             content.style.padding = '0 10px';
-            content.style.maxWidth = '500px';
+            content.style.maxWidth = '100%';
+            content.style.width = '100%';
             content.style.margin = '0 auto';
         }
 
@@ -199,10 +200,14 @@ document.addEventListener('DOMContentLoaded', function() {
             section.style.padding = '10px';
 
             if (window.innerWidth > 768) {
-                // Desktop specific styling
+                // Desktop specific styling - keep desktop layout unchanged
                 section.style.width = '100%';
                 section.style.maxWidth = '300px';
                 section.style.minWidth = '250px';
+            } else {
+                // Mobile specific styling - fix the width issue
+                section.style.width = '100%';
+                section.style.boxSizing = 'border-box';
             }
 
             // Category header
