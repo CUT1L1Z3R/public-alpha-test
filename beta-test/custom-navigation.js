@@ -57,16 +57,17 @@ document.addEventListener('DOMContentLoaded', function() {
                         // Mobile centered positioning
                         genreDropdown.style.position = 'fixed';
                         genreDropdown.style.top = '50%';
-                        genreDropdown.style.left = '45%'; // Shifted to the left from 50%
+                        genreDropdown.style.left = '50%';
                         genreDropdown.style.transform = 'translate(-50%, -50%)';
-                        genreDropdown.style.width = window.innerWidth <= 480 ? '75%' : '75%'; // Reduced mobile width to 75%
-                        genreDropdown.style.maxWidth = '320px'; // Further reduced max width for mobile
-                        genreDropdown.style.maxHeight = '90vh'; // Increased from 80vh to 90vh for more space
+                        genreDropdown.style.width = window.innerWidth <= 480 ? '80%' : '75%'; // Made width smaller
+                        genreDropdown.style.maxWidth = '390px'; // Reduced max width
+                        genreDropdown.style.maxHeight = '90vh'; // Increased from 80vh to 90vh
                         genreDropdown.style.overflowY = 'auto';
-                        genreDropdown.style.overflowX = 'hidden'; // Prevent horizontal scrolling
+                        genreDropdown.style.overscrollBehavior = 'contain'; // Prevent scroll chaining
+                        genreDropdown.style.WebkitOverflowScrolling = 'touch'; // Smooth scrolling on iOS
                         genreDropdown.style.zIndex = '9999';
-                        genreDropdown.style.marginRight = '20px'; // Increased right margin for more space
-                        genreDropdown.style.marginLeft = '10px'; // Reduced left margin
+                        genreDropdown.style.marginRight = '15px'; // Right margin
+                        genreDropdown.style.marginLeft = '15px'; // Added equal left margin
                     } else {
                         // Desktop positioning - below genre link and centered
                         const rect = link.getBoundingClientRect();
@@ -112,12 +113,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 dropdown.style.border = '1px solid rgba(141, 22, 201, 0.5)';
                 dropdown.style.backdropFilter = 'blur(15px)';
                 dropdown.style.webkitBackdropFilter = 'blur(15px)';
-                dropdown.style.padding = window.innerWidth <= 480 ? '20px 15px' : '28px';  // Reduced padding for mobile
+                dropdown.style.padding = '28px';  // Increased padding
                 dropdown.style.borderRadius = '16px';
                 dropdown.style.display = 'flex';  // Use flexbox for centering
                 dropdown.style.flexDirection = 'column';
                 dropdown.style.alignItems = 'center';
-                dropdown.style.justifyContent = 'center';
+                dropdown.style.justifyContent = 'flex-start'; // Changed from center to flex-start
 
                 // Add CSS styles for the dark background overlay
                 const overlayStyle = document.createElement('style');
@@ -162,7 +163,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 title.style.backgroundClip = 'text';
                 title.style.textShadow = '0 2px 4px rgba(0,0,0,0.3)';
                 title.style.width = '100%';
-                title.style.maxWidth = window.innerWidth <= 480 ? '200px' : '400px'; // Reduced from 250px to 200px for mobile
+                title.style.maxWidth = window.innerWidth <= 480 ? '250px' : '400px';
                 title.style.position = 'relative';
                 title.style.margin = '0 auto';
                 title.style.textAlign = 'center';
@@ -217,11 +218,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Set grid columns based on screen size
                 if (window.innerWidth <= 480) {
                     container.style.gridTemplateColumns = '1fr';
-                    container.style.gap = '10px'; // Reduced gap for more compact layout
-                    container.style.width = '95%'; // Reduced width for mobile
-                    container.style.maxWidth = '95%';
+                    container.style.gap = '15px';
+                    container.style.width = '100%';
+                    container.style.maxWidth = '100%';
                     container.style.padding = '0';
-                    container.style.marginBottom = '10px'; // Reduced margin for more content space
+                    container.style.marginBottom = '15px'; // Add margin at the bottom for spacing
+                    container.style.overflowY = 'auto'; // Allow container to scroll independently
+                    container.style.maxHeight = '70vh'; // Set max height for scrollable area
                 } else if (window.innerWidth <= 768) {
                     container.style.gridTemplateColumns = '1fr';
                     container.style.gap = '20px'; // Increased gap for better spacing
@@ -246,12 +249,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     // Adjust padding based on screen size
                     if (window.innerWidth <= 480) {
-                        categoryColumn.style.padding = '8px 10px'; // Further reduced vertical padding
-                        categoryColumn.style.width = '85%';  // Reduced width for more space
-                        categoryColumn.style.maxWidth = '85%';
+                        categoryColumn.style.padding = '10px';
+                        categoryColumn.style.width = '90%';
+                        categoryColumn.style.maxWidth = '90%';
                         categoryColumn.style.minWidth = 'auto';
                         categoryColumn.style.margin = '0 auto';
-                        categoryColumn.style.marginBottom = '10px'; // Added bottom margin for spacing between columns
+                        categoryColumn.style.display = 'block'; // Ensure block display
+                        categoryColumn.style.height = 'auto'; // Allow height to adjust to content
                     } else if (window.innerWidth <= 768) {
                         categoryColumn.style.padding = '12px';
                         categoryColumn.style.width = '90%';
@@ -283,9 +287,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     // Adjust font size based on screen size
                     if (window.innerWidth <= 480) {
-                        categoryHeader.style.fontSize = '14px'; // Reduced from 15px
-                        categoryHeader.style.marginBottom = '8px'; // Reduced from 10px
-                        categoryHeader.style.paddingBottom = '4px'; // Reduced from 5px
+                        categoryHeader.style.fontSize = '15px';
+                        categoryHeader.style.marginBottom = '10px';
+                        categoryHeader.style.paddingBottom = '5px';
                     } else {
                         categoryHeader.style.fontSize = '17px';
                         categoryHeader.style.marginBottom = '15px';
@@ -300,9 +304,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     categoryHeader.style.webkitBackgroundClip = 'text';
                     categoryHeader.style.webkitTextFillColor = 'transparent';
                     categoryHeader.style.backgroundClip = 'text';
-                    categoryHeader.style.whiteSpace = 'nowrap'; // Prevent text wrapping
-                    categoryHeader.style.overflow = 'hidden'; // Hide overflow
-                    categoryHeader.style.textOverflow = 'ellipsis'; // Show ellipsis for long text
                     categoryHeader.style.textShadow = '0 1px 3px rgba(0,0,0,0.3)';
                     categoryHeader.style.padding = '3px 0 8px';
 
@@ -319,7 +320,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Add genre links for this category
                     genreCategories[category].forEach(genre => {
                         const genreItem = document.createElement('li');
-                        genreItem.style.margin = window.innerWidth <= 480 ? '5px 0' : '8px 0'; // Reduced margin for mobile
+                        genreItem.style.margin = '8px 0';
 
                         const genreLink = document.createElement('a');
                         genreLink.href = genre.url;
@@ -329,8 +330,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         // Responsive genre link size and spacing
                         if (window.innerWidth <= 480) {
                             genreLink.style.fontSize = '13px';
-                            genreLink.style.padding = '4px 15px'; // Reduced padding for more compact mobile view
-                            genreLink.style.lineHeight = '1.2'; // Reduced line height
+                            genreLink.style.padding = '6px 25px';
                         } else {
                             genreLink.style.fontSize = '14px';
                             genreLink.style.padding = '7px 25px';
@@ -374,6 +374,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
 
                 dropdown.appendChild(container);
+
+                // Add scroll indicator for mobile
+                if (window.innerWidth <= 480) {
+                    const scrollIndicator = document.createElement('div');
+                    scrollIndicator.style.width = '100%';
+                    scrollIndicator.style.textAlign = 'center';
+                    scrollIndicator.style.marginTop = '5px';
+                    scrollIndicator.style.fontSize = '12px';
+                    scrollIndicator.style.color = 'rgba(255,255,255,0.6)';
+                    scrollIndicator.innerHTML = 'Scroll for more';
+                    dropdown.appendChild(scrollIndicator);
+                }
 
                 // Add close button with improved styling
                 const closeBtn = document.createElement('button');

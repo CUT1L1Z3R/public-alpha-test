@@ -520,7 +520,6 @@
         gap: 10px; /* Increased from 6px */
         justify-content: center;
         margin-bottom: 15px; /* Added margin */
-        margin-right: 5%; /* Move buttons slightly to the left for better mobile symmetry */
     }
 
     .filter-button {
