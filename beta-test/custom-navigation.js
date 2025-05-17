@@ -26,7 +26,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Replace the existing dropdown implementation with a more mobile-friendly approach
     // that doesn't suffer from the scrolling visibility issues
-
     function createGenreDropdown() {
         // Remove any existing dropdown
         const existingDropdown = document.getElementById('genre-dropdown');
@@ -34,26 +33,53 @@ document.addEventListener('DOMContentLoaded', function() {
             existingDropdown.remove();
         }
 
-        // Create the main container
+        // Create the main container with responsive design
         const dropdown = document.createElement('div');
         dropdown.id = 'genre-dropdown';
-        dropdown.style.position = 'fixed';
-        dropdown.style.top = '0';
-        dropdown.style.left = '0';
-        dropdown.style.width = '100%';
-        dropdown.style.height = '100%';
-        dropdown.style.backgroundColor = 'rgba(0, 0, 0, 0.95)';
-        dropdown.style.zIndex = '9999';
-        dropdown.style.overflowY = 'scroll';
-        dropdown.style.display = 'block';
-        dropdown.style.padding = '20px';
-        dropdown.style.boxSizing = 'border-box';
 
-        // Create title
+        // Different styling for desktop vs mobile
+        if (window.innerWidth > 768) {
+            // Desktop styling - more like the original design
+            dropdown.style.position = 'fixed';
+            dropdown.style.top = '50%';
+            dropdown.style.left = '50%';
+            dropdown.style.transform = 'translate(-50%, -50%)';
+            dropdown.style.width = '90%';
+            dropdown.style.maxWidth = '1000px';
+            dropdown.style.backgroundColor = 'rgba(20, 20, 20, 0.92)';
+            dropdown.style.boxShadow = '0 8px 32px 0 rgba(0,0,0,0.65)';
+            dropdown.style.border = '1px solid rgba(141, 22, 201, 0.5)';
+            dropdown.style.backdropFilter = 'blur(15px)';
+            dropdown.style.webkitBackdropFilter = 'blur(15px)';
+            dropdown.style.padding = '28px';
+            dropdown.style.borderRadius = '16px';
+            dropdown.style.zIndex = '9999';
+            dropdown.style.display = 'block';
+
+            // Ensure proper scrolling without disappearing content
+            dropdown.style.overflowY = 'auto';
+            dropdown.style.maxHeight = '85vh';
+            dropdown.style.webkitOverflowScrolling = 'touch';
+        } else {
+            // Mobile styling - full screen overlay
+            dropdown.style.position = 'fixed';
+            dropdown.style.top = '0';
+            dropdown.style.left = '0';
+            dropdown.style.width = '100%';
+            dropdown.style.height = '100%';
+            dropdown.style.backgroundColor = 'rgba(0, 0, 0, 0.95)';
+            dropdown.style.zIndex = '9999';
+            dropdown.style.overflowY = 'scroll';
+            dropdown.style.display = 'block';
+            dropdown.style.padding = '20px';
+            dropdown.style.boxSizing = 'border-box';
+        }
+
+        // Create title with responsive styling
         const title = document.createElement('h3');
         title.textContent = 'Browse by Genre';
         title.style.color = 'rgb(164, 57, 207)';
-        title.style.fontSize = '22px';
+        title.style.fontSize = window.innerWidth > 768 ? '22px' : '20px';
         title.style.textAlign = 'center';
         title.style.marginBottom = '20px';
         title.style.background = 'linear-gradient(90deg, rgba(164, 57, 207, 1) 0%, rgba(141, 22, 201, 1) 100%)';
@@ -66,8 +92,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const closeBtn = document.createElement('button');
         closeBtn.innerHTML = '&times;';
         closeBtn.style.position = 'absolute';
-        closeBtn.style.top = '20px';
-        closeBtn.style.right = '20px';
+        closeBtn.style.top = window.innerWidth > 768 ? '15px' : '20px';
+        closeBtn.style.right = window.innerWidth > 768 ? '15px' : '20px';
         closeBtn.style.backgroundColor = 'rgba(30, 30, 30, 0.7)';
         closeBtn.style.border = '1px solid rgba(141, 22, 201, 0.3)';
         closeBtn.style.color = 'rgba(255,255,255,0.9)';
@@ -79,6 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
         closeBtn.style.alignItems = 'center';
         closeBtn.style.justifyContent = 'center';
         closeBtn.style.borderRadius = '50%';
+        closeBtn.style.zIndex = '1001';
 
         closeBtn.onclick = function(e) {
             e.preventDefault();
@@ -88,11 +115,37 @@ document.addEventListener('DOMContentLoaded', function() {
             genreDropdownVisible = false;
         };
 
+        // Hover effect for close button
+        closeBtn.onmouseover = function() {
+            this.style.color = '#fff';
+            this.style.backgroundColor = 'rgba(141, 22, 201, 0.8)';
+            this.style.transform = 'scale(1.1) rotate(90deg)';
+            this.style.boxShadow = '0 4px 12px rgba(141, 22, 201, 0.5)';
+        };
+
+        closeBtn.onmouseout = function() {
+            this.style.color = 'rgba(255,255,255,0.9)';
+            this.style.backgroundColor = 'rgba(30, 30, 30, 0.7)';
+            this.style.transform = 'scale(1) rotate(0)';
+            this.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)';
+        };
+
         // Content container
         const content = document.createElement('div');
-        content.style.padding = '0 10px';
-        content.style.maxWidth = '500px';
-        content.style.margin = '0 auto';
+        content.style.width = '100%';
+
+        if (window.innerWidth > 768) {
+            // Desktop: 3-column grid layout
+            content.style.display = 'grid';
+            content.style.gridTemplateColumns = 'repeat(3, 1fr)';
+            content.style.gap = '30px';
+            content.style.justifyItems = 'center';
+        } else {
+            // Mobile: single column
+            content.style.padding = '0 10px';
+            content.style.maxWidth = '500px';
+            content.style.margin = '0 auto';
+        }
 
         // Genre categories
         const genreCategories = {
@@ -144,6 +197,13 @@ document.addEventListener('DOMContentLoaded', function() {
             section.style.borderRadius = '12px';
             section.style.border = '1px solid rgba(141, 22, 201, 0.2)';
             section.style.padding = '10px';
+
+            if (window.innerWidth > 768) {
+                // Desktop specific styling
+                section.style.width = '100%';
+                section.style.maxWidth = '300px';
+                section.style.minWidth = '250px';
+            }
 
             // Category header
             const header = document.createElement('h4');
@@ -208,9 +268,42 @@ document.addEventListener('DOMContentLoaded', function() {
         dropdown.appendChild(content);
         document.body.appendChild(dropdown);
 
+        // Add CSS for overlay
+        const styleElement = document.createElement('style');
+        styleElement.textContent = `
+            body.dropdown-active::after {
+                content: '';
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.7);
+                backdrop-filter: blur(3px);
+                z-index: 9998;
+            }
+
+            @keyframes dropdownFadeIn {
+                from {
+                    opacity: 0;
+                    transform: ${window.innerWidth > 768 ? 'translate(-50%, -55%)' : 'translateY(-15px)'};
+                }
+                to {
+                    opacity: 1;
+                    transform: ${window.innerWidth > 768 ? 'translate(-50%, -50%)' : 'translateY(0)'};
+                }
+            }
+
+            #genre-dropdown {
+                animation: dropdownFadeIn 0.3s ease forwards;
+            }
+        `;
+        document.head.appendChild(styleElement);
+
         return dropdown;
     }
 
+    // Fix navigation links to handle Cloudflare Pages routing
     navItems.forEach(item => {
         const link = item.querySelector('a');
         const href = link.getAttribute('href');
