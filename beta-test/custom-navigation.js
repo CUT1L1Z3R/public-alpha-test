@@ -96,9 +96,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         };
                         document.addEventListener('click', closeDropdown);
                         document.addEventListener('touchend', closeDropdown);
-
-                        // Remove scroll event listener that would close the dropdown
-                        window.removeEventListener('scroll', closeDropdown);
                     }, 100);
                 }
             });
@@ -120,30 +117,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 dropdown.style.flexDirection = 'column';
                 dropdown.style.alignItems = 'center';
                 dropdown.style.justifyContent = 'center';
-
-                // Prevent dropdown from closing on scroll
-                dropdown.addEventListener('wheel', function(e) {
-                    e.stopPropagation();
-                }, { passive: true });
-
-                // Prevent dropdown from closing when user scrolls the page
-                window.addEventListener('scroll', function(e) {
-                    if (dropdown.style.display === 'block') {
-                        e.stopPropagation();
-                        // Reposition the dropdown when scrolling
-                        if (window.innerWidth <= 768) {
-                            dropdown.style.position = 'fixed';
-                            dropdown.style.top = '50%';
-                            dropdown.style.left = '45%';
-                            dropdown.style.transform = 'translate(-50%, -50%)';
-                        } else {
-                            dropdown.style.position = 'fixed';
-                            dropdown.style.top = '50%';
-                            dropdown.style.left = '50%';
-                            dropdown.style.transform = 'translate(-50%, -50%)';
-                        }
-                    }
-                }, { passive: true });
 
                 // Add CSS styles for the dark background overlay
                 const overlayStyle = document.createElement('style');
@@ -198,11 +171,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 const container = document.createElement('div');
                 container.className = 'genre-dropdown-container';
                 container.style.display = 'grid';
-
-                // Prevent dropdown from closing when scrolling
-                container.addEventListener('wheel', function(e) {
-                    e.stopPropagation();
-                }, { passive: true });
 
                 // Updated genre categories based on the user's specifications
                 const genreCategories = {
@@ -309,6 +277,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     const categoryHeader = document.createElement('h4');
                     categoryHeader.textContent = category.toUpperCase();
                     categoryHeader.style.color = '#FFFFFF';
+
+                    // Special handling for Anime category to prevent text from disappearing
+                    if (category === 'Anime') {
+                        categoryColumn.style.webkitTransform = 'translateZ(0)';
+                        categoryColumn.style.transform = 'translateZ(0)';
+                        categoryColumn.style.webkitBackfaceVisibility = 'hidden';
+                        categoryColumn.style.backfaceVisibility = 'hidden';
+                        categoryColumn.style.willChange = 'transform';
+                    }
                     categoryHeader.style.marginTop = '0';
 
                     // Adjust font size based on screen size
@@ -343,9 +320,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     genreList.style.width = '100%';
                     genreList.style.display = 'block';
 
-                    // Add data-category attribute to identify lists by category
-                    genreList.setAttribute('data-category', category);
-
                     // Add genre links for this category
                     genreCategories[category].forEach(genre => {
                         const genreItem = document.createElement('li');
@@ -371,7 +345,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         genreLink.style.borderRadius = '8px';
                         genreLink.style.fontWeight = '400';
                         genreLink.style.position = 'relative';
-                        genreLink.style.overflow = 'hidden';
+                        genreLink.style.overflow = 'visible'; // Changed from 'hidden' to 'visible'
                         genreLink.style.zIndex = '1';
                         genreLink.style.textAlign = 'left';
                         genreLink.style.background = 'rgba(30, 30, 30, 0.4)';
@@ -385,30 +359,10 @@ document.addEventListener('DOMContentLoaded', function() {
                             this.style.transform = 'translateX(5px)';
                             this.style.borderLeft = '3px solid rgba(164, 57, 207, 0.8)';
 
-                            // Special handling for anime genres to ensure they appear on hover
-                            const parentList = this.closest('ul');
-                            if (parentList && parentList.getAttribute('data-category') === 'Anime') {
-                                // Make sure the dropdown stays visible
-                                const dropdown = document.getElementById('genre-dropdown');
-                                if (dropdown) {
-                                    dropdown.style.display = 'block';
-                                    // Ensure dropdown stays in view
-                                    if (window.innerWidth <= 768) {
-                                        dropdown.style.position = 'fixed';
-                                        dropdown.style.top = '50%';
-                                        dropdown.style.left = '45%';
-                                        dropdown.style.transform = 'translate(-50%, -50%)';
-                                    } else {
-                                        dropdown.style.position = 'fixed';
-                                        dropdown.style.top = '50%';
-                                        dropdown.style.left = '50%';
-                                        dropdown.style.transform = 'translate(-50%, -50%)';
-                                    }
-
-                                    // Add active class to body
-                                    document.body.classList.add('dropdown-active');
-                                }
-                            }
+                            // Force text to remain visible
+                            this.style.webkitBackfaceVisibility = 'hidden';
+                            this.style.backfaceVisibility = 'hidden';
+                            this.style.webkitTransform = 'translateZ(0) translateX(5px)';
                         };
 
                         genreLink.onmouseout = function() {
@@ -418,45 +372,20 @@ document.addEventListener('DOMContentLoaded', function() {
                             this.style.transform = 'translateX(0)';
                             this.style.borderLeft = '3px solid rgba(141, 22, 201, 0.4)';
 
-                            // For anime genres, don't hide immediately on mouseout
-                            const parentList = this.closest('ul');
-                            if (parentList && parentList.getAttribute('data-category') === 'Anime') {
-                                // Don't hide dropdown immediately
-                                // Will be handled by the closeDropdown event listener
-                            }
+                            // Force text to remain visible
+                            this.style.webkitBackfaceVisibility = 'hidden';
+                            this.style.backfaceVisibility = 'hidden';
+                            this.style.webkitTransform = 'translateZ(0) translateX(0)';
                         };
 
-                        // Add touch event handlers for mobile devices
+                        // Add touch event to handle content visibility during touch/scroll
                         genreLink.addEventListener('touchstart', function(e) {
-                            // For anime genres, ensure dropdown stays visible on touch
-                            const parentList = this.closest('ul');
-                            if (parentList && parentList.getAttribute('data-category') === 'Anime') {
-                                // Prevent default to avoid immediate navigation
-                                e.preventDefault();
-
-                                // Apply hover styles
-                                this.style.color = '#fff';
-                                this.style.background = 'linear-gradient(45deg, rgba(141, 22, 201, 0.7) 0%, rgba(164, 57, 207, 0.7) 100%)';
-                                this.style.boxShadow = '0 2px 8px rgba(141, 22, 201, 0.4)';
-                                this.style.transform = 'translateX(5px)';
-                                this.style.borderLeft = '3px solid rgba(164, 57, 207, 0.8)';
-
-                                // Make sure dropdown is visible
-                                const dropdown = document.getElementById('genre-dropdown');
-                                if (dropdown) {
-                                    dropdown.style.display = 'block';
-                                    document.body.classList.add('dropdown-active');
-                                }
-                            }
-                        }, { passive: false });
-
-                        // Handle navigation on touch end
-                        genreLink.addEventListener('click', function(e) {
-                            // For anime genres, ensure we navigate after seeing the menu
-                            const parentList = this.closest('ul');
-                            if (parentList && parentList.getAttribute('data-category') === 'Anime') {
-                                // Allow navigation to proceed
-                            }
+                            // This forces the content to be visible during touch/scroll
+                            this.style.color = '#fff';
+                            this.style.webkitBackfaceVisibility = 'hidden';
+                            this.style.backfaceVisibility = 'hidden';
+                            this.style.webkitTransform = 'translateZ(0)';
+                            this.style.transform = 'translateZ(0)';
                         });
 
                         genreItem.appendChild(genreLink);
@@ -539,6 +468,21 @@ document.addEventListener('DOMContentLoaded', function() {
                         border: 1px solid rgba(141, 22, 201, 0.3);
                     }
 
+                    /* Fix for content disappearing on scroll */
+                    #genre-dropdown {
+                        will-change: transform; /* Optimize performance */
+                        transform: translateZ(0); /* Force hardware acceleration */
+                        backface-visibility: hidden; /* Prevent flickering */
+                    }
+
+                    .dropdown-column ul li a {
+                        overflow: visible !important;
+                        -webkit-backface-visibility: hidden;
+                        backface-visibility: hidden;
+                        -webkit-transform: translateZ(0) scale(1.0, 1.0);
+                        transform: translateZ(0) scale(1.0, 1.0);
+                    }
+
                     /* Add a dark overlay to the background when dropdown is active */
                     body.dropdown-active::after {
                         content: '';
@@ -606,6 +550,19 @@ document.addEventListener('DOMContentLoaded', function() {
                             display: flex !important;
                             flex-direction: column !important;
                             width: 100% !important; /* Make columns take full width */
+                            /* Fix for content disappearing on scroll */
+                            will-change: transform !important;
+                            transform: translateZ(0) !important;
+                            backface-visibility: hidden !important;
+                        }
+
+                        /* Fix for content disappearing on scroll in Anime section */
+                        .dropdown-column ul li a {
+                            -webkit-transform: translateZ(0) !important;
+                            transform: translateZ(0) !important;
+                            -webkit-backface-visibility: hidden !important;
+                            backface-visibility: hidden !important;
+                            will-change: transform !important;
                         }
                     }
                 `;
@@ -659,28 +616,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         window.addEventListener('scroll', function() {
             const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-
-            // Keep dropdown visible during scroll if it's already open
-            const genreDropdown = document.getElementById('genre-dropdown');
-            if (genreDropdown && genreDropdown.style.display === 'block') {
-                // Reposition dropdown to stay in view
-                if (window.innerWidth <= 768) {
-                    // Mobile positioning
-                    genreDropdown.style.position = 'fixed';
-                    genreDropdown.style.top = '50%';
-                    genreDropdown.style.left = '45%';
-                    genreDropdown.style.transform = 'translate(-50%, -50%)';
-                } else {
-                    // Desktop positioning
-                    genreDropdown.style.position = 'fixed';
-                    genreDropdown.style.top = '50%';
-                    genreDropdown.style.left = '50%';
-                    genreDropdown.style.transform = 'translate(-50%, -50%)';
-                }
-
-                // Ensure the dropdown stays in view and doesn't disappear
-                document.body.classList.add('dropdown-active');
-            }
 
             if (window.innerWidth <= 768) {
                 // Mobile behavior
