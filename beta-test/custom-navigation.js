@@ -304,26 +304,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Active state based on current URL parameters
                 const currentURL = window.location.href;
-                // Fix: check if the current page is a genre page and matches the genre type
-                // This will highlight the correct genre link for all sections
-                try {
-                    const urlObj = new URL(link.href, window.location.origin);
-                    const params = new URLSearchParams(urlObj.search);
-                    const genreType = params.get('type');
-                    const genreName = params.get('genre');
-                    const pageParams = new URLSearchParams(window.location.search);
-                    const pageType = pageParams.get('type');
-                    const pageGenre = pageParams.get('genre');
-                    if (
-                        window.location.pathname.endsWith('/genre/index.html') &&
-                        genreType === pageType &&
-                        genreName === pageGenre
-                    ) {
-                        link.style.background = 'linear-gradient(45deg, rgba(141, 22, 201, 0.7) 0%, rgba(164, 57, 207, 0.7) 100%)';
-                        link.style.fontWeight = 'bold';
-                    }
-                } catch (err) {
-                    // fallback for non-standard URLs
+                if (currentURL.includes(link.href)) {
+                    link.style.background = 'linear-gradient(45deg, rgba(141, 22, 201, 0.7) 0%, rgba(164, 57, 207, 0.7) 100%)';
+                    link.style.fontWeight = 'bold';
                 }
 
                 item.appendChild(link);
@@ -399,23 +382,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 e.preventDefault();
                 e.stopPropagation();
 
-                // Create or toggle the dropdown genre menu - force recreation every time to avoid issues
+                // Create or toggle the dropdown genre menu
                 let genreDropdown = document.getElementById('genre-dropdown');
-                if (genreDropdown) {
-                    // Remove the old dropdown completely each time to ensure it works
-                    genreDropdown.remove();
-                    genreDropdown = null;
-                }
 
-                // Check if we should show or hide
                 if (genreDropdown && genreDropdown.style.display === 'block') {
                     // If dropdown is visible, hide it
                     genreDropdown.style.display = 'none';
                     document.body.classList.remove('dropdown-active');
                     genreDropdownVisible = false;
                 } else {
-                    // Create a fresh dropdown each time
-                    genreDropdown = createGenreDropdown();
+                    // If dropdown doesn't exist, create it
+                    if (!genreDropdown) {
+                        genreDropdown = createGenreDropdown();
+                    } else {
+                        genreDropdown.style.display = 'block';
+                    }
 
                     genreDropdownVisible = true;
                     document.body.classList.add('dropdown-active');
