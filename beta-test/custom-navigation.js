@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
             dropdown.style.maxHeight = '85vh';
             dropdown.style.webkitOverflowScrolling = 'touch';
         } else {
-            // Mobile styling - full screen overlay
+            // Mobile styling - full screen overlay with improved layout
             dropdown.style.position = 'fixed';
             dropdown.style.top = '0';
             dropdown.style.left = '0';
@@ -80,43 +80,49 @@ document.addEventListener('DOMContentLoaded', function() {
             dropdown.style.height = '100%';
             dropdown.style.backgroundColor = 'rgba(0, 0, 0, 0.95)';
             dropdown.style.zIndex = '9999';
-            dropdown.style.overflowY = 'scroll';
+            dropdown.style.overflowY = 'auto';
+            dropdown.style.overflowX = 'hidden';
             dropdown.style.display = 'block';
-            dropdown.style.padding = '20px';
+            dropdown.style.padding = '15px';
+            dropdown.style.paddingTop = '60px'; // Space for the close button
             dropdown.style.boxSizing = 'border-box';
+            dropdown.style.WebkitOverflowScrolling = 'touch'; // Smooth scrolling on iOS
         }
 
         // Create title with responsive styling
         const title = document.createElement('h3');
         title.textContent = 'Browse by Genre';
         title.style.color = 'rgb(164, 57, 207)';
-        title.style.fontSize = window.innerWidth > 768 ? '22px' : '20px';
+        title.style.fontSize = window.innerWidth > 768 ? '22px' : (window.innerWidth > 480 ? '20px' : '24px'); // Larger on mobile
         title.style.textAlign = 'center';
-        title.style.marginBottom = '20px';
+        title.style.marginBottom = window.innerWidth <= 480 ? '25px' : '20px';
+        title.style.marginTop = window.innerWidth <= 480 ? '10px' : '0';
         title.style.background = 'linear-gradient(90deg, rgba(164, 57, 207, 1) 0%, rgba(141, 22, 201, 1) 100%)';
         title.style.webkitBackgroundClip = 'text';
         title.style.webkitTextFillColor = 'transparent';
         title.style.backgroundClip = 'text';
         title.style.fontWeight = '600';
+        title.style.textShadow = window.innerWidth <= 480 ? '0 1px 2px rgba(0,0,0,0.2)' : 'none'; // Add subtle text shadow on mobile
 
         // Close button
         const closeBtn = document.createElement('button');
         closeBtn.innerHTML = '&times;';
-        closeBtn.style.position = 'absolute';
-        closeBtn.style.top = window.innerWidth > 768 ? '15px' : '20px';
-        closeBtn.style.right = window.innerWidth > 768 ? '15px' : '20px';
-        closeBtn.style.backgroundColor = 'rgba(30, 30, 30, 0.7)';
-        closeBtn.style.border = '1px solid rgba(141, 22, 201, 0.3)';
-        closeBtn.style.color = 'rgba(255,255,255,0.9)';
-        closeBtn.style.fontSize = '24px';
+        closeBtn.style.position = 'fixed'; // Changed to fixed for mobile
+        closeBtn.style.top = window.innerWidth > 768 ? '15px' : '15px';
+        closeBtn.style.right = window.innerWidth > 768 ? '15px' : '15px';
+        closeBtn.style.backgroundColor = 'rgba(141, 22, 201, 0.9)'; // More visible color
+        closeBtn.style.border = '1px solid rgba(255, 255, 255, 0.5)';
+        closeBtn.style.color = 'rgba(255,255,255,1)'; // Brighter text
+        closeBtn.style.fontSize = window.innerWidth > 768 ? '24px' : '28px'; // Larger on mobile
         closeBtn.style.cursor = 'pointer';
-        closeBtn.style.width = '32px';
-        closeBtn.style.height = '32px';
+        closeBtn.style.width = window.innerWidth > 768 ? '32px' : '40px'; // Larger on mobile
+        closeBtn.style.height = window.innerWidth > 768 ? '32px' : '40px'; // Larger on mobile
         closeBtn.style.display = 'flex';
         closeBtn.style.alignItems = 'center';
         closeBtn.style.justifyContent = 'center';
         closeBtn.style.borderRadius = '50%';
-        closeBtn.style.zIndex = '1001';
+        closeBtn.style.zIndex = '10001'; // Higher z-index to ensure visibility
+        closeBtn.style.boxShadow = '0 2px 10px rgba(0,0,0,0.5)'; // Add shadow for better visibility
 
         closeBtn.onclick = function(e) {
             e.preventDefault();
@@ -152,11 +158,25 @@ document.addEventListener('DOMContentLoaded', function() {
             content.style.gap = '30px';
             content.style.justifyItems = 'center';
         } else {
-            // Mobile: single column with adaptive width
-            content.style.padding = '0 10px';
+            // Mobile: responsive grid or single column depending on width
+            if (window.innerWidth > 480) {
+                // Tablet: 2-column grid
+                content.style.display = 'grid';
+                content.style.gridTemplateColumns = 'repeat(2, 1fr)';
+                content.style.gap = '20px';
+                content.style.justifyItems = 'center';
+            } else {
+                // Phone: single column with better spacing
+                content.style.display = 'flex';
+                content.style.flexDirection = 'column';
+                content.style.gap = '20px';
+            }
+            content.style.padding = '0 5px';
             content.style.maxWidth = '100%';
             content.style.width = '100%';
             content.style.margin = '0 auto';
+            content.style.overflowY = 'auto';
+            content.style.WebkitOverflowScrolling = 'touch'; // For smooth scrolling on iOS
         }
 
         // Genre categories
@@ -215,17 +235,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 section.style.width = '100%';
                 section.style.maxWidth = '300px';
                 section.style.minWidth = '250px';
+            } else if (window.innerWidth > 480) {
+                // Tablet specific styling
+                section.style.width = '100%';
+                section.style.minWidth = '220px';
+                section.style.maxWidth = '100%';
+                section.style.boxSizing = 'border-box';
             } else {
-                // Mobile specific styling - fix the width issue
+                // Mobile phone specific styling - improved layout
                 section.style.width = '100%';
                 section.style.boxSizing = 'border-box';
+                section.style.marginBottom = '10px'; // Reduced margin for phones
             }
 
             // Category header
             const header = document.createElement('h4');
             header.textContent = category;
             header.style.color = 'rgb(164, 57, 207)';
-            header.style.fontSize = '18px';
+            header.style.fontSize = window.innerWidth <= 480 ? '20px' : '18px'; // Larger on mobile
             header.style.textAlign = 'center';
             header.style.marginBottom = '10px';
             header.style.background = 'linear-gradient(90deg, #a710e0 0%, #8a14ca 100%)';
@@ -234,7 +261,8 @@ document.addEventListener('DOMContentLoaded', function() {
             header.style.backgroundClip = 'text';
             header.style.fontWeight = '600';
             header.style.borderBottom = '1px solid rgba(141, 22, 201, 0.4)';
-            header.style.paddingBottom = '5px';
+            header.style.paddingBottom = window.innerWidth <= 480 ? '8px' : '5px';
+            header.style.paddingTop = window.innerWidth <= 480 ? '8px' : '5px';
 
             section.appendChild(header);
 
@@ -254,10 +282,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 link.style.color = '#fff';
                 link.style.display = 'block';
                 link.style.textDecoration = 'none';
-                link.style.padding = '8px 10px';
+                link.style.padding = window.innerWidth <= 480 ? '12px 10px' : '8px 10px'; // Larger touch target on mobile
                 link.style.borderRadius = '8px';
                 link.style.borderLeft = '3px solid rgba(141, 22, 201, 0.4)';
                 link.style.background = 'rgba(30, 30, 30, 0.4)';
+                link.style.fontSize = window.innerWidth <= 480 ? '16px' : '14px'; // Larger font on mobile
+                link.style.fontWeight = '400';
+                link.style.marginBottom = window.innerWidth <= 480 ? '8px' : '4px'; // More space between items on mobile
 
                 // Hover effect
                 link.onmouseover = function() {
