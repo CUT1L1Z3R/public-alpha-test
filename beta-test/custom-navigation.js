@@ -391,13 +391,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     document.body.classList.remove('dropdown-active');
                     genreDropdownVisible = false;
                 } else {
-                    // If dropdown doesn't exist, create it
-                    if (!genreDropdown) {
-                        genreDropdown = createGenreDropdown();
-                    } else {
-                        genreDropdown.style.display = 'block';
+                    // Always recreate the dropdown when clicked to ensure it has the latest content
+                    // This fixes issues on different section pages
+                    if (genreDropdown) {
+                        // Remove existing dropdown to recreate it fresh
+                        genreDropdown.remove();
                     }
 
+                    genreDropdown = createGenreDropdown();
                     genreDropdownVisible = true;
                     document.body.classList.add('dropdown-active');
 
