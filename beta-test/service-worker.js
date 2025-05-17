@@ -1,5 +1,5 @@
 // Service Worker for FreeFlixx
-const CACHE_VERSION = '1.0.2'; // Increment this when making changes
+const CACHE_VERSION = '1.0.3'; // Increment this when making changes
 const CACHE_NAME = 'freeflixx-cache-v' + CACHE_VERSION;
 const urlsToCache = [
   './',
@@ -9,12 +9,18 @@ const urlsToCache = [
   './manifest.json',
   './assets/freeflixx.ico',
   './assets/freeflixx.png',
-  './assests/netflix.png',
-  './assests/play.png',
-  './assests/info.png',
+  './assets/netflix.png',
+  './assets/play.png',
+  './assets/info.png',
+  './assets/playg.png',
+  './assets/Imdb-Logo.png',
   './custom-buttons.css',
   './custom-navigation.js',
-  './navigation-fix.js'
+  './navigation-fix.js',
+  './sitemap.xml',
+  './robots.txt',
+  './404.html',
+  './free-movie-streaming.html'
 ];
 
 // Install event - cache assets

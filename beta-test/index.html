@@ -5,36 +5,37 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <meta name="description" content="🎬 Stream Unlimited Free Movies and TV Shows on FreeFlixx - Watch HD blockbusters, trending series, popular anime with no subscription fees. Best free streaming site 2023!">
+    <meta name="description" content="🎬 Stream Unlimited Free Movies and TV Shows on FreeFlixx - Watch HD blockbusters, trending series, popular anime with no subscription fees. Best free streaming site 2025!">
     <meta name="keywords" content="free movies online, free TV shows streaming, FreeFlixx, watch free movies, no subscription streaming, free anime, Netflix alternatives, Disney+ alternatives, free streaming platforms, HD movies free, new releases free, popular TV series free, best free streaming site, horror movies free, action movies streaming, comedy shows free">
-    <meta name="application-name" content="FreeFlix">
-    <meta name="apple-mobile-web-app-title" content="FreeFlix">
-    <meta name="generator" content="FreeFlix Ultimate Movies Streaming Platform">
-    <meta name="google-site-verification" content="FreeFlix premium streaming platform - 100% free">
+    <meta name="application-name" content="FreeFlixx">
+    <meta name="apple-mobile-web-app-title" content="FreeFlixx">
+    <meta name="generator" content="FreeFlixx Ultimate Movies Streaming Platform">
+    <meta name="google-site-verification" content="FreeFlixx premium streaming platform - 100% free">
     <meta name="google" content="notranslate">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-    <meta name="author" content="FreeFlix Team">
+    <meta name="author" content="FreeFlixx Team">
     <meta name="rating" content="general">
+    <meta name="theme-color" content="#e50914">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://freeflix.top/">
-    <meta property="og:title" content="FreeFlix - #1 Free Movie & TV Show Streaming Platform | No Sign-up Needed">
+    <meta property="og:title" content="FreeFlixx - #1 Free Movie & TV Show Streaming Platform | No Sign-up Needed">
     <meta property="og:description" content="Watch unlimited HD movies, TV shows, and anime completely free. Stream the latest releases without subscription fees or signup. Your favorite entertainment, just a click away.">
     <meta property="og:image" content="https://freeflix.top/assets/freeflixx.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:locale" content="en_US">
-    <meta property="og:site_name" content="FreeFlix">
+    <meta property="og:site_name" content="FreeFlixx">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://freeflix.top/">
-    <meta property="twitter:title" content="FreeFlix - #1 Free Movie & TV Show Streaming | No Subscription">
-    <meta property="twitter:description" content="Watch unlimited HD movies, TV shows, and anime completely free. Stream the latest releases without subscription fees or signup. Best free streaming site of 2023!">
+    <meta property="twitter:title" content="FreeFlixx - #1 Free Movie & TV Show Streaming | No Subscription">
+    <meta property="twitter:description" content="Watch unlimited HD movies, TV shows, and anime completely free. Stream the latest releases without subscription fees or signup. Best free streaming site of 2025!">
     <meta property="twitter:image" content="https://freeflix.top/assets/freeflixx.png">
-    <meta name="twitter:creator" content="@FreeFlix">
-    <meta name="twitter:site" content="@FreeFlix">
+    <meta name="twitter:creator" content="@FreeFlixx">
+    <meta name="twitter:site" content="@FreeFlixx">
 
     <!-- Canonical URL -->
     <link rel="canonical" href="https://freeflix.top/">
@@ -42,6 +43,13 @@
     <link rel="alternate" href="https://freeflix.top/sitemap.html" hreflang="x-default" title="HTML Sitemap">
     <link rel="alternate" hreflang="en" href="https://freeflix.top/">
     <link rel="alternate" hreflang="x-default" href="https://freeflix.top/">
+
+    <!-- Preload critical assets -->
+    <link rel="preload" href="/assets/freeflixx.png" as="image">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="/index.css" as="style">
+    <link rel="preload" href="/custom-navigation.js" as="script">
 
     <!-- Structured Data for Movie Streaming Website -->
     <script type="application/ld+json">
@@ -224,7 +232,7 @@
 <body>
     <!-- Header container -->
     <header class="header">
-        <img src="assets/freeflixx.png" alt="FreeFlix logo" id="netflix-logo">
+        <img src="/assets/freeflixx.png" alt="FreeFlixx logo" id="netflix-logo" width="150" height="47" loading="eager" fetchpriority="high">
         <div class="input-container">
             <input type="text" id="searchInput" placeholder="Search movies...">
             <div id="searchResults"></div>
@@ -271,16 +279,16 @@
 
     <!-- Banner container -->
     <div id="banner-container">
-        <img id="banner" src="" alt="banner" />
+        <img id="banner" src="" alt="Featured movie or show banner" width="100%" height="auto" loading="lazy" />
         <div id="details-container">
             <h1 id="banner-title"></h1>
             <div id="button-container">
                 <button id="play-button">
-                    <img style="width: 0.8rem; height: 0.8rem;" src="assests/play.png" />
+                    <img style="width: 0.8rem; height: 0.8rem;" src="/assets/play.png" width="13" height="13" alt="Play button" loading="lazy" />
                     <span>Play</span>
                 </button>
                 <button id="more-info">
-                    <img id="info-icon" src="assests/info.png" />
+                    <img id="info-icon" src="/assets/info.png" width="13" height="13" alt="Info button" loading="lazy" />
                     <span>More Information</span>
                 </button>
             </div>
@@ -689,6 +697,21 @@
     })();
     </script>
     <script src="navigation-fix.js"></script>
+
+    <!-- Register Service Worker for offline functionality and better performance -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(function(registration) {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    })
+                    .catch(function(error) {
+                        console.log('ServiceWorker registration failed: ', error);
+                    });
+            });
+        }
+    </script>
 </body>
 
 </html>

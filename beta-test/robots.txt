@@ -3,33 +3,9 @@ Allow: /
 Disallow: /*.js$
 Disallow: /*.css$
 Disallow: /*?*
+Disallow: /*.backup$
+Disallow: /*.bak$
 
-# Allow all major search engines optimal crawling
-User-agent: Googlebot
-Allow: /
-Crawl-delay: 1
-
-User-agent: Bingbot
-Allow: /
-Crawl-delay: 1
-
-User-agent: Slurp
-Allow: /
-Crawl-delay: 1
-
-User-agent: DuckDuckBot
-Allow: /
-Crawl-delay: 1
-
-User-agent: Baiduspider
-Allow: /
-Crawl-delay: 1
-
-User-agent: YandexBot
-Allow: /
-Crawl-delay: 1
-
-# Primary sitemap
 Sitemap: https://freeflix.top/sitemap.xml
 Sitemap: https://freeflix.top/sitemap-index.xml
-Sitemap: https://freeflix.top/google-sitemap.xml
+Sitemap: https://freeflix.top/sitemap-index.xml
