@@ -16,4 +16,12 @@
     <loc>https://freeflix.top/anime-sitemap.xml</loc>
     <lastmod>2025-05-17</lastmod>
   </sitemap>
+  <sitemap>
+    <loc>https://freeflix.top/genre-sitemap.xml</loc>
+    <lastmod>2025-05-17</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://freeflix.top/google-sitemap.xml</loc>
+    <lastmod>2025-05-17</lastmod>
+  </sitemap>
 </sitemapindex>

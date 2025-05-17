@@ -1,14 +1,14 @@
-// Service Worker for FreeFlixx
+// Service Worker for FreeFlix
 const CACHE_VERSION = '1.0.3'; // Increment this when making changes
-const CACHE_NAME = 'freeflixx-cache-v' + CACHE_VERSION;
+const CACHE_NAME = 'freeflix-cache-v' + CACHE_VERSION;
 const urlsToCache = [
   './',
   './index.html',
   './index.css',
   './index.js',
   './manifest.json',
-  './assets/freeflixx.ico',
-  './assets/freeflixx.png',
+  './assets/freeflix.ico',
+  './assets/freeflix.png',
   './assets/netflix.png',
   './assets/play.png',
   './assets/info.png',

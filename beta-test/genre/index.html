@@ -2,10 +2,76 @@
 <html lang="en" style="overflow-x: hidden; max-width: 100%;">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="description" content="Browse movies and TV shows by genre on FreeFlixx.">
-    <title>Genre Results - FreeFlixx</title>
-    <link rel="icon" href="../assets/freeflixx.ico" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="description" content="Browse movies, TV shows, and anime by genre on FreeFlix. Find action, comedy, drama, horror, thriller, romance, fantasy, and more categories to stream for free without subscription.">
+    <meta name="keywords" content="movie genres, TV show genres, anime genres, FreeFlix, streaming by genre, action, comedy, drama, horror, thriller, fantasy, romance, sci-fi">
+
+    <!-- Robots meta tag to ensure indexing -->
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://freeflix.top/genre/">
+    <meta property="og:title" content="FreeFlix - Browse by Genre">
+    <meta property="og:description" content="Browse movies, TV shows, and anime by genre on FreeFlix. Find your favorite content categories to stream for free.">
+    <meta property="og:image" content="https://freeflix.top/assets/freeflix.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://freeflix.top/genre/">
+    <meta property="twitter:title" content="FreeFlix - Browse by Genre">
+    <meta property="twitter:description" content="Browse movies, TV shows, and anime by genre on FreeFlix. Find your favorite content categories to stream for free.">
+    <meta property="twitter:image" content="https://freeflix.top/assets/freeflix.png">
+
+    <!-- Schema.org structured data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "FreeFlix - Browse by Genre",
+      "description": "Browse movies, TV shows, and anime by genre on FreeFlix. Find your favorite content categories to stream for free.",
+      "url": "https://freeflix.top/genre/",
+      "image": "https://freeflix.top/assets/freeflix.png",
+      "mainEntity": {
+        "@type": "ItemList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Action",
+            "url": "https://freeflix.top/genre/?genre=action"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Comedy",
+            "url": "https://freeflix.top/genre/?genre=comedy"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Drama",
+            "url": "https://freeflix.top/genre/?genre=drama"
+          },
+          {
+            "@type": "ListItem",
+            "position": 4,
+            "name": "Horror",
+            "url": "https://freeflix.top/genre/?genre=horror"
+          },
+          {
+            "@type": "ListItem",
+            "position": 5,
+            "name": "Thriller",
+            "url": "https://freeflix.top/genre/?genre=thriller"
+          }
+        ]
+      }
+    }
+    </script>
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://freeflix.top/genre/">
     <link rel="stylesheet" href="../index.css">
     <link rel="stylesheet" href="../custom-buttons.css">
     <link rel="stylesheet" href="../custom-search.css">
@@ -198,7 +264,7 @@
     <header class="header">
         <div class="logo">
             <a href="../index.html">
-                <img src="../assets/freeflixx.png" alt="FreeFlixx Logo">
+                <img src="../assets/freeflix.png" alt="FreeFlix Logo">
             </a>
         </div>
         <div class="search-container">
@@ -265,7 +331,7 @@
 
     <footer class="footer">
         <div>
-            <p>FreeFlixx &copy; 2023 - All Rights Reserved</p>
+            <p>FreeFlix &copy; 2023 - All Rights Reserved</p>
             <p>This site does not store any files on its server. All contents are provided by non-affiliated third parties.</p>
         </div>
     </footer>

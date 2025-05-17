@@ -10,8 +10,8 @@
         <changefreq>daily</changefreq>
         <priority>0.9</priority>
         <image:image>
-            <image:loc>https://freeflix.top/assets/freeflixx.png</image:loc>
-            <image:title>FreeFlixx TV Shows - Stream TV Series Free</image:title>
+            <image:loc>https://freeflix.top/assets/freeflix.png</image:loc>
+            <image:title>FreeFlix TV Shows - Stream TV Series Free</image:title>
             <image:caption>Watch your favorite TV series completely free without subscription</image:caption>
         </image:image>
     </url>

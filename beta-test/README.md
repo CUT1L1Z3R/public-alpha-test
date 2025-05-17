@@ -1,4 +1,4 @@
-# FreeFlixx - Free Movie Streaming Platform
+# FreeFlix - Free Movie Streaming Platform
 
 A modern and responsive web application for streaming movies, TV shows, and anime content.
 

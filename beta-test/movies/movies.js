@@ -1,5 +1,5 @@
 /**
- * JavaScript file for the movies page of the FreeFlixx streaming site.
+ * JavaScript file for the movies page of the FreeFlix streaming site.
  * Handles fetching, displaying, and UI interactions for movies.
  */
 

@@ -1,5 +1,5 @@
 /**
- * Custom navigation script for FreeFlixx
+ * Custom navigation script for FreeFlix
  * Enhances navigation and mobile experience
  * Fixed genre dropdown scrolling issue
  */

@@ -4,32 +4,13 @@
   "exclude": [
     "/assets/*",
     "/assests/*",
-    "/*.css",
-    "/*.js",
-    "/*.png",
-    "/*.jpg",
-    "/*.ico",
-    "/*.xml",
-    "/*.webmanifest",
-    "/*.json"
-  ],
-  "routes": [
-    { "src": "/index.html", "dest": "/index.html" },
-    { "src": "/", "dest": "/index.html" },
-    { "src": "/movies", "dest": "/movies/index.html" },
-    { "src": "/movies/", "dest": "/movies/index.html" },
-    { "src": "/movies/index.html", "dest": "/movies/index.html" },
-    { "src": "/tvshows", "dest": "/tvshows/index.html" },
-    { "src": "/tvshows/", "dest": "/tvshows/index.html" },
-    { "src": "/tvshows/index.html", "dest": "/tvshows/index.html" },
-    { "src": "/anime", "dest": "/anime/index.html" },
-    { "src": "/anime/", "dest": "/anime/index.html" },
-    { "src": "/anime/index.html", "dest": "/anime/index.html" },
-    { "src": "/movie_details", "dest": "/movie_details/movie_details.html" },
-    { "src": "/movie_details/", "dest": "/movie_details/movie_details.html" },
-    { "src": "/watchList", "dest": "/watchList/watchlist.html" },
-    { "src": "/watchList/", "dest": "/watchList/watchlist.html" },
-    { "src": "/404.html", "dest": "/404.html" },
-    { "src": "/*", "status": 404, "dest": "/404.html" }
+    "/**/*.css",
+    "/**/*.js",
+    "/**/*.png",
+    "/**/*.jpg",
+    "/**/*.ico",
+    "/**/*.xml",
+    "/**/*.webmanifest",
+    "/**/*.json"
   ]
 }

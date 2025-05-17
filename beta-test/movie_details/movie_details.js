@@ -497,14 +497,29 @@ function initServerDropdown() {
         serverDropdownContent.classList.toggle('show');
         serverDropdownHeader.classList.toggle('active');
         dropdownArrow.classList.toggle('up');
+
+        // Prevent page scrolling when dropdown is open
+        if (serverDropdownContent.classList.contains('show')) {
+            // Save current scroll position
+            window.dropdownScrollPos = window.scrollY;
+        }
     });
 
     // Close dropdown when clicking outside
     document.addEventListener('click', function(event) {
         if (!event.target.closest('.server-dropdown')) {
+            const wasOpen = serverDropdownContent.classList.contains('show');
             serverDropdownContent.classList.remove('show');
             serverDropdownHeader.classList.remove('active');
             dropdownArrow.classList.remove('up');
+
+            // If dropdown was open, restore scroll position
+            if (wasOpen && window.dropdownScrollPos !== undefined) {
+                setTimeout(() => {
+                    window.scrollTo(0, window.dropdownScrollPos);
+                    window.dropdownScrollPos = undefined;
+                }, 10);
+            }
         }
     });
 
@@ -531,6 +546,14 @@ function initServerDropdown() {
             serverDropdownContent.classList.remove('show');
             serverDropdownHeader.classList.remove('active');
             dropdownArrow.classList.remove('up');
+
+            // Restore the scroll position if needed
+            if (window.dropdownScrollPos !== undefined) {
+                setTimeout(() => {
+                    window.scrollTo(0, window.dropdownScrollPos);
+                    window.dropdownScrollPos = undefined;
+                }, 10);
+            }
 
             // Call the existing changeServer function
             changeServer();

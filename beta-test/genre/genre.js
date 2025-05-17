@@ -1,5 +1,5 @@
 /**
- * JavaScript file for genre-specific pages on FreeFlixx
+ * JavaScript file for genre-specific pages on FreeFlix
  * Handles fetching and displaying content based on genre
  */
 
@@ -199,7 +199,7 @@ function updatePageTitle(genre, mediaType) {
     const formattedGenre = genre.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 
     // Update the page title
-    document.title = `${formattedGenre} ${mediaType === 'movie' ? 'Movies' : mediaType === 'tv' ? 'TV Shows' : 'Anime'} - FreeFlixx`;
+    document.title = `${formattedGenre} ${mediaType === 'movie' ? 'Movies' : mediaType === 'tv' ? 'TV Shows' : 'Anime'} - FreeFlix`;
 
     // Update the header text
     genreTitle.textContent = `${formattedGenre} ${mediaType === 'movie' ? 'Movies' : mediaType === 'tv' ? 'TV Shows' : 'Anime'}`;
