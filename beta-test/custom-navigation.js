@@ -57,17 +57,15 @@ document.addEventListener('DOMContentLoaded', function() {
                         // Mobile centered positioning
                         genreDropdown.style.position = 'fixed';
                         genreDropdown.style.top = '50%';
-                        genreDropdown.style.left = '50%';
+                        genreDropdown.style.left = '45%'; // Shifted to the left from 50%
                         genreDropdown.style.transform = 'translate(-50%, -50%)';
-                        genreDropdown.style.width = window.innerWidth <= 480 ? '80%' : '75%'; // Made width smaller
-                        genreDropdown.style.maxWidth = '390px'; // Reduced max width
-                        genreDropdown.style.maxHeight = '90vh'; // Increased from 80vh to 90vh
+                        genreDropdown.style.width = window.innerWidth <= 480 ? '75%' : '75%'; // Reduced mobile width to 75%
+                        genreDropdown.style.maxWidth = '320px'; // Further reduced max width for mobile
+                        genreDropdown.style.maxHeight = '80vh';
                         genreDropdown.style.overflowY = 'auto';
-                        genreDropdown.style.overscrollBehavior = 'contain'; // Prevent scroll chaining
-                        genreDropdown.style.WebkitOverflowScrolling = 'touch'; // Smooth scrolling on iOS
                         genreDropdown.style.zIndex = '9999';
-                        genreDropdown.style.marginRight = '15px'; // Right margin
-                        genreDropdown.style.marginLeft = '15px'; // Added equal left margin
+                        genreDropdown.style.marginRight = '20px'; // Increased right margin for more space
+                        genreDropdown.style.marginLeft = '10px'; // Reduced left margin
                     } else {
                         // Desktop positioning - below genre link and centered
                         const rect = link.getBoundingClientRect();
@@ -118,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 dropdown.style.display = 'flex';  // Use flexbox for centering
                 dropdown.style.flexDirection = 'column';
                 dropdown.style.alignItems = 'center';
-                dropdown.style.justifyContent = 'flex-start'; // Changed from center to flex-start
+                dropdown.style.justifyContent = 'center';
 
                 // Add CSS styles for the dark background overlay
                 const overlayStyle = document.createElement('style');
@@ -163,7 +161,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 title.style.backgroundClip = 'text';
                 title.style.textShadow = '0 2px 4px rgba(0,0,0,0.3)';
                 title.style.width = '100%';
-                title.style.maxWidth = window.innerWidth <= 480 ? '250px' : '400px';
+                title.style.maxWidth = window.innerWidth <= 480 ? '200px' : '400px'; // Reduced from 250px to 200px for mobile
                 title.style.position = 'relative';
                 title.style.margin = '0 auto';
                 title.style.textAlign = 'center';
@@ -219,12 +217,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (window.innerWidth <= 480) {
                     container.style.gridTemplateColumns = '1fr';
                     container.style.gap = '15px';
-                    container.style.width = '100%';
-                    container.style.maxWidth = '100%';
+                    container.style.width = '95%'; // Reduced width for mobile
+                    container.style.maxWidth = '95%';
                     container.style.padding = '0';
                     container.style.marginBottom = '15px'; // Add margin at the bottom for spacing
-                    container.style.overflowY = 'auto'; // Allow container to scroll independently
-                    container.style.maxHeight = '70vh'; // Set max height for scrollable area
                 } else if (window.innerWidth <= 768) {
                     container.style.gridTemplateColumns = '1fr';
                     container.style.gap = '20px'; // Increased gap for better spacing
@@ -249,13 +245,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     // Adjust padding based on screen size
                     if (window.innerWidth <= 480) {
-                        categoryColumn.style.padding = '10px';
-                        categoryColumn.style.width = '90%';
-                        categoryColumn.style.maxWidth = '90%';
+                        categoryColumn.style.padding = '12px 10px'; // Reduced horizontal padding
+                        categoryColumn.style.width = '85%';  // Reduced width for more space
+                        categoryColumn.style.maxWidth = '85%';
                         categoryColumn.style.minWidth = 'auto';
                         categoryColumn.style.margin = '0 auto';
-                        categoryColumn.style.display = 'block'; // Ensure block display
-                        categoryColumn.style.height = 'auto'; // Allow height to adjust to content
                     } else if (window.innerWidth <= 768) {
                         categoryColumn.style.padding = '12px';
                         categoryColumn.style.width = '90%';
@@ -374,18 +368,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
 
                 dropdown.appendChild(container);
-
-                // Add scroll indicator for mobile
-                if (window.innerWidth <= 480) {
-                    const scrollIndicator = document.createElement('div');
-                    scrollIndicator.style.width = '100%';
-                    scrollIndicator.style.textAlign = 'center';
-                    scrollIndicator.style.marginTop = '5px';
-                    scrollIndicator.style.fontSize = '12px';
-                    scrollIndicator.style.color = 'rgba(255,255,255,0.6)';
-                    scrollIndicator.innerHTML = 'Scroll for more';
-                    dropdown.appendChild(scrollIndicator);
-                }
 
                 // Add close button with improved styling
                 const closeBtn = document.createElement('button');
