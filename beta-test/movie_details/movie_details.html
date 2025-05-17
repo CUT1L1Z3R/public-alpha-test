@@ -72,9 +72,11 @@
 
             /* Enhanced visibility for vidsrc.ru fullscreen controls */
             iframe[src*="vidsrc.ru"], iframe[src*="vidsrc.su"] {
-                padding-bottom: 40px !important;
-                margin-bottom: 40px !important;
-                min-height: 220px;
+                padding-bottom: 60px !important;
+                margin-bottom: 60px !important;
+                min-height: 180px !important;
+                max-height: 180px !important;
+                height: 180px !important;
             }
 
             /* Ensure controls are visible on embeds */
@@ -111,8 +113,10 @@
         <!-- Movie poster section -->
         <div class="movie-poster">
             <img id="moviePoster" src="" alt="Movie Poster" width="300" height="450" loading="eager">
-            <iframe id="iframe" frameborder="0" allowfullscreen playsinline
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"></iframe>
+            <div class="iframe-container">
+                <iframe id="iframe" frameborder="0" allowfullscreen playsinline
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"></iframe>
+            </div>
 
             <!-- Season selector (visible only for TV shows) -->
             <div id="seasons-container" class="seasons-container">

@@ -59,14 +59,35 @@ h1 {
     flex-direction: column;
 }
 
-/* iframe sizing */
+/* iframe container and sizing */
+.iframe-container {
+    position: relative;
+    width: 100%;
+    overflow: visible;
+    padding-bottom: 60px; /* Space for controls */
+    margin-bottom: 20px;
+}
+
+/* Add a pseudo element to increase the clicking area for fullscreen button */
+.iframe-container::after {
+    content: "";
+    display: block;
+    height: 50px;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+}
+
 iframe {
     width: 100%;
     height: 450px !important;
-    margin: 0 0 20px 0;
+    margin: 0;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     border: none; /* Remove border to make it cleaner */
+    position: relative;
 }
 
 #moviePoster {
@@ -872,18 +893,31 @@ p {
         box-sizing: border-box;
     }
 
+    /* Video frame container optimization */
+    .iframe-container {
+        padding-bottom: 85px !important; /* Extra space for controls */
+        margin-bottom: 15px !important;
+        overflow: visible;
+        position: relative;
+    }
+
     /* Video frame optimization */
     #iframe,
     iframe {
-        height: 220px !important;
+        height: 170px !important; /* Reduced height to make room for controls */
         width: 100%;
-        margin: 0 auto 15px auto;
+        margin: 0 !important;
         box-sizing: border-box;
         /* Fix for fullscreen button visibility in mobile */
         max-width: 100% !important;
         /* Ensure fullscreen button is not cut off */
         position: relative;
         z-index: 1;
+    }
+
+    /* Increase size of pseudo element for better click area */
+    .iframe-container::after {
+        height: 70px;
     }
 
     /* Season container adjustments */
@@ -1027,11 +1061,20 @@ p {
         padding: 0 10px;
     }
 
+    /* Improved iframe container styling */
+    .iframe-container {
+        width: 95%;
+        margin: 0 auto;
+        padding-bottom: 65px;
+        position: relative;
+        overflow: visible;
+    }
+
     #iframe,
     iframe {
         height: 320px !important;
-        width: 95%;
-        margin: 0 auto 20px auto;
+        width: 100%;
+        margin: 0;
         box-sizing: border-box;
     }
 

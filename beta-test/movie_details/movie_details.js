@@ -311,11 +311,15 @@ async function changeServer() {
     // Special handling for vidsrc.ru to ensure fullscreen button visibility on mobile
     if (embedURL.includes('vidsrc.su') || embedURL.includes('vidsrc.ru')) {
         if (window.innerWidth <= 740) {
-            iframe.style.marginBottom = '35px';
-            // Add a slight padding to ensure controls are visible
-            iframe.style.paddingBottom = '35px';
+            const iframeContainer = document.querySelector('.iframe-container');
+            if (iframeContainer) {
+                iframeContainer.style.paddingBottom = '85px';
+            }
         }
     }
+
+    // Always call adjustIframeForMobile when changing servers
+    setTimeout(adjustIframeForMobile, 500);
     // Setup fallback chain on error
     let currentIndex = serverFallbackChain.indexOf(server);
     iframe.onerror = () => {
@@ -604,6 +608,26 @@ document.getElementById('server').addEventListener('change', () => {
     changeServer();
 });
 
+// Function to adjust iframe for mobile
+function adjustIframeForMobile() {
+    const iframe = document.getElementById('iframe');
+    const iframeContainer = document.querySelector('.iframe-container');
+
+    if (window.innerWidth <= 740) {
+        // Mobile adjustments
+        if (iframe && iframeContainer) {
+            // Adjust container height specifically for mobile
+            iframeContainer.style.paddingBottom = '75px';
+
+            // If using vidsrc.ru or vidsrc.su, add extra space
+            if (iframe.src.includes('vidsrc.ru') || iframe.src.includes('vidsrc.su')) {
+                iframeContainer.style.paddingBottom = '85px';
+                iframe.style.marginBottom = '0';
+            }
+        }
+    }
+}
+
 // Initialize everything when the window loads
 window.addEventListener('load', function() {
     // Set a default server if none is selected
@@ -617,6 +641,10 @@ window.addEventListener('load', function() {
 
     // Display movie details
     displayMovieDetails();
+
+    // Adjust iframe for mobile devices
+    adjustIframeForMobile();
+
     // Show server change notice banner on load
     const banner = document.getElementById('server-notice-banner');
     const bannerClose = document.getElementById('banner-close-btn');
@@ -627,7 +655,11 @@ window.addEventListener('load', function() {
         bannerClose.addEventListener('click', () => {
             banner.style.display = 'none';
         });
-        // Auto close banner after 4 seconds
+        // Auto close banner after 7 seconds
         setTimeout(() => { banner.style.display = 'none'; }, 7000);
     }
+});
+
+// Listen for resize events to adjust iframe on orientation change
+window.addEventListener('resize', adjustIframeForMobile);
 });
