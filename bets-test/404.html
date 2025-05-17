@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="description" content="Sorry, this page doesn't exist on FreeFlixx - The #1 free streaming platform for movies, TV shows and anime. Return to our homepage to continue watching unlimited free content.">
+    <meta name="robots" content="noindex,follow">
+    <link rel="canonical" href="https://freeflix.top/">
+    <title>404 - Page Not Found | FreeFlixx - Free Movie Streaming</title>
+    <link rel="icon" href="/assets/freeflixx.ico">
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 30px;
+            border-radius: 8px;
+        }
+        h1 {
+            color: #e50914;
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 18px;
+            margin: 20px 0;
+            line-height: 1.6;
+        }
+        .home-btn {
+            display: inline-block;
+            background-color: #e50914;
+            color: #fff;
+            padding: 12px 30px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 30px;
+            transition: all 0.3s ease;
+        }
+        .home-btn:hover {
+            background-color: #f40612;
+            transform: scale(1.05);
+            text-decoration: none;
+        }
+        .error-code {
+            font-size: 120px;
+            font-weight: bold;
+            margin: 0;
+            color: rgba(229, 9, 20, 0.2);
+            position: absolute;
+            z-index: -1;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .logo {
+            width: 180px;
+            margin-bottom: 2rem;
+        }
+        .suggestions {
+            margin: 2rem 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+        }
+        .suggestion-link {
+            color: #fff;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            background-color: rgba(229, 9, 20, 0.3);
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+        .suggestion-link:hover {
+            background-color: rgba(229, 9, 20, 0.6);
+        }
+        .footer {
+            margin-top: 2rem;
+            color: #999;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <img src="/assets/freeflixx.png" alt="FreeFlixx Logo" class="logo">
+
+    <div class="error-code">404</div>
+    <div class="container">
+        <h1>Page Not Found</h1>
+        <p>The page you're looking for doesn't exist or has been moved to another location.</p>
+        <p>Sorry for the inconvenience. Why not explore our vast library of free movies, TV shows, and anime?</p>
+
+        <a href="/" class="home-btn">Back to Homepage</a>
+
+        <p>Or continue browsing our popular categories:</p>
+
+        <div class="suggestions">
+            <a href="/movies/index.html" class="suggestion-link">Movies</a>
+            <a href="/tvshows/index.html" class="suggestion-link">TV Shows</a>
+            <a href="/anime/index.html" class="suggestion-link">Anime</a>
+            <a href="/?genre=action" class="suggestion-link">Action</a>
+            <a href="/?genre=comedy" class="suggestion-link">Comedy</a>
+            <a href="/?genre=horror" class="suggestion-link">Horror</a>
+            <a href="/?collection=trending" class="suggestion-link">Trending</a>
+            <a href="/?collection=top-rated" class="suggestion-link">Top Rated</a>
+            <a href="/watchList/watchlist.html" class="suggestion-link">My Watchlist</a>
+        </div>
+
+        <p>FreeFlixx offers thousands of movies, TV shows, and anime completely free - no subscription required!</p>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2025 FreeFlixx - The #1 Free Streaming Platform</p>
+    </div>
+
+    <script>
+        // Analytics for tracking 404 errors
+        document.addEventListener('DOMContentLoaded', function() {
+            // Track what page caused the 404
+            const referrer = document.referrer;
+            const currentUrl = window.location.href;
+
+            // Record in console for debugging
+            console.log('404 Error - Page not found: ' + currentUrl);
+            console.log('Referrer: ' + (referrer || 'Direct access'));
+
+            // Automatically redirect to home page after 15 seconds
+            setTimeout(function() {
+                window.location.href = '/';
+            }, 15000);
+        });
+    </script>
+</body>
+</html>
