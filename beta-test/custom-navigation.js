@@ -10,11 +10,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Global handler to ensure dropdown content stays visible when scrolling
     function fixVisibility(e) {
-        // No-op: with new dropdown, this is not needed, but kept for compatibility
+        // Check if dropdown is visible
+        const genreDropdown = document.getElementById('genre-dropdown');
+        if (genreDropdown && genreDropdownVisible) {
+            // Ensure the dropdown stays in view for mobile
+            if (window.innerWidth <= 768) {
+                genreDropdown.style.top = '0';
+                genreDropdown.style.left = '0';
+                genreDropdown.style.height = '100%';
+                genreDropdown.style.width = '100%';
+                genreDropdown.style.position = 'fixed';
+            }
+        }
     }
 
     // Add global event listeners to fix visibility
-    ['scroll', 'touchmove', 'touchstart', 'touchend'].forEach(eventType => {
+    ['scroll', 'touchmove', 'touchstart', 'touchend', 'resize'].forEach(eventType => {
         document.addEventListener(eventType, fixVisibility, { passive: true });
     });
 
@@ -260,6 +271,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     this.style.transform = 'translateX(0)';
                 };
 
+                // Active state based on current URL parameters
+                const currentURL = window.location.href;
+                if (currentURL.includes(link.href)) {
+                    link.style.background = 'linear-gradient(45deg, rgba(141, 22, 201, 0.7) 0%, rgba(164, 57, 207, 0.7) 100%)';
+                    link.style.fontWeight = 'bold';
+                }
+
                 item.appendChild(link);
                 list.appendChild(item);
             });
@@ -351,6 +369,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     genreDropdownVisible = true;
                     document.body.classList.add('dropdown-active');
+
+                    // Add click events to all links within the dropdown
+                    // This ensures they work correctly on each page
+                    const genreLinks = genreDropdown.querySelectorAll('a');
+                    genreLinks.forEach(genreLink => {
+                        genreLink.addEventListener('click', function(ge) {
+                            // Don't prevent default - let the link work
+                            // But hide the dropdown
+                            genreDropdown.style.display = 'none';
+                            document.body.classList.remove('dropdown-active');
+                            genreDropdownVisible = false;
+                        });
+                    });
 
                     // Outside click to close dropdown
                     setTimeout(() => {
