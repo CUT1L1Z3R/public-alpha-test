@@ -24,6 +24,32 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // Function to initialize dropdown references and ensure they work on every page
+    function initializeGenreDropdown() {
+        // Close any existing dropdowns
+        const existingDropdown = document.getElementById('genre-dropdown');
+        if (existingDropdown) {
+            existingDropdown.remove();
+            document.body.classList.remove('dropdown-active');
+            genreDropdownVisible = false;
+        }
+
+        // Find the genre dropdown link
+        const genreLink = document.querySelector('.nav-item.dropdown a[data-section="genres"]');
+        if (genreLink) {
+            // Make sure old dropdown content is hidden
+            const oldDropdownContent = genreLink.nextElementSibling;
+            if (oldDropdownContent && oldDropdownContent.classList.contains('dropdown-content')) {
+                oldDropdownContent.style.display = 'none';
+                oldDropdownContent.style.opacity = '0';
+                oldDropdownContent.style.pointerEvents = 'none';
+            }
+        }
+    }
+
+    // Run initialization on page load
+    initializeGenreDropdown();
+
     // Add global event listeners to fix visibility
     ['scroll', 'touchmove', 'touchstart', 'touchend', 'resize'].forEach(eventType => {
         document.addEventListener(eventType, fixVisibility, { passive: true });
@@ -34,6 +60,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Set the active navigation item based on the current page
     const currentPath = window.location.pathname;
+    const currentHref = window.location.href;
+    const isMoviesPage = currentPath.includes('/movies/') || currentHref.includes('/movies/');
+    const isTVShowsPage = currentPath.includes('/tvshows/') || currentHref.includes('/tvshows/');
+    const isAnimePage = currentPath.includes('/anime/') || currentHref.includes('/anime/');
 
     // Replace the existing dropdown implementation with a more mobile-friendly approach
     // that doesn't suffer from the scrolling visibility issues
@@ -367,11 +397,11 @@ document.addEventListener('DOMContentLoaded', function() {
         if (href === 'index.html' && (currentPath === '/' || currentPath.endsWith('/index.html') || currentPath === '')) {
             // Already on index page, just add active class
             item.classList.add('active');
-        } else if (currentPath.includes('/movies/') && section === 'movies') {
+        } else if ((currentPath.includes('/movies/') || isMoviesPage) && section === 'movies') {
             item.classList.add('active');
-        } else if (currentPath.includes('/tvshows/') && section === 'tv') {
+        } else if ((currentPath.includes('/tvshows/') || isTVShowsPage) && section === 'tv') {
             item.classList.add('active');
-        } else if (currentPath.includes('/anime/') && section === 'anime') {
+        } else if ((currentPath.includes('/anime/') || isAnimePage) && section === 'anime') {
             item.classList.add('active');
         }
 
@@ -385,20 +415,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Create or toggle the dropdown genre menu
                 let genreDropdown = document.getElementById('genre-dropdown');
 
-                if (genreDropdown && genreDropdown.style.display === 'block') {
-                    // If dropdown is visible, hide it
-                    genreDropdown.style.display = 'none';
+                // Always remove existing dropdown to ensure fresh creation
+                if (genreDropdown) {
+                    genreDropdown.remove();
                     document.body.classList.remove('dropdown-active');
                     genreDropdownVisible = false;
-                } else {
-                    // Always recreate the dropdown when clicked to ensure it has the latest content
-                    // This fixes issues on different section pages
-                    if (genreDropdown) {
-                        // Remove existing dropdown to recreate it fresh
-                        genreDropdown.remove();
-                    }
+                }
 
-                    genreDropdown = createGenreDropdown();
+                // Create a new dropdown
+                genreDropdown = createGenreDropdown();
+                document.body.appendChild(genreDropdown);
+                genreDropdownVisible = true;
+                document.body.classList.add('dropdown-active');
+
                     genreDropdownVisible = true;
                     document.body.classList.add('dropdown-active');
 
@@ -453,7 +482,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
 
                 // Always ensure the link isn't broken for sub-pages
-                if (href === 'index.html' && (currentPath === '/anime/' || currentPath === '/movies/' || currentPath === '/tvshows/')) {
+                if (href === 'index.html' &&
+                   (currentPath === '/anime/' || isAnimePage ||
+                    currentPath === '/movies/' || isMoviesPage ||
+                    currentPath === '/tvshows/' || isTVShowsPage)) {
                     e.preventDefault();
                     window.location.href = '../index.html';
                 }
