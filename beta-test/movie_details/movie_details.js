@@ -300,7 +300,22 @@ async function changeServer() {
     iframe.setAttribute('playsinline', '');
     iframe.setAttribute('webkit-playsinline', 'true');
     iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen');
-    iframe.setAttribute('allowfullscreen', '');
+    iframe.setAttribute('allowfullscreen', 'true');
+    iframe.setAttribute('webkitallowfullscreen', 'true');
+    iframe.setAttribute('mozallowfullscreen', 'true');
+
+    // Force iframe to have a proper stacking context for controls
+    iframe.style.zIndex = '1';
+    iframe.style.position = 'relative';
+
+    // Special handling for vidsrc.ru to ensure fullscreen button visibility on mobile
+    if (embedURL.includes('vidsrc.su') || embedURL.includes('vidsrc.ru')) {
+        if (window.innerWidth <= 740) {
+            iframe.style.marginBottom = '35px';
+            // Add a slight padding to ensure controls are visible
+            iframe.style.paddingBottom = '35px';
+        }
+    }
     // Setup fallback chain on error
     let currentIndex = serverFallbackChain.indexOf(server);
     iframe.onerror = () => {
@@ -362,7 +377,22 @@ function playEpisode(tvId, seasonNumber, episodeNumber) {
         iframe.setAttribute('playsinline', '');
         iframe.setAttribute('webkit-playsinline', 'true');
         iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen');
-        iframe.setAttribute('allowfullscreen', '');
+        iframe.setAttribute('allowfullscreen', 'true');
+        iframe.setAttribute('webkitallowfullscreen', 'true');
+        iframe.setAttribute('mozallowfullscreen', 'true');
+
+        // Force iframe to have a proper stacking context for controls
+        iframe.style.zIndex = '1';
+        iframe.style.position = 'relative';
+
+        // Special handling for vidsrc.ru to ensure fullscreen button visibility on mobile
+        if (embedURL.includes('vidsrc.su') || embedURL.includes('vidsrc.ru')) {
+            if (window.innerWidth <= 740) {
+                iframe.style.marginBottom = '35px';
+                // Add a slight padding to ensure controls are visible
+                iframe.style.paddingBottom = '35px';
+            }
+        }
         // Setup fallback chain on error for episodes
         let epIndex = serverFallbackChain.indexOf(server);
         iframe.onerror = () => {
@@ -491,17 +521,18 @@ function initServerDropdown() {
 
     if (!serverDropdownHeader) return; // Exit if elements don't exist
 
-    // Show dropdown immediately when clicking the header (no toggle)
+    // Toggle dropdown when clicking the header
     serverDropdownHeader.addEventListener('click', function(event) {
         event.stopPropagation();
-        // Always show dropdown when clicked (no toggle)
-        serverDropdownContent.classList.add('show');
-        serverDropdownHeader.classList.add('active');
-        dropdownArrow.classList.add('up');
+        serverDropdownContent.classList.toggle('show');
+        serverDropdownHeader.classList.toggle('active');
+        dropdownArrow.classList.toggle('up');
 
         // Prevent page scrolling when dropdown is open
-        // Save current scroll position
-        window.dropdownScrollPos = window.scrollY;
+        if (serverDropdownContent.classList.contains('show')) {
+            // Save current scroll position
+            window.dropdownScrollPos = window.scrollY;
+        }
     });
 
     // Close dropdown when clicking outside
@@ -578,7 +609,7 @@ window.addEventListener('load', function() {
     // Set a default server if none is selected
     const serverSelect = document.getElementById('server');
     if (serverSelect && !serverSelect.value) {
-        serverSelect.value = "vidlink.pro";
+        serverSelect.value = "vidsrc.su";  // Default to vidsrc.su instead
     }
 
     // Initialize server dropdown

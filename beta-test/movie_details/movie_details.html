@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <meta name="description" content="Get detailed information about movies and TV shows on FreeFlix. View ratings, cast, trailers, synopsis and add titles to your watchlist.">
     <meta name="keywords" content="movie details, TV show details, anime details, movie info, cast, ratings, synopsis, trailer, FreeFlix, streaming info">
 
@@ -60,6 +60,34 @@
             p, h1, h2, h3, h4, h5, h6, span, div {
                 overflow-wrap: break-word;
                 word-wrap: break-word;
+            }
+
+            /* Ensure fullscreen button is visible on vidsrc.ru and similar providers */
+            #iframe, iframe {
+                padding-bottom: 30px !important; /* Add space below the iframe for the fullscreen button */
+                z-index: 1;
+                position: relative !important;
+                margin-bottom: 30px !important; /* Extra space for controls */
+            }
+
+            /* Enhanced visibility for vidsrc.ru fullscreen controls */
+            iframe[src*="vidsrc.ru"], iframe[src*="vidsrc.su"] {
+                padding-bottom: 40px !important;
+                margin-bottom: 40px !important;
+                min-height: 220px;
+            }
+
+            /* Ensure controls are visible on embeds */
+            .plyr, .jw-player, .video-js, .vjs-controls {
+                z-index: 10 !important;
+                overflow: visible !important;
+            }
+
+            /* Fix for controls being cut off */
+            .plyr__controls, .jw-controlbar, .vjs-control-bar {
+                visibility: visible !important;
+                opacity: 1 !important;
+                z-index: 100 !important;
             }
         }
     </style>

@@ -823,6 +823,12 @@ p {
         padding: 4px 8px;
         font-size: 12px;
     }
+
+    /* Specific fix for vidsrc.ru fullscreen button on mobile */
+    iframe {
+        min-height: 220px !important;
+        margin-bottom: 35px !important; /* Extra space for controls */
+    }
 }
 
 /* ----Media Queries---- */
@@ -873,6 +879,11 @@ p {
         width: 100%;
         margin: 0 auto 15px auto;
         box-sizing: border-box;
+        /* Fix for fullscreen button visibility in mobile */
+        max-width: 100% !important;
+        /* Ensure fullscreen button is not cut off */
+        position: relative;
+        z-index: 1;
     }
 
     /* Season container adjustments */
