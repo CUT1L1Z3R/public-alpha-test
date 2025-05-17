@@ -8,6 +8,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Fix for Safari/mobile scrolling issues with genre dropdown
     let genreDropdownVisible = false;
 
+    // Set the active navigation item based on the current page
+    const currentPath = window.location.pathname;
+    const currentHref = window.location.href;
+    const isMoviesPage = currentPath.includes('/movies/') || currentHref.includes('/movies/');
+    const isTVShowsPage = currentPath.includes('/tvshows/') || currentHref.includes('/tvshows/');
+    const isAnimePage = currentPath.includes('/anime/') || currentHref.includes('/anime/');
+
     // Global handler to ensure dropdown content stays visible when scrolling
     function fixVisibility(e) {
         // Check if dropdown is visible
@@ -24,46 +31,106 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Function to initialize dropdown references and ensure they work on every page
+    // Function to initialize the genre dropdown
     function initializeGenreDropdown() {
-        // Close any existing dropdowns
-        const existingDropdown = document.getElementById('genre-dropdown');
-        if (existingDropdown) {
-            existingDropdown.remove();
-            document.body.classList.remove('dropdown-active');
-            genreDropdownVisible = false;
-        }
-
         // Find the genre dropdown link
-        const genreLink = document.querySelector('.nav-item.dropdown a[data-section="genres"]');
-        if (genreLink) {
-            // Make sure old dropdown content is hidden
-            const oldDropdownContent = genreLink.nextElementSibling;
-            if (oldDropdownContent && oldDropdownContent.classList.contains('dropdown-content')) {
-                oldDropdownContent.style.display = 'none';
-                oldDropdownContent.style.opacity = '0';
-                oldDropdownContent.style.pointerEvents = 'none';
+        const genreItems = document.querySelectorAll('.nav-item.dropdown');
+        genreItems.forEach(item => {
+            const link = item.querySelector('a[data-section="genres"]');
+            if (link) {
+                // Remove existing event listeners (to avoid duplicates)
+                const newLink = link.cloneNode(true);
+                if (link.parentNode) {
+                    link.parentNode.replaceChild(newLink, link);
+                }
+
+                // Add click event to the genre link
+                newLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    // Handle dropdown creation
+                    toggleGenreDropdown();
+                });
+
+                // Hide the original dropdown for compatibility
+                const oldDropdown = item.querySelector('.dropdown-content');
+                if (oldDropdown) {
+                    oldDropdown.style.display = 'none';
+                    oldDropdown.style.opacity = '0';
+                    oldDropdown.style.pointerEvents = 'none';
+                }
             }
-        }
+        });
     }
 
-    // Run initialization on page load
-    initializeGenreDropdown();
+    // Function to toggle the dropdown visibility
+    function toggleGenreDropdown() {
+        let genreDropdown = document.getElementById('genre-dropdown');
 
-    // Add global event listeners to fix visibility
-    ['scroll', 'touchmove', 'touchstart', 'touchend', 'resize'].forEach(eventType => {
-        document.addEventListener(eventType, fixVisibility, { passive: true });
-    });
+        // If dropdown exists and is visible, hide it
+        if (genreDropdown && genreDropdown.style.display === 'block') {
+            genreDropdown.style.display = 'none';
+            document.body.classList.remove('dropdown-active');
+            genreDropdownVisible = false;
+            return;
+        }
 
-    // Handle mobile navigation menu
-    const navItems = document.querySelectorAll('.nav-item');
+        // Remove any existing dropdown
+        if (genreDropdown) {
+            genreDropdown.remove();
+        }
 
-    // Set the active navigation item based on the current page
-    const currentPath = window.location.pathname;
-    const currentHref = window.location.href;
-    const isMoviesPage = currentPath.includes('/movies/') || currentHref.includes('/movies/');
-    const isTVShowsPage = currentPath.includes('/tvshows/') || currentHref.includes('/tvshows/');
-    const isAnimePage = currentPath.includes('/anime/') || currentHref.includes('/anime/');
+        // Create and append the dropdown
+        genreDropdown = createGenreDropdown();
+        document.body.appendChild(genreDropdown);
+
+        // Show the dropdown
+        genreDropdown.style.display = 'block';
+        document.body.classList.add('dropdown-active');
+        genreDropdownVisible = true;
+
+        // Add click events to all links in the dropdown
+        setupGenreDropdownLinks(genreDropdown);
+
+        // Set up outside click to close the dropdown
+        setupOutsideClickHandler();
+    }
+
+    // Function to set up the dropdown links
+    function setupGenreDropdownLinks(genreDropdown) {
+        const genreLinks = genreDropdown.querySelectorAll('a');
+        genreLinks.forEach(genreLink => {
+            genreLink.addEventListener('click', function() {
+                // Hide the dropdown when a link is clicked
+                genreDropdown.style.display = 'none';
+                document.body.classList.remove('dropdown-active');
+                genreDropdownVisible = false;
+            });
+        });
+    }
+
+    // Function to set up outside click handler
+    function setupOutsideClickHandler() {
+        setTimeout(() => {
+            const closeDropdown = function(event) {
+                const genreDropdown = document.getElementById('genre-dropdown');
+                const genreLink = document.querySelector('.nav-item.dropdown a[data-section="genres"]');
+
+                if (genreDropdown && !genreDropdown.contains(event.target) &&
+                    genreLink && !genreLink.contains(event.target)) {
+                    genreDropdown.style.display = 'none';
+                    document.body.classList.remove('dropdown-active');
+                    document.removeEventListener('click', closeDropdown);
+                    document.removeEventListener('touchend', closeDropdown);
+                    genreDropdownVisible = false;
+                }
+            };
+
+            document.addEventListener('click', closeDropdown);
+            document.addEventListener('touchend', closeDropdown);
+        }, 100);
+    }
 
     // Replace the existing dropdown implementation with a more mobile-friendly approach
     // that doesn't suffer from the scrolling visibility issues
@@ -229,54 +296,37 @@ document.addEventListener('DOMContentLoaded', function() {
                 { title: 'Drama', url: '/genre/index.html?genre=drama&type=tv' },
                 { title: 'Comedy', url: '/genre/index.html?genre=comedy&type=tv' },
                 { title: 'Crime', url: '/genre/index.html?genre=crime&type=tv' },
-                { title: 'Action & Adventure', url: '/genre/index.html?genre=action-adventure&type=tv' },
                 { title: 'Mystery', url: '/genre/index.html?genre=mystery&type=tv' },
-                { title: 'Animation', url: '/genre/index.html?genre=animation&type=tv' },
-                { title: 'Reality TV', url: '/genre/index.html?genre=reality&type=tv' },
+                { title: 'Action', url: '/genre/index.html?genre=action&type=tv' },
                 { title: 'Sci-Fi', url: '/genre/index.html?genre=science-fiction&type=tv' },
+                { title: 'Fantasy', url: '/genre/index.html?genre=fantasy&type=tv' },
+                { title: 'Adventure', url: '/genre/index.html?genre=adventure&type=tv' },
+                { title: 'Family', url: '/genre/index.html?genre=family&type=tv' },
+                { title: 'Animation', url: '/genre/index.html?genre=animation&type=tv' },
                 { title: 'Documentary', url: '/genre/index.html?genre=documentary&type=tv' },
-                { title: 'Western', url: '/genre/index.html?genre=western&type=tv' }
+                { title: 'War', url: '/genre/index.html?genre=war&type=tv' }
             ],
             'ANIME': [
                 { title: 'Action', url: '/genre/index.html?genre=action&type=anime' },
                 { title: 'Adventure', url: '/genre/index.html?genre=adventure&type=anime' },
                 { title: 'Comedy', url: '/genre/index.html?genre=comedy&type=anime' },
                 { title: 'Drama', url: '/genre/index.html?genre=drama&type=anime' },
-                { title: 'Romance', url: '/genre/index.html?genre=romance&type=anime' },
                 { title: 'Fantasy', url: '/genre/index.html?genre=fantasy&type=anime' },
-                { title: 'Sci-Fi', url: '/genre/index.html?genre=sci-fi&type=anime' },
                 { title: 'Horror', url: '/genre/index.html?genre=horror&type=anime' },
+                { title: 'Romance', url: '/genre/index.html?genre=romance&type=anime' },
+                { title: 'Sci-Fi', url: '/genre/index.html?genre=science-fiction&type=anime' },
+                { title: 'Slice of Life', url: '/genre/index.html?genre=slice-of-life&type=anime' },
+                { title: 'Sports', url: '/genre/index.html?genre=sports&type=anime' },
+                { title: 'Supernatural', url: '/genre/index.html?genre=supernatural&type=anime' },
                 { title: 'Mystery', url: '/genre/index.html?genre=mystery&type=anime' }
             ]
         };
 
-        // Create sections for each category
+        // Add category sections
         Object.keys(genreCategories).forEach(category => {
-            // Section
             const section = document.createElement('div');
-            section.style.marginBottom = '20px';
-            section.style.background = 'rgba(30, 30, 30, 0.6)';
-            section.style.borderRadius = '12px';
-            section.style.border = '1px solid rgba(141, 22, 201, 0.2)';
-            section.style.padding = '10px';
-
-            if (window.innerWidth > 768) {
-                // Desktop specific styling - keep desktop layout unchanged
-                section.style.width = '100%';
-                section.style.maxWidth = '300px';
-                section.style.minWidth = '250px';
-            } else if (window.innerWidth > 480) {
-                // Tablet specific styling
-                section.style.width = '100%';
-                section.style.minWidth = '220px';
-                section.style.maxWidth = '100%';
-                section.style.boxSizing = 'border-box';
-            } else {
-                // Mobile phone specific styling - improved layout
-                section.style.width = '100%';
-                section.style.boxSizing = 'border-box';
-                section.style.marginBottom = '10px'; // Reduced margin for phones
-            }
+            section.className = 'dropdown-section';
+            section.style.marginBottom = '25px';
 
             // Category header
             const header = document.createElement('h4');
@@ -330,14 +380,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 link.onmouseout = function() {
                     this.style.background = 'rgba(30, 30, 30, 0.4)';
                     this.style.transform = 'translateX(0)';
+                    this.style.transition = 'all 0.2s ease';
                 };
-
-                // Active state based on current URL parameters
-                const currentURL = window.location.href;
-                if (currentURL.includes(link.href)) {
-                    link.style.background = 'linear-gradient(45deg, rgba(141, 22, 201, 0.7) 0%, rgba(164, 57, 207, 0.7) 100%)';
-                    link.style.fontWeight = 'bold';
-                }
 
                 item.appendChild(link);
                 list.appendChild(item);
@@ -347,26 +391,13 @@ document.addEventListener('DOMContentLoaded', function() {
             content.appendChild(section);
         });
 
-        dropdown.appendChild(closeBtn);
         dropdown.appendChild(title);
+        dropdown.appendChild(closeBtn);
         dropdown.appendChild(content);
-        document.body.appendChild(dropdown);
 
-        // Add CSS for overlay
+        // Add animation styles
         const styleElement = document.createElement('style');
         styleElement.textContent = `
-            body.dropdown-active::after {
-                content: '';
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.7);
-                backdrop-filter: blur(3px);
-                z-index: 9998;
-            }
-
             @keyframes dropdownFadeIn {
                 from {
                     opacity: 0;
@@ -387,7 +418,15 @@ document.addEventListener('DOMContentLoaded', function() {
         return dropdown;
     }
 
-    // Fix navigation links to handle Cloudflare Pages routing
+    // Add global event listeners to fix visibility
+    ['scroll', 'touchmove', 'touchstart', 'touchend', 'resize'].forEach(eventType => {
+        document.addEventListener(eventType, fixVisibility, { passive: true });
+    });
+
+    // Handle mobile navigation menu
+    const navItems = document.querySelectorAll('.nav-item');
+
+    // Add active class to the appropriate navigation item
     navItems.forEach(item => {
         const link = item.querySelector('a');
         const href = link.getAttribute('href');
@@ -405,72 +444,8 @@ document.addEventListener('DOMContentLoaded', function() {
             item.classList.add('active');
         }
 
-        // Add special handling for genre dropdown
-        if (section === 'genres') {
-            // Handle dropdown toggling on click for both mobile and desktop
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-
-                // Create or toggle the dropdown genre menu
-                let genreDropdown = document.getElementById('genre-dropdown');
-
-                // Always remove existing dropdown to ensure fresh creation
-                if (genreDropdown) {
-                    genreDropdown.remove();
-                    document.body.classList.remove('dropdown-active');
-                    genreDropdownVisible = false;
-                }
-
-                // Create a new dropdown
-                genreDropdown = createGenreDropdown();
-                document.body.appendChild(genreDropdown);
-                genreDropdownVisible = true;
-                document.body.classList.add('dropdown-active');
-
-                    genreDropdownVisible = true;
-                    document.body.classList.add('dropdown-active');
-
-                    // Add click events to all links within the dropdown
-                    // This ensures they work correctly on each page
-                    const genreLinks = genreDropdown.querySelectorAll('a');
-                    genreLinks.forEach(genreLink => {
-                        genreLink.addEventListener('click', function(ge) {
-                            // Don't prevent default - let the link work
-                            // But hide the dropdown
-                            genreDropdown.style.display = 'none';
-                            document.body.classList.remove('dropdown-active');
-                            genreDropdownVisible = false;
-                        });
-                    });
-
-                    // Outside click to close dropdown
-                    setTimeout(() => {
-                        const closeDropdown = function(event) {
-                            if (!genreDropdown.contains(event.target) && !link.contains(event.target)) {
-                                genreDropdown.style.display = 'none';
-                                document.body.classList.remove('dropdown-active');
-                                document.removeEventListener('click', closeDropdown);
-                                document.removeEventListener('touchend', closeDropdown);
-                                genreDropdownVisible = false;
-                            }
-                        };
-                        document.addEventListener('click', closeDropdown);
-                        document.addEventListener('touchend', closeDropdown);
-                    }, 100);
-                }
-            });
-
-            // Handle existing dropdown menu for backward compatibility
-            const dropdown = link.nextElementSibling;
-            if (dropdown && dropdown.classList.contains('dropdown-content')) {
-                // We'll keep this element in the DOM but hidden, as it might contain important data
-                dropdown.style.display = 'none';
-                dropdown.style.opacity = '0';
-                dropdown.style.pointerEvents = 'none';
-            }
-        } else {
-            // Enhance navigation with error handling
+        // Enhance navigation with error handling
+        if (section !== 'genres') {
             link.addEventListener('click', function(e) {
                 // Check if we're already on this page - prevent navigation to avoid the error
                 const isIndexPage = currentPath === '/' || currentPath.endsWith('/index.html') || currentPath === '';
@@ -533,25 +508,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Fix for iOS Safari bounce effect
-    document.body.addEventListener('touchmove', function(e) {
-        const genreDropdown = document.getElementById('genre-dropdown');
-        if (genreDropdown && genreDropdown.style.display === 'block' && e.target.closest('#genre-dropdown')) {
-            // If we're in the dropdown and scrolling, prevent body scrolling
-            e.stopPropagation();
-        } else if (e.target.closest('.movie-container')) {
-            e.stopPropagation();
-        }
-    }, { passive: true });
-
-    // Add smooth scrolling to all links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-
-            document.querySelector(this.getAttribute('href')).scrollIntoView({
-                behavior: 'smooth'
-            });
-        });
-    });
+    // Initialize genre dropdown functionality
+    initializeGenreDropdown();
 });
