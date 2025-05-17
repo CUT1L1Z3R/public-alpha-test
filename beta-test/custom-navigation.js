@@ -38,12 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
         dropdown.id = 'genre-dropdown';
 
         // Different styling for desktop vs mobile
-        const isMobile = window.innerWidth <= 768;
-
-        if (isMobile) {
-            // Mobile styling - full screen overlay using classes
-            dropdown.classList.add('mobile-view');
-        } else {
+        if (window.innerWidth > 768) {
             // Desktop styling - more like the original design
             dropdown.style.position = 'fixed';
             dropdown.style.top = '50%';
@@ -65,49 +60,52 @@ document.addEventListener('DOMContentLoaded', function() {
             dropdown.style.overflowY = 'auto';
             dropdown.style.maxHeight = '85vh';
             dropdown.style.webkitOverflowScrolling = 'touch';
+        } else {
+            // Mobile styling - full screen overlay
+            dropdown.style.position = 'fixed';
+            dropdown.style.top = '0';
+            dropdown.style.left = '0';
+            dropdown.style.width = '100%';
+            dropdown.style.height = '100%';
+            dropdown.style.backgroundColor = 'rgba(0, 0, 0, 0.95)';
+            dropdown.style.zIndex = '9999';
+            dropdown.style.overflowY = 'scroll';
+            dropdown.style.display = 'block';
+            dropdown.style.padding = '20px';
+            dropdown.style.boxSizing = 'border-box';
         }
 
         // Create title with responsive styling
         const title = document.createElement('h3');
         title.textContent = 'Browse by Genre';
+        title.style.color = 'rgb(164, 57, 207)';
+        title.style.fontSize = window.innerWidth > 768 ? '22px' : '20px';
+        title.style.textAlign = 'center';
+        title.style.marginBottom = '20px';
+        title.style.background = 'linear-gradient(90deg, rgba(164, 57, 207, 1) 0%, rgba(141, 22, 201, 1) 100%)';
+        title.style.webkitBackgroundClip = 'text';
+        title.style.webkitTextFillColor = 'transparent';
+        title.style.backgroundClip = 'text';
+        title.style.fontWeight = '600';
 
-        if (isMobile) {
-            title.className = 'genre-title';
-        } else {
-            title.style.color = 'rgb(164, 57, 207)';
-            title.style.fontSize = '22px';
-            title.style.textAlign = 'center';
-            title.style.marginBottom = '20px';
-            title.style.background = 'linear-gradient(90deg, rgba(164, 57, 207, 1) 0%, rgba(141, 22, 201, 1) 100%)';
-            title.style.webkitBackgroundClip = 'text';
-            title.style.webkitTextFillColor = 'transparent';
-            title.style.backgroundClip = 'text';
-            title.style.fontWeight = '600';
-        }
-
-        // Close button (using the close-btn class for mobile)
+        // Close button
         const closeBtn = document.createElement('button');
         closeBtn.innerHTML = '&times;';
-
-        if (isMobile) {
-            closeBtn.className = 'close-btn';
-        } else {
-            closeBtn.style.position = 'absolute';
-            closeBtn.style.top = '15px';
-            closeBtn.style.right = '15px';
-            closeBtn.style.backgroundColor = 'rgba(30, 30, 30, 0.7)';
-            closeBtn.style.border = '1px solid rgba(141, 22, 201, 0.3)';
-            closeBtn.style.color = 'rgba(255,255,255,0.9)';
-            closeBtn.style.fontSize = '24px';
-            closeBtn.style.cursor = 'pointer';
-            closeBtn.style.width = '32px';
-            closeBtn.style.height = '32px';
-            closeBtn.style.display = 'flex';
-            closeBtn.style.alignItems = 'center';
-            closeBtn.style.justifyContent = 'center';
-            closeBtn.style.borderRadius = '50%';
-            closeBtn.style.zIndex = '1001';
-        }
+        closeBtn.style.position = 'absolute';
+        closeBtn.style.top = window.innerWidth > 768 ? '15px' : '20px';
+        closeBtn.style.right = window.innerWidth > 768 ? '15px' : '20px';
+        closeBtn.style.backgroundColor = 'rgba(30, 30, 30, 0.7)';
+        closeBtn.style.border = '1px solid rgba(141, 22, 201, 0.3)';
+        closeBtn.style.color = 'rgba(255,255,255,0.9)';
+        closeBtn.style.fontSize = '24px';
+        closeBtn.style.cursor = 'pointer';
+        closeBtn.style.width = '32px';
+        closeBtn.style.height = '32px';
+        closeBtn.style.display = 'flex';
+        closeBtn.style.alignItems = 'center';
+        closeBtn.style.justifyContent = 'center';
+        closeBtn.style.borderRadius = '50%';
+        closeBtn.style.zIndex = '1001';
 
         closeBtn.onclick = function(e) {
             e.preventDefault();
@@ -117,34 +115,37 @@ document.addEventListener('DOMContentLoaded', function() {
             genreDropdownVisible = false;
         };
 
-        if (!isMobile) {
-            // Hover effect for close button (desktop only)
-            closeBtn.onmouseover = function() {
-                this.style.color = '#fff';
-                this.style.backgroundColor = 'rgba(141, 22, 201, 0.8)';
-                this.style.transform = 'scale(1.1) rotate(90deg)';
-                this.style.boxShadow = '0 4px 12px rgba(141, 22, 201, 0.5)';
-            };
+        // Hover effect for close button
+        closeBtn.onmouseover = function() {
+            this.style.color = '#fff';
+            this.style.backgroundColor = 'rgba(141, 22, 201, 0.8)';
+            this.style.transform = 'scale(1.1) rotate(90deg)';
+            this.style.boxShadow = '0 4px 12px rgba(141, 22, 201, 0.5)';
+        };
 
-            closeBtn.onmouseout = function() {
-                this.style.color = 'rgba(255,255,255,0.9)';
-                this.style.backgroundColor = 'rgba(30, 30, 30, 0.7)';
-                this.style.transform = 'scale(1) rotate(0)';
-                this.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)';
-            };
-        }
+        closeBtn.onmouseout = function() {
+            this.style.color = 'rgba(255,255,255,0.9)';
+            this.style.backgroundColor = 'rgba(30, 30, 30, 0.7)';
+            this.style.transform = 'scale(1) rotate(0)';
+            this.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)';
+        };
 
         // Content container
         const content = document.createElement('div');
-        content.className = isMobile ? 'content' : '';
+        content.style.width = '100%';
 
-        if (!isMobile) {
+        if (window.innerWidth > 768) {
             // Desktop: 3-column grid layout
-            content.style.width = '100%';
             content.style.display = 'grid';
             content.style.gridTemplateColumns = 'repeat(3, 1fr)';
             content.style.gap = '30px';
             content.style.justifyItems = 'center';
+        } else {
+            // Mobile: single column with adaptive width
+            content.style.padding = '0 10px';
+            content.style.maxWidth = '100%';
+            content.style.width = '100%';
+            content.style.margin = '0 auto';
         }
 
         // Genre categories
@@ -192,80 +193,72 @@ document.addEventListener('DOMContentLoaded', function() {
         Object.keys(genreCategories).forEach(category => {
             // Section
             const section = document.createElement('div');
-            section.className = isMobile ? 'genre-section' : '';
+            section.style.marginBottom = '20px';
+            section.style.background = 'rgba(30, 30, 30, 0.6)';
+            section.style.borderRadius = '12px';
+            section.style.border = '1px solid rgba(141, 22, 201, 0.2)';
+            section.style.padding = '10px';
 
-            if (!isMobile) {
-                section.style.marginBottom = '20px';
-                section.style.background = 'rgba(30, 30, 30, 0.6)';
-                section.style.borderRadius = '12px';
-                section.style.border = '1px solid rgba(141, 22, 201, 0.2)';
-                section.style.padding = '10px';
+            if (window.innerWidth > 768) {
+                // Desktop specific styling - keep desktop layout unchanged
                 section.style.width = '100%';
                 section.style.maxWidth = '300px';
                 section.style.minWidth = '250px';
+            } else {
+                // Mobile specific styling - fix the width issue
+                section.style.width = '100%';
+                section.style.boxSizing = 'border-box';
             }
 
             // Category header
             const header = document.createElement('h4');
             header.textContent = category;
-
-            if (!isMobile) {
-                header.style.color = 'rgb(164, 57, 207)';
-                header.style.fontSize = '18px';
-                header.style.textAlign = 'center';
-                header.style.marginBottom = '10px';
-                header.style.background = 'linear-gradient(90deg, #a710e0 0%, #8a14ca 100%)';
-                header.style.webkitBackgroundClip = 'text';
-                header.style.webkitTextFillColor = 'transparent';
-                header.style.backgroundClip = 'text';
-                header.style.fontWeight = '600';
-                header.style.borderBottom = '1px solid rgba(141, 22, 201, 0.4)';
-                header.style.paddingBottom = '5px';
-            }
+            header.style.color = 'rgb(164, 57, 207)';
+            header.style.fontSize = '18px';
+            header.style.textAlign = 'center';
+            header.style.marginBottom = '10px';
+            header.style.background = 'linear-gradient(90deg, #a710e0 0%, #8a14ca 100%)';
+            header.style.webkitBackgroundClip = 'text';
+            header.style.webkitTextFillColor = 'transparent';
+            header.style.backgroundClip = 'text';
+            header.style.fontWeight = '600';
+            header.style.borderBottom = '1px solid rgba(141, 22, 201, 0.4)';
+            header.style.paddingBottom = '5px';
 
             section.appendChild(header);
 
             // Genre list
             const list = document.createElement('ul');
-
-            if (!isMobile) {
-                list.style.listStyle = 'none';
-                list.style.padding = '0';
-                list.style.margin = '0';
-            }
+            list.style.listStyle = 'none';
+            list.style.padding = '0';
+            list.style.margin = '0';
 
             genreCategories[category].forEach(genre => {
                 const item = document.createElement('li');
-
-                if (!isMobile) {
-                    item.style.margin = '8px 0';
-                }
+                item.style.margin = '8px 0';
 
                 const link = document.createElement('a');
                 link.href = genre.url;
                 link.textContent = genre.title;
+                link.style.color = '#fff';
+                link.style.display = 'block';
+                link.style.textDecoration = 'none';
+                link.style.padding = '8px 10px';
+                link.style.borderRadius = '8px';
+                link.style.borderLeft = '3px solid rgba(141, 22, 201, 0.4)';
+                link.style.background = 'rgba(30, 30, 30, 0.4)';
 
-                if (!isMobile) {
-                    link.style.color = '#fff';
-                    link.style.display = 'block';
-                    link.style.textDecoration = 'none';
-                    link.style.padding = '8px 10px';
-                    link.style.borderRadius = '8px';
-                    link.style.borderLeft = '3px solid rgba(141, 22, 201, 0.4)';
-                    link.style.background = 'rgba(30, 30, 30, 0.4)';
+                // Hover effect
+                link.onmouseover = function() {
+                    this.style.background = 'linear-gradient(45deg, rgba(141, 22, 201, 0.7) 0%, rgba(164, 57, 207, 0.7) 100%)';
+                    this.style.transform = 'translateX(5px)';
+                    this.style.transition = 'all 0.2s ease';
+                };
 
-                    // Hover effect
-                    link.onmouseover = function() {
-                        this.style.background = 'linear-gradient(45deg, rgba(141, 22, 201, 0.7) 0%, rgba(164, 57, 207, 0.7) 100%)';
-                        this.style.transform = 'translateX(5px)';
-                        this.style.transition = 'all 0.2s ease';
-                    };
-
-                    link.onmouseout = function() {
-                        this.style.background = 'rgba(30, 30, 30, 0.4)';
-                        this.style.transform = 'translateX(0)';
-                    };
-                }
+                link.onmouseout = function() {
+                    this.style.background = 'rgba(30, 30, 30, 0.4)';
+                    this.style.transform = 'translateX(0)';
+                };
 
                 item.appendChild(link);
                 list.appendChild(item);
@@ -280,7 +273,7 @@ document.addEventListener('DOMContentLoaded', function() {
         dropdown.appendChild(content);
         document.body.appendChild(dropdown);
 
-        // Add CSS for overlay and mobile view
+        // Add CSS for overlay
         const styleElement = document.createElement('style');
         styleElement.textContent = `
             body.dropdown-active::after {
@@ -308,108 +301,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
             #genre-dropdown {
                 animation: dropdownFadeIn 0.3s ease forwards;
-            }
-
-            /* Mobile view styles for genre dropdown */
-            #genre-dropdown.mobile-view {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100vw;
-                height: 100vh;
-                background: rgba(0,0,0,0.95);
-                z-index: 9999;
-                overflow-y: auto;
-                display: block;
-                padding: 0;
-                box-sizing: border-box;
-            }
-            #genre-dropdown.mobile-view .close-btn {
-                position: absolute;
-                top: 18px;
-                right: 18px;
-                background: rgba(30,30,30,0.7);
-                border: 1px solid rgba(141,22,201,0.3);
-                color: #fff;
-                font-size: 32px;
-                width: 44px;
-                height: 44px;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                z-index: 1001;
-                cursor: pointer;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-                transition: background 0.2s, color 0.2s, transform 0.2s;
-            }
-            #genre-dropdown.mobile-view .close-btn:active {
-                background: rgba(141,22,201,0.8);
-                color: #fff;
-                transform: scale(1.1) rotate(90deg);
-            }
-            #genre-dropdown.mobile-view .genre-title {
-                color: rgb(164, 57, 207);
-                font-size: 20px;
-                text-align: center;
-                margin: 32px 0 18px 0;
-                background: linear-gradient(90deg, rgba(164, 57, 207, 1) 0%, rgba(141, 22, 201, 1) 100%);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                background-clip: text;
-                font-weight: 600;
-                letter-spacing: 0.5px;
-            }
-            #genre-dropdown.mobile-view .content {
-                width: 100%;
-                max-width: 500px;
-                margin: 0 auto;
-                padding: 0 10px 30px 10px;
-                box-sizing: border-box;
-            }
-            #genre-dropdown.mobile-view .genre-section {
-                margin-bottom: 22px;
-                background: rgba(30,30,30,0.7);
-                border-radius: 12px;
-                border: 1px solid rgba(141,22,201,0.18);
-                padding: 10px 0 10px 0;
-            }
-            #genre-dropdown.mobile-view .genre-section h4 {
-                color: rgb(164, 57, 207);
-                font-size: 17px;
-                text-align: center;
-                margin-bottom: 10px;
-                background: linear-gradient(90deg, #a710e0 0%, #8a14ca 100%);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                background-clip: text;
-                font-weight: 600;
-                border-bottom: 1px solid rgba(141,22,201,0.22);
-                padding-bottom: 5px;
-                letter-spacing: 0.2px;
-            }
-            #genre-dropdown.mobile-view .genre-section ul {
-                list-style: none;
-                padding: 0;
-                margin: 0;
-            }
-            #genre-dropdown.mobile-view .genre-section li {
-                margin: 7px 0;
-            }
-            #genre-dropdown.mobile-view .genre-section a {
-                color: #fff;
-                display: block;
-                text-decoration: none;
-                padding: 10px 12px;
-                border-radius: 8px;
-                border-left: 3px solid rgba(141,22,201,0.32);
-                background: rgba(30,30,30,0.4);
-                font-size: 16px;
-                transition: background 0.18s, transform 0.18s;
-            }
-            #genre-dropdown.mobile-view .genre-section a:active {
-                background: linear-gradient(45deg, rgba(141,22,201,0.7) 0%, rgba(164,57,207,0.7) 100%);
-                transform: translateX(5px);
             }
         `;
         document.head.appendChild(styleElement);
