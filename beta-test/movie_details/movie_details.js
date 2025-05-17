@@ -491,18 +491,17 @@ function initServerDropdown() {
 
     if (!serverDropdownHeader) return; // Exit if elements don't exist
 
-    // Toggle dropdown when clicking the header
+    // Show dropdown immediately when clicking the header (no toggle)
     serverDropdownHeader.addEventListener('click', function(event) {
         event.stopPropagation();
-        serverDropdownContent.classList.toggle('show');
-        serverDropdownHeader.classList.toggle('active');
-        dropdownArrow.classList.toggle('up');
+        // Always show dropdown when clicked (no toggle)
+        serverDropdownContent.classList.add('show');
+        serverDropdownHeader.classList.add('active');
+        dropdownArrow.classList.add('up');
 
         // Prevent page scrolling when dropdown is open
-        if (serverDropdownContent.classList.contains('show')) {
-            // Save current scroll position
-            window.dropdownScrollPos = window.scrollY;
-        }
+        // Save current scroll position
+        window.dropdownScrollPos = window.scrollY;
     });
 
     // Close dropdown when clicking outside
