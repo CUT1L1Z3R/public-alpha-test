@@ -62,10 +62,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         genreDropdown.style.width = window.innerWidth <= 480 ? '75%' : '75%'; // Reduced mobile width to 75%
                         genreDropdown.style.maxWidth = '320px'; // Further reduced max width for mobile
                         genreDropdown.style.maxHeight = '80vh';
-                        genreDropdown.style.overflowY = 'auto';
+                        genreDropdown.style.overflowY = 'scroll'; // Changed from 'auto' to 'scroll'
                         genreDropdown.style.zIndex = '9999';
                         genreDropdown.style.marginRight = '20px'; // Increased right margin for more space
                         genreDropdown.style.marginLeft = '10px'; // Reduced left margin
+                        genreDropdown.style.webkitOverflowScrolling = 'touch'; // For smoother scrolling on iOS
+                        genreDropdown.style.overscrollBehaviorY = 'contain'; // Prevent scroll propagation
                     } else {
                         // Desktop positioning - below genre link and centered
                         const rect = link.getBoundingClientRect();
@@ -79,6 +81,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         genreDropdown.style.display = 'flex';
                         genreDropdown.style.flexDirection = 'column';
                         genreDropdown.style.alignItems = 'center';
+                        genreDropdown.style.overflowY = 'scroll'; // Added to ensure content is scrollable
+                        genreDropdown.style.maxHeight = '80vh'; // Limit height to 80% of viewport
+                        genreDropdown.style.webkitOverflowScrolling = 'touch'; // Smooth scrolling
+                        genreDropdown.style.overscrollBehaviorY = 'contain'; // Prevent scroll propagation
                     }
 
                     // Add dark overlay when dropdown is shown
@@ -171,6 +177,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 const container = document.createElement('div');
                 container.className = 'genre-dropdown-container';
                 container.style.display = 'grid';
+                container.style.position = 'relative'; // Add position relative
+                container.style.overflowY = 'visible'; // Ensure content is visible
+                container.style.minHeight = 'min-content'; // Ensure minimum height based on content
 
                 // Updated genre categories based on the user's specifications
                 const genreCategories = {
@@ -277,15 +286,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     const categoryHeader = document.createElement('h4');
                     categoryHeader.textContent = category.toUpperCase();
                     categoryHeader.style.color = '#FFFFFF';
-
-                    // Special handling for Anime category to prevent text from disappearing
-                    if (category === 'Anime') {
-                        categoryColumn.style.webkitTransform = 'translateZ(0)';
-                        categoryColumn.style.transform = 'translateZ(0)';
-                        categoryColumn.style.webkitBackfaceVisibility = 'hidden';
-                        categoryColumn.style.backfaceVisibility = 'hidden';
-                        categoryColumn.style.willChange = 'transform';
-                    }
                     categoryHeader.style.marginTop = '0';
 
                     // Adjust font size based on screen size
@@ -324,11 +324,31 @@ document.addEventListener('DOMContentLoaded', function() {
                     genreCategories[category].forEach(genre => {
                         const genreItem = document.createElement('li');
                         genreItem.style.margin = '8px 0';
+                        genreItem.style.visibility = 'visible'; // Ensure visibility
+                        genreItem.style.display = 'block'; // Force display
+
+                        // Add touch handlers to prevent content disappearing
+                        genreItem.addEventListener('touchstart', function(e) {
+                            // Prevent the default behavior
+                            e.stopPropagation();
+                            // Make sure item remains visible
+                            this.style.visibility = 'visible';
+                            this.style.opacity = '1';
+                        }, { passive: true });
+
+                        genreItem.addEventListener('touchmove', function(e) {
+                            // Prevent the default behavior
+                            e.stopPropagation();
+                            // Make sure item remains visible
+                            this.style.visibility = 'visible';
+                            this.style.opacity = '1';
+                        }, { passive: true });
 
                         const genreLink = document.createElement('a');
                         genreLink.href = genre.url;
                         genreLink.textContent = genre.title;
                         genreLink.style.color = '#fff';
+                        genreLink.style.visibility = 'visible'; // Ensure visibility
 
                         // Responsive genre link size and spacing
                         if (window.innerWidth <= 480) {
@@ -345,7 +365,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         genreLink.style.borderRadius = '8px';
                         genreLink.style.fontWeight = '400';
                         genreLink.style.position = 'relative';
-                        genreLink.style.overflow = 'visible'; // Changed from 'hidden' to 'visible'
+                        genreLink.style.overflow = 'hidden';
                         genreLink.style.zIndex = '1';
                         genreLink.style.textAlign = 'left';
                         genreLink.style.background = 'rgba(30, 30, 30, 0.4)';
@@ -358,11 +378,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             this.style.boxShadow = '0 2px 8px rgba(141, 22, 201, 0.4)';
                             this.style.transform = 'translateX(5px)';
                             this.style.borderLeft = '3px solid rgba(164, 57, 207, 0.8)';
-
-                            // Force text to remain visible
-                            this.style.webkitBackfaceVisibility = 'hidden';
-                            this.style.backfaceVisibility = 'hidden';
-                            this.style.webkitTransform = 'translateZ(0) translateX(5px)';
                         };
 
                         genreLink.onmouseout = function() {
@@ -371,22 +386,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             this.style.boxShadow = 'none';
                             this.style.transform = 'translateX(0)';
                             this.style.borderLeft = '3px solid rgba(141, 22, 201, 0.4)';
-
-                            // Force text to remain visible
-                            this.style.webkitBackfaceVisibility = 'hidden';
-                            this.style.backfaceVisibility = 'hidden';
-                            this.style.webkitTransform = 'translateZ(0) translateX(0)';
                         };
-
-                        // Add touch event to handle content visibility during touch/scroll
-                        genreLink.addEventListener('touchstart', function(e) {
-                            // This forces the content to be visible during touch/scroll
-                            this.style.color = '#fff';
-                            this.style.webkitBackfaceVisibility = 'hidden';
-                            this.style.backfaceVisibility = 'hidden';
-                            this.style.webkitTransform = 'translateZ(0)';
-                            this.style.transform = 'translateZ(0)';
-                        });
 
                         genreItem.appendChild(genreLink);
                         genreList.appendChild(genreItem);
@@ -447,6 +447,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Add enhanced animation
                 dropdown.style.animation = 'dropdownFadeIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+
+                // Add touch event listeners to fix scrolling issues
+                dropdown.addEventListener('touchstart', function(e) {
+                    e.stopPropagation(); // Prevent event bubbling
+                }, { passive: true });
+
+                dropdown.addEventListener('touchmove', function(e) {
+                    e.stopPropagation(); // Prevent event bubbling
+                }, { passive: true });
+
+                // Prevent content from disappearing when scrolling
+                dropdown.addEventListener('scroll', function(e) {
+                    e.stopPropagation(); // Prevent event bubbling
+                    e.preventDefault(); // Prevent default scroll behavior
+                    return false;
+                }, { passive: false });
+
                 const styleElement = document.createElement('style');
                 styleElement.textContent = `
                     @keyframes dropdownFadeIn {
@@ -466,21 +483,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         transform: translateY(-5px);
                         box-shadow: 0 8px 20px rgba(0,0,0,0.25);
                         border: 1px solid rgba(141, 22, 201, 0.3);
-                    }
-
-                    /* Fix for content disappearing on scroll */
-                    #genre-dropdown {
-                        will-change: transform; /* Optimize performance */
-                        transform: translateZ(0); /* Force hardware acceleration */
-                        backface-visibility: hidden; /* Prevent flickering */
-                    }
-
-                    .dropdown-column ul li a {
-                        overflow: visible !important;
-                        -webkit-backface-visibility: hidden;
-                        backface-visibility: hidden;
-                        -webkit-transform: translateZ(0) scale(1.0, 1.0);
-                        transform: translateZ(0) scale(1.0, 1.0);
                     }
 
                     /* Add a dark overlay to the background when dropdown is active */
@@ -503,16 +505,33 @@ document.addEventListener('DOMContentLoaded', function() {
                             grid-template-columns: 1fr !important;
                             gap: 20px !important; /* Increased gap */
                             padding: 0 !important;
+                            position: relative !important;
+                            min-height: min-content !important;
                         }
                         .dropdown-column {
                             max-width: 90% !important;
                             min-width: auto !important;
                             padding: 15px !important;
                             margin: 0 auto 15px auto !important; /* Center and add margin */
+                            visibility: visible !important; /* Ensure visibility */
+                            opacity: 1 !important; /* Ensure opacity */
+                            display: block !important; /* Force display */
                         }
                         #genre-dropdown {
                             margin-right: 15px !important; /* Right margin for mobile */
                             margin-left: 15px !important; /* Equal left margin for balance */
+                            overflow-y: scroll !important; /* Force scroll capability */
+                            -webkit-overflow-scrolling: touch !important; /* For iOS smooth scrolling */
+                            overscroll-behavior-y: contain !important; /* Prevent scroll propagation */
+                            touch-action: pan-y !important; /* Enable vertical panning */
+                            -webkit-tap-highlight-color: rgba(0,0,0,0) !important; /* Remove tap highlight */
+                        }
+                        /* Fix for category columns to stay visible when scrolling */
+                        #genre-dropdown ul, #genre-dropdown li, #genre-dropdown a {
+                            visibility: visible !important;
+                            display: block !important;
+                            opacity: 1 !important;
+                            position: relative !important;
                         }
                     }
                     @media (min-width: 481px) and (max-width: 768px) {
@@ -521,16 +540,33 @@ document.addEventListener('DOMContentLoaded', function() {
                             grid-template-columns: 1fr !important; /* Change to 1fr to match mobile layout */
                             gap: 20px !important; /* Increased gap */
                             padding: 0 !important;
+                            position: relative !important;
+                            min-height: min-content !important;
                         }
                         .dropdown-column {
                             max-width: 90% !important;
                             min-width: auto !important;
                             padding: 12px !important;
                             margin: 0 auto 15px auto !important; /* Center and add margin */
+                            visibility: visible !important; /* Ensure visibility */
+                            opacity: 1 !important; /* Ensure opacity */
+                            display: block !important; /* Force display */
                         }
                         #genre-dropdown {
                             margin-right: 15px !important; /* Right margin for mobile */
                             margin-left: 15px !important; /* Equal left margin for balance */
+                            overflow-y: scroll !important; /* Force scroll capability */
+                            -webkit-overflow-scrolling: touch !important; /* For iOS smooth scrolling */
+                            overscroll-behavior-y: contain !important; /* Prevent scroll propagation */
+                            touch-action: pan-y !important; /* Enable vertical panning */
+                            -webkit-tap-highlight-color: rgba(0,0,0,0) !important; /* Remove tap highlight */
+                        }
+                        /* Fix for category columns to stay visible when scrolling */
+                        #genre-dropdown ul, #genre-dropdown li, #genre-dropdown a {
+                            visibility: visible !important;
+                            display: block !important;
+                            opacity: 1 !important;
+                            position: relative !important;
                         }
                     }
                     @media (min-width: 769px) {
@@ -542,6 +578,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             justify-items: center !important;
                             width: 95% !important; /* Increased width to 95% */
                             margin: 0 auto !important; /* Center the container */
+                            position: relative !important;
+                            min-height: min-content !important;
                         }
                         .dropdown-column {
                             max-width: 280px !important; /* Adjusted max width */
@@ -550,19 +588,21 @@ document.addEventListener('DOMContentLoaded', function() {
                             display: flex !important;
                             flex-direction: column !important;
                             width: 100% !important; /* Make columns take full width */
-                            /* Fix for content disappearing on scroll */
-                            will-change: transform !important;
-                            transform: translateZ(0) !important;
-                            backface-visibility: hidden !important;
+                            visibility: visible !important; /* Ensure visibility */
+                            opacity: 1 !important; /* Ensure opacity */
                         }
-
-                        /* Fix for content disappearing on scroll in Anime section */
-                        .dropdown-column ul li a {
-                            -webkit-transform: translateZ(0) !important;
-                            transform: translateZ(0) !important;
-                            -webkit-backface-visibility: hidden !important;
-                            backface-visibility: hidden !important;
-                            will-change: transform !important;
+                        #genre-dropdown {
+                            overflow-y: scroll !important; /* Force scroll capability */
+                            -webkit-overflow-scrolling: touch !important; /* For smooth scrolling */
+                            overscroll-behavior-y: contain !important; /* Prevent scroll propagation */
+                            touch-action: pan-y !important; /* Enable vertical panning */
+                        }
+                        /* Fix for category columns to stay visible when scrolling */
+                        #genre-dropdown ul, #genre-dropdown li, #genre-dropdown a {
+                            visibility: visible !important;
+                            display: block !important;
+                            opacity: 1 !important;
+                            position: relative !important;
                         }
                     }
                 `;
@@ -638,10 +678,29 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Fix for iOS Safari bounce effect
+    // Fix for iOS Safari bounce effect and genre dropdown scrolling
     document.body.addEventListener('touchmove', function(e) {
-        if (e.target.closest('.movie-container')) {
+        if (e.target.closest('.movie-container') || e.target.closest('#genre-dropdown')) {
             e.stopPropagation();
+
+            // If touching dropdown content, ensure it stays visible
+            if (e.target.closest('#genre-dropdown')) {
+                const dropdown = document.getElementById('genre-dropdown');
+                if (dropdown) {
+                    // Force all elements to stay visible
+                    const allElements = dropdown.querySelectorAll('*');
+                    allElements.forEach(el => {
+                        el.style.visibility = 'visible';
+                        el.style.opacity = '1';
+                    });
+
+                    // Re-render dropdown content to prevent disappearing
+                    dropdown.style.display = 'block';
+
+                    // Force dropdown to stay in view
+                    dropdown.style.zIndex = '9999';
+                }
+            }
         }
     }, { passive: true });
 
