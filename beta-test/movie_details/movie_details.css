@@ -100,6 +100,7 @@ iframe {
 .movie-info h1 {
     color: #a209da;
     font-size: 46px;
+    margin-top: 0; /* Remove top margin */
 }
 
 /* Plot styling */
@@ -108,6 +109,7 @@ iframe {
     line-height: 1.4;
     font-size: 18px;
     text-align: justify;
+    margin-top: 0; /* Remove top margin */
 }
 
 /* Movie data styling */
@@ -828,7 +830,7 @@ p {
     .movie-details {
         flex-direction: column;
         margin-top: 0;
-        gap: 12px;
+        gap: 0; /* Remove gap completely */
         width: 100%;
         max-width: 100%;
         padding: 0;
@@ -839,7 +841,7 @@ p {
     .movie-poster {
         width: 100%;
         margin: 0 auto;
-        padding: 0 8px;
+        padding: 0 8px 0 8px; /* Remove bottom padding */
         box-sizing: border-box;
     }
 
@@ -872,8 +874,9 @@ p {
     /* Movie info section */
     .movie-info {
         width: 95%;
-        margin: auto;
-        gap: 12px;
+        margin: 0 auto; /* Remove top and bottom margin */
+        padding-top: 0; /* Remove top padding */
+        gap: 8px; /* Reduce gap */
         overflow-wrap: break-word;
         word-break: break-word;
         box-sizing: border-box;
@@ -884,15 +887,16 @@ p {
     .movie-info h1 {
         font-size: 24px;
         line-height: 1.3;
-        margin: 0 0 8px 0;
+        margin: 0 0 4px 0; /* Reduced bottom margin */
     }
 
     /* Streamline movie data layout */
     .movie-data {
         flex-direction: column;
-        gap: 10px;
+        gap: 4px; /* Reduce gap */
         width: 100%;
         box-sizing: border-box;
+        margin-bottom: 4px; /* Add small bottom margin */
     }
 
     /* Episode items in vertical layout */
@@ -921,7 +925,7 @@ p {
     .server-dropdown,
     .watchListBtn {
         max-width: 100%;
-        margin: 8px auto;
+        margin: 4px auto; /* Reduce margin */
         box-sizing: border-box;
     }
 
@@ -936,8 +940,10 @@ p {
         max-width: 100%;
         overflow-wrap: break-word;
         font-size: 14px;
-        line-height: 1.4;
+        line-height: 1.25; /* Reduce line height */
         box-sizing: border-box;
+        margin-top: 0;
+        margin-bottom: 6px; /* Reduce bottom margin */
     }
 
     /* Server dropdown content */
@@ -970,10 +976,10 @@ p {
 @media only screen and (max-width: 560px) {
     /* Adjust iframe to make sure fullscreen button is accessible */
     iframe#iframe {
-        width: calc(100% - 5px) !important; /* Slight reduction in width */
+        width: calc(100% - 2px) !important; /* Minimal reduction in width */
         position: relative !important;
-        right: 5px !important; /* Shift slightly to the left */
-        margin-right: 5px !important;
+        right: 2px !important; /* Minimal shift to the left */
+        margin-right: 2px !important;
         margin-bottom: 0 !important; /* Remove bottom margin */
     }
 
