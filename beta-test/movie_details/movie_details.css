@@ -848,7 +848,7 @@ p {
     /* Video frame optimization */
     #iframe,
     iframe {
-        height: 220px !important;
+        height: 230px !important; /* Slightly increased height */
         width: 100%;
         margin: 0 auto 0 auto; /* Removed bottom margin */
         box-sizing: border-box;
@@ -976,11 +976,13 @@ p {
 @media only screen and (max-width: 560px) {
     /* Adjust iframe to make sure fullscreen button is accessible */
     iframe#iframe {
-        width: calc(100% - 2px) !important; /* Minimal reduction in width */
+        width: 100% !important; /* Full width */
         position: relative !important;
-        right: 2px !important; /* Minimal shift to the left */
-        margin-right: 2px !important;
+        right: 0 !important; /* No shift */
+        margin-right: 0 !important;
         margin-bottom: 0 !important; /* Remove bottom margin */
+        padding-right: 30px !important; /* Add padding for the fullscreen button */
+        box-sizing: border-box !important;
     }
 
     /* Ensure movie poster container has proper space but remove excess padding */
@@ -1260,7 +1262,7 @@ p {
 
     /* Add extra space to the right of the iframe for controls */
     #iframe {
-        padding-right: 50px; /* Space for fullscreen button */
+        padding-right: 30px; /* Reduced space for fullscreen button */
         box-sizing: border-box;
     }
 
