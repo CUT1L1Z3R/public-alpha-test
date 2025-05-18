@@ -38,9 +38,11 @@ function handleDownload() {
     // Log the URL for debugging
     console.log(`Download URL: ${downloadUrl}`);
 
-    // Redirect to the download URL
+    // Redirect to the download countdown page with the download URL as parameter
     if (downloadUrl) {
-        window.open(downloadUrl, '_blank');
+        // Encode the URL to avoid issues with query parameters
+        const encodedUrl = encodeURIComponent(downloadUrl);
+        window.location.href = `../download.html?url=${encodedUrl}`;
     }
 }
 
