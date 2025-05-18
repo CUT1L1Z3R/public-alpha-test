@@ -846,10 +846,15 @@ p {
     /* Video frame optimization */
     #iframe,
     iframe {
-        height: 220px !important;
+        height: 240px !important;
         width: 100%;
-        margin: 0 auto 15px auto;
+        margin: 0 auto 30px auto;
         box-sizing: border-box;
+        /* Ensure the iframe extends to full width */
+        max-width: 100%;
+        /* Add space below the player for controls */
+        padding-bottom: 36px;
+        position: relative;
     }
 
     /* Season container adjustments */
@@ -965,6 +970,45 @@ p {
         padding-right: 8px;
     }
 }
+
+/* Enhance mobile video player experience */
+@media only screen and (max-width: 560px) {
+    /* Fix for embedded video players and their controls */
+    .movie-poster {
+        /* Ensure extra margin for control bars */
+        margin-bottom: 40px !important;
+        position: relative;
+    }
+
+    /* Increase the tap target area for controls */
+    iframe {
+        /* Add extra top margin for header controls */
+        margin-top: 10px !important;
+        /* Fix aspect ratio to maintain 16:9 */
+        aspect-ratio: 16/9;
+        /* Ensure controls have space */
+        padding-bottom: 45px !important;
+    }
+
+    /* Prevent parent container overflow issues */
+    .movie-details, .movie-poster {
+        overflow: visible !important;
+    }
+
+    /* Ensure the iframe allows for control display */
+    #iframe::after {
+        content: "";
+        display: block;
+        height: 40px;
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+    }
+}
+
+/* Add specific meta viewport tag to page via JavaScript */
+/* This will be added via JavaScript in the movie_details.js file */
 
 @media screen and (min-width:561px) and (max-width:740px) {
     /* Core layout fixes */
