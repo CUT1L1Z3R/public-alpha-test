@@ -1,3 +1,12 @@
+/* Video container styling */
+.video-container {
+    position: relative;
+    width: 100%;
+    overflow: visible;
+    padding: 0;
+    margin: 0 -1px; /* Negative margin to allow video to extend slightly beyond container */
+}
+
 /* Global styles for body and text elements */
 body,
 p,
@@ -1041,7 +1050,7 @@ p {
     .movie-poster {
         width: 100%;
         margin: 0 auto;
-        padding: 0 4px; /* Reduced padding to allow for wider video player */
+        padding: 0 1px; /* Minimized padding to maximize video width */
         box-sizing: border-box;
         margin-bottom: -20px; /* Reduced negative margin for better spacing */
     }
@@ -1050,7 +1059,7 @@ p {
     #iframe,
     iframe {
         height: 230px !important;
-        width: 98%; /* Almost full width as requested */
+        width: 99.5%; /* Expanded width to use almost the entire screen */
         margin: 0 auto 0 auto;
         box-sizing: border-box;
         display: block; /* Ensure proper block display */
@@ -1060,7 +1069,7 @@ p {
     #player-controls-spacer {
         display: block;
         width: 100%;
-        height: 36px; /* Increased height to ensure fullscreen button is accessible */
+        height: 40px; /* Further increased height to ensure fullscreen button is accessible */
         clear: both;
         margin-top: 0;
         margin-bottom: 0;
