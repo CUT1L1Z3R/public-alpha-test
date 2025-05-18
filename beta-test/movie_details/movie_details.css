@@ -66,7 +66,7 @@ iframe {
     margin: 0;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    border: none; /* Remove border to make it cleaner */
+    border: none;
 }
 
 #moviePoster {
@@ -81,81 +81,6 @@ iframe {
 .movie-info {
     margin-left: 20px;
     margin-right: 30px;
-}
-
-/* Add margin space to the plot element */
-#plot {
-    color: white;
-    line-height: 1.6;
-    font-size: 18px;
-    text-align: justify;
-    margin-top: 10px;
-    margin-bottom: 20px;
-    padding: 15px;
-    background-color: rgba(65, 1, 63, 0.4);
-    border-radius: 8px;
-    font-family: 'Poppins', Arial, sans-serif;
-    letter-spacing: 0.2px;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-}
-
-/* Movie information section */
-.movie-info {
-    width: 40%;
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-}
-
-/* Movie title styling */
-.movie-info h1 {
-    color: #a209da;
-    font-size: 46px;
-    margin-top: 0;
-    margin-bottom: 15px;
-    font-family: 'Poppins', Arial, sans-serif;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-/* Movie data styling */
-.movie-data {
-    display: flex;
-    flex-direction: row;
-    gap: 30px;
-    margin-bottom: 15px;
-}
-
-/* Design class styling */
-.design {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 8px;
-    color: white;
-    margin-bottom: 8px;
-    font-family: 'Poppins', Arial, sans-serif;
-}
-
-/* Styling for bold text elements (category labels) */
-span {
-    font-weight: bold;
-    color: #a209da;
-    font-size: 18px;
-    letter-spacing: 0.5px;
-}
-
-/* Styling for category values */
-.design p {
-    font-weight: 500;
-    font-size: 18px;
-    color: white;
-    font-family: 'Poppins', Arial, sans-serif;
-}
-
-p {
-    font-weight: bold;
 }
 
 /* Movie poster and video container */
@@ -212,30 +137,6 @@ p {
     padding: 8px;
 }
 
-.season-dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #222;
-    width: 100%;
-    max-height: 300px;
-    overflow-y: auto;
-    z-index: 1;
-    border-radius: 0 0 5px 5px;
-}
-
-.season-dropdown-content.show {
-    display: block;
-}
-
-.season-item {
-    padding: 12px 15px;
-    cursor: pointer;
-}
-
-.season-item:hover {
-    background-color: #333;
-}
-
 .episodes-list {
     display: flex;
     flex-direction: column;
@@ -275,21 +176,6 @@ p {
     justify-content: space-between;
 }
 
-.episode-number {
-    background-color: #333;
-    color: white;
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
-}
-
 .episode-title {
     font-weight: bold;
     font-size: 18px;
@@ -310,504 +196,234 @@ p {
     position: relative;
 }
 
-/* ---- Server dropdown & watchlist styles - unified design ---- */
-
-/* Both buttons should have identical width and appearance */
-.watchListBtn,
-.server-dropdown {
-  width: 100%;
-  max-width: 100%;
-  margin: 10px 0;
+/* Movie info section */
+.movie-info {
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    font-family: 'Poppins', Arial, sans-serif;
 }
 
+/* Movie title styling */
+.movie-info h1 {
+    color: #a209da;
+    font-size: 46px;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-family: 'Poppins', Arial, sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Plot styling */
+#plot {
+    color: white;
+    line-height: 1.6;
+    font-size: 18px;
+    text-align: justify;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-family: 'Poppins', Arial, sans-serif;
+    letter-spacing: 0.2px;
+    background-color: transparent; /* Remove background */
+    padding: 0; /* Remove padding */
+    border-radius: 0; /* Remove border radius */
+    text-shadow: none; /* Remove text shadow */
+}
+
+/* Movie data styling */
+.movie-data {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    margin-bottom: 15px;
+}
+
+/* Design class styling */
+.design {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    color: white;
+    margin-bottom: 0;
+    font-family: 'Poppins', Arial, sans-serif;
+}
+
+/* Styling for category labels */
+span {
+    font-weight: bold;
+    color: #a209da;
+    font-size: 18px;
+}
+
+/* Styling for category values */
+.design p {
+    font-weight: 400;
+    font-size: 18px;
+    color: white;
+    font-family: 'Poppins', Arial, sans-serif;
+}
+
+/* Servers section label */
+.section-label {
+    color: #a209da;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 0;
+    margin-bottom: 5px;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+/* WatchList button */
 .watchListBtn {
-  color: white;
-  font-size: 16px;
-  font-weight: 600;
-  padding: 10px 20px; /* Increased padding height */
-  text-align: center;
-  background: rgb(141, 22, 201);
-  border-radius: 3px;
-  border: 1px solid transparent;
-  cursor: pointer;
-  display: block; /* Ensure block display for full width */
-  margin-top: 12px; /* Add top margin */
-  margin-bottom: 12px; /* Add bottom margin */
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 12px 20px;
+    text-align: center;
+    background: #a209da;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    font-family: 'Poppins', Arial, sans-serif;
+    letter-spacing: 0.5px;
+    width: 100%;
 }
 
 .watchListBtn:hover {
-  background: black;
-  color: rgb(141, 22, 201);
-  border: 1px solid rgb(141, 22, 201);
+    background: #8907b0;
 }
 
+/* Server dropdown */
 .server-dropdown {
-  position: relative;
-  z-index: 20;
+    width: 100%;
+    margin: 0;
+    font-family: 'Poppins', Arial, sans-serif;
+    position: relative;
+    z-index: 20;
 }
 
-/* Section label styling */
-.section-label {
-  color: #a209da;
-  font-size: 14px;
-  font-weight: bold;
-  margin-top: 12px;
-  margin-bottom: 5px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-@media only screen and (max-width: 560px) {
-  .section-label {
-    margin-top: 6px;
-    margin-bottom: 4px;
-  }
-}
-
-/* --- FIXED SERVER DROPDOWN HEADER --- */
 .server-dropdown-header {
-  background: transparent;
-  border: 1.5px solid rgb(141, 22, 201);
-  border-radius: 3px;
-  padding: 10px 20px; /* Increased padding height */
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  color: rgb(141, 22, 201);
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  position: relative;
-  transition: all 0.3s ease;
-  box-shadow: none;
-  width: 100%;
-  box-sizing: border-box; /* Ensure padding is included in width */
-  text-align: left;
-  gap: 10px; /* ensures spacing between content and arrow */
-  margin-top: 4px; /* Add small top margin */
-}
-/* Removed server label from dropdown since we have a dedicated label now */
-/*.server-dropdown-header::before {
-  content: "Servers";
-  position: absolute;
-  top: -15px;
-  left: 0;
-  font-size: 12px;
-  color: #a209da;
-  background: none;
-  padding: 0;
-  letter-spacing: 0.5px;
-}*/
-
-.server-dropdown-header:hover {
-  background: black;
-  color: rgb(141, 22, 201);
-  border: 1.5px solid rgb(141, 22, 201);
-}
-
-.server-dropdown-header.active {
-  border-radius: 3px 3px 0 0;
-  border-bottom: none;
-}
-
-/* Server tag styles with improved spacing */
-.selected-server {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-  flex: 1; /* Take up available space */
-  min-width: 0;
-  overflow: hidden;
-}
-
-.server-tag {
-  display: inline-block;
-  padding: 2px 8px;
-  border-radius: 3px;
-  font-size: 10px;
-  text-align: center;
-  text-transform: uppercase;
-  box-shadow: none;
-  font-weight: 600;
-  margin-right: 2px;
-}
-
-/* Dropdown arrow styling */
-.dropdown-arrow {
-  transition: transform 0.3s ease;
-  font-size: 16px;
-  color: rgb(141, 22, 201);
-  margin-left: 10px;
-  margin-right: 0;
-  flex-shrink: 0;
-  align-self: center;
-}
-
-.dropdown-arrow.up {
-  transform: rotate(180deg);
-}
-
-/* Keep hover consistent for server-dropdown-header */
-.server-dropdown-header:hover .dropdown-arrow {
-  color: rgb(141, 22, 201);
-}
-
-/* Ensure server dropdown content is full width */
-.server-dropdown-content {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-  background-color: #201020;
-  border: 1px solid #a209da;
-  border-top: none;
-  border-radius: 0 0 3px 3px;
-  z-index: 100;
-  display: none;
-  max-height: 300px;
-  overflow-y: auto;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  box-sizing: border-box; /* Include border in width */
-}
-
-.server-dropdown-content.show {
-  display: block;
-}
-
-.server-option {
-  padding: 10px 16px;
-  color: white;
-  cursor: pointer;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-  border-bottom: 1px solid rgba(162, 9, 218, 0.2);
-  transition: background-color 0.2s;
-  background: none;
-}
-
-.server-option:last-child {
-  border-bottom: none;
-  border-radius: 0 0 3px 3px;
-}
-
-.server-option:hover,
-.server-option.active {
-  background-color: #3a1052;
+    background: #1e0723;
+    border: 1px solid #a209da;
+    border-radius: 3px;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: white;
+    font-size: 14px;
+    font-weight: normal;
+    cursor: pointer;
+    margin-top: 5px;
 }
 
 /* Server name and tags styling */
 .server-name {
-  font-weight: 600;
-  font-size: 16px;
-  margin-right: 4px;
-  color: white;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
 }
 
-/* Make the server name in the dropdown header match the button color and enhance it */
 .server-dropdown-header .server-name {
-  color: rgb(141, 22, 201);
-  font-weight: 600;
-  font-size: 16px;
-  margin-right: 4px;
-}
-
-/* Updated tag color styles to match the site's purple branding */
-.tag-stable {
-  background-color: #755b22;
-  color: #fff;
-}
-
-.tag-4k {
-  background-color: #a209da;
-  color: #fff;
-}
-
-.tag-hd {
-  background-color: #5d4fc7;
-  color: #fff;
-}
-
-.tag-recommended {
-  background-color: #15a854;
-  color: #fff;
-}
-
-/* Server tag styles */
-.server-tag {
-    margin-left: 5px;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: bold;
     color: white;
 }
 
-/* Recommended tag */
+/* Server tags */
+.server-tag {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 10px;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-left: 5px;
+}
+
 .tag-recommended {
     background-color: #15a854;
 }
 
-/* 4K tag */
 .tag-4k {
     background-color: #3f51b5;
 }
 
-/* Fast tag */
 .tag-fast {
     background-color: red;
 }
 
-/* Customize scrollbar for the server dropdown */
-.server-dropdown-content::-webkit-scrollbar {
-  width: 8px;
+.tag-stable {
+    background-color: #755b22;
 }
 
-.server-dropdown-content::-webkit-scrollbar-track {
-  background: #201020;
-  border-radius: 0 0 3px 0;
+.tag-hd {
+    background-color: #5d4fc7;
 }
 
-.server-dropdown-content::-webkit-scrollbar-thumb {
-  background: #a209da;
-  border-radius: 10px;
-}
-
-.server-dropdown-content::-webkit-scrollbar-thumb:hover {
-  background: #8507b5;
-}
-
-/* Server selector dropdown styles - OLD VERSION (keeping for backward compatibility) */
-#server-selector {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #810c7d;
-  color: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  display: none;
-  z-index: 10;
-}
-
-.close-button {
+/* Server dropdown content */
+.server-dropdown-content {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: #333;
-    color: #fff;
-    padding: 5px 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.close-button:hover {
-    background-color: #41013f;
-}
-
-.server-selector-header {
-  background-color: #540151;
-  padding: 10px;
-  border-bottom: 1px solid #41013f;
-}
-
-.server-selector-header h2 {
-  font-size: 18px;
-  font-weight: bold;
-}
-
-.server-selector-dropdown {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background-color: #41013f;
-  color: #fff;
-  padding: 10px;
-  border: 1px solid #41013f;
-  border-radius: 5px;
-  display: none;
-  z-index: 10;
-}
-
-.server-selector-dropdown label {
-  display: block;
-  margin-bottom: 10px;
-}
-
-.server-selector-dropdown select {
-  width: 100%;
-  padding: 10px;
-  font-size: 14px;
-  background-color: #41013f;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.server-selector-content {
-  padding: 20px;
-}
-
-.server-selector-content label {
-  font-size: 16px;
-  font-weight: bold;
-}
-
-.server-selector-content select {
-  padding: 10px;
-  font-size: 14px;
-  background-color: #30012f;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-/* Change server button styles */
-.change-server-btn {
-  background-color: #a209da;
-  color: #fff;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.change-server-btn:hover {
-  background-color: transparent;
-  border-color: #7a288a;
-  outline: 2px solid #7a288a;
-}
-
-.change-server-btn:active {
-  background-color: transparent;
-  border-color: #7a288a;
-  outline: 2px solid #7a288a;
-}
-
-/* Style for change-server button smaller font */
-#change-server-btn {
-    font-size: 14px; /* smaller font size */
-    padding: 6px 12px;
-}
-
-.server-selector label {
-  color: white;
-  font-size: 14px;
-  font-weight: bold;
-  margin-right: 10px;
-}
-
-.server-selector-select {
-  padding: 10px;
-  font-size: 14px;
-  background-color: #444;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  width: 200px;
-  font-weight: bold;
-}
-
-.server-selector select:focus {
-  outline: none;
-  background-color: #555;
-}
-
-.server-selector button {
-  background-color: #4CAF50;
-  color: white;
-  padding: 5px 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  width: 60px;
-}
-
-.server-selector button:hover {
-  background-color: #3e8e41;
-}
-
-/* Position the server-selector below the video */
-.server-selector {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-}
-
-/* Iframe to display video */
-#iframe {
-    width: 100%;
-    height: 450px !important;
-    display: block;
-    margin-bottom: 0; /* Removed margin */
-    border: none; /* Remove border to make it cleaner */
-}
-
-/* Styling for the change server dropdown */
-.server-selector {
-  margin-top: 20px;
-  text-align: bottom;
-  padding: 10px;
-  background-color: #222;
-  border-radius: 5px;
-}
-
-/* Modal styles */
-.modal {
-    position: fixed;
-    top: 0;
+    top: 100%;
     left: 0;
     width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-}
-
-.modal.hidden {
+    background-color: #201020;
+    border: 1px solid #a209da;
+    border-top: none;
+    border-radius: 0 0 3px 3px;
+    z-index: 100;
     display: none;
+    max-height: 300px;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.modal-content {
-    background-color: #222;
-    padding: 30px;
-    border-radius: 12px;
-    color: #f0f0f0;
-    max-width: 350px;
-    text-align: center;
-    position: relative;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-    animation: fadeInScale 0.4s ease-in-out;
+.server-dropdown-content.show {
+    display: block;
 }
 
-.close-btn {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    font-size: 20px;
+.server-option {
+    padding: 10px 16px;
+    color: white;
     cursor: pointer;
-    color: #ccc;
-    transition: color 0.2s;
-}
-.close-btn:hover {
-    color: #fff;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    border-bottom: 1px solid rgba(162, 9, 218, 0.2);
+    transition: background-color 0.2s;
 }
 
-/* Modal appear animation */
-@keyframes fadeInScale {
-    0% { opacity: 0; transform: scale(0.8); }
-    100% { opacity: 1; transform: scale(1); }
+.server-option:last-child {
+    border-bottom: none;
+    border-radius: 0 0 3px 3px;
+}
+
+.server-option:hover,
+.server-option.active {
+    background-color: #3a1052;
+}
+
+/* Selected server */
+.selected-server {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+}
+
+/* Dropdown arrow */
+.dropdown-arrow {
+    transition: transform 0.3s ease;
+    font-size: 16px;
+    color: white;
 }
 
 /* Server notice banner */
@@ -844,18 +460,7 @@ p {
     line-height: 1;
 }
 
-@media (max-width: 600px) {
-    .server-notice-banner {
-        bottom: auto;
-        top: 8px;
-        padding: 4px 8px;
-        font-size: 12px;
-    }
-}
-
-/* ----Media Queries---- */
-
-/* Mobile viewport scaling fix */
+/* Mobile optimizations */
 @media only screen and (max-width: 560px) {
     /* Core layout fixes to prevent zooming issues */
     html, body {
@@ -872,7 +477,7 @@ p {
     .movie-details {
         flex-direction: column;
         margin-top: 0;
-        gap: 0; /* Remove gap completely */
+        gap: 0;
         width: 100%;
         max-width: 100%;
         padding: 0;
@@ -883,116 +488,56 @@ p {
     .movie-poster {
         width: 100%;
         margin: 0 auto;
-        padding: 0 8px 0 8px; /* Remove bottom padding */
+        padding: 0 8px 0 8px;
         box-sizing: border-box;
     }
 
     /* Video frame optimization */
     #iframe,
     iframe {
-        height: 230px !important; /* Slightly increased height */
+        height: 230px !important;
         width: 100%;
-        margin: 0 auto 0 auto; /* Removed bottom margin */
-        box-sizing: border-box;
-    }
-
-    /* Season container adjustments */
-    .seasons-container {
-        margin-top: 5px !important;
-        width: 100%;
-        margin-left: auto;
-        margin-right: auto;
-        padding: 0 8px;
-        box-sizing: border-box;
-    }
-
-    /* Scroll area for episodes */
-    .episodes-list {
-        max-height: 280px;
-        width: 100%;
+        margin: 0 auto 0 auto;
         box-sizing: border-box;
     }
 
     /* Movie info section */
     .movie-info {
         width: 95%;
-        margin: -10px auto 0; /* Negative top margin to eliminate gap */
-        padding-top: 0; /* Remove top padding */
-        gap: 6px; /* Further reduce gap */
-        overflow-wrap: break-word;
-        word-break: break-word;
-        box-sizing: border-box;
-        word-wrap: break-word;
+        margin: 10px auto 0;
+        gap: 10px;
     }
 
-    /* Optimize title size */
     .movie-info h1 {
         font-size: 28px;
-        line-height: 1.3;
-        margin: -5px 0 10px 0; /* Negative top margin to pull closer to video */
-        padding-top: 0;
+        margin-bottom: 10px;
     }
 
-    /* Streamline movie data layout */
-    .movie-data {
-        flex-direction: column;
-        gap: 20px;
-        width: 100%;
-        box-sizing: border-box;
-        margin-bottom: 12px;
-        padding-bottom: 2px;
-    }
-
-    /* Episode items in vertical layout */
-    .episode-item {
-        flex-direction: column;
-        margin-bottom: 12px;
-        box-sizing: border-box;
-    }
-
-    /* Thumbnail adjustments */
-    .episode-thumbnail {
-        width: 100%;
-        height: auto;
-        margin-right: 0;
-        margin-bottom: 8px;
-        box-sizing: border-box;
-    }
-
-    /* Episode info sizing */
-    .episode-info {
-        width: 100%;
-        box-sizing: border-box;
-    }
-
-    /* Button and dropdown sizing */
-    .server-dropdown,
-    .watchListBtn {
-        max-width: 100%;
-        margin: 4px auto; /* Reduce margin */
-        box-sizing: border-box;
-    }
-
-    /* Server dropdown header */
-    .server-dropdown-header {
-        padding: 6px 12px;
-        font-size: 14px;
-    }
-
-    /* Fix for plot description text */
     #plot {
         font-size: 16px;
         line-height: 1.5;
-        padding: 12px;
-        margin-top: 8px;
-        margin-bottom: 15px;
     }
 
-    /* Server dropdown content */
-    .server-dropdown-content {
-        min-width: 0;
-        max-width: 100%;
-        box-sizing: border-box;
+    .section-label {
+        font-size: 16px;
+    }
+
+    .movie-data {
+        gap: 15px;
+        flex-direction: column;
+    }
+
+    span {
+        font-size: 16px;
+    }
+
+    .design p {
+        font-size: 16px;
+    }
+
+    .watchListBtn {
+        padding: 10px 15px;
+        font-size: 14px;
     }
 
     /* Header adjustments */
@@ -1013,367 +558,9 @@ p {
         padding-right: 8px;
     }
 
-    /* Category label and value font size adjustments */
-    span {
-        font-size: 16px;
-    }
-
-    .design p {
-        font-size: 16px;
-    }
-
-    .design {
-        gap: 6px;
-        margin-bottom: 6px;
-    }
-}
-
-/* Mobile specific iframe adjustments for button access */
-@media only screen and (max-width: 560px) {
-    /* Adjust iframe to make sure fullscreen button is accessible */
-    iframe#iframe {
-        width: 100% !important; /* Full width */
-        position: relative !important;
-        right: 0 !important; /* No shift */
-        margin-right: 0 !important;
-        margin-bottom: -20px !important; /* Negative margin to pull content closer */
-        padding-right: 30px !important; /* Add padding for the fullscreen button */
-        box-sizing: border-box !important;
-    }
-
-    /* Ensure movie poster container has proper space but remove excess padding */
-    .movie-poster {
-        padding-bottom: 0 !important; /* Remove bottom padding */
-        position: relative !important;
-        margin-bottom: -15px !important; /* Negative margin to pull content closer */
-    }
-}
-
-@media screen and (min-width:561px) and (max-width:740px) {
-    /* Core layout fixes */
-    html, body {
-        width: 100%;
-        max-width: 100%;
-        overflow-x: hidden;
-        box-sizing: border-box;
-    }
-
-    .movie-details {
-        flex-direction: column;
-        gap: 15px;
-        width: 100%;
-        box-sizing: border-box;
-    }
-
-    .movie-poster {
-        width: 100%;
-        height: auto;
-        box-sizing: border-box;
-        padding: 0 10px;
-    }
-
-    #iframe,
-    iframe {
-        height: 320px !important;
-        width: 95%;
-        margin: 0 auto 20px auto;
-        box-sizing: border-box;
-    }
-
-    .seasons-container {
-        margin-top: 30px;
-        width: 95%;
-        margin-left: auto;
-        margin-right: auto;
-        box-sizing: border-box;
-    }
-
-    .movie-info {
-        width: 95%;
-        margin: auto;
-        gap: 15px;
-        box-sizing: border-box;
-    }
-
-    .movie-data {
-        flex-direction: column;
-        gap: 15px;
-        width: 100%;
-        box-sizing: border-box;
-    }
-
-    .episode-item {
-        flex-direction: row;
-        box-sizing: border-box;
-    }
-
-    .server-dropdown,
-    .watchListBtn {
-        max-width: 100%;
-        margin: 10px auto;
-        box-sizing: border-box;
-    }
-
-    .server-dropdown-content {
-        min-width: 0;
-        max-width: 100%;
-        box-sizing: border-box;
-    }
-
-    /* Fix for plot description text */
-    #plot {
-        max-width: 100%;
-        overflow-wrap: break-word;
-        box-sizing: border-box;
-    }
-}
-
-@media screen and (min-width:741px) and (max-width:840px) {
-    .movie-details {
-        flex-direction: column;
-        gap: 15px;
-    }
-
-    .movie-poster {
-        width: 100%;
-        height: auto;
-    }
-
-    #iframe,
-    iframe {
-        height: 380px !important;
-        margin: 0;
-        width: 95%;
-        margin: 0 auto 20px auto;
-    }
-
-    .seasons-container {
-        margin-top: 40px;
-        width: 95%;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .movie-info {
-        width: 95%;
-        margin: auto;
-        gap: 15px;
-    }
-
-    .movie-data {
-        flex-direction: column;
-        gap: 15px;
-    }
-    .server-dropdown,
-    .watchListBtn {
-        max-width: 100%;
-        margin: 10px auto;
-    }
-    .server-dropdown-content {
-        min-width: 0;
-        max-width: 100%;
-    }
-}
-
-@media screen and (min-width:841px) and (max-width:924px) {
-    .movie-poster {
-        width: 500px;
-        height: auto;
-    }
-
-    #iframe,
-    iframe {
-        height: 350px !important;
-    }
-
-    .movie-info {
-        width: 36%;
-        gap: 15px;
-    }
-
-    .movie-data {
-        flex-direction: column;
-        gap: 15px;
-    }
-    .server-dropdown,
-    .watchListBtn {
-        max-width: 100%;
-        margin: 10px auto;
-    }
-    .server-dropdown-content {
-        min-width: 0;
-        max-width: 100%;
-    }
-}
-
-@media screen and (min-width:925px) and (max-width:1024px) {
-    .movie-poster {
-        width: 550px;
-        height: auto;
-    }
-
-    #iframe,
-    iframe {
-        height: 380px !important;
-    }
-
-    .movie-info {
-        width: 38%;
-        gap: 15px;
-    }
-
-    .movie-data {
-        flex-direction: column;
-        gap: 15px;
-    }
-    .server-dropdown,
-    .watchListBtn {
-        max-width: 100%;
-        margin: 10px auto;
-    }
-    .server-dropdown-content {
-        min-width: 0;
-        max-width: 100%;
-    }
-}
-
-/* Update all media queries for consistent server dropdown styling */
-@media screen and (min-width:741px) and (max-width:1300px) {
-    .server-dropdown,
-    .watchListBtn {
-        max-width: 100%;
-        margin: 10px auto;
-    }
-
-    .server-dropdown-content {
-        min-width: 0;
-        max-width: 100%;
-    }
-}
-
-@media screen and (min-width:1025px) and (max-width:1300px) {
-    .movie-poster {
-        width: 600px;
-        height: auto;
-    }
-
-    #iframe,
-    iframe {
-        height: 420px !important;
-    }
-
-    .movie-info {
-        width: 39%;
-        gap: 15px;
-    }
-
-    .rating-data {
-        flex-direction: column;
-        gap: 15px;
-    }
-    .server-dropdown,
-    .watchListBtn {
-        max-width: 100%;
-        margin: 10px auto;
-    }
-    .server-dropdown-content {
-        min-width: 0;
-        max-width: 100%;
-    }
-}
-
-/* Desktop iframe height */
-@media screen and (min-width: 1301px) {
-    #iframe,
-    iframe {
-        height: 450px !important;
-    }
-    .server-dropdown,
-    .watchListBtn {
-        max-width: 100%;
-        margin: 10px auto;
-    }
-    .server-dropdown-content {
-        min-width: 0;
-        max-width: 100vw;
-    }
-}
-
-/* Spacer for video controls in mobile view */
-#player-controls-spacer {
-    display: none; /* Hidden by default */
-}
-
-/* Show spacer on mobile devices but with reduced height */
-@media only screen and (max-width: 560px) {
-    #player-controls-spacer {
-        display: block;
-        width: 100%;
-        height: 10px; /* Reduced height to minimize space */
-        clear: both;
-        margin-top: 0;
-        margin-bottom: 0;
-        position: relative;
-        pointer-events: none; /* Allows clicking through to elements under it */
-    }
-
-    /* Add extra space to the right of the iframe for controls */
-    #iframe {
-        padding-right: 30px; /* Reduced space for fullscreen button */
-        box-sizing: border-box;
-    }
-
-    /* Ensure iframe retains proper height */
-    iframe {
-        min-height: 220px;
-    }
-}
-
-/* Custom improvements for mobile aesthetics - better video to content transition */
-@media only screen and (max-width: 560px) {
-    /* Create a cleaner transition between video and content */
-    .movie-info::before {
-        content: "";
-        display: block;
-        height: 0;
-        width: 100%;
-        margin-top: -15px;
-        position: relative;
-    }
-
-    /* Adjust spacing for a more cohesive layout */
-    .movie-info h1 {
-        color: #a209da;
-        margin-top: -5px;
-        margin-bottom: 10px;
-    }
-
-    /* Plot spacing adjustment */
-    #plot {
-        margin-bottom: 15px;
-    }
-
-    /* Consistent spacing for details */
-    .movie-data {
-        margin-bottom: 12px;
-    }
-
-    .rating-data {
-        margin-bottom: 12px;
-    }
-
-    /* Better spacing for buttons */
-    .watchListBtn {
-        margin-bottom: 10px;
-        margin-top: 10px;
-    }
-
-    .server-dropdown {
-        margin-top: 8px;
-    }
-
-    /* Improved detail spacing */
-    .design {
-        margin-bottom: 6px;
+    /* Server dropdown header */
+    .server-dropdown-header {
+        padding: 8px 12px;
+        font-size: 14px;
     }
 }
