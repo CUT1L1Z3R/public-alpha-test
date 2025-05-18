@@ -8,6 +8,42 @@ logo.addEventListener('click', () => {
 // Define server fallback chain
 const serverFallbackChain = ['vidsrc.su', 'vidsrc.vip', 'vidlink.pro'];
 
+// Function to handle content download (declare early to avoid hoisting issues)
+function handleDownload() {
+    let downloadUrl = '';
+
+    // Generate the appropriate download URL based on media type
+    if (media === 'movie') {
+        // For movies, use the movie download endpoint
+        downloadUrl = `https://dl.vidsrc.vip/movie/${id}`;
+    } else if (media === 'tv') {
+        // For TV shows and anime, need to determine season and episode
+        const activeEpisode = document.querySelector('.episode-item.active');
+
+        if (activeEpisode) {
+            // If an episode is selected, use that specific episode
+            const seasonNumber = activeEpisode.dataset.seasonNumber;
+            const episodeNumber = activeEpisode.dataset.episodeNumber;
+            downloadUrl = `https://dl.vidsrc.vip/tv/${id}/${seasonNumber}/${episodeNumber}`;
+        } else if (seasonSelect && seasonSelect.value) {
+            // If no episode selected but season is selected, use first episode of selected season
+            const seasonNumber = seasonSelect.value;
+            downloadUrl = `https://dl.vidsrc.vip/tv/${id}/${seasonNumber}/1`;
+        } else {
+            // Default to first episode of first season if nothing selected
+            downloadUrl = `https://dl.vidsrc.vip/tv/${id}/1/1`;
+        }
+    }
+
+    // Log the URL for debugging
+    console.log(`Download URL: ${downloadUrl}`);
+
+    // Redirect to the download URL
+    if (downloadUrl) {
+        window.open(downloadUrl, '_blank');
+    }
+}
+
 // Function to ensure iframe controls are accessible on mobile
 function ensureControlsAccessible() {
     if (window.innerWidth <= 560) { // Only on mobile
@@ -37,6 +73,7 @@ const plot = document.getElementById("plot");
 const language = document.getElementById("language");
 const iframe = document.getElementById("iframe");
 const watchListBtn = document.querySelector('.watchListBtn');
+const downloadBtn = document.querySelector('.downloadBtn');
 const watchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
 
 // Season and Episode selectors
@@ -502,6 +539,9 @@ async function displayMovieDetails() {
         }
 
         watchListBtn.addEventListener('click', () => toggleFavorite(movieDetails));
+
+        // Add event listener for the download button
+        downloadBtn.addEventListener('click', handleDownload);
 
     } catch (error) {
         console.error('Error displaying movie details:', error);

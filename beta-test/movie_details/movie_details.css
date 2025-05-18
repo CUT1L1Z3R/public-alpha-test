@@ -294,13 +294,14 @@ p {
 
 /* Both buttons should have identical width and appearance */
 .watchListBtn,
+.downloadBtn,
 .server-dropdown {
   width: 100%;
   max-width: 100%;
   margin: 10px 0;
 }
 
-.watchListBtn {
+.watchListBtn, .downloadBtn {
   color: white;
   font-size: 16px;
   font-weight: 600;
@@ -313,10 +314,15 @@ p {
   display: block; /* Ensure block display for full width */
 }
 
-.watchListBtn:hover {
+.watchListBtn:hover, .downloadBtn:hover {
   background: black;
   color: rgb(141, 22, 201);
   border: 1px solid rgb(141, 22, 201);
+}
+
+/* Make the download button slightly different */
+.downloadBtn {
+  background: rgb(109, 18, 158);
 }
 
 /* Server dropdown wrapper with dedicated space */
