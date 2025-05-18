@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="description" content="Get detailed information about movies and TV shows on FreeFlix. View ratings, cast, trailers, synopsis and add titles to your watchlist.">
     <meta name="keywords" content="movie details, TV show details, anime details, movie info, cast, ratings, synopsis, trailer, FreeFlix, streaming info">
 
@@ -61,36 +61,6 @@
                 overflow-wrap: break-word;
                 word-wrap: break-word;
             }
-
-            /* Ensure fullscreen button is visible on vidsrc.ru and similar providers */
-            #iframe, iframe {
-                padding-bottom: 30px !important; /* Add space below the iframe for the fullscreen button */
-                z-index: 1;
-                position: relative !important;
-                margin-bottom: 30px !important; /* Extra space for controls */
-            }
-
-            /* Enhanced visibility for vidsrc.ru fullscreen controls */
-            iframe[src*="vidsrc.ru"], iframe[src*="vidsrc.su"] {
-                padding-bottom: 60px !important;
-                margin-bottom: 60px !important;
-                min-height: 180px !important;
-                max-height: 180px !important;
-                height: 180px !important;
-            }
-
-            /* Ensure controls are visible on embeds */
-            .plyr, .jw-player, .video-js, .vjs-controls {
-                z-index: 10 !important;
-                overflow: visible !important;
-            }
-
-            /* Fix for controls being cut off */
-            .plyr__controls, .jw-controlbar, .vjs-control-bar {
-                visibility: visible !important;
-                opacity: 1 !important;
-                z-index: 100 !important;
-            }
         }
     </style>
 </head>
@@ -113,10 +83,8 @@
         <!-- Movie poster section -->
         <div class="movie-poster">
             <img id="moviePoster" src="" alt="Movie Poster" width="300" height="450" loading="eager">
-            <div class="iframe-container">
-                <iframe id="iframe" frameborder="0" allowfullscreen playsinline
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"></iframe>
-            </div>
+            <iframe id="iframe" frameborder="0" allowfullscreen playsinline
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"></iframe>
 
             <!-- Season selector (visible only for TV shows) -->
             <div id="seasons-container" class="seasons-container">
@@ -184,7 +152,7 @@
                         <span class="server-tag tag-4k">4K</span>
                         <span class="server-tag tag-fast">FAST</span>
                     </div>
-                    <div class="server-option" data-server="player.videasy.net">
+                    <div class="server-option" data-server="vidsrc.vip">
                         <span class="server-name">MAFUYU</span>
                         <span class="server-tag tag-recommended">Recommended</span>
                         <span class="server-tag tag-stable">Stable</span>
@@ -219,7 +187,7 @@
                 <select id="server" class="server-selector-select">
                     <option value="vidsrc.su">SHINOMIYA (RECOMMENDED 4K FAST)</option>
                     <option value="vidlink.pro">Vidlink.pro</option>
-                    <option value="player.videasy.net">Player.videasy.net</option>
+                    <option value="vidsrc.vip">Vidsrc.vip</option>
                     <option value="vidsrc.cc">Vidsrc.cc</option>
                     <option value="movieapi.club">Movieapi.club</option>
                     <option value="vidsrc.me">MAFUYU 1080P FAST</option>

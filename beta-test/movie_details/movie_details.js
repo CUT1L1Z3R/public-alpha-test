@@ -6,7 +6,7 @@ logo.addEventListener('click', () => {
 });
 
 // Define server fallback chain
-const serverFallbackChain = ['vidsrc.su', 'player.videasy.net', 'vidlink.pro'];
+const serverFallbackChain = ['vidsrc.su', 'vidsrc.vip', 'vidlink.pro'];
 
 // Selecting various elements on the page for displaying movie details
 const movieTitle = document.getElementById('movieTitle');
@@ -238,8 +238,8 @@ async function changeServer() {
             case "vidsrc.su":
                 embedURL = `https://vidsrc.su/embed/anime/${id}`;
                 break;
-            case "player.videasy.net":
-                embedURL = `https://player.videasy.net/anime/${id}`;
+            case "vidsrc.vip":
+                embedURL = `https://vidsrc.vip/anime/${id}`;
                 break;
             case "2embed":
                 embedURL = `https://www.2embed.cc/embed/anime/${id}`;
@@ -272,8 +272,8 @@ async function changeServer() {
             case "vidsrc.su":
                 embedURL = `https://vidsrc.su/embed/${type}/${id}`;
                 break;
-            case "player.videasy.net":
-                embedURL = `https://player.videasy.net/${type}/${id}`;
+            case "vidsrc.vip":
+                embedURL = `https://vidsrc.vip/${type}/${id}`;
                 break;
             case "2embed":
                 embedURL = `https://www.2embed.cc/embed/${id}`;
@@ -300,26 +300,7 @@ async function changeServer() {
     iframe.setAttribute('playsinline', '');
     iframe.setAttribute('webkit-playsinline', 'true');
     iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen');
-    iframe.setAttribute('allowfullscreen', 'true');
-    iframe.setAttribute('webkitallowfullscreen', 'true');
-    iframe.setAttribute('mozallowfullscreen', 'true');
-
-    // Force iframe to have a proper stacking context for controls
-    iframe.style.zIndex = '1';
-    iframe.style.position = 'relative';
-
-    // Special handling for vidsrc.ru to ensure fullscreen button visibility on mobile
-    if (embedURL.includes('vidsrc.su') || embedURL.includes('vidsrc.ru')) {
-        if (window.innerWidth <= 740) {
-            const iframeContainer = document.querySelector('.iframe-container');
-            if (iframeContainer) {
-                iframeContainer.style.paddingBottom = '85px';
-            }
-        }
-    }
-
-    // Always call adjustIframeForMobile when changing servers
-    setTimeout(adjustIframeForMobile, 500);
+    iframe.setAttribute('allowfullscreen', '');
     // Setup fallback chain on error
     let currentIndex = serverFallbackChain.indexOf(server);
     iframe.onerror = () => {
@@ -345,8 +326,8 @@ function playEpisode(tvId, seasonNumber, episodeNumber) {
 
     // Update the URL for each server to include season and episode parameters
     switch (server) {
-        case "player.videasy.net":
-            embedURL = `https://player.videasy.net/tv/${tvId}/${seasonNumber}/${episodeNumber}`;
+        case "vidsrc.vip":
+            embedURL = `https://vidsrc.vip/tv/${tvId}/${seasonNumber}/${episodeNumber}`;
             break;
         case "vidlink.pro":
             embedURL = `https://vidlink.pro/tv/${tvId}/${seasonNumber}/${episodeNumber}?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
@@ -381,22 +362,7 @@ function playEpisode(tvId, seasonNumber, episodeNumber) {
         iframe.setAttribute('playsinline', '');
         iframe.setAttribute('webkit-playsinline', 'true');
         iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen');
-        iframe.setAttribute('allowfullscreen', 'true');
-        iframe.setAttribute('webkitallowfullscreen', 'true');
-        iframe.setAttribute('mozallowfullscreen', 'true');
-
-        // Force iframe to have a proper stacking context for controls
-        iframe.style.zIndex = '1';
-        iframe.style.position = 'relative';
-
-        // Special handling for vidsrc.ru to ensure fullscreen button visibility on mobile
-        if (embedURL.includes('vidsrc.su') || embedURL.includes('vidsrc.ru')) {
-            if (window.innerWidth <= 740) {
-                iframe.style.marginBottom = '35px';
-                // Add a slight padding to ensure controls are visible
-                iframe.style.paddingBottom = '35px';
-            }
-        }
+        iframe.setAttribute('allowfullscreen', '');
         // Setup fallback chain on error for episodes
         let epIndex = serverFallbackChain.indexOf(server);
         iframe.onerror = () => {
@@ -531,29 +497,14 @@ function initServerDropdown() {
         serverDropdownContent.classList.toggle('show');
         serverDropdownHeader.classList.toggle('active');
         dropdownArrow.classList.toggle('up');
-
-        // Prevent page scrolling when dropdown is open
-        if (serverDropdownContent.classList.contains('show')) {
-            // Save current scroll position
-            window.dropdownScrollPos = window.scrollY;
-        }
     });
 
     // Close dropdown when clicking outside
     document.addEventListener('click', function(event) {
         if (!event.target.closest('.server-dropdown')) {
-            const wasOpen = serverDropdownContent.classList.contains('show');
             serverDropdownContent.classList.remove('show');
             serverDropdownHeader.classList.remove('active');
             dropdownArrow.classList.remove('up');
-
-            // If dropdown was open, restore scroll position
-            if (wasOpen && window.dropdownScrollPos !== undefined) {
-                setTimeout(() => {
-                    window.scrollTo(0, window.dropdownScrollPos);
-                    window.dropdownScrollPos = undefined;
-                }, 10);
-            }
         }
     });
 
@@ -581,14 +532,6 @@ function initServerDropdown() {
             serverDropdownHeader.classList.remove('active');
             dropdownArrow.classList.remove('up');
 
-            // Restore the scroll position if needed
-            if (window.dropdownScrollPos !== undefined) {
-                setTimeout(() => {
-                    window.scrollTo(0, window.dropdownScrollPos);
-                    window.dropdownScrollPos = undefined;
-                }, 10);
-            }
-
             // Call the existing changeServer function
             changeServer();
         });
@@ -608,32 +551,12 @@ document.getElementById('server').addEventListener('change', () => {
     changeServer();
 });
 
-// Function to adjust iframe for mobile
-function adjustIframeForMobile() {
-    const iframe = document.getElementById('iframe');
-    const iframeContainer = document.querySelector('.iframe-container');
-
-    if (window.innerWidth <= 740) {
-        // Mobile adjustments
-        if (iframe && iframeContainer) {
-            // Adjust container height specifically for mobile
-            iframeContainer.style.paddingBottom = '75px';
-
-            // If using vidsrc.ru or vidsrc.su, add extra space
-            if (iframe.src.includes('vidsrc.ru') || iframe.src.includes('vidsrc.su')) {
-                iframeContainer.style.paddingBottom = '85px';
-                iframe.style.marginBottom = '0';
-            }
-        }
-    }
-}
-
 // Initialize everything when the window loads
 window.addEventListener('load', function() {
     // Set a default server if none is selected
     const serverSelect = document.getElementById('server');
     if (serverSelect && !serverSelect.value) {
-        serverSelect.value = "vidsrc.su";  // Default to vidsrc.su instead
+        serverSelect.value = "vidlink.pro";
     }
 
     // Initialize server dropdown
@@ -641,10 +564,6 @@ window.addEventListener('load', function() {
 
     // Display movie details
     displayMovieDetails();
-
-    // Adjust iframe for mobile devices
-    adjustIframeForMobile();
-
     // Show server change notice banner on load
     const banner = document.getElementById('server-notice-banner');
     const bannerClose = document.getElementById('banner-close-btn');
@@ -655,11 +574,7 @@ window.addEventListener('load', function() {
         bannerClose.addEventListener('click', () => {
             banner.style.display = 'none';
         });
-        // Auto close banner after 7 seconds
+        // Auto close banner after 4 seconds
         setTimeout(() => { banner.style.display = 'none'; }, 7000);
     }
-});
-
-// Listen for resize events to adjust iframe on orientation change
-window.addEventListener('resize', adjustIframeForMobile);
 });

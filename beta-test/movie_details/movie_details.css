@@ -59,35 +59,14 @@ h1 {
     flex-direction: column;
 }
 
-/* iframe container and sizing */
-.iframe-container {
-    position: relative;
-    width: 100%;
-    overflow: visible;
-    padding-bottom: 60px; /* Space for controls */
-    margin-bottom: 20px;
-}
-
-/* Add a pseudo element to increase the clicking area for fullscreen button */
-.iframe-container::after {
-    content: "";
-    display: block;
-    height: 50px;
-    width: 100%;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    z-index: -1;
-}
-
+/* iframe sizing */
 iframe {
     width: 100%;
     height: 450px !important;
-    margin: 0;
+    margin: 0 0 20px 0;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     border: none; /* Remove border to make it cleaner */
-    position: relative;
 }
 
 #moviePoster {
@@ -444,22 +423,12 @@ p {
   display: none;
   max-height: 300px;
   overflow-y: auto;
-  overflow-x: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   box-sizing: border-box; /* Include border in width */
-  /* Improved scrolling */
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
 }
 
 .server-dropdown-content.show {
   display: block;
-  animation: fadeIn 0.2s ease-out;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-5px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 
 .server-option {
@@ -549,7 +518,7 @@ p {
 
 /* Customize scrollbar for the server dropdown */
 .server-dropdown-content::-webkit-scrollbar {
-  width: 6px; /* Thinner scrollbar */
+  width: 8px;
 }
 
 .server-dropdown-content::-webkit-scrollbar-track {
@@ -564,12 +533,6 @@ p {
 
 .server-dropdown-content::-webkit-scrollbar-thumb:hover {
   background: #8507b5;
-}
-
-/* Firefox scrollbar styling */
-.server-dropdown-content {
-  scrollbar-width: thin;
-  scrollbar-color: #a209da #201020;
 }
 
 /* Server selector dropdown styles - OLD VERSION (keeping for backward compatibility) */
@@ -844,12 +807,6 @@ p {
         padding: 4px 8px;
         font-size: 12px;
     }
-
-    /* Specific fix for vidsrc.ru fullscreen button on mobile */
-    iframe {
-        min-height: 220px !important;
-        margin-bottom: 35px !important; /* Extra space for controls */
-    }
 }
 
 /* ----Media Queries---- */
@@ -865,13 +822,6 @@ p {
         padding: 0;
         box-sizing: border-box;
         font-size: 14px;
-        position: relative; /* Needed for fixed positioning context */
-    }
-
-    /* Ensure dropdown stays within viewport */
-    .server-dropdown {
-        position: relative;
-        z-index: 25;
     }
 
     /* Fix for overall container */
@@ -893,31 +843,13 @@ p {
         box-sizing: border-box;
     }
 
-    /* Video frame container optimization */
-    .iframe-container {
-        padding-bottom: 85px !important; /* Extra space for controls */
-        margin-bottom: 15px !important;
-        overflow: visible;
-        position: relative;
-    }
-
     /* Video frame optimization */
     #iframe,
     iframe {
-        height: 170px !important; /* Reduced height to make room for controls */
+        height: 220px !important;
         width: 100%;
-        margin: 0 !important;
+        margin: 0 auto 15px auto;
         box-sizing: border-box;
-        /* Fix for fullscreen button visibility in mobile */
-        max-width: 100% !important;
-        /* Ensure fullscreen button is not cut off */
-        position: relative;
-        z-index: 1;
-    }
-
-    /* Increase size of pseudo element for better click area */
-    .iframe-container::after {
-        height: 70px;
     }
 
     /* Season container adjustments */
@@ -1012,11 +944,7 @@ p {
     .server-dropdown-content {
         min-width: 0;
         max-width: 100%;
-        max-height: 200px; /* Smaller height on mobile */
-        overflow-y: auto;
-        overflow-x: hidden;
         box-sizing: border-box;
-        -webkit-overflow-scrolling: touch;
     }
 
     /* Header adjustments */
@@ -1061,20 +989,11 @@ p {
         padding: 0 10px;
     }
 
-    /* Improved iframe container styling */
-    .iframe-container {
-        width: 95%;
-        margin: 0 auto;
-        padding-bottom: 65px;
-        position: relative;
-        overflow: visible;
-    }
-
     #iframe,
     iframe {
         height: 320px !important;
-        width: 100%;
-        margin: 0;
+        width: 95%;
+        margin: 0 auto 20px auto;
         box-sizing: border-box;
     }
 
@@ -1115,10 +1034,6 @@ p {
     .server-dropdown-content {
         min-width: 0;
         max-width: 100%;
-        max-height: 250px; /* Better height on tablets */
-        overflow-y: auto;
-        overflow-x: hidden;
-        -webkit-overflow-scrolling: touch;
         box-sizing: border-box;
     }
 
