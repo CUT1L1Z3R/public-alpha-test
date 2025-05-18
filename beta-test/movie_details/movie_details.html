@@ -83,9 +83,11 @@
         <!-- Movie poster section -->
         <div class="movie-poster">
             <img id="moviePoster" src="" alt="Movie Poster" width="300" height="450" loading="eager">
-            <iframe id="iframe" frameborder="0" allowfullscreen playsinline
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"></iframe>
-            <div id="player-controls-spacer"></div>
+            <div style="position: relative; width: 100%;">
+                <iframe id="iframe" frameborder="0" allowfullscreen playsinline
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"></iframe>
+                <div id="player-controls-spacer"></div>
+            </div>
 
             <!-- Season selector (visible only for TV shows) -->
             <div id="seasons-container" class="seasons-container">
