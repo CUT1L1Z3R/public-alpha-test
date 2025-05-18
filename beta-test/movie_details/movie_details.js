@@ -1,162 +1,3 @@
-/**
- * Mobile viewport and fullscreen optimizations
- */
-// Add mobile viewport optimization
-function setOptimizedViewport() {
-    // Check if we're on a mobile device
-    if (window.innerWidth <= 768) {
-        // Find existing viewport meta tag
-        let viewportMeta = document.querySelector('meta[name="viewport"]');
-
-        // Update or create viewport meta tag with settings that ensure video controls are visible
-        if (viewportMeta) {
-            viewportMeta.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, viewport-fit=cover');
-        } else {
-            viewportMeta = document.createElement('meta');
-            viewportMeta.setAttribute('name', 'viewport');
-            viewportMeta.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, viewport-fit=cover');
-            document.head.appendChild(viewportMeta);
-        }
-
-        // Add additional mobile optimizations
-        document.documentElement.style.height = '100%';
-        document.body.style.height = '100%';
-        document.body.style.overflowX = 'hidden';
-    }
-}
-
-// Ensure iframe is properly configured for fullscreen
-function optimizeIframeForFullscreen() {
-    const iframeElement = document.getElementById('iframe');
-    if (iframeElement) {
-        // Ensure all fullscreen attributes are properly set
-        iframeElement.setAttribute('allowfullscreen', 'true');
-        iframeElement.setAttribute('webkitallowfullscreen', 'true');
-        iframeElement.setAttribute('mozallowfullscreen', 'true');
-        iframeElement.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen');
-
-        // For iOS Safari specific fixes
-        iframeElement.setAttribute('playsinline', 'true');
-    }
-}
-
-// Function to ensure iframe containers are properly sized for mobile video controls
-function adjustPlayerForMobile() {
-    // Only apply for mobile devices
-    if (window.innerWidth <= 768) {
-        const iframe = document.getElementById('iframe');
-        let iframeContainer = document.getElementById('iframe-container');
-
-        if (iframe && !iframeContainer) {
-            // If we don't have a container yet (compatibility with existing code)
-            // Create a container element
-            const container = document.createElement('div');
-            container.id = 'iframe-container';
-
-            // Move the iframe inside the container
-            const parent = iframe.parentNode;
-            parent.insertBefore(container, iframe);
-            container.appendChild(iframe);
-
-            // Add a spacer for controls
-            const spacer = document.createElement('div');
-            spacer.className = 'controls-spacer';
-            container.appendChild(spacer);
-
-            iframeContainer = container;
-        }
-
-        // Adjust iframe height to ensure controls are visible
-        if (iframe) {
-            // Make sure iframe is tall enough
-            const minHeight = Math.max(250, window.innerWidth * 0.5625 + 45); // 16:9 + controls
-            iframe.style.minHeight = `${minHeight}px`;
-
-            // Ensure our container has the correct layout
-            if (iframeContainer) {
-                iframeContainer.style.paddingBottom = '56.25%'; // 16:9 aspect ratio
-                iframeContainer.style.height = '0';
-                iframeContainer.style.position = 'relative';
-                iframeContainer.style.marginBottom = '50px';
-                iframeContainer.style.overflow = 'visible';
-
-                // Position iframe absolutely within container
-                iframe.style.position = 'absolute';
-                iframe.style.top = '0';
-                iframe.style.left = '0';
-                iframe.style.width = '100%';
-                iframe.style.height = '100%';
-            }
-        }
-    }
-}
-
-// Mobile video player fullscreen fix
-function fixMobileVideoControls() {
-    // Check if we're on mobile
-    if (window.innerWidth <= 560) {
-        const videoIframe = document.getElementById('iframe');
-        if (videoIframe) {
-            // Direct style overrides to ensure controls are visible
-            videoIframe.style.minHeight = '300px';
-            videoIframe.style.marginBottom = '60px';
-            videoIframe.style.position = 'relative';
-            videoIframe.style.zIndex = '5';
-
-            // Special handling for iOS
-            if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-                // iOS needs extra space
-                videoIframe.style.minHeight = '320px';
-                videoIframe.style.marginBottom = '70px';
-
-                // This forces iOS to render the controls correctly
-                document.body.style.paddingBottom = '70px';
-
-                // Try to fix the bottom bar overlapping controls
-                const poster = document.querySelector('.movie-poster');
-                if (poster) {
-                    poster.style.marginBottom = '80px';
-                }
-
-                // Create a fix for the fullscreen button
-                let fullscreenFix = document.createElement('div');
-                fullscreenFix.style.height = '60px';
-                fullscreenFix.style.width = '100%';
-                fullscreenFix.style.position = 'relative';
-                fullscreenFix.style.clear = 'both';
-                fullscreenFix.style.display = 'block';
-                fullscreenFix.style.marginTop = '-40px';
-                fullscreenFix.style.pointerEvents = 'none';
-
-                // Add it after the iframe
-                if (!videoIframe.nextSibling || videoIframe.nextSibling !== fullscreenFix) {
-                    videoIframe.parentNode.insertBefore(fullscreenFix, videoIframe.nextSibling);
-                }
-            }
-        }
-    }
-}
-
-// Run optimizations when DOM content is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    setOptimizedViewport();
-    optimizeIframeForFullscreen();
-    adjustPlayerForMobile();
-
-    // Add our new mobile fix
-    fixMobileVideoControls();
-
-    // Add resize listener to handle orientation changes
-    window.addEventListener('resize', function() {
-        setOptimizedViewport();
-        adjustPlayerForMobile();
-        fixMobileVideoControls();
-    });
-
-    // Delayed application for mobile fixes
-    setTimeout(fixMobileVideoControls, 1000);
-});
-
 //
 // Selecting the logo element and adding a click event listener to navigate to the homepage
 const logo = document.querySelector('.logo');
@@ -166,6 +7,25 @@ logo.addEventListener('click', () => {
 
 // Define server fallback chain
 const serverFallbackChain = ['vidsrc.su', 'vidsrc.vip', 'vidlink.pro'];
+
+// Function to ensure iframe controls are accessible on mobile
+function ensureControlsAccessible() {
+    if (window.innerWidth <= 560) { // Only on mobile
+        const iframe = document.getElementById('iframe');
+        const spacer = document.getElementById('player-controls-spacer');
+
+        if (iframe && spacer) {
+            // Set spacer height proportionally
+            spacer.style.height = '75px';
+
+            // Force iframe to have breathing room for controls
+            iframe.style.paddingRight = '50px';
+
+            // Ensure proper minimum height
+            iframe.style.minHeight = '220px';
+        }
+    }
+}
 
 // Selecting various elements on the page for displaying movie details
 const movieTitle = document.getElementById('movieTitle');
@@ -361,42 +221,19 @@ async function loadEpisodes(tvId, seasonNumber) {
     }
 }
 
-// Add to the loadMedia function to better handle mobile video
+// Add code to update player when source changes
 function loadMedia(embedURL, server) {
-    // Set the video URL
+    // Set the source of the iframe to the video URL
     iframe.setAttribute('src', embedURL);
-    iframe.setAttribute('playsinline', '');
-    iframe.setAttribute('webkit-playsinline', 'true');
-    iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen');
-    iframe.setAttribute('allowfullscreen', '');
-    iframe.setAttribute('webkitallowfullscreen', 'true');
-    iframe.setAttribute('mozallowfullscreen', 'true');
-    // Setup fallback chain on error
-    let currentIndex = serverFallbackChain.indexOf(server);
-    iframe.onerror = () => {
-        const nextIndex = currentIndex + 1;
-        if (nextIndex < serverFallbackChain.length) {
-            const nextServer = serverFallbackChain[nextIndex];
-            document.getElementById('server').value = nextServer;
-            currentIndex = nextIndex;
-            changeServer();
-        }
-    };
-    // Ensure iframe is visible and sized correctly
-    iframe.style.display = "block";  // Show the iframe
 
-    // Hide the movie poster when the video is playing
-    moviePoster.style.display = "none";  // Hide the movie poster image
+    // Show the iframe and ensure it's visible
+    iframe.style.display = "block";
 
-    // Ensure fullscreen attributes are set
-    optimizeIframeForFullscreen();
+    // Hide the movie poster when the video is loaded
+    moviePoster.style.display = "none";
 
-    // Apply fixes for mobile video controls
-    fixMobileVideoControls();
-
-    // Delayed reapplication of fixes for when video starts playing
-    setTimeout(fixMobileVideoControls, 500);
-    setTimeout(fixMobileVideoControls, 1500);
+    // Ensure controls are accessible after changing source
+    setTimeout(ensureControlsAccessible, 500);
 }
 
 // Function to handle video source change based on selected server
@@ -492,8 +329,31 @@ async function changeServer() {
     // Log the URL for debugging
     console.log(`Loading ${type} from: ${embedURL}`);
 
-    // Use the new loadMedia function for loading and adjusting
-    loadMedia(embedURL, server);
+    // Update the iframe source with the correct video URL and set attributes
+    iframe.setAttribute('src', embedURL);
+    iframe.setAttribute('playsinline', '');
+    iframe.setAttribute('webkit-playsinline', 'true');
+    iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen');
+    iframe.setAttribute('allowfullscreen', '');
+    // Setup fallback chain on error
+    let currentIndex = serverFallbackChain.indexOf(server);
+    iframe.onerror = () => {
+        const nextIndex = currentIndex + 1;
+        if (nextIndex < serverFallbackChain.length) {
+            const nextServer = serverFallbackChain[nextIndex];
+            document.getElementById('server').value = nextServer;
+            currentIndex = nextIndex;
+            changeServer();
+        }
+    };
+    // Ensure iframe is visible and sized correctly
+    iframe.style.display = "block";  // Show the iframe
+
+    // Hide the movie poster when the video is playing
+    moviePoster.style.display = "none";  // Hide the movie poster image
+
+    // Ensure controls are accessible after changing source
+    setTimeout(ensureControlsAccessible, 500);
 }
 
 // Function to play a specific episode
@@ -534,8 +394,29 @@ function playEpisode(tvId, seasonNumber, episodeNumber) {
         // Log the URL for debugging
         console.log(`Loading TV episode from: ${embedURL}`);
 
-        // Use the new loadMedia function for loading and adjusting
-        loadMedia(embedURL, server);
+        // Update the iframe source with the episode URL and set attributes
+        iframe.setAttribute('src', embedURL);
+        iframe.setAttribute('playsinline', '');
+        iframe.setAttribute('webkit-playsinline', 'true');
+        iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen');
+        iframe.setAttribute('allowfullscreen', '');
+        // Setup fallback chain on error for episodes
+        let epIndex = serverFallbackChain.indexOf(server);
+        iframe.onerror = () => {
+            const nextEp = epIndex + 1;
+            if (nextEp < serverFallbackChain.length) {
+                const nextSrv = serverFallbackChain[nextEp];
+                document.getElementById('server').value = nextSrv;
+                epIndex = nextEp;
+                changeServer();
+            }
+        };
+
+        iframe.style.display = "block";
+        moviePoster.style.display = "none";
+
+        // Ensure controls are accessible after changing source
+        setTimeout(ensureControlsAccessible, 500);
 
         // Mark the selected episode as active
         const episodes = document.querySelectorAll('.episode-item');
@@ -708,6 +589,20 @@ function initServerDropdown() {
 // Function to handle changes when server selection is made
 document.getElementById('server').addEventListener('change', () => {
     changeServer();
+});
+
+// Add the function to the DOMContentLoaded event
+document.addEventListener('DOMContentLoaded', function() {
+    // Ensure our controls are accessible on mobile
+    ensureControlsAccessible();
+
+    // Add resize event
+    window.addEventListener('resize', function() {
+        ensureControlsAccessible();
+    });
+
+    // Also call it a bit after page load (helpful for mobile browsers)
+    setTimeout(ensureControlsAccessible, 1000);
 });
 
 // Initialize everything when the window loads

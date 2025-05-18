@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="description" content="Get detailed information about movies and TV shows on FreeFlix. View ratings, cast, trailers, synopsis and add titles to your watchlist.">
     <meta name="keywords" content="movie details, TV show details, anime details, movie info, cast, ratings, synopsis, trailer, FreeFlix, streaming info">
 
@@ -63,77 +63,6 @@
             }
         }
     </style>
-
-    <!-- Mobile video player enhancements -->
-    <style>
-        /* Force proper iframe rendering on mobile */
-        @media only screen and (max-width: 560px) {
-            #iframe-container {
-                position: relative;
-                width: 100%;
-                padding-bottom: 56.25%; /* 16:9 aspect ratio */
-                height: 0;
-                overflow: visible; /* Allow controls to be visible */
-                margin-bottom: 50px; /* Space for controls */
-            }
-
-            #iframe {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                min-height: 250px; /* Ensure minimum height */
-            }
-
-            /* Container for better control visibility */
-            .controls-spacer {
-                height: 45px;
-                width: 100%;
-                display: block;
-                position: relative;
-                z-index: 5;
-            }
-        }
-    </style>
-
-    <!-- Direct fix for mobile video fullscreen -->
-    <style>
-        /* Target specific video player controls */
-        @media only screen and (max-width: 560px) {
-            /* CRITICAL MOBILE VIDEO FIX */
-            iframe {
-                max-height: unset !important;
-                max-width: unset !important;
-                min-height: 300px !important;
-                margin-bottom: 60px !important;
-                position: relative !important;
-                z-index: 5 !important;
-            }
-
-            /* Ensure the container doesn't limit the controls */
-            .movie-poster {
-                overflow: visible !important;
-                margin-bottom: 60px !important;
-                position: relative !important;
-            }
-
-            /* Fix for the movie details container */
-            .movie-details {
-                overflow: visible !important;
-            }
-
-            /* Fix that ensures the fullscreen button is tappable */
-            body::after {
-                content: "";
-                display: block;
-                height: 60px;
-                width: 100%;
-                position: relative;
-                clear: both;
-            }
-        }
-    </style>
 </head>
 
 <body style="overflow-x: hidden; max-width: 100%; width: 100%;">
@@ -154,20 +83,9 @@
         <!-- Movie poster section -->
         <div class="movie-poster">
             <img id="moviePoster" src="" alt="Movie Poster" width="300" height="450" loading="eager">
-            <!-- Improved iframe container for better mobile display -->
-            <div id="iframe-container">
-                <iframe id="iframe"
-                    frameborder="0"
-                    allowfullscreen="true"
-                    webkitallowfullscreen="true"
-                    mozallowfullscreen="true"
-                    playsinline="true"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
-                style="position: relative; z-index: 10;"
-            ></iframe>
-                <!-- Extra space for controls -->
-                <div class="controls-spacer"></div>
-            </div>
+            <iframe id="iframe" frameborder="0" allowfullscreen playsinline
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"></iframe>
+            <div id="player-controls-spacer"></div>
 
             <!-- Season selector (visible only for TV shows) -->
             <div id="seasons-container" class="seasons-container">
