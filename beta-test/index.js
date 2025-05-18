@@ -41,24 +41,151 @@ if ('serviceWorker' in navigator) {
                         if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
                             console.log('New content is available, refresh to update.');
 
-                            // Show a notification to the user about the update
+                            // Create an enhanced popup notification for the user
                             const updateNotification = document.createElement('div');
-                            updateNotification.style.position = 'fixed';
-                            updateNotification.style.bottom = '20px';
-                            updateNotification.style.right = '20px';
-                            updateNotification.style.background = '#8d16c9';
-                            updateNotification.style.color = 'white';
-                            updateNotification.style.padding = '10px 20px';
-                            updateNotification.style.borderRadius = '5px';
-                            updateNotification.style.boxShadow = '0 2px 10px rgba(0,0,0,0.3)';
-                            updateNotification.style.zIndex = '9999';
-                            updateNotification.innerHTML = 'New content available! <button id="update-button" style="background:#fff; color:#8d16c9; border:none; padding:5px 10px; margin-left:10px; border-radius:3px; cursor:pointer;">Refresh</button>';
+                            updateNotification.className = 'update-popup';
+                            updateNotification.innerHTML = `
+                                <div class="update-popup-content">
+                                    <div class="update-popup-header">
+                                        <h3>New Content Available!</h3>
+                                        <button id="update-close" class="update-close-btn">&times;</button>
+                                    </div>
+                                    <div class="update-popup-body">
+                                        <p class="update-feature"><span class="update-icon">✓</span> Download Button Available</p>
+                                        <p class="update-feature"><span class="update-icon">✓</span> Genre Navigation Added</p>
+                                    </div>
+                                    <div class="update-popup-footer">
+                                        <button id="update-button" class="update-refresh-btn">Refresh Now</button>
+                                    </div>
+                                </div>
+                            `;
 
+                            // Add styles directly in the JS to ensure they're applied even if CSS isn't loaded yet
+                            const popupStyle = document.createElement('style');
+                            popupStyle.textContent = `
+                                .update-popup {
+                                    position: fixed;
+                                    bottom: 30px;
+                                    right: 30px;
+                                    z-index: 10000;
+                                    animation: slideIn 0.5s ease forwards;
+                                }
+
+                                @keyframes slideIn {
+                                    from { transform: translateY(100px); opacity: 0; }
+                                    to { transform: translateY(0); opacity: 1; }
+                                }
+
+                                .update-popup-content {
+                                    background-color: #1a1a1a;
+                                    border: 1px solid rgba(141, 22, 201, 0.6);
+                                    border-radius: 8px;
+                                    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5), 0 0 15px rgba(141, 22, 201, 0.3);
+                                    overflow: hidden;
+                                    width: 320px;
+                                    color: white;
+                                }
+
+                                .update-popup-header {
+                                    background: linear-gradient(135deg, #8d16c9 0%, #5b0e88 100%);
+                                    padding: 12px 15px;
+                                    display: flex;
+                                    justify-content: space-between;
+                                    align-items: center;
+                                }
+
+                                .update-popup-header h3 {
+                                    margin: 0;
+                                    font-size: 16px;
+                                    font-weight: 600;
+                                }
+
+                                .update-close-btn {
+                                    background: transparent;
+                                    border: none;
+                                    color: white;
+                                    font-size: 22px;
+                                    cursor: pointer;
+                                    line-height: 0.8;
+                                    padding: 0;
+                                    width: 24px;
+                                    height: 24px;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    opacity: 0.8;
+                                    transition: opacity 0.2s;
+                                }
+
+                                .update-close-btn:hover {
+                                    opacity: 1;
+                                }
+
+                                .update-popup-body {
+                                    padding: 15px 20px;
+                                    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                                }
+
+                                .update-feature {
+                                    margin: 8px 0;
+                                    display: flex;
+                                    align-items: center;
+                                }
+
+                                .update-icon {
+                                    color: #4CAF50;
+                                    margin-right: 10px;
+                                    font-weight: bold;
+                                }
+
+                                .update-popup-footer {
+                                    padding: 15px 20px;
+                                    text-align: right;
+                                }
+
+                                .update-refresh-btn {
+                                    background: linear-gradient(135deg, #8d16c9 0%, #5b0e88 100%);
+                                    color: white;
+                                    border: none;
+                                    padding: 8px 18px;
+                                    border-radius: 4px;
+                                    cursor: pointer;
+                                    font-weight: 600;
+                                    transition: all 0.2s;
+                                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+                                }
+
+                                .update-refresh-btn:hover {
+                                    background: linear-gradient(135deg, #a219e6 0%, #6c0fa1 100%);
+                                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+                                }
+                            `;
+
+                            document.head.appendChild(popupStyle);
                             document.body.appendChild(updateNotification);
 
+                            // Add event listeners
                             document.getElementById('update-button').addEventListener('click', () => {
                                 window.location.reload();
                             });
+
+                            document.getElementById('update-close').addEventListener('click', () => {
+                                updateNotification.style.animation = 'slideOut 0.3s ease forwards';
+                                setTimeout(() => {
+                                    updateNotification.remove();
+                                    popupStyle.remove();
+                                }, 300);
+                            });
+
+                            // Add the slideOut animation
+                            const slideOutStyle = document.createElement('style');
+                            slideOutStyle.textContent = `
+                                @keyframes slideOut {
+                                    from { transform: translateY(0); opacity: 1; }
+                                    to { transform: translateY(100px); opacity: 0; }
+                                }
+                            `;
+                            document.head.appendChild(slideOutStyle);
                         }
                     });
                 });
@@ -72,24 +199,151 @@ if ('serviceWorker' in navigator) {
             if (event.data && event.data.type === 'UPDATE_AVAILABLE') {
                 console.log('Update available, version:', event.data.version);
 
-                // Show a notification to the user about the update
+                // Create an enhanced popup notification for the user
                 const updateNotification = document.createElement('div');
-                updateNotification.style.position = 'fixed';
-                updateNotification.style.bottom = '20px';
-                updateNotification.style.right = '20px';
-                updateNotification.style.background = '#8d16c9';
-                updateNotification.style.color = 'white';
-                updateNotification.style.padding = '10px 20px';
-                updateNotification.style.borderRadius = '5px';
-                updateNotification.style.boxShadow = '0 2px 10px rgba(0,0,0,0.3)';
-                updateNotification.style.zIndex = '9999';
-                updateNotification.innerHTML = 'New content available! <button id="update-button" style="background:#fff; color:#8d16c9; border:none; padding:5px 10px; margin-left:10px; border-radius:3px; cursor:pointer;">Refresh</button>';
+                updateNotification.className = 'update-popup';
+                updateNotification.innerHTML = `
+                    <div class="update-popup-content">
+                        <div class="update-popup-header">
+                            <h3>New Content Available!</h3>
+                            <button id="update-close" class="update-close-btn">&times;</button>
+                        </div>
+                        <div class="update-popup-body">
+                            <p class="update-feature"><span class="update-icon">✓</span> Download Button Available</p>
+                            <p class="update-feature"><span class="update-icon">✓</span> Genre Navigation Added</p>
+                        </div>
+                        <div class="update-popup-footer">
+                            <button id="update-button" class="update-refresh-btn">Refresh Now</button>
+                        </div>
+                    </div>
+                `;
 
+                // Add styles directly in the JS to ensure they're applied even if CSS isn't loaded yet
+                const popupStyle = document.createElement('style');
+                popupStyle.textContent = `
+                    .update-popup {
+                        position: fixed;
+                        bottom: 30px;
+                        right: 30px;
+                        z-index: 10000;
+                        animation: slideIn 0.5s ease forwards;
+                    }
+
+                    @keyframes slideIn {
+                        from { transform: translateY(100px); opacity: 0; }
+                        to { transform: translateY(0); opacity: 1; }
+                    }
+
+                    .update-popup-content {
+                        background-color: #1a1a1a;
+                        border: 1px solid rgba(141, 22, 201, 0.6);
+                        border-radius: 8px;
+                        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5), 0 0 15px rgba(141, 22, 201, 0.3);
+                        overflow: hidden;
+                        width: 320px;
+                        color: white;
+                    }
+
+                    .update-popup-header {
+                        background: linear-gradient(135deg, #8d16c9 0%, #5b0e88 100%);
+                        padding: 12px 15px;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                    }
+
+                    .update-popup-header h3 {
+                        margin: 0;
+                        font-size: 16px;
+                        font-weight: 600;
+                    }
+
+                    .update-close-btn {
+                        background: transparent;
+                        border: none;
+                        color: white;
+                        font-size: 22px;
+                        cursor: pointer;
+                        line-height: 0.8;
+                        padding: 0;
+                        width: 24px;
+                        height: 24px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        opacity: 0.8;
+                        transition: opacity 0.2s;
+                    }
+
+                    .update-close-btn:hover {
+                        opacity: 1;
+                    }
+
+                    .update-popup-body {
+                        padding: 15px 20px;
+                        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                    }
+
+                    .update-feature {
+                        margin: 8px 0;
+                        display: flex;
+                        align-items: center;
+                    }
+
+                    .update-icon {
+                        color: #4CAF50;
+                        margin-right: 10px;
+                        font-weight: bold;
+                    }
+
+                    .update-popup-footer {
+                        padding: 15px 20px;
+                        text-align: right;
+                    }
+
+                    .update-refresh-btn {
+                        background: linear-gradient(135deg, #8d16c9 0%, #5b0e88 100%);
+                        color: white;
+                        border: none;
+                        padding: 8px 18px;
+                        border-radius: 4px;
+                        cursor: pointer;
+                        font-weight: 600;
+                        transition: all 0.2s;
+                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+                    }
+
+                    .update-refresh-btn:hover {
+                        background: linear-gradient(135deg, #a219e6 0%, #6c0fa1 100%);
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+                    }
+                `;
+
+                document.head.appendChild(popupStyle);
                 document.body.appendChild(updateNotification);
 
+                // Add event listeners
                 document.getElementById('update-button').addEventListener('click', () => {
                     window.location.reload();
                 });
+
+                document.getElementById('update-close').addEventListener('click', () => {
+                    updateNotification.style.animation = 'slideOut 0.3s ease forwards';
+                    setTimeout(() => {
+                        updateNotification.remove();
+                        popupStyle.remove();
+                    }, 300);
+                });
+
+                // Add the slideOut animation
+                const slideOutStyle = document.createElement('style');
+                slideOutStyle.textContent = `
+                    @keyframes slideOut {
+                        from { transform: translateY(0); opacity: 1; }
+                        to { transform: translateY(100px); opacity: 0; }
+                    }
+                `;
+                document.head.appendChild(slideOutStyle);
             }
         });
     });
