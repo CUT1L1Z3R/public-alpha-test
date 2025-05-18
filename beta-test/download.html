@@ -183,12 +183,12 @@
             </div>
 
             <div class="countdown">
-                Please wait <span id="countdown">5</span> seconds
+                Please wait <span id="countdown">10</span> seconds
             </div>
 
             <div class="download-info">
                 Preparing your download. Loving what I do? You can support me by clicking the ADS.
-                Please wait while we process your request.
+                Please wait while we process your request. The countdown will begin once everything is loaded.
             </div>
             <button class="download-btn" id="download-btn">Continue to Download</button>
         </div>
@@ -205,28 +205,37 @@
         const progressBar = document.getElementById('progress-bar');
 
         // Set countdown
-        let secondsLeft = 5;
+        let secondsLeft = 6; // Set to 6 seconds
+        let countdownStarted = false;
+        let countdownInterval;
 
         // Update progress bar
         function updateProgressBar() {
-            const progressPercent = ((5 - secondsLeft) / 5) * 100;
+            const progressPercent = ((6 - secondsLeft) / 6) * 100; // Updated for 6 seconds
             progressBar.style.width = progressPercent + '%';
         }
 
-        // Start countdown
-        const countdownInterval = setInterval(() => {
-            secondsLeft--;
-            countdownElement.textContent = secondsLeft;
-            updateProgressBar();
+        // Start countdown function
+        function startCountdown() {
+            if (countdownStarted) return;
 
-            if (secondsLeft <= 0) {
-                clearInterval(countdownInterval);
-                countdownElement.textContent = '0';
-                countdownElement.parentElement.innerHTML = 'Download ready!';
-                downloadButton.classList.add('active');
-                progressBar.style.width = '100%';
-            }
-        }, 1000);
+            countdownStarted = true;
+            countdownElement.textContent = secondsLeft;
+
+            countdownInterval = setInterval(() => {
+                secondsLeft--;
+                countdownElement.textContent = secondsLeft;
+                updateProgressBar();
+
+                if (secondsLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    countdownElement.textContent = '0';
+                    countdownElement.parentElement.innerHTML = 'Download ready!';
+                    downloadButton.classList.add('active');
+                    progressBar.style.width = '100%';
+                }
+            }, 1000);
+        }
 
         // Handle download button click
         downloadButton.addEventListener('click', () => {
@@ -235,8 +244,18 @@
             }
         });
 
-        // Set initial progress
-        updateProgressBar();
+        // Set initial state
+        countdownElement.textContent = secondsLeft;
+
+        // Start countdown after a delay to allow ads to load
+        setTimeout(() => {
+            startCountdown();
+        }, 3000); // 3 second delay before starting countdown
+
+        // Fallback - if ads take too long, start countdown anyway
+        setTimeout(() => {
+            startCountdown();
+        }, 5000); // 5 second maximum wait
     </script>
 </body>
 </html>
