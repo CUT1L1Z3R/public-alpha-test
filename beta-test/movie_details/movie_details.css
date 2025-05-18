@@ -68,7 +68,8 @@ iframe {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     border: none; /* Remove border to make it cleaner */
     max-width: 100%; /* Ensure iframe never exceeds container width */
-    overflow: hidden; /* Hide any overflow */
+    overflow: visible; /* Allow controls to be visible outside boundaries */
+    position: relative; /* Needed for control positioning */
 }
 
 #moviePoster {
@@ -1040,7 +1041,7 @@ p {
     .movie-poster {
         width: 100%;
         margin: 0 auto;
-        padding: 0 12px; /* Increased padding for better side margins */
+        padding: 0 4px; /* Reduced padding to allow for wider video player */
         box-sizing: border-box;
         margin-bottom: -20px; /* Reduced negative margin for better spacing */
     }
@@ -1049,7 +1050,7 @@ p {
     #iframe,
     iframe {
         height: 230px !important;
-        width: 92%; /* Further reduced from 95% to ensure controls aren't cut off */
+        width: 98%; /* Almost full width as requested */
         margin: 0 auto 0 auto;
         box-sizing: border-box;
         display: block; /* Ensure proper block display */
@@ -1059,7 +1060,7 @@ p {
     #player-controls-spacer {
         display: block;
         width: 100%;
-        height: 20px; /* Further increased height for more space */
+        height: 36px; /* Increased height to ensure fullscreen button is accessible */
         clear: both;
         margin-top: 0;
         margin-bottom: 0;
