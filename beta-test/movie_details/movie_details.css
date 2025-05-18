@@ -968,18 +968,51 @@ p {
 
 /* Mobile specific iframe adjustments for button access */
 @media only screen and (max-width: 560px) {
-    /* Adjust iframe to make sure fullscreen button is accessible */
+    /* Adjust iframe to make sure fullscreen button is accessible while keeping good size */
     iframe#iframe {
-        width: calc(100% - 5px) !important; /* Slight reduction in width */
+        width: 100% !important; /* Full width */
+        height: 220px !important; /* Better height for mobile */
         position: relative !important;
-        right: 5px !important; /* Shift slightly to the left */
-        margin-right: 5px !important;
+        margin-right: 0 !important;
+        margin-bottom: 10px !important;
     }
 
-    /* Ensure movie poster container has proper space */
+    /* Ensure movie poster container has proper space but not too much */
     .movie-poster {
-        padding-bottom: 60px !important; /* Space for controls below */
+        padding-bottom: 20px !important; /* Reduced padding */
         position: relative !important;
+    }
+
+    /* Make the control spacer smaller but still functional */
+    #player-controls-spacer {
+        height: 35px !important; /* Reduced height */
+        margin-top: -5px !important;
+        margin-bottom: 10px !important;
+    }
+}
+
+/* Adjust mobile spacing to reduce empty space */
+@media only screen and (max-width: 560px) {
+    /* Reduce spacing between elements */
+    .movie-details {
+        gap: 5px !important;
+    }
+
+    /* Make the movie info section closer to the video */
+    .movie-info {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+
+    /* Reduce margin below the video */
+    .movie-poster {
+        margin-bottom: 0 !important;
+    }
+
+    /* Ensure title has no extra space */
+    .movie-info h1 {
+        margin-top: 0 !important;
+        margin-bottom: 10px !important;
     }
 }
 
@@ -1243,22 +1276,11 @@ p {
     #player-controls-spacer {
         display: block;
         width: 100%;
-        height: 75px; /* Tall enough for controls */
+        height: 35px !important; /* Reduced height */
         clear: both;
-        margin-top: -10px; /* Negative margin to pull it up under the player */
-        margin-bottom: 20px;
+        margin-top: -5px !important;
+        margin-bottom: 10px !important;
         position: relative;
         pointer-events: none; /* Allows clicking through to elements under it */
-    }
-
-    /* Add extra space to the right of the iframe for controls */
-    #iframe {
-        padding-right: 50px; /* Space for fullscreen button */
-        box-sizing: border-box;
-    }
-
-    /* Ensure iframe retains proper height */
-    iframe {
-        min-height: 220px;
     }
 }

@@ -8,21 +8,53 @@ logo.addEventListener('click', () => {
 // Define server fallback chain
 const serverFallbackChain = ['vidsrc.su', 'vidsrc.vip', 'vidlink.pro'];
 
-// Function to ensure iframe controls are accessible on mobile
+// Function to ensure iframe controls are accessible on mobile with better sizing
 function ensureControlsAccessible() {
     if (window.innerWidth <= 560) { // Only on mobile
         const iframe = document.getElementById('iframe');
         const spacer = document.getElementById('player-controls-spacer');
 
         if (iframe && spacer) {
-            // Set spacer height proportionally
-            spacer.style.height = '75px';
+            // Set spacer height appropriately - not too large
+            spacer.style.height = '35px';
+            spacer.style.marginTop = '-5px';
+            spacer.style.marginBottom = '10px';
 
-            // Force iframe to have breathing room for controls
-            iframe.style.paddingRight = '50px';
+            // Keep iframe full width but ensure controls accessible
+            iframe.style.width = '100%';
+            iframe.style.height = '220px';
+            iframe.style.marginBottom = '10px';
 
-            // Ensure proper minimum height
-            iframe.style.minHeight = '220px';
+            // Fix for movie poster container
+            const posterContainer = document.querySelector('.movie-poster');
+            if (posterContainer) {
+                posterContainer.style.paddingBottom = '20px';
+            }
+        }
+    }
+}
+
+// Function to reduce mobile whitespace
+function optimizeMobileSpacing() {
+    if (window.innerWidth <= 560) {
+        // Get elements to adjust
+        const movieTitle = document.querySelector('.movie-info h1');
+        const movieInfo = document.querySelector('.movie-info');
+        const movieDetails = document.querySelector('.movie-details');
+
+        // Apply tighter spacing
+        if (movieTitle) {
+            movieTitle.style.marginTop = '0';
+            movieTitle.style.marginBottom = '10px';
+        }
+
+        if (movieInfo) {
+            movieInfo.style.marginTop = '0';
+            movieInfo.style.paddingTop = '0';
+        }
+
+        if (movieDetails) {
+            movieDetails.style.gap = '5px';
         }
     }
 }
@@ -595,14 +627,19 @@ document.getElementById('server').addEventListener('change', () => {
 document.addEventListener('DOMContentLoaded', function() {
     // Ensure our controls are accessible on mobile
     ensureControlsAccessible();
+    optimizeMobileSpacing();
 
     // Add resize event
     window.addEventListener('resize', function() {
         ensureControlsAccessible();
+        optimizeMobileSpacing();
     });
 
     // Also call it a bit after page load (helpful for mobile browsers)
-    setTimeout(ensureControlsAccessible, 1000);
+    setTimeout(function() {
+        ensureControlsAccessible();
+        optimizeMobileSpacing();
+    }, 1000);
 });
 
 // Initialize everything when the window loads
