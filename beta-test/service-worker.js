@@ -77,31 +77,38 @@ self.addEventListener('fetch', event => {
   const isApiCall = event.request.url.includes('api.themoviedb.org');
   const isVersioned = event.request.url.includes('?v=') || event.request.url.includes('&v=');
   const isAsset = (/\.(jpe?g|png|gif|svg|ico|css|js)$/i).test(url.pathname);
+  const isHtml = url.pathname.endsWith('.html') || url.pathname.endsWith('/');
 
   // Different caching strategies based on resource type
-  if (isApiCall) {
-    // Network-only for API calls with cache fallback
+  if (isApiCall || isHtml) {
+    // Network-first for API calls and HTML files to ensure fresh content
     event.respondWith(
       fetch(event.request)
+        .then(response => {
+          // Cache the fresh response
+          if (response && response.status === 200) {
+            const responseToCache = response.clone();
+            caches.open(CACHE_NAME).then(cache => {
+              cache.put(event.request, responseToCache);
+            });
+          }
+          return response;
+        })
         .catch(error => {
-          console.error('API fetch failed:', error);
+          console.error('Fetch failed:', error);
           return caches.match(event.request);
         })
     );
   } else if (isVersioned || isAsset) {
-    // Cache-first for versioned resources and assets
+    // Cache-first for versioned resources and assets with
+    // stale-while-revalidate pattern for auto-updating
     event.respondWith(
       caches.match(event.request)
         .then(response => {
-          // Return cached response if we have it
-          if (response) {
-            return response;
-          }
-
-          // Otherwise fetch from network and cache
-          return fetch(event.request)
+          // Start fetching fresh copy in background
+          const fetchPromise = fetch(event.request)
             .then(networkResponse => {
-              // Only cache valid responses
+              // Update cache with fresh copy
               if (networkResponse && networkResponse.status === 200) {
                 const responseToCache = networkResponse.clone();
                 caches.open(CACHE_NAME).then(cache => {
@@ -110,6 +117,9 @@ self.addEventListener('fetch', event => {
               }
               return networkResponse;
             });
+
+          // Return cached response immediately if available
+          return response || fetchPromise;
         })
     );
   } else {
@@ -166,16 +176,8 @@ self.addEventListener('activate', event => {
       // Take control of uncontrolled clients
       return self.clients.claim();
     }).then(() => {
-      // After claiming clients, notify them of the update
-      // but don't force reload
-      self.clients.matchAll().then(clients => {
-        clients.forEach(client => {
-          client.postMessage({
-            type: 'UPDATE_AVAILABLE',
-            version: CACHE_VERSION
-          });
-        });
-      });
+      // Removed update notification to prevent popup from appearing
+      console.log('Update available (notifications disabled)');
     })
   );
 });

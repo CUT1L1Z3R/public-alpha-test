@@ -45,35 +45,7 @@
         // Just update resource versions without forcing reload
         updateResourceVersions();
 
-        // Create a notification for the user
-        const versionNotice = document.createElement('div');
-        versionNotice.style.position = 'fixed';
-        versionNotice.style.bottom = '20px';
-        versionNotice.style.left = '20px';
-        versionNotice.style.background = 'rgba(0,0,0,0.8)';
-        versionNotice.style.color = 'white';
-        versionNotice.style.padding = '10px 15px';
-        versionNotice.style.borderRadius = '5px';
-        versionNotice.style.zIndex = '9999';
-        versionNotice.style.fontSize = '14px';
-        versionNotice.innerHTML = `FreeFlix updated to v${currentVersion}`;
-        versionNotice.style.transition = 'opacity 0.5s ease-in-out';
-        versionNotice.style.opacity = '0';
-
-        // Add notification after a delay
-        setTimeout(() => {
-            document.body.appendChild(versionNotice);
-            setTimeout(() => {
-                versionNotice.style.opacity = '1';
-                setTimeout(() => {
-                    versionNotice.style.opacity = '0';
-                    setTimeout(() => {
-                        if (versionNotice.parentNode) {
-                            versionNotice.parentNode.removeChild(versionNotice);
-                        }
-                    }, 500);
-                }, 3000);
-            }, 100);
-        }, 2000);
+        // Notification removed to avoid interfering with website content
+        console.log('Updated to version:', currentVersion);
     }
 })();
