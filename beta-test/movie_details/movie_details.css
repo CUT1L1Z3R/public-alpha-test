@@ -84,8 +84,8 @@ iframe {
     width: 40%;
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    margin-top: -15px; /* Added negative margin to reduce space below video */
+    gap: 10px;
+    margin-top: -25px; /* Increased negative margin to reduce space below video */
 }
 
 /* Add margin space to the plot element */
@@ -706,9 +706,10 @@ p {
     border: none; /* Remove border to make it cleaner */
 }
 
-/* Spacer for video controls in mobile view */
+/* Player controls spacer adjustment */
 #player-controls-spacer {
     display: none; /* Hidden by default */
+    height: 0; /* Reduce height to minimum */
 }
 
 /* Styling for the change server dropdown */
@@ -844,7 +845,7 @@ p {
         margin: 0 auto;
         padding: 0 8px;
         box-sizing: border-box;
-        margin-bottom: -20px; /* Reduce space below video on mobile */
+        margin-bottom: -30px; /* Increased negative margin on mobile */
     }
 
     /* Video frame optimization */
@@ -899,8 +900,8 @@ p {
     /* Movie info section */
     .movie-info {
         width: 95%;
-        margin: -10px auto 0; /* Reduce space below video */
-        gap: 10px;
+        margin: -20px auto 0; /* Increased negative margin on mobile */
+        gap: 8px; /* Reduced gap further */
         overflow-wrap: break-word;
         word-break: break-word;
         box-sizing: border-box;
