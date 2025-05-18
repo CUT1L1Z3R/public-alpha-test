@@ -6,7 +6,108 @@ logo.addEventListener('click', () => {
 });
 
 // Define server fallback chain
-const serverFallbackChain = ['vidsrc.su', 'player.videasy.net', 'vidlink.pro'];
+const serverFallbackChain = ['vidsrc.su', 'vidsrc.vip', 'vidlink.pro'];
+
+// Function to show toast notification
+function showToast(message, type = 'info') {
+    // Check if a toast container already exists
+    let toastContainer = document.querySelector('.toast-container');
+
+    // If not, create one
+    if (!toastContainer) {
+        toastContainer = document.createElement('div');
+        toastContainer.className = 'toast-container';
+        document.body.appendChild(toastContainer);
+    }
+
+    // Create the toast element
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.textContent = message;
+
+    // Add to container
+    toastContainer.appendChild(toast);
+
+    // Show the toast
+    setTimeout(() => {
+        toast.classList.add('show');
+    }, 10);
+
+    // Remove the toast after 3 seconds
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => {
+            toastContainer.removeChild(toast);
+        }, 300);
+    }, 3000);
+}
+
+// Function to handle content download (declare early to avoid hoisting issues)
+function handleDownload() {
+    let downloadUrl = '';
+    let contentType = media === 'movie' ? 'movie' : 'episode';
+
+    // Show preparing download notification
+    showToast(`Preparing your ${contentType} download...`, 'info');
+
+    // Generate the appropriate download URL based on media type
+    if (media === 'movie') {
+        // For movies, use the movie download endpoint
+        downloadUrl = `https://dl.vidsrc.vip/movie/${id}`;
+    } else if (media === 'tv') {
+        // For TV shows and anime, need to determine season and episode
+        const activeEpisode = document.querySelector('.episode-item.active');
+
+        if (activeEpisode) {
+            // If an episode is selected, use that specific episode
+            const seasonNumber = activeEpisode.dataset.seasonNumber;
+            const episodeNumber = activeEpisode.dataset.episodeNumber;
+            downloadUrl = `https://dl.vidsrc.vip/tv/${id}/${seasonNumber}/${episodeNumber}`;
+        } else if (seasonSelect && seasonSelect.value) {
+            // If no episode selected but season is selected, use first episode of selected season
+            const seasonNumber = seasonSelect.value;
+            downloadUrl = `https://dl.vidsrc.vip/tv/${id}/${seasonNumber}/1`;
+        } else {
+            // Default to first episode of first season if nothing selected
+            downloadUrl = `https://dl.vidsrc.vip/tv/${id}/1/1`;
+        }
+    }
+
+    // Log the URL for debugging
+    console.log(`Download URL: ${downloadUrl}`);
+
+    // Redirect to the download countdown page with the download URL as parameter
+    if (downloadUrl) {
+        // Encode the URL to avoid issues with query parameters
+        const encodedUrl = encodeURIComponent(downloadUrl);
+
+        // Add a slight delay to show the toast
+        setTimeout(() => {
+            window.location.href = `../download.html?url=${encodedUrl}`;
+        }, 800);
+    } else {
+        showToast("Unable to generate download URL. Please try a different server.", 'error');
+    }
+}
+
+// Function to ensure iframe controls are accessible on mobile
+function ensureControlsAccessible() {
+    if (window.innerWidth <= 560) { // Only on mobile
+        const iframe = document.getElementById('iframe');
+        const spacer = document.getElementById('player-controls-spacer');
+
+        if (iframe && spacer) {
+            // Set spacer height proportionally
+            spacer.style.height = '75px';
+
+            // Force iframe to have breathing room for controls
+            iframe.style.paddingRight = '50px';
+
+            // Ensure proper minimum height
+            iframe.style.minHeight = '220px';
+        }
+    }
+}
 
 // Selecting various elements on the page for displaying movie details
 const movieTitle = document.getElementById('movieTitle');
@@ -18,6 +119,7 @@ const plot = document.getElementById("plot");
 const language = document.getElementById("language");
 const iframe = document.getElementById("iframe");
 const watchListBtn = document.querySelector('.watchListBtn');
+const downloadBtn = document.querySelector('.downloadBtn');
 const watchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
 
 // Season and Episode selectors
@@ -202,6 +304,21 @@ async function loadEpisodes(tvId, seasonNumber) {
     }
 }
 
+// Add code to update player when source changes
+function loadMedia(embedURL, server) {
+    // Set the source of the iframe to the video URL
+    iframe.setAttribute('src', embedURL);
+
+    // Show the iframe and ensure it's visible
+    iframe.style.display = "block";
+
+    // Hide the movie poster when the video is loaded
+    moviePoster.style.display = "none";
+
+    // Ensure controls are accessible after changing source
+    setTimeout(ensureControlsAccessible, 500);
+}
+
 // Function to handle video source change based on selected server
 async function changeServer() {
     const server = document.getElementById('server').value; // Get the selected server
@@ -238,8 +355,8 @@ async function changeServer() {
             case "vidsrc.su":
                 embedURL = `https://vidsrc.su/embed/anime/${id}`;
                 break;
-            case "player.videasy.net":
-                embedURL = `https://player.videasy.net/anime/${id}`;
+            case "vidsrc.vip":
+                embedURL = `https://vidsrc.vip/anime/${id}`;
                 break;
             case "2embed":
                 embedURL = `https://www.2embed.cc/embed/anime/${id}`;
@@ -272,8 +389,8 @@ async function changeServer() {
             case "vidsrc.su":
                 embedURL = `https://vidsrc.su/embed/${type}/${id}`;
                 break;
-            case "player.videasy.net":
-                embedURL = `https://player.videasy.net/${type}/${id}`;
+            case "vidsrc.vip":
+                embedURL = `https://vidsrc.vip/${type}/${id}`;
                 break;
             case "2embed":
                 embedURL = `https://www.2embed.cc/embed/${id}`;
@@ -317,6 +434,9 @@ async function changeServer() {
 
     // Hide the movie poster when the video is playing
     moviePoster.style.display = "none";  // Hide the movie poster image
+
+    // Ensure controls are accessible after changing source
+    setTimeout(ensureControlsAccessible, 500);
 }
 
 // Function to play a specific episode
@@ -326,8 +446,8 @@ function playEpisode(tvId, seasonNumber, episodeNumber) {
 
     // Update the URL for each server to include season and episode parameters
     switch (server) {
-        case "player.videasy.net":
-            embedURL = `https://player.videasy.net/tv/${tvId}/${seasonNumber}/${episodeNumber}`;
+        case "vidsrc.vip":
+            embedURL = `https://vidsrc.vip/tv/${tvId}/${seasonNumber}/${episodeNumber}`;
             break;
         case "vidlink.pro":
             embedURL = `https://vidlink.pro/tv/${tvId}/${seasonNumber}/${episodeNumber}?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
@@ -377,6 +497,9 @@ function playEpisode(tvId, seasonNumber, episodeNumber) {
 
         iframe.style.display = "block";
         moviePoster.style.display = "none";
+
+        // Ensure controls are accessible after changing source
+        setTimeout(ensureControlsAccessible, 500);
 
         // Mark the selected episode as active
         const episodes = document.querySelectorAll('.episode-item');
@@ -463,6 +586,9 @@ async function displayMovieDetails() {
 
         watchListBtn.addEventListener('click', () => toggleFavorite(movieDetails));
 
+        // Add event listener for the download button
+        downloadBtn.addEventListener('click', handleDownload);
+
     } catch (error) {
         console.error('Error displaying movie details:', error);
         movieTitle.textContent = "Details are not available right now! Please try after some time.";
@@ -487,6 +613,7 @@ function initServerDropdown() {
     // Setup server dropdown toggle
     const serverDropdownHeader = document.querySelector('.server-dropdown-header');
     const serverDropdownContent = document.querySelector('.server-dropdown-content');
+    const serverDropdown = document.querySelector('.server-dropdown');
     const dropdownArrow = document.querySelector('.dropdown-arrow');
 
     if (!serverDropdownHeader) return; // Exit if elements don't exist
@@ -494,32 +621,42 @@ function initServerDropdown() {
     // Toggle dropdown when clicking the header
     serverDropdownHeader.addEventListener('click', function(event) {
         event.stopPropagation();
+
+        // Toggle visibility
+        const isShowing = !serverDropdownContent.classList.contains('show');
         serverDropdownContent.classList.toggle('show');
         serverDropdownHeader.classList.toggle('active');
         dropdownArrow.classList.toggle('up');
 
-        // Prevent page scrolling when dropdown is open
-        if (serverDropdownContent.classList.contains('show')) {
-            // Save current scroll position
-            window.dropdownScrollPos = window.scrollY;
+        // Add/remove dedicated space class
+        if (isShowing) {
+            serverDropdown.classList.add('has-open-dropdown');
+
+            // Scroll to ensure the dropdown is visible if needed
+            setTimeout(() => {
+                const contentRect = serverDropdownContent.getBoundingClientRect();
+                const viewportHeight = window.innerHeight;
+
+                // If dropdown extends below viewport, scroll it into view
+                if (contentRect.bottom > viewportHeight) {
+                    window.scrollBy({
+                        top: Math.min(contentRect.height, contentRect.bottom - viewportHeight + 20),
+                        behavior: 'smooth'
+                    });
+                }
+            }, 50);
+        } else {
+            serverDropdown.classList.remove('has-open-dropdown');
         }
     });
 
     // Close dropdown when clicking outside
     document.addEventListener('click', function(event) {
         if (!event.target.closest('.server-dropdown')) {
-            const wasOpen = serverDropdownContent.classList.contains('show');
             serverDropdownContent.classList.remove('show');
             serverDropdownHeader.classList.remove('active');
             dropdownArrow.classList.remove('up');
-
-            // If dropdown was open, restore scroll position
-            if (wasOpen && window.dropdownScrollPos !== undefined) {
-                setTimeout(() => {
-                    window.scrollTo(0, window.dropdownScrollPos);
-                    window.dropdownScrollPos = undefined;
-                }, 10);
-            }
+            serverDropdown.classList.remove('has-open-dropdown');
         }
     });
 
@@ -546,14 +683,7 @@ function initServerDropdown() {
             serverDropdownContent.classList.remove('show');
             serverDropdownHeader.classList.remove('active');
             dropdownArrow.classList.remove('up');
-
-            // Restore the scroll position if needed
-            if (window.dropdownScrollPos !== undefined) {
-                setTimeout(() => {
-                    window.scrollTo(0, window.dropdownScrollPos);
-                    window.dropdownScrollPos = undefined;
-                }, 10);
-            }
+            serverDropdown.classList.remove('has-open-dropdown');
 
             // Call the existing changeServer function
             changeServer();
@@ -572,6 +702,42 @@ function initServerDropdown() {
 // Function to handle changes when server selection is made
 document.getElementById('server').addEventListener('change', () => {
     changeServer();
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Ensure our controls are accessible on mobile
+    ensureControlsAccessible();
+
+    // Add resize event
+    window.addEventListener('resize', function() {
+        ensureControlsAccessible();
+    });
+
+    // Also call it a bit after page load (helpful for mobile browsers)
+    setTimeout(ensureControlsAccessible, 1000);
+
+    // Add ripple effect to download button
+    const downloadBtn = document.querySelector('.downloadBtn');
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', function(e) {
+            const ripple = document.createElement('span');
+            ripple.classList.add('ripple');
+            this.appendChild(ripple);
+
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = (e.clientX - rect.left - size/2) + 'px';
+            ripple.style.top = (e.clientY - rect.top - size/2) + 'px';
+
+            ripple.classList.add('active');
+
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        });
+    }
 });
 
 // Initialize everything when the window loads

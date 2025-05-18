@@ -77,20 +77,20 @@ iframe {
     border-radius: 8px;
 }
 
-/* Add margin space to the text elements */
+/* Movie information section */
 .movie-info {
     margin-left: 20px;
     margin-right: 30px;
     width: 40%;
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    margin-top: -15px; /* Added negative margin to reduce space below video */
+    gap: 16px; /* Increased from 10px for better spacing between elements */
+    margin-top: -25px; /* Increased negative margin to reduce space below video */
 }
 
 /* Add margin space to the plot element */
 #plot {
-    margin-bottom: 20px;
+    margin-bottom: 24px; /* Increased from 20px */
 }
 
 /* Movie information section */
@@ -98,14 +98,18 @@ iframe {
     color: #a209da;
     font-size: 46px;
     margin-top: 0;
+    margin-bottom: 18px; /* Added bottom margin for better spacing with description */
+    line-height: 1.2; /* Added line height for better title readability */
 }
 
 /* Plot styling */
 #plot {
     color: white;
-    line-height: 1.4;
+    line-height: 1.6; /* Increased from 1.4 for better readability */
     font-size: 18px;
     text-align: justify;
+    margin-top: 0; /* Ensure there's no extra top margin */
+    padding-bottom: 6px; /* Added padding at bottom */
 }
 
 /* Movie data styling */
@@ -290,13 +294,14 @@ p {
 
 /* Both buttons should have identical width and appearance */
 .watchListBtn,
+.downloadBtn,
 .server-dropdown {
   width: 100%;
   max-width: 100%;
   margin: 10px 0;
 }
 
-.watchListBtn {
+.watchListBtn, .downloadBtn {
   color: white;
   font-size: 16px;
   font-weight: 600;
@@ -315,9 +320,131 @@ p {
   border: 1px solid rgb(141, 22, 201);
 }
 
+/* Enhanced hover effect for download button */
+.downloadBtn:hover {
+  background: linear-gradient(45deg, rgb(162, 9, 218), rgb(141, 22, 201));
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(162, 9, 218, 0.4);
+  color: white;
+  border: 1px solid transparent;
+}
+
+/* Make the download button eye-catching */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(162, 9, 218, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(162, 9, 218, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(162, 9, 218, 0);
+  }
+}
+
+/* Ripple effect animation */
+@keyframes ripple-animation {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* Toast notification styles */
+.toast-container {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.toast {
+  padding: 12px 20px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  margin-bottom: 8px;
+  font-weight: 500;
+  min-width: 250px;
+  max-width: 320px;
+  text-align: center;
+  transform: translateY(100px);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.toast-info {
+  border-left: 4px solid #a209da;
+}
+
+.toast-error {
+  border-left: 4px solid #d32f2f;
+}
+
+.toast-success {
+  border-left: 4px solid #2e7d32;
+}
+
+/* Enhanced download button styles */
+.downloadBtn {
+  background: linear-gradient(45deg, rgb(141, 22, 201), rgb(109, 18, 158));
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(141, 22, 201, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  animation: pulse 2s infinite;
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  transform: scale(0);
+  pointer-events: none;
+  opacity: 1;
+}
+
+.ripple.active {
+  animation: ripple-animation 0.6s linear;
+}
+
+/* Server dropdown wrapper with dedicated space */
 .server-dropdown {
+  width: 100%;
+  max-width: 100%;
+  margin: 10px 0;
   position: relative;
   z-index: 20;
+  transition: margin-bottom 0.3s ease-out;
+  margin-bottom: 0; /* Start with no extra space */
+}
+
+/* Create dedicated space for dropdown when open */
+.server-dropdown.has-open-dropdown {
+  margin-bottom: calc(min(40vh, 300px)); /* Space for dropdown content */
+}
+
+/* Dedicated space for server options */
+.servers-section {
+  margin-bottom: 15px;
+  position: relative;
 }
 
 /* --- FIXED SERVER DROPDOWN HEADER --- */
@@ -342,15 +469,17 @@ p {
   gap: 10px; /* ensures spacing between content and arrow */
 }
 .server-dropdown-header::before {
-  content: "Servers";
-  position: absolute;
-  top: -15px;
-  left: 0;
-  font-size: 12px;
-  color: #a209da;
-  background: none;
-  padding: 0;
-  letter-spacing: 0.5px;
+    content: "Servers";
+    position: absolute;
+    top: -15px;
+    left: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #a209da;
+    background: black;
+    padding: 0 4px;
+    letter-spacing: 0.5px;
+    z-index: 1;
 }
 
 .server-dropdown-header:hover {
@@ -364,6 +493,14 @@ p {
   border-bottom: none;
 }
 
+.server-dropdown-header.active + .server-dropdown-content.dropdown-down {
+  border-radius: 0 0 3px 3px;
+}
+
+.server-dropdown-header.active + .server-dropdown-content.dropdown-up {
+  border-radius: 3px 3px 0 0;
+}
+
 /* Server tag styles with improved spacing */
 .selected-server {
   display: flex;
@@ -373,6 +510,48 @@ p {
   flex: 1; /* Take up available space */
   min-width: 0;
   overflow: hidden;
+}
+
+/* Mobile optimizations for server dropdown */
+@media (max-width: 560px) {
+    /* Increase tap area for better touch interaction */
+    .server-dropdown-header {
+        padding: 10px 16px;
+        min-height: 48px; /* Minimum recommended touch target size */
+    }
+
+    .server-option {
+        padding: 12px 16px;
+        min-height: 48px; /* Minimum recommended touch target size */
+    }
+
+    /* Ensure dropdown doesn't get too tall on small screens */
+    .server-dropdown-content {
+        max-height: 40vh; /* 40% of viewport height */
+    }
+
+    /* Create dedicated space for dropdown on mobile */
+    .server-dropdown.has-open-dropdown {
+        margin-bottom: 40vh; /* 40% of viewport height on mobile */
+    }
+
+    /* Ensure tags don't wrap awkwardly */
+    .server-tag {
+        margin-bottom: 4px;
+        white-space: nowrap;
+    }
+
+    /* Improve tap targets for dropdown arrows */
+    .dropdown-arrow {
+        font-size: 18px;
+        padding: 8px;
+        margin: -8px;
+    }
+
+    /* Ensure header text doesn't get cut off */
+    .selected-server {
+        max-width: calc(100% - 30px);
+    }
 }
 
 .server-tag {
@@ -423,10 +602,26 @@ p {
   overflow-y: auto;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   box-sizing: border-box; /* Include border in width */
+  /* For smooth appearance, let animation handle opacity/transform */
 }
 
+/* Animation for dropdown appearance */
 .server-dropdown-content.show {
   display: block;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.server-dropdown-content.dropdown-down {
+  /* No longer need to set top/bottom, handled by .server-dropdown-content */
+}
+
+.server-dropdown-content.dropdown-up {
+  /* Upward dropdown positioning removed for dedicated space approach */
 }
 
 .server-option {
@@ -706,9 +901,10 @@ p {
     border: none; /* Remove border to make it cleaner */
 }
 
-/* Spacer for video controls in mobile view */
+/* Player controls spacer adjustment */
 #player-controls-spacer {
     display: none; /* Hidden by default */
+    height: 0; /* Reduce height to minimum */
 }
 
 /* Styling for the change server dropdown */
@@ -844,7 +1040,7 @@ p {
         margin: 0 auto;
         padding: 0 8px;
         box-sizing: border-box;
-        margin-bottom: -20px; /* Reduce space below video on mobile */
+        margin-bottom: -30px; /* Increased negative margin on mobile */
     }
 
     /* Video frame optimization */
@@ -899,8 +1095,8 @@ p {
     /* Movie info section */
     .movie-info {
         width: 95%;
-        margin: -10px auto 0; /* Reduce space below video */
-        gap: 10px;
+        margin: -20px auto 0; /* Increased negative margin on mobile */
+        gap: 12px; /* Increased from 8px for better spacing */
         overflow-wrap: break-word;
         word-break: break-word;
         box-sizing: border-box;
@@ -909,9 +1105,9 @@ p {
 
     /* Optimize title size */
     .movie-info h1 {
-        font-size: 24px;
+        font-size: 28px; /* Increased from 24px */
         line-height: 1.3;
-        margin: 0 0 8px 0;
+        margin: 0 0 12px 0; /* Increased bottom margin from 8px */
     }
 
     /* Streamline movie data layout */
@@ -962,9 +1158,10 @@ p {
     #plot {
         max-width: 100%;
         overflow-wrap: break-word;
-        font-size: 14px;
-        line-height: 1.4;
+        font-size: 15px; /* Increased from 14px */
+        line-height: 1.5; /* Increased from 1.4 */
         box-sizing: border-box;
+        margin-bottom: 18px; /* Added specific margin for mobile */
     }
 
     /* Server dropdown content */

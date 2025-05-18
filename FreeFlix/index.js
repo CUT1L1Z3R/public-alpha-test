@@ -3,6 +3,44 @@
  * Handles fetching, displaying, and UI interactions for movies, TV shows, and anime.
  */
 
+// Cache busting mechanism
+(function() {
+  // Force service worker update
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+      for(let registration of registrations) {
+        registration.update();
+      }
+    });
+  }
+
+  // Generate a unique timestamp for cache busting
+  const cacheBuster = new Date().getTime();
+
+  // Add cache-busting parameter to all API requests
+  const originalFetch = window.fetch;
+  window.fetch = function(url, options) {
+    if (typeof url === 'string') {
+      // Don't modify URLs that already have cache busting
+      if (url.indexOf('?v=') === -1 && url.indexOf('&v=') === -1) {
+        url += (url.indexOf('?') === -1 ? '?v=' : '&v=') + cacheBuster;
+      }
+    }
+    return originalFetch.apply(this, arguments);
+  };
+
+  // Force reload after service worker update
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.addEventListener('controllerchange', function() {
+      // Only reload once to avoid infinite reload loop
+      if (!window.isReloading) {
+        window.isReloading = true;
+        window.location.reload();
+      }
+    });
+  }
+})();
+
 // Register Service Worker for better performance and offline capability
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
@@ -1317,7 +1355,6 @@ movieContainers.forEach(container => {
  * Enables custom drag-to-scroll and momentum for .movies-box containers on touch devices.
  */
 
-// injectFadeStyles and any other code that should follow here
 (function injectFadeStyles() {
     if (!document.getElementById('fade-section-styles')) {
         const style = document.createElement('style');

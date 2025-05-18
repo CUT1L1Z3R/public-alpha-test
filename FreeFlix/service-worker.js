@@ -1,5 +1,5 @@
 // Service Worker for FreeFlix
-const CACHE_VERSION = '1.0.3'; // Increment this when making changes
+const CACHE_VERSION = '1.0.4'; // Increment this when making changes
 const CACHE_NAME = 'freeflix-cache-v' + CACHE_VERSION;
 const urlsToCache = [
   './',
@@ -28,15 +28,24 @@ self.addEventListener('install', event => {
   // Skip waiting to update service worker immediately
   self.skipWaiting();
 
+  // Clear all caches first before adding new cache
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => {
-        console.log('Opened cache');
-        return cache.addAll(urlsToCache);
-      })
-      .catch(error => {
-        console.error('Failed to cache resources:', error);
-      })
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.map(cacheName => {
+          console.log('Deleting old cache:', cacheName);
+          return caches.delete(cacheName);
+        })
+      ).then(() => {
+        console.log('Opening new cache:', CACHE_NAME);
+        return caches.open(CACHE_NAME).then(cache => {
+          console.log('Opened cache');
+          return cache.addAll(urlsToCache);
+        });
+      });
+    }).catch(error => {
+      console.error('Failed to cache resources:', error);
+    })
   );
 });
 
