@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1"
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <!-- Homepage -->
+  <url>
+    <loc>https://freeflix.top/</loc>
+    <lastmod>2025-05-17</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://freeflix.top/assets/freeflix.png</image:loc>
+      <image:title>FreeFlix - Stream Movies &amp; TV Shows For Free</image:title>
+      <image:caption>The #1 free streaming platform for movies, TV shows and anime</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Main Category Pages -->
+  <url>
+    <loc>https://freeflix.top/movies/</loc>
+    <lastmod>2025-05-17</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://freeflix.top/assets/freeflix.png</image:loc>
+      <image:title>FreeFlix Movies - Watch Free HD Movies Online</image:title>
+      <image:caption>Stream thousands of movies for free without subscription</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://freeflix.top/tvshows/</loc>
+    <lastmod>2025-05-17</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://freeflix.top/assets/freeflix.png</image:loc>
+      <image:title>FreeFlix TV Shows - Stream TV Series Free</image:title>
+      <image:caption>Watch popular TV shows and series completely free</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://freeflix.top/anime/</loc>
+    <lastmod>2025-05-17</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://freeflix.top/assets/freeflix.png</image:loc>
+      <image:title>FreeFlix Anime - Watch Free Anime Online</image:title>
+      <image:caption>Stream latest and classic anime series and movies</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Movie Genre Pages -->
+  <url>
+    <loc>https://freeflix.top/movies/?genre=action</loc>
+    <lastmod>2025-05-17</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://freeflix.top/assets/freeflix.png</image:loc>
+      <image:title>Action Movies - Watch Free on FreeFlix</image:title>
+      <image:caption>Stream action movies free online in HD quality</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://freeflix.top/movies/?genre=comedy</loc>
+    <lastmod>2025-05-17</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://freeflix.top/assets/freeflix.png</image:loc>
+      <image:title>Comedy Movies - Watch Free on FreeFlix</image:title>
+      <image:caption>Stream comedy movies free online in HD quality</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://freeflix.top/movies/?genre=horror</loc>
+    <lastmod>2025-05-17</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://freeflix.top/assets/freeflix.png</image:loc>
+      <image:title>Horror Movies - Watch Free on FreeFlix</image:title>
+      <image:caption>Stream horror movies free online in HD quality</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://freeflix.top/movies/?genre=thriller</loc>
+    <lastmod>2025-05-17</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://freeflix.top/assets/freeflix.png</image:loc>
+      <image:title>Thriller Movies - Watch Free on FreeFlix</image:title>
+      <image:caption>Stream thriller movies free online in HD quality</image:caption>
+    </image:image>
+  </url>
+
+  <!-- TV Show Genre Pages -->
+  <url>
+    <loc>https://freeflix.top/tvshows/?genre=drama</loc>
+    <lastmod>2025-05-17</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://freeflix.top/assets/freeflix.png</image:loc>
+      <image:title>Drama TV Shows - Watch Free on FreeFlix</image:title>
+      <image:caption>Stream drama TV shows free online in HD quality</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://freeflix.top/tvshows/?genre=comedy</loc>
+    <lastmod>2025-05-17</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://freeflix.top/assets/freeflix.png</image:loc>
+      <image:title>Comedy TV Shows - Watch Free on FreeFlix</image:title>
+      <image:caption>Stream comedy TV shows free online in HD quality</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://freeflix.top/tvshows/?genre=crime</loc>
+    <lastmod>2025-05-17</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://freeflix.top/assets/freeflix.png</image:loc>
+      <image:title>Crime TV Shows - Watch Free on FreeFlix</image:title>
+      <image:caption>Stream crime TV shows free online in HD quality</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Anime Genre Pages -->
+  <url>
+    <loc>https://freeflix.top/anime/?genre=action</loc>
+    <lastmod>2025-05-17</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://freeflix.top/assets/freeflix.png</image:loc>
+      <image:title>Action Anime - Watch Free on FreeFlix</image:title>
+      <image:caption>Stream action anime free online in HD quality</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://freeflix.top/anime/?genre=adventure</loc>
+    <lastmod>2025-05-17</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://freeflix.top/assets/freeflix.png</image:loc>
+      <image:title>Adventure Anime - Watch Free on FreeFlix</image:title>
+      <image:caption>Stream adventure anime free online in HD quality</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Featured Content (Top Rated and Popular) -->
+  <url>
+    <loc>https://freeflix.top/movies/?filter=top_rated</loc>
+    <lastmod>2025-05-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://freeflix.top/assets/freeflix.png</image:loc>
+      <image:title>Top Rated Movies - Best Films on FreeFlix</image:title>
+      <image:caption>Stream the highest rated movies free online</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://freeflix.top/tvshows/?filter=top_rated</loc>
+    <lastmod>2025-05-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://freeflix.top/assets/freeflix.png</image:loc>
+      <image:title>Top Rated TV Shows - Best Series on FreeFlix</image:title>
+      <image:caption>Stream the highest rated TV shows free online</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Utility Pages -->
+  <url>
+    <loc>https://freeflix.top/movie_details/</loc>
+    <lastmod>2025-05-17</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://freeflix.top/assets/freeflix.png</image:loc>
+      <image:title>FreeFlix Movie Details</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://freeflix.top/watchList/</loc>
+    <lastmod>2025-05-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://freeflix.top/assets/freeflix.png</image:loc>
+      <image:title>FreeFlix Watchlist - Save Your Favorite Movies</image:title>
+      <image:caption>Create and manage your personal watchlist of movies and TV shows</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://freeflix.top/sitemap.html</loc>
+    <lastmod>2025-05-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>https://freeflix.top/404.html</loc>
+    <lastmod>2025-05-17</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <!-- SEO Landing Pages -->
+  <url>
+    <loc>https://freeflix.top/free-movie-streaming.html</loc>
+    <lastmod>2025-05-17</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://freeflix.top/assets/freeflix.png</image:loc>
+      <image:title>Free Movie Streaming - No Subscription Required</image:title>
+      <image:caption>Stream movies and TV shows for free with no account or subscription</image:caption>
+    </image:image>
+  </url>
+
+</urlset>

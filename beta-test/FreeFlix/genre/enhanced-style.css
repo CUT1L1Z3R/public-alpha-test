@@ -1,0 +1,267 @@
+/* Enhanced styles for genre pages */
+
+/* Improved Title Styling */
+.genre-title {
+  font-size: 2.5rem;
+  color: #fff;
+  text-align: center;
+  margin: 1.5rem 0 2rem;
+  text-transform: capitalize;
+  position: relative;
+  font-weight: 700;
+  letter-spacing: 2px;
+  background: linear-gradient(90deg, #a710e0 0%, #8a14ca 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 2px 10px rgba(141, 22, 201, 0.5);
+  display: inline-block;
+  padding: 5px 20px;
+  border-radius: 50px;
+  margin-left: auto;
+  margin-right: auto;
+  width: auto;
+}
+
+.genre-title::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, #a710e0 0%, #8a14ca 100%);
+  border-radius: 4px;
+}
+
+/* Enhanced Movie Overlay */
+.movie-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  padding: 30px 15px 10px; /* Increased top padding to push content further down */
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.5) 80%, rgba(0, 0, 0, 0) 100%);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* Align content to the bottom */
+  opacity: 1;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  transform: translateY(0);
+  min-height: 100px; /* Increased min-height to push content down */
+  border: none;
+  z-index: 2; /* Ensure overlay is above image */
+}
+
+.movie-item:hover .movie-overlay {
+  transform: translateY(0); /* No transform on hover, keep at bottom */
+  background: linear-gradient(to top, rgba(141, 22, 201, 0.8) 0%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.2) 100%);
+  /* Modified gradient to make purple highlight shorter/less intense */
+}
+
+/* Title and Rating Container - Side by Side at bottom*/
+.title-rating-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 0;
+  margin-top: 10px; /* Increased margin to push content down */
+  position: relative; /* Ensure proper positioning */
+}
+
+/* Improved Movie Title */
+.movie-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+  color: #ffffff;
+  letter-spacing: 0.5px;
+  max-width: 70%; /* Allow space for rating */
+}
+
+/* Enhanced Rating Style */
+.movie-rating {
+  display: flex;
+  align-items: center;
+  font-size: 0.95rem;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 3px 8px;
+  border-radius: 20px;
+  width: fit-content;
+  backdrop-filter: blur(2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin-left: 10px;
+}
+
+.rating-star {
+  color: #FFC107;
+  margin-right: 5px;
+  font-size: 1.1rem;
+  text-shadow: 0 0 5px rgba(255, 193, 7, 0.7);
+}
+
+.rating-value {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+/* Fix for movie item borders */
+.movie-item {
+  border: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative; /* Ensure proper positioning */
+}
+
+.image-wrapper {
+  border: none;
+  position: relative; /* Ensure proper positioning */
+}
+
+.image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: none;
+}
+
+/* Improved Search Input Style */
+.search-container {
+  flex: 1;
+  max-width: 400px;
+  margin: 0 20px;
+  position: relative;
+}
+
+/* Fix for Watchlist button positioning */
+.watch-list-button {
+  min-width: 120px;
+  height: 40px;
+  padding: 5px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, #a710e0 0%, #8a14ca 100%);
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 10px rgba(141, 22, 201, 0.4);
+  position: relative;
+  overflow: hidden;
+  margin-left: auto; /* Push to the right */
+  margin-right: 10px; /* Further reduced right margin to move closer to edge */
+  letter-spacing: 0.5px;
+}
+
+/* Fixed header styles */
+.header {
+  padding: 0 15px 0 30px !important; /* Reduced right padding */
+  justify-content: space-between !important;
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* Media Queries for Responsive Design */
+@media (max-width: 768px) {
+  .genre-title {
+    font-size: 2rem;
+    padding: 5px 15px;
+  }
+
+  .movie-title {
+    font-size: 1rem;
+    max-width: 65%;
+  }
+
+  .watch-list-button {
+    min-width: 100px;
+    font-size: 14px;
+    padding: 5px 15px;
+    margin-right: 5px; /* Further reduced margin for smaller screens */
+  }
+
+  #searchInput {
+    height: 36px;
+    font-size: 14px;
+  }
+
+  .search-container {
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Optimize for mobile full view */
+  .genre-title {
+    font-size: 1.3rem;
+    padding: 4px 8px;
+    margin-bottom: 0.5rem;
+  }
+
+  .movie-title {
+    font-size: 0.9rem; /* Slightly increased for better readability */
+    max-width: 65%;
+  }
+
+  .movie-rating {
+    font-size: 0.8rem; /* Slightly increased for better readability */
+    padding: 2px 5px;
+  }
+
+  .rating-star {
+    font-size: 0.9rem; /* Slightly increased for better visibility */
+    margin-right: 3px;
+  }
+
+  .watch-list-button {
+    min-width: 80px;
+    font-size: 12px;
+    padding: 4px 8px;
+    height: 34px;
+    margin-right: 3px;
+  }
+
+  #searchInput {
+    height: 30px;
+    font-size: 12px;
+    padding: 0 10px;
+  }
+
+  .search-container {
+    max-width: 140px;
+    margin: 0 5px;
+  }
+
+  /* Optimized movie item styles for mobile two-column layout */
+  .movie-item {
+    width: 100%;
+    margin: 0 auto;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Streamlined overlay to fit small screens */
+  .movie-overlay {
+    padding: 25px 10px 8px !important;
+    min-height: 85px !important;
+  }
+
+  .title-rating-container {
+    margin-bottom: 3px;
+    margin-top: 5px;
+  }
+}

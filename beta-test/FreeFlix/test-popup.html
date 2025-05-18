@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FreeFlix Update Popup Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #0c0c0c;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        button {
+            background: #8d16c9;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+        h1 {
+            color: #8d16c9;
+            margin-bottom: 20px;
+        }
+
+        .preview {
+            border: 1px solid #333;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 30px;
+            max-width: 800px;
+        }
+    </style>
+</head>
+<body>
+    <h1>FreeFlix Update Popup Test</h1>
+    <button id="test-popup">Show Update Popup</button>
+
+    <div class="preview">
+        <p>This page allows you to test the new update popup notification with the requested features:</p>
+        <ul>
+            <li>Download Button Available</li>
+            <li>Genre Navigation Added</li>
+        </ul>
+    </div>
+
+    <script>
+        document.getElementById('test-popup').addEventListener('click', function() {
+            // Create an enhanced popup notification for the user
+            const updateNotification = document.createElement('div');
+            updateNotification.className = 'update-popup';
+            updateNotification.innerHTML = `
+                <div class="update-popup-content">
+                    <div class="update-popup-header">
+                        <h3>New Content Available!</h3>
+                        <button id="update-close" class="update-close-btn">&times;</button>
+                    </div>
+                    <div class="update-popup-body">
+                        <p class="update-feature"><span class="update-icon">✓</span> Download Button Available</p>
+                        <p class="update-feature"><span class="update-icon">✓</span> Genre Navigation Added</p>
+                    </div>
+                    <div class="update-popup-footer">
+                        <button id="update-button" class="update-refresh-btn">Refresh Now</button>
+                    </div>
+                </div>
+            `;
+
+            // Add styles directly in the JS to ensure they're applied
+            const popupStyle = document.createElement('style');
+            popupStyle.textContent = `
+                .update-popup {
+                    position: fixed;
+                    bottom: 30px;
+                    right: 30px;
+                    z-index: 10000;
+                    animation: slideIn 0.5s ease forwards;
+                }
+
+                @keyframes slideIn {
+                    from { transform: translateY(100px); opacity: 0; }
+                    to { transform: translateY(0); opacity: 1; }
+                }
+
+                .update-popup-content {
+                    background-color: #1a1a1a;
+                    border: 1px solid rgba(141, 22, 201, 0.6);
+                    border-radius: 8px;
+                    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5), 0 0 15px rgba(141, 22, 201, 0.3);
+                    overflow: hidden;
+                    width: 320px;
+                    color: white;
+                }
+
+                .update-popup-header {
+                    background: linear-gradient(135deg, #8d16c9 0%, #5b0e88 100%);
+                    padding: 12px 15px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+
+                .update-popup-header h3 {
+                    margin: 0;
+                    font-size: 16px;
+                    font-weight: 600;
+                }
+
+                .update-close-btn {
+                    background: transparent;
+                    border: none;
+                    color: white;
+                    font-size: 22px;
+                    cursor: pointer;
+                    line-height: 0.8;
+                    padding: 0;
+                    width: 24px;
+                    height: 24px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    opacity: 0.8;
+                    transition: opacity 0.2s;
+                }
+
+                .update-close-btn:hover {
+                    opacity: 1;
+                }
+
+                .update-popup-body {
+                    padding: 15px 20px;
+                    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                }
+
+                .update-feature {
+                    margin: 8px 0;
+                    display: flex;
+                    align-items: center;
+                }
+
+                .update-icon {
+                    color: #4CAF50;
+                    margin-right: 10px;
+                    font-weight: bold;
+                }
+
+                .update-popup-footer {
+                    padding: 15px 20px;
+                    text-align: right;
+                }
+
+                .update-refresh-btn {
+                    background: linear-gradient(135deg, #8d16c9 0%, #5b0e88 100%);
+                    color: white;
+                    border: none;
+                    padding: 8px 18px;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    font-weight: 600;
+                    transition: all 0.2s;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+                }
+
+                .update-refresh-btn:hover {
+                    background: linear-gradient(135deg, #a219e6 0%, #6c0fa1 100%);
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+                }
+
+                @keyframes slideOut {
+                    from { transform: translateY(0); opacity: 1; }
+                    to { transform: translateY(100px); opacity: 0; }
+                }
+            `;
+
+            document.head.appendChild(popupStyle);
+            document.body.appendChild(updateNotification);
+
+            // Add event listeners
+            document.getElementById('update-button').addEventListener('click', () => {
+                alert('User clicked refresh button - this would reload the page');
+                updateNotification.style.animation = 'slideOut 0.3s ease forwards';
+                setTimeout(() => {
+                    updateNotification.remove();
+                }, 300);
+            });
+
+            document.getElementById('update-close').addEventListener('click', () => {
+                updateNotification.style.animation = 'slideOut 0.3s ease forwards';
+                setTimeout(() => {
+                    updateNotification.remove();
+                }, 300);
+            });
+        });
+    </script>
+</body>
+</html>
