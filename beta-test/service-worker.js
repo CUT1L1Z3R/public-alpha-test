@@ -1,5 +1,5 @@
 // Service Worker for FreeFlix
-const CACHE_VERSION = '1.0.4'; // Increment this when making changes
+const CACHE_VERSION = '1.0.5'; // Increment this when making changes
 const CACHE_NAME = 'freeflix-cache-v' + CACHE_VERSION;
 const urlsToCache = [
   './',
@@ -23,25 +23,30 @@ const urlsToCache = [
   './free-movie-streaming.html'
 ];
 
-// Install event - cache assets
+// Install event - cache assets with version control
 self.addEventListener('install', event => {
-  // Skip waiting to update service worker immediately
+  // Use skipWaiting but we'll control the reload behavior ourselves
   self.skipWaiting();
 
-  // Clear all caches first before adding new cache
+  // Clear old caches and create new one
   event.waitUntil(
+    // First clear old caches for proper version updates
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cacheName => {
-          console.log('Deleting old cache:', cacheName);
-          return caches.delete(cacheName);
-        })
-      ).then(() => {
-        console.log('Opening new cache:', CACHE_NAME);
-        return caches.open(CACHE_NAME).then(cache => {
-          console.log('Opened cache');
-          return cache.addAll(urlsToCache);
-        });
+          // Only delete our app's caches, but different versions
+          if (cacheName.startsWith('freeflix-cache-') && cacheName !== CACHE_NAME) {
+            console.log('Deleting old cache:', cacheName);
+            return caches.delete(cacheName);
+          }
+        }).filter(Boolean) // Remove undefined values
+      );
+    }).then(() => {
+      // Then open and populate the new cache
+      console.log('Opening new cache:', CACHE_NAME);
+      return caches.open(CACHE_NAME).then(cache => {
+        console.log('Caching app resources');
+        return cache.addAll(urlsToCache);
       });
     }).catch(error => {
       console.error('Failed to cache resources:', error);
@@ -49,79 +54,87 @@ self.addEventListener('install', event => {
   );
 });
 
-// Fetch event - serve from cache if available
+// Fetch event - enhanced to better handle caching and updates
 self.addEventListener('fetch', event => {
-  // Handle page navigation requests differently
+  // Handle page navigation requests with network-first strategy
   if (event.request.mode === 'navigate') {
     event.respondWith(
+      // Try to fetch from network first (ensures fresh content)
       fetch(event.request)
+        .then(response => {
+          return response;
+        })
         .catch(() => {
+          // If network fails, use cache as fallback
           return caches.match('./index.html');
         })
     );
     return;
   }
 
-  // Don't cache API calls or skip cache for development
+  // Special handling for different resource types
+  const url = new URL(event.request.url);
   const isApiCall = event.request.url.includes('api.themoviedb.org');
-  const shouldSkipCache = event.request.url.includes('?v=') || isApiCall;
+  const isVersioned = event.request.url.includes('?v=') || event.request.url.includes('&v=');
+  const isAsset = (/\.(jpe?g|png|gif|svg|ico|css|js)$/i).test(url.pathname);
 
-  event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        // For API calls or versioned resources, always go to network first
-        if (shouldSkipCache) {
+  // Different caching strategies based on resource type
+  if (isApiCall) {
+    // Network-only for API calls with cache fallback
+    event.respondWith(
+      fetch(event.request)
+        .catch(error => {
+          console.error('API fetch failed:', error);
+          return caches.match(event.request);
+        })
+    );
+  } else if (isVersioned || isAsset) {
+    // Cache-first for versioned resources and assets
+    event.respondWith(
+      caches.match(event.request)
+        .then(response => {
+          // Return cached response if we have it
+          if (response) {
+            return response;
+          }
+
+          // Otherwise fetch from network and cache
           return fetch(event.request)
             .then(networkResponse => {
-              // Only cache if it's not an API call
-              if (!isApiCall && networkResponse && networkResponse.status === 200) {
+              // Only cache valid responses
+              if (networkResponse && networkResponse.status === 200) {
                 const responseToCache = networkResponse.clone();
                 caches.open(CACHE_NAME).then(cache => {
                   cache.put(event.request, responseToCache);
                 });
               }
               return networkResponse;
-            })
-            .catch(error => {
-              console.error('API fetch failed:', error);
-              // If we have a cached response, return it as fallback
-              if (response) return response;
-
-              // Otherwise return an error
-              return new Response('Network error happened', {
-                status: 408,
-                headers: { 'Content-Type': 'text/plain' },
-              });
             });
-        }
-
-        // Return the cached response if found for non-API calls
-        if (response) {
+        })
+    );
+  } else {
+    // Network-first for everything else
+    event.respondWith(
+      fetch(event.request)
+        .then(response => {
+          // Cache successful responses
+          if (response && response.status === 200) {
+            const responseToCache = response.clone();
+            caches.open(CACHE_NAME).then(cache => {
+              cache.put(event.request, responseToCache);
+            });
+          }
           return response;
-        }
-
-        // Otherwise fetch from network
-        return fetch(event.request)
-          .then(response => {
-            // Don't cache if not a valid response
-            if (!response || response.status !== 200 || response.type !== 'basic') {
-              return response;
+        })
+        .catch(error => {
+          console.error('Fetch failed:', error);
+          // Try cache as fallback
+          return caches.match(event.request).then(cachedResponse => {
+            if (cachedResponse) {
+              return cachedResponse;
             }
 
-            // Clone the response
-            const responseToCache = response.clone();
-
-            // Add to cache
-            caches.open(CACHE_NAME)
-              .then(cache => {
-                cache.put(event.request, responseToCache);
-              });
-
-            return response;
-          })
-          .catch(error => {
-            console.error('Fetch failed:', error);
-            // Return a custom offline page if it's a page request
+            // Return an error response if no cached version
             if (event.request.mode === 'navigate') {
               return caches.match('./index.html');
             }
@@ -130,25 +143,39 @@ self.addEventListener('fetch', event => {
               headers: { 'Content-Type': 'text/plain' },
             });
           });
-      })
-  );
+        })
+    );
+  }
 });
 
-// Activate event - delete old caches
+// Activate event with controlled update behavior
 self.addEventListener('activate', event => {
   const cacheWhitelist = [CACHE_NAME];
 
-  // Take control of all clients immediately
   event.waitUntil(
     caches.keys().then(cacheNames => {
-      return Promise.all([
+      return Promise.all(
         cacheNames.map(cacheName => {
           if (cacheWhitelist.indexOf(cacheName) === -1) {
+            console.log('Deleting old cache:', cacheName);
             return caches.delete(cacheName);
           }
-        }),
-        self.clients.claim() // Take control of all clients
-      ]);
+        }).filter(Boolean) // Remove undefined values
+      );
+    }).then(() => {
+      // Take control of uncontrolled clients
+      return self.clients.claim();
+    }).then(() => {
+      // After claiming clients, notify them of the update
+      // but don't force reload
+      self.clients.matchAll().then(clients => {
+        clients.forEach(client => {
+          client.postMessage({
+            type: 'UPDATE_AVAILABLE',
+            version: CACHE_VERSION
+          });
+        });
+      });
     })
   );
 });

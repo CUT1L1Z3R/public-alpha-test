@@ -683,58 +683,19 @@
     <script src="./index.js?v=1.0.2"></script>
 
     <script>
-    // Force reload of resources when a new version is deployed
+    // Modified script to avoid auto-reloading but still handle versioning
     (function() {
         const lastUpdate = localStorage.getItem('lastUpdate');
         const currentVersion = '1.0.2'; // Update this when making changes
         const timestamp = new Date().getTime();
-        const scripts = document.getElementsByTagName('script');
-        const styles = document.getElementsByTagName('link');
 
+        // Only update the version in localStorage, but don't force reload
         if (lastUpdate !== currentVersion) {
             localStorage.setItem('lastUpdate', currentVersion);
+            console.log('Updated to version:', currentVersion);
 
-            // Update script sources with timestamp
-            for (let i = 0; i < scripts.length; i++) {
-                const script = scripts[i];
-                if (script.src && !script.src.includes('data-cfasync')) {
-                    if (script.src.includes('?v=')) {
-                        script.src = script.src.split('?v=')[0] + '?v=' + timestamp;
-                    } else if (!script.src.includes('?')) {
-                        script.src = script.src + '?v=' + timestamp;
-                    }
-                }
-            }
-
-            // Update stylesheet links with timestamp
-            for (let i = 0; i < styles.length; i++) {
-                const style = styles[i];
-                if (style.href && style.rel === 'stylesheet') {
-                    if (style.href.includes('?v=')) {
-                        style.href = style.href.split('?v=')[0] + '?v=' + timestamp;
-                    } else if (!style.href.includes('?')) {
-                        style.href = style.href + '?v=' + timestamp;
-                    }
-                }
-            }
-
-            // Force cache clearing by unregistering service worker
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.getRegistrations().then(function(registrations) {
-                    for(let registration of registrations) {
-                        registration.unregister();
-                    }
-                    // Force reload the application
-                    setTimeout(() => {
-                        window.location.reload(true);
-                    }, 300);
-                });
-            } else {
-                // Force reload the application JS
-                setTimeout(() => {
-                    window.location.reload(true);
-                }, 300);
-            }
+            // Note: Auto-reload functionality has been removed to prevent
+            // the site from refreshing itself when users visit it
         }
     })();
     </script>
@@ -744,9 +705,13 @@
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/service-worker.js?v=' + new Date().getTime())
+                // Use a fixed version instead of timestamp to avoid frequent updates
+                navigator.serviceWorker.register('/service-worker.js?v=1.0.4')
                     .then(function(registration) {
                         console.log('ServiceWorker registration successful with scope: ', registration.scope);
+
+                        // Don't automatically update the service worker
+                        // This prevents the auto-reload behavior
                     })
                     .catch(function(error) {
                         console.log('ServiceWorker registration failed: ', error);
