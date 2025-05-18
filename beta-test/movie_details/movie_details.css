@@ -63,7 +63,7 @@ h1 {
 iframe {
     width: 100%;
     height: 450px !important;
-    margin: 0 0 20px 0;
+    margin: 0;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     border: none; /* Remove border to make it cleaner */
@@ -704,7 +704,7 @@ p {
     width: 100%;
     height: 450px !important;
     display: block;
-    margin-bottom: 10px;
+    margin-bottom: 0; /* Removed margin */
     border: none; /* Remove border to make it cleaner */
 }
 
@@ -848,13 +848,13 @@ p {
     iframe {
         height: 220px !important;
         width: 100%;
-        margin: 0 auto 15px auto;
+        margin: 0 auto 0 auto; /* Removed bottom margin */
         box-sizing: border-box;
     }
 
     /* Season container adjustments */
     .seasons-container {
-        margin-top: 15px !important;
+        margin-top: 5px !important;
         width: 100%;
         margin-left: auto;
         margin-right: auto;
@@ -968,51 +968,19 @@ p {
 
 /* Mobile specific iframe adjustments for button access */
 @media only screen and (max-width: 560px) {
-    /* Adjust iframe to make sure fullscreen button is accessible while keeping good size */
+    /* Adjust iframe to make sure fullscreen button is accessible */
     iframe#iframe {
-        width: 100% !important; /* Full width */
-        height: 220px !important; /* Better height for mobile */
+        width: calc(100% - 5px) !important; /* Slight reduction in width */
         position: relative !important;
-        margin-right: 0 !important;
-        margin-bottom: 10px !important;
+        right: 5px !important; /* Shift slightly to the left */
+        margin-right: 5px !important;
+        margin-bottom: 0 !important; /* Remove bottom margin */
     }
 
-    /* Ensure movie poster container has proper space but not too much */
+    /* Ensure movie poster container has proper space but remove excess padding */
     .movie-poster {
-        padding-bottom: 20px !important; /* Reduced padding */
+        padding-bottom: 0 !important; /* Remove bottom padding */
         position: relative !important;
-    }
-
-    /* Make the control spacer smaller but still functional */
-    #player-controls-spacer {
-        height: 35px !important; /* Reduced height */
-        margin-top: -5px !important;
-        margin-bottom: 10px !important;
-    }
-}
-
-/* Adjust mobile spacing to reduce empty space */
-@media only screen and (max-width: 560px) {
-    /* Reduce spacing between elements */
-    .movie-details {
-        gap: 5px !important;
-    }
-
-    /* Make the movie info section closer to the video */
-    .movie-info {
-        margin-top: 0 !important;
-        padding-top: 0 !important;
-    }
-
-    /* Reduce margin below the video */
-    .movie-poster {
-        margin-bottom: 0 !important;
-    }
-
-    /* Ensure title has no extra space */
-    .movie-info h1 {
-        margin-top: 0 !important;
-        margin-bottom: 10px !important;
     }
 }
 
@@ -1271,16 +1239,27 @@ p {
     display: none; /* Hidden by default */
 }
 
-/* Show spacer on mobile devices */
+/* Show spacer on mobile devices but with reduced height */
 @media only screen and (max-width: 560px) {
     #player-controls-spacer {
         display: block;
         width: 100%;
-        height: 35px !important; /* Reduced height */
+        height: 10px; /* Reduced height to minimize space */
         clear: both;
-        margin-top: -5px !important;
-        margin-bottom: 10px !important;
+        margin-top: 0;
+        margin-bottom: 0;
         position: relative;
         pointer-events: none; /* Allows clicking through to elements under it */
+    }
+
+    /* Add extra space to the right of the iframe for controls */
+    #iframe {
+        padding-right: 50px; /* Space for fullscreen button */
+        box-sizing: border-box;
+    }
+
+    /* Ensure iframe retains proper height */
+    iframe {
+        min-height: 220px;
     }
 }
