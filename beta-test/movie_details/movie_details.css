@@ -85,7 +85,18 @@ iframe {
 
 /* Add margin space to the plot element */
 #plot {
+    color: white;
+    line-height: 1.6;
+    font-size: 18px;
+    text-align: justify;
+    margin-top: 10px;
     margin-bottom: 20px;
+    padding: 15px;
+    background-color: rgba(65, 1, 63, 0.4);
+    border-radius: 8px;
+    font-family: 'Poppins', Arial, sans-serif;
+    letter-spacing: 0.2px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 /* Movie information section */
@@ -100,17 +111,12 @@ iframe {
 .movie-info h1 {
     color: #a209da;
     font-size: 46px;
-    margin-top: 0; /* Remove top margin */
-}
-
-/* Plot styling */
-#plot {
-    color: white;
-    line-height: 1.3; /* Reduce line height */
-    font-size: 16px; /* Slightly smaller font */
-    text-align: justify;
-    margin-top: 0; /* Remove top margin */
-    margin-bottom: 4px; /* Reduce bottom margin */
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-family: 'Poppins', Arial, sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 /* Movie data styling */
@@ -118,6 +124,7 @@ iframe {
     display: flex;
     flex-direction: row;
     gap: 30px;
+    margin-bottom: 15px;
 }
 
 /* Design class styling */
@@ -125,15 +132,26 @@ iframe {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 6px; /* Slightly larger gap */
+    gap: 8px;
     color: white;
-    margin-bottom: 6px; /* Add bottom margin */
+    margin-bottom: 8px;
+    font-family: 'Poppins', Arial, sans-serif;
 }
 
-/* Styling for bold text elements */
+/* Styling for bold text elements (category labels) */
 span {
     font-weight: bold;
     color: #a209da;
+    font-size: 18px;
+    letter-spacing: 0.5px;
+}
+
+/* Styling for category values */
+.design p {
+    font-weight: 500;
+    font-size: 18px;
+    color: white;
+    font-family: 'Poppins', Arial, sans-serif;
 }
 
 p {
@@ -909,20 +927,20 @@ p {
 
     /* Optimize title size */
     .movie-info h1 {
-        font-size: 24px;
+        font-size: 28px;
         line-height: 1.3;
-        margin: -5px 0 4px 0; /* Negative top margin to pull closer to video */
+        margin: -5px 0 10px 0; /* Negative top margin to pull closer to video */
         padding-top: 0;
     }
 
     /* Streamline movie data layout */
     .movie-data {
         flex-direction: column;
-        gap: 8px; /* Increase gap slightly for better readability */
+        gap: 20px;
         width: 100%;
         box-sizing: border-box;
-        margin-bottom: 10px; /* Increase bottom margin */
-        padding-bottom: 2px; /* Add small padding */
+        margin-bottom: 12px;
+        padding-bottom: 2px;
     }
 
     /* Episode items in vertical layout */
@@ -963,14 +981,11 @@ p {
 
     /* Fix for plot description text */
     #plot {
-        max-width: 100%;
-        overflow-wrap: break-word;
-        font-size: 14px;
-        line-height: 1.3; /* Slightly increase line height for readability */
-        box-sizing: border-box;
-        margin-top: 0;
-        margin-bottom: 12px; /* Increase bottom margin for better spacing */
-        padding-bottom: 4px; /* Add some padding */
+        font-size: 16px;
+        line-height: 1.5;
+        padding: 12px;
+        margin-top: 8px;
+        margin-bottom: 15px;
     }
 
     /* Server dropdown content */
@@ -996,6 +1011,20 @@ p {
     .movie-details > * {
         padding-left: 8px;
         padding-right: 8px;
+    }
+
+    /* Category label and value font size adjustments */
+    span {
+        font-size: 16px;
+    }
+
+    .design p {
+        font-size: 16px;
+    }
+
+    .design {
+        gap: 6px;
+        margin-bottom: 6px;
     }
 }
 
@@ -1316,17 +1345,17 @@ p {
     .movie-info h1 {
         color: #a209da;
         margin-top: -5px;
-        margin-bottom: 8px;
+        margin-bottom: 10px;
     }
 
     /* Plot spacing adjustment */
     #plot {
-        margin-bottom: 12px;
+        margin-bottom: 15px;
     }
 
     /* Consistent spacing for details */
     .movie-data {
-        margin-bottom: 8px;
+        margin-bottom: 12px;
     }
 
     .rating-data {
@@ -1345,6 +1374,6 @@ p {
 
     /* Improved detail spacing */
     .design {
-        margin-bottom: 4px;
+        margin-bottom: 6px;
     }
 }
