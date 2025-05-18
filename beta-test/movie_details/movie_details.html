@@ -96,6 +96,44 @@
             }
         }
     </style>
+
+    <!-- Direct fix for mobile video fullscreen -->
+    <style>
+        /* Target specific video player controls */
+        @media only screen and (max-width: 560px) {
+            /* CRITICAL MOBILE VIDEO FIX */
+            iframe {
+                max-height: unset !important;
+                max-width: unset !important;
+                min-height: 300px !important;
+                margin-bottom: 60px !important;
+                position: relative !important;
+                z-index: 5 !important;
+            }
+
+            /* Ensure the container doesn't limit the controls */
+            .movie-poster {
+                overflow: visible !important;
+                margin-bottom: 60px !important;
+                position: relative !important;
+            }
+
+            /* Fix for the movie details container */
+            .movie-details {
+                overflow: visible !important;
+            }
+
+            /* Fix that ensures the fullscreen button is tappable */
+            body::after {
+                content: "";
+                display: block;
+                height: 60px;
+                width: 100%;
+                position: relative;
+                clear: both;
+            }
+        }
+    </style>
 </head>
 
 <body style="overflow-x: hidden; max-width: 100%; width: 100%;">

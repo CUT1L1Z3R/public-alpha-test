@@ -91,20 +91,70 @@ function adjustPlayerForMobile() {
     }
 }
 
+// Mobile video player fullscreen fix
+function fixMobileVideoControls() {
+    // Check if we're on mobile
+    if (window.innerWidth <= 560) {
+        const videoIframe = document.getElementById('iframe');
+        if (videoIframe) {
+            // Direct style overrides to ensure controls are visible
+            videoIframe.style.minHeight = '300px';
+            videoIframe.style.marginBottom = '60px';
+            videoIframe.style.position = 'relative';
+            videoIframe.style.zIndex = '5';
+
+            // Special handling for iOS
+            if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+                // iOS needs extra space
+                videoIframe.style.minHeight = '320px';
+                videoIframe.style.marginBottom = '70px';
+
+                // This forces iOS to render the controls correctly
+                document.body.style.paddingBottom = '70px';
+
+                // Try to fix the bottom bar overlapping controls
+                const poster = document.querySelector('.movie-poster');
+                if (poster) {
+                    poster.style.marginBottom = '80px';
+                }
+
+                // Create a fix for the fullscreen button
+                let fullscreenFix = document.createElement('div');
+                fullscreenFix.style.height = '60px';
+                fullscreenFix.style.width = '100%';
+                fullscreenFix.style.position = 'relative';
+                fullscreenFix.style.clear = 'both';
+                fullscreenFix.style.display = 'block';
+                fullscreenFix.style.marginTop = '-40px';
+                fullscreenFix.style.pointerEvents = 'none';
+
+                // Add it after the iframe
+                if (!videoIframe.nextSibling || videoIframe.nextSibling !== fullscreenFix) {
+                    videoIframe.parentNode.insertBefore(fullscreenFix, videoIframe.nextSibling);
+                }
+            }
+        }
+    }
+}
+
 // Run optimizations when DOM content is loaded
 document.addEventListener('DOMContentLoaded', function() {
     setOptimizedViewport();
     optimizeIframeForFullscreen();
     adjustPlayerForMobile();
 
+    // Add our new mobile fix
+    fixMobileVideoControls();
+
     // Add resize listener to handle orientation changes
     window.addEventListener('resize', function() {
         setOptimizedViewport();
         adjustPlayerForMobile();
+        fixMobileVideoControls();
     });
 
-    // Call after video loads to ensure it's applied properly
-    setTimeout(adjustPlayerForMobile, 1000);
+    // Delayed application for mobile fixes
+    setTimeout(fixMobileVideoControls, 1000);
 });
 
 //
@@ -311,7 +361,7 @@ async function loadEpisodes(tvId, seasonNumber) {
     }
 }
 
-// Add to the loadMedia function to ensure proper mobile sizing
+// Add to the loadMedia function to better handle mobile video
 function loadMedia(embedURL, server) {
     // Set the video URL
     iframe.setAttribute('src', embedURL);
@@ -341,18 +391,12 @@ function loadMedia(embedURL, server) {
     // Ensure fullscreen attributes are set
     optimizeIframeForFullscreen();
 
-    // Adjust iframe dimensions specifically for mobile after source change
-    setTimeout(function() {
-        adjustPlayerForMobile();
+    // Apply fixes for mobile video controls
+    fixMobileVideoControls();
 
-        // Extra fix for iOS devices
-        if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-            const iframe = document.getElementById('iframe');
-            if (iframe) {
-                iframe.style.height = (window.innerWidth * 0.5625 + 50) + 'px'; // 16:9 + extra for controls
-            }
-        }
-    }, 500);
+    // Delayed reapplication of fixes for when video starts playing
+    setTimeout(fixMobileVideoControls, 500);
+    setTimeout(fixMobileVideoControls, 1500);
 }
 
 // Function to handle video source change based on selected server

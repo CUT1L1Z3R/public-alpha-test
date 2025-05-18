@@ -843,18 +843,54 @@ p {
         box-sizing: border-box;
     }
 
-    /* Video frame optimization */
+    /* Video frame optimization for mobile - CRITICAL FIX */
     #iframe,
     iframe {
-        height: 240px !important;
-        width: 100%;
-        margin: 0 auto 30px auto;
-        box-sizing: border-box;
-        /* Ensure the iframe extends to full width */
-        max-width: 100%;
-        /* Add space below the player for controls */
-        padding-bottom: 36px;
-        position: relative;
+        height: 300px !important;
+        min-height: 300px !important;
+        width: 100% !important;
+        margin: 0 auto !important;
+        box-sizing: border-box !important;
+        position: relative !important;
+        z-index: 1000 !important; /* Ensure it's above other elements */
+        overflow: visible !important;
+        /* Critical: Add space for controls below */
+        margin-bottom: 75px !important;
+        border-radius: 8px !important;
+    }
+
+    /* Force visible overflow for controls */
+    .movie-poster, .movie-details, body, html {
+        overflow: visible !important;
+    }
+
+    /* Add space after the iframe */
+    #iframe::after,
+    iframe::after {
+        content: "" !important;
+        display: block !important;
+        height: 70px !important;
+        width: 100% !important;
+        position: relative !important;
+        pointer-events: none !important;
+    }
+
+    /* Ensure container allows overflow */
+    #iframe-container {
+        overflow: visible !important;
+        position: relative !important;
+        width: 100% !important;
+        z-index: 1000 !important;
+        margin-bottom: 70px !important;
+    }
+
+    /* Extra space for iOS devices */
+    .controls-spacer {
+        height: 70px !important;
+        width: 100% !important;
+        display: block !important;
+        position: relative !important;
+        pointer-events: none !important;
     }
 
     /* Season container adjustments */
