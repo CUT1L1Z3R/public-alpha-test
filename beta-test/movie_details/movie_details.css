@@ -106,10 +106,11 @@ iframe {
 /* Plot styling */
 #plot {
     color: white;
-    line-height: 1.4;
-    font-size: 18px;
+    line-height: 1.3; /* Reduce line height */
+    font-size: 16px; /* Slightly smaller font */
     text-align: justify;
     margin-top: 0; /* Remove top margin */
+    margin-bottom: 4px; /* Reduce bottom margin */
 }
 
 /* Movie data styling */
@@ -874,9 +875,9 @@ p {
     /* Movie info section */
     .movie-info {
         width: 95%;
-        margin: 0 auto; /* Remove top and bottom margin */
+        margin: -10px auto 0; /* Negative top margin to eliminate gap */
         padding-top: 0; /* Remove top padding */
-        gap: 8px; /* Reduce gap */
+        gap: 6px; /* Further reduce gap */
         overflow-wrap: break-word;
         word-break: break-word;
         box-sizing: border-box;
@@ -887,7 +888,8 @@ p {
     .movie-info h1 {
         font-size: 24px;
         line-height: 1.3;
-        margin: 0 0 4px 0; /* Reduced bottom margin */
+        margin: -5px 0 4px 0; /* Negative top margin to pull closer to video */
+        padding-top: 0;
     }
 
     /* Streamline movie data layout */
@@ -980,7 +982,7 @@ p {
         position: relative !important;
         right: 0 !important; /* No shift */
         margin-right: 0 !important;
-        margin-bottom: 0 !important; /* Remove bottom margin */
+        margin-bottom: -20px !important; /* Negative margin to pull content closer */
         padding-right: 30px !important; /* Add padding for the fullscreen button */
         box-sizing: border-box !important;
     }
@@ -989,6 +991,7 @@ p {
     .movie-poster {
         padding-bottom: 0 !important; /* Remove bottom padding */
         position: relative !important;
+        margin-bottom: -15px !important; /* Negative margin to pull content closer */
     }
 }
 
@@ -1269,5 +1272,34 @@ p {
     /* Ensure iframe retains proper height */
     iframe {
         min-height: 220px;
+    }
+}
+
+/* Custom improvements for mobile aesthetics - better video to content transition */
+@media only screen and (max-width: 560px) {
+    /* Create a cleaner transition between video and content */
+    .movie-info::before {
+        content: "";
+        display: block;
+        height: 0;
+        width: 100%;
+        margin-top: -15px;
+        position: relative;
+    }
+
+    /* Adjust spacing for a more cohesive layout */
+    .movie-info h1 {
+        color: #a209da;
+        margin-top: -5px;
+    }
+
+    /* Reduce spacing between all elements */
+    .movie-data, .rating-data {
+        margin-bottom: 3px;
+    }
+
+    /* Make the design more compact */
+    .design {
+        margin-bottom: 2px;
     }
 }
