@@ -8,9 +8,47 @@ logo.addEventListener('click', () => {
 // Define server fallback chain
 const serverFallbackChain = ['vidsrc.su', 'vidsrc.vip', 'vidlink.pro'];
 
+// Function to show toast notification
+function showToast(message, type = 'info') {
+    // Check if a toast container already exists
+    let toastContainer = document.querySelector('.toast-container');
+
+    // If not, create one
+    if (!toastContainer) {
+        toastContainer = document.createElement('div');
+        toastContainer.className = 'toast-container';
+        document.body.appendChild(toastContainer);
+    }
+
+    // Create the toast element
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.textContent = message;
+
+    // Add to container
+    toastContainer.appendChild(toast);
+
+    // Show the toast
+    setTimeout(() => {
+        toast.classList.add('show');
+    }, 10);
+
+    // Remove the toast after 3 seconds
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => {
+            toastContainer.removeChild(toast);
+        }, 300);
+    }, 3000);
+}
+
 // Function to handle content download (declare early to avoid hoisting issues)
 function handleDownload() {
     let downloadUrl = '';
+    let contentType = media === 'movie' ? 'movie' : 'episode';
+
+    // Show preparing download notification
+    showToast(`Preparing your ${contentType} download...`, 'info');
 
     // Generate the appropriate download URL based on media type
     if (media === 'movie') {
@@ -42,7 +80,13 @@ function handleDownload() {
     if (downloadUrl) {
         // Encode the URL to avoid issues with query parameters
         const encodedUrl = encodeURIComponent(downloadUrl);
-        window.location.href = `../download.html?url=${encodedUrl}`;
+
+        // Add a slight delay to show the toast
+        setTimeout(() => {
+            window.location.href = `../download.html?url=${encodedUrl}`;
+        }, 800);
+    } else {
+        showToast("Unable to generate download URL. Please try a different server.", 'error');
     }
 }
 
@@ -660,7 +704,6 @@ document.getElementById('server').addEventListener('change', () => {
     changeServer();
 });
 
-// Add the function to the DOMContentLoaded event
 document.addEventListener('DOMContentLoaded', function() {
     // Ensure our controls are accessible on mobile
     ensureControlsAccessible();
@@ -672,6 +715,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Also call it a bit after page load (helpful for mobile browsers)
     setTimeout(ensureControlsAccessible, 1000);
+
+    // Add ripple effect to download button
+    const downloadBtn = document.querySelector('.downloadBtn');
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', function(e) {
+            const ripple = document.createElement('span');
+            ripple.classList.add('ripple');
+            this.appendChild(ripple);
+
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = (e.clientX - rect.left - size/2) + 'px';
+            ripple.style.top = (e.clientY - rect.top - size/2) + 'px';
+
+            ripple.classList.add('active');
+
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        });
+    }
 });
 
 // Initialize everything when the window loads
