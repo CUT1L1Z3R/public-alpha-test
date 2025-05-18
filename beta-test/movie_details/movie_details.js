@@ -527,6 +527,7 @@ function initServerDropdown() {
     // Setup server dropdown toggle
     const serverDropdownHeader = document.querySelector('.server-dropdown-header');
     const serverDropdownContent = document.querySelector('.server-dropdown-content');
+    const serverDropdown = document.querySelector('.server-dropdown');
     const dropdownArrow = document.querySelector('.dropdown-arrow');
 
     if (!serverDropdownHeader) return; // Exit if elements don't exist
@@ -534,9 +535,33 @@ function initServerDropdown() {
     // Toggle dropdown when clicking the header
     serverDropdownHeader.addEventListener('click', function(event) {
         event.stopPropagation();
+
+        // Toggle visibility
+        const isShowing = !serverDropdownContent.classList.contains('show');
         serverDropdownContent.classList.toggle('show');
         serverDropdownHeader.classList.toggle('active');
         dropdownArrow.classList.toggle('up');
+
+        // Add/remove dedicated space class
+        if (isShowing) {
+            serverDropdown.classList.add('has-open-dropdown');
+
+            // Scroll to ensure the dropdown is visible if needed
+            setTimeout(() => {
+                const contentRect = serverDropdownContent.getBoundingClientRect();
+                const viewportHeight = window.innerHeight;
+
+                // If dropdown extends below viewport, scroll it into view
+                if (contentRect.bottom > viewportHeight) {
+                    window.scrollBy({
+                        top: Math.min(contentRect.height, contentRect.bottom - viewportHeight + 20),
+                        behavior: 'smooth'
+                    });
+                }
+            }, 50);
+        } else {
+            serverDropdown.classList.remove('has-open-dropdown');
+        }
     });
 
     // Close dropdown when clicking outside
@@ -545,6 +570,7 @@ function initServerDropdown() {
             serverDropdownContent.classList.remove('show');
             serverDropdownHeader.classList.remove('active');
             dropdownArrow.classList.remove('up');
+            serverDropdown.classList.remove('has-open-dropdown');
         }
     });
 
@@ -571,6 +597,7 @@ function initServerDropdown() {
             serverDropdownContent.classList.remove('show');
             serverDropdownHeader.classList.remove('active');
             dropdownArrow.classList.remove('up');
+            serverDropdown.classList.remove('has-open-dropdown');
 
             // Call the existing changeServer function
             changeServer();

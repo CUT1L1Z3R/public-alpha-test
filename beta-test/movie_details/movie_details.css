@@ -319,9 +319,26 @@ p {
   border: 1px solid rgb(141, 22, 201);
 }
 
+/* Server dropdown wrapper with dedicated space */
 .server-dropdown {
+  width: 100%;
+  max-width: 100%;
+  margin: 10px 0;
   position: relative;
   z-index: 20;
+  transition: margin-bottom 0.3s ease-out;
+  margin-bottom: 0; /* Start with no extra space */
+}
+
+/* Create dedicated space for dropdown when open */
+.server-dropdown.has-open-dropdown {
+  margin-bottom: calc(min(40vh, 300px)); /* Space for dropdown content */
+}
+
+/* Dedicated space for server options */
+.servers-section {
+  margin-bottom: 15px;
+  position: relative;
 }
 
 /* --- FIXED SERVER DROPDOWN HEADER --- */
@@ -346,15 +363,17 @@ p {
   gap: 10px; /* ensures spacing between content and arrow */
 }
 .server-dropdown-header::before {
-  content: "Servers";
-  position: absolute;
-  top: -15px;
-  left: 0;
-  font-size: 12px;
-  color: #a209da;
-  background: none;
-  padding: 0;
-  letter-spacing: 0.5px;
+    content: "Servers";
+    position: absolute;
+    top: -15px;
+    left: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #a209da;
+    background: black;
+    padding: 0 4px;
+    letter-spacing: 0.5px;
+    z-index: 1;
 }
 
 .server-dropdown-header:hover {
@@ -368,6 +387,14 @@ p {
   border-bottom: none;
 }
 
+.server-dropdown-header.active + .server-dropdown-content.dropdown-down {
+  border-radius: 0 0 3px 3px;
+}
+
+.server-dropdown-header.active + .server-dropdown-content.dropdown-up {
+  border-radius: 3px 3px 0 0;
+}
+
 /* Server tag styles with improved spacing */
 .selected-server {
   display: flex;
@@ -377,6 +404,48 @@ p {
   flex: 1; /* Take up available space */
   min-width: 0;
   overflow: hidden;
+}
+
+/* Mobile optimizations for server dropdown */
+@media (max-width: 560px) {
+    /* Increase tap area for better touch interaction */
+    .server-dropdown-header {
+        padding: 10px 16px;
+        min-height: 48px; /* Minimum recommended touch target size */
+    }
+
+    .server-option {
+        padding: 12px 16px;
+        min-height: 48px; /* Minimum recommended touch target size */
+    }
+
+    /* Ensure dropdown doesn't get too tall on small screens */
+    .server-dropdown-content {
+        max-height: 40vh; /* 40% of viewport height */
+    }
+
+    /* Create dedicated space for dropdown on mobile */
+    .server-dropdown.has-open-dropdown {
+        margin-bottom: 40vh; /* 40% of viewport height on mobile */
+    }
+
+    /* Ensure tags don't wrap awkwardly */
+    .server-tag {
+        margin-bottom: 4px;
+        white-space: nowrap;
+    }
+
+    /* Improve tap targets for dropdown arrows */
+    .dropdown-arrow {
+        font-size: 18px;
+        padding: 8px;
+        margin: -8px;
+    }
+
+    /* Ensure header text doesn't get cut off */
+    .selected-server {
+        max-width: calc(100% - 30px);
+    }
 }
 
 .server-tag {
@@ -427,10 +496,26 @@ p {
   overflow-y: auto;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   box-sizing: border-box; /* Include border in width */
+  /* For smooth appearance, let animation handle opacity/transform */
 }
 
+/* Animation for dropdown appearance */
 .server-dropdown-content.show {
   display: block;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.server-dropdown-content.dropdown-down {
+  /* No longer need to set top/bottom, handled by .server-dropdown-content */
+}
+
+.server-dropdown-content.dropdown-up {
+  /* Upward dropdown positioning removed for dedicated space approach */
 }
 
 .server-option {
