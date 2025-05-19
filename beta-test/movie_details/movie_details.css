@@ -1,10 +1,12 @@
 /* Video container styling */
 .video-container {
     position: relative;
-    width: 100%;
+    width: 102%; /* Wider than parent container */
     overflow: visible;
     padding: 0;
-    margin: 0 -1px; /* Negative margin to allow video to extend slightly beyond container */
+    margin: 0 -5px; /* Strong negative margin to extend beyond container */
+    left: -3px; /* Shift left to extend beyond container on both sides */
+    box-sizing: border-box;
 }
 
 /* Global styles for body and text elements */
@@ -76,7 +78,7 @@ iframe {
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     border: none; /* Remove border to make it cleaner */
-    max-width: 100%; /* Ensure iframe never exceeds container width */
+    max-width: none; /* Allow iframe to exceed container width */
     overflow: visible; /* Allow controls to be visible outside boundaries */
     position: relative; /* Needed for control positioning */
 }
@@ -1035,6 +1037,16 @@ p {
         font-size: 14px;
     }
 
+    /* Extra overrides for movie poster container to ensure full width */
+    .movie-poster {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        position: relative;
+        left: 0;
+        right: 0;
+    }
+
     /* Fix for overall container */
     .movie-details {
         flex-direction: column;
@@ -1050,17 +1062,20 @@ p {
     .movie-poster {
         width: 100%;
         margin: 0 auto;
-        padding: 0 1px; /* Minimized padding to maximize video width */
+        padding: 0; /* Removed all padding */
         box-sizing: border-box;
         margin-bottom: -20px; /* Reduced negative margin for better spacing */
+        overflow-x: visible; /* Allow content to overflow */
     }
 
     /* Video frame optimization */
     #iframe,
     iframe {
         height: 230px !important;
-        width: 99.5%; /* Expanded width to use almost the entire screen */
-        margin: 0 auto 0 auto;
+        width: 100%; /* Full width of container which is now wider */
+        margin: 0;
+        padding: 0;
+        left: 0;
         box-sizing: border-box;
         display: block; /* Ensure proper block display */
     }
