@@ -1,14 +1,3 @@
-/* Video container styling */
-.video-container {
-    position: relative;
-    width: 110%; /* Much wider than parent container */
-    overflow: visible;
-    padding: 0;
-    margin: 0 -15px; /* Strong negative margin to extend beyond container */
-    left: -10px; /* Larger shift left to extend further */
-    box-sizing: border-box;
-}
-
 /* Global styles for body and text elements */
 body,
 p,
@@ -78,9 +67,6 @@ iframe {
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     border: none; /* Remove border to make it cleaner */
-    max-width: none; /* Allow iframe to exceed container width */
-    overflow: visible; /* Allow controls to be visible outside boundaries */
-    position: relative; /* Needed for control positioning */
 }
 
 #moviePoster {
@@ -1037,25 +1023,6 @@ p {
         font-size: 14px;
     }
 
-    /* Fix movie details container to handle the video overflow properly */
-    .movie-details {
-        overflow-x: hidden; /* Hide horizontal overflow from the container */
-        position: relative;
-        width: 100%;
-        max-width: 100%;
-    }
-
-    /* Extra overrides for movie poster container to ensure full width */
-    .movie-poster {
-        width: 110%;
-        margin: 0 -15px; /* Negative margin to extend beyond the parent */
-        padding: 0;
-        position: relative;
-        left: -5px; /* Shift left to balance the extension */
-        right: 0;
-        overflow-x: visible;
-    }
-
     /* Fix for overall container */
     .movie-details {
         flex-direction: column;
@@ -1071,47 +1038,47 @@ p {
     .movie-poster {
         width: 100%;
         margin: 0 auto;
-        padding: 0; /* Removed all padding */
+        padding: 0 4px; /* Reduced side padding for more video width */
         box-sizing: border-box;
-        margin-bottom: -20px; /* Reduced negative margin for better spacing */
-        overflow-x: visible; /* Allow content to overflow */
+        margin-bottom: -30px; /* Increased negative margin on mobile */
     }
 
     /* Video frame optimization */
     #iframe,
     iframe {
         height: 230px !important;
-        width: 105%; /* Wider than container */
-        margin: 0 -5px; /* Negative margins to extend further */
-        padding: 0;
-        left: -5px;
+        width: 98%; /* Slightly less than 100% to prevent control cutoff */
+        margin: 0 auto 0 auto;
         box-sizing: border-box;
-        display: block; /* Ensure proper block display */
-        position: relative; /* Allow positioning */
+        /* Center the iframe */
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     /* Show spacer on mobile devices but with reduced height */
     #player-controls-spacer {
         display: block;
-        width: 110%; /* Match the width of container */
-        height: 45px; /* Even more height for controls */
+        width: 100%;
+        height: 10px; /* Reduced height to minimize space */
         clear: both;
         margin-top: 0;
-        margin-bottom: 5px;
+        margin-bottom: 0;
         position: relative;
-        left: -5px; /* Match the offset of other elements */
         pointer-events: none; /* Allows clicking through to elements under it */
     }
 
     /* Add extra space to the right of the iframe for controls */
     #iframe {
-        padding-right: 0; /* Removed padding as we're using width reduction instead */
+        padding-right: 15px; /* Reduced padding to increase visible width */
+        width: 98%; /* Slightly increased width to avoid cutting off controls */
         box-sizing: border-box;
     }
 
     /* Ensure iframe retains proper height */
     iframe {
         min-height: 220px;
+        width: 98%; /* Slightly increased width to avoid cutting off controls */
     }
 
     /* Season container adjustments */
@@ -1134,14 +1101,12 @@ p {
     /* Movie info section */
     .movie-info {
         width: 95%;
-        margin: 5px auto 0; /* Changed from negative to positive margin to prevent overlap */
+        margin: -20px auto 0; /* Increased negative margin on mobile */
         gap: 12px; /* Increased from 8px for better spacing */
         overflow-wrap: break-word;
         word-break: break-word;
         box-sizing: border-box;
         word-wrap: break-word;
-        position: relative; /* Ensure proper stacking */
-        z-index: 2; /* Place above video container if needed */
     }
 
     /* Optimize title size */

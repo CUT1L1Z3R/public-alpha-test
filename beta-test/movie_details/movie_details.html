@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
     <meta name="description" content="Get detailed information about movies and TV shows on FreeFlix. View ratings, cast, trailers, synopsis and add titles to your watchlist.">
     <meta name="keywords" content="movie details, TV show details, anime details, movie info, cast, ratings, synopsis, trailer, FreeFlix, streaming info">
 
@@ -83,11 +83,9 @@
         <!-- Movie poster section -->
         <div class="movie-poster">
             <img id="moviePoster" src="" alt="Movie Poster" width="300" height="450" loading="eager">
-            <div class="video-container">
-                <iframe id="iframe" frameborder="0" allowfullscreen playsinline
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"></iframe>
-                <div id="player-controls-spacer"></div>
-            </div>
+            <iframe id="iframe" frameborder="0" allowfullscreen playsinline
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"></iframe>
+            <div id="player-controls-spacer"></div>
 
             <!-- Season selector (visible only for TV shows) -->
             <div id="seasons-container" class="seasons-container">
