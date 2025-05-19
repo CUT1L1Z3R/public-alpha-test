@@ -1,11 +1,11 @@
 /* Video container styling */
 .video-container {
     position: relative;
-    width: 102%; /* Wider than parent container */
+    width: 110%; /* Much wider than parent container */
     overflow: visible;
     padding: 0;
-    margin: 0 -5px; /* Strong negative margin to extend beyond container */
-    left: -3px; /* Shift left to extend beyond container on both sides */
+    margin: 0 -15px; /* Strong negative margin to extend beyond container */
+    left: -10px; /* Larger shift left to extend further */
     box-sizing: border-box;
 }
 
@@ -1037,14 +1037,23 @@ p {
         font-size: 14px;
     }
 
+    /* Fix movie details container to handle the video overflow properly */
+    .movie-details {
+        overflow-x: hidden; /* Hide horizontal overflow from the container */
+        position: relative;
+        width: 100%;
+        max-width: 100%;
+    }
+
     /* Extra overrides for movie poster container to ensure full width */
     .movie-poster {
-        width: 100%;
-        margin: 0;
+        width: 110%;
+        margin: 0 -15px; /* Negative margin to extend beyond the parent */
         padding: 0;
         position: relative;
-        left: 0;
+        left: -5px; /* Shift left to balance the extension */
         right: 0;
+        overflow-x: visible;
     }
 
     /* Fix for overall container */
@@ -1072,23 +1081,25 @@ p {
     #iframe,
     iframe {
         height: 230px !important;
-        width: 100%; /* Full width of container which is now wider */
-        margin: 0;
+        width: 105%; /* Wider than container */
+        margin: 0 -5px; /* Negative margins to extend further */
         padding: 0;
-        left: 0;
+        left: -5px;
         box-sizing: border-box;
         display: block; /* Ensure proper block display */
+        position: relative; /* Allow positioning */
     }
 
     /* Show spacer on mobile devices but with reduced height */
     #player-controls-spacer {
         display: block;
-        width: 100%;
-        height: 40px; /* Further increased height to ensure fullscreen button is accessible */
+        width: 110%; /* Match the width of container */
+        height: 45px; /* Even more height for controls */
         clear: both;
         margin-top: 0;
-        margin-bottom: 0;
+        margin-bottom: 5px;
         position: relative;
+        left: -5px; /* Match the offset of other elements */
         pointer-events: none; /* Allows clicking through to elements under it */
     }
 
@@ -1123,12 +1134,14 @@ p {
     /* Movie info section */
     .movie-info {
         width: 95%;
-        margin: -20px auto 0; /* Increased negative margin on mobile */
+        margin: 5px auto 0; /* Changed from negative to positive margin to prevent overlap */
         gap: 12px; /* Increased from 8px for better spacing */
         overflow-wrap: break-word;
         word-break: break-word;
         box-sizing: border-box;
         word-wrap: break-word;
+        position: relative; /* Ensure proper stacking */
+        z-index: 2; /* Place above video container if needed */
     }
 
     /* Optimize title size */
