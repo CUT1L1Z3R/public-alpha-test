@@ -201,9 +201,9 @@
     <script>
         // Simulate ad loading
         let adsLoaded = 0;
-        const totalAds = 2;
+        const totalAds = 1;
         let countdownStarted = false;
-        let secondsLeft = 10; // Increased from 5 to 10 seconds
+        let secondsLeft = 5; // Increased from 5 to 10 seconds
 
         // Function to simulate loading an ad
         function loadAd(adId, delay) {
@@ -217,6 +217,36 @@
                 }, delay);
             });
         }
+
+        // Update the status display
+        function updateStatus() {
+            const countdownElement = document.getElementById('countdown');
+
+            // Start countdown only when all ads are loaded
+            if (adsLoaded === totalAds && !countdownStarted) {
+                countdownStarted = true;
+                countdownElement.textContent = `Download will be available in ${secondsLeft} seconds`;
+
+                // Start the countdown
+                const countdownInterval = setInterval(() => {
+                    secondsLeft--;
+                    countdownElement.textContent = `Download will be available in ${secondsLeft} seconds`;
+
+                    if (secondsLeft <= 0) {
+                        clearInterval(countdownInterval);
+                        countdownElement.textContent = 'Your download is ready!';
+                        document.getElementById('downloadBtn').disabled = false;
+                    }
+                }, 1000);
+            } else if (!countdownStarted) {
+                countdownElement.textContent = `Loading ads (${adsLoaded}/${totalAds})...`;
+            }
+        }
+
+        // Load ads with different delays to simulate network conditions
+        window.addEventListener('DOMContentLoaded', () => {
+            // Ad 1 loads after 3 seconds
+            loadAd('ad1', 3000);
         
         // Get query parameters from URL
         const urlParams = new URLSearchParams(window.location.search);
