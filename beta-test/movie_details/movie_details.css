@@ -1020,11 +1020,11 @@ p {
     #iframe,
     iframe {
         height: 75px !important; /* Further reduced height for better mobile viewing */
-        width: 100vw !important;
-        max-width: 100vw !important;
-        margin-left: 0;
+        width: 102vw !important;  /* Slightly oversize to remove side gap */
+        max-width: 102vw !important;
+        margin-left: -1vw; /* Pull slightly to the left */
         margin-right: 0;
-        padding-right: 35px !important; /* Space for fullscreen button */
+        padding-right: 28px !important; /* Reduced right padding but still enough for fullscreen button */
     }
 }
 
