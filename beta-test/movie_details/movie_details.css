@@ -1038,22 +1038,27 @@ p {
     .movie-poster {
         width: 100%;
         margin: 0 auto;
-        padding: 0 4px; /* Reduced side padding for more video width */
+        padding: 0 8px;
         box-sizing: border-box;
         margin-bottom: -30px; /* Increased negative margin on mobile */
     }
 
     /* Video frame optimization */
-    #iframe,
+    #iframe {
+        width: 98vw;
+        max-width: 98vw;
+        margin-left: 1vw;
+        margin-right: 1vw;
+        padding-right: 38px;
+        box-sizing: border-box;
+    }
     iframe {
         height: 230px !important;
-        width: 98%; /* Slightly less than 100% to prevent control cutoff */
-        margin: 0 auto 0 auto;
+        width: 98vw;
+        max-width: 98vw;
+        margin-left: 1vw;
+        margin-right: 1vw;
         box-sizing: border-box;
-        /* Center the iframe */
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
     }
 
     /* Show spacer on mobile devices but with reduced height */
@@ -1068,17 +1073,9 @@ p {
         pointer-events: none; /* Allows clicking through to elements under it */
     }
 
-    /* Add extra space to the right of the iframe for controls */
-    #iframe {
-        padding-right: 15px; /* Reduced padding to increase visible width */
-        width: 98%; /* Slightly increased width to avoid cutting off controls */
-        box-sizing: border-box;
-    }
-
     /* Ensure iframe retains proper height */
     iframe {
         min-height: 220px;
-        width: 98%; /* Slightly increased width to avoid cutting off controls */
     }
 
     /* Season container adjustments */
