@@ -19,6 +19,435 @@ let bannerInterval; // Interval for auto-rotation
 // TMDB API key
 const api_Key = '84259f99204eeb7d45c7e3d8e36c6123';
 
+// RiveStream server configuration for anime
+const RIVESTREAM_CONFIG = {
+    apiUrl: 'https://rivestream.net/api/backendfetch',
+    secretKey: 'LTUfm4fmX2ZTIwY2Uz',
+    service: 'ee3',
+    proxyMode: 'noProxy'
+};
+
+// Function to get RiveStream server URL for anime
+async function getRiveStreamServer(tmdbId, season = 1, episode = 1) {
+    try {
+        const params = new URLSearchParams({
+            requestID: 'tvVideoProvider',
+            id: tmdbId,
+            season: season,
+            episode: episode,
+            service: RIVESTREAM_CONFIG.service,
+            secretKey: RIVESTREAM_CONFIG.secretKey,
+            proxyMode: RIVESTREAM_CONFIG.proxyMode
+        });
+
+        const response = await fetch(`${RIVESTREAM_CONFIG.apiUrl}?${params}`);
+        const data = await response.json();
+
+        if (data && data.source) {
+            return {
+                success: true,
+                url: data.source,
+                quality: data.quality || 'HD',
+                server: 'RiveStream'
+            };
+        }
+
+        return { success: false, error: 'No source found' };
+    } catch (error) {
+        console.error('Error fetching RiveStream server:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+// Function to create server buttons for anime
+function createServerButtons(tmdbId, mediaType = 'tv', container) {
+    if (mediaType !== 'tv') return; // Only for TV shows/anime
+
+    const serverContainer = document.createElement('div');
+    serverContainer.className = 'server-buttons-container';
+    serverContainer.style.cssText = `
+        margin: 20px 0;
+        padding: 20px;
+        background: rgba(0,0,0,0.8);
+        border-radius: 10px;
+        border: 1px solid #333;
+    `;
+
+    const serverTitle = document.createElement('h3');
+    serverTitle.textContent = 'Available Servers';
+    serverTitle.style.cssText = `
+        color: #fff;
+        margin-bottom: 15px;
+        font-size: 1.2rem;
+    `;
+
+    const serverButtonsRow = document.createElement('div');
+    serverButtonsRow.style.cssText = `
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        align-items: center;
+    `;
+
+    // Season and episode selectors
+    const seasonSelect = document.createElement('select');
+    seasonSelect.style.cssText = `
+        padding: 8px 12px;
+        border-radius: 5px;
+        border: none;
+        background: #444;
+        color: #fff;
+        margin-right: 10px;
+    `;
+
+    const episodeSelect = document.createElement('select');
+    episodeSelect.style.cssText = `
+        padding: 8px 12px;
+        border-radius: 5px;
+        border: none;
+        background: #444;
+        color: #fff;
+        margin-right: 15px;
+    `;
+
+    // Default options
+    for (let i = 1; i <= 5; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = `Season ${i}`;
+        seasonSelect.appendChild(option);
+    }
+
+    for (let i = 1; i <= 24; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = `Episode ${i}`;
+        episodeSelect.appendChild(option);
+    }
+
+    // RiveStream server button
+    const riveStreamBtn = document.createElement('button');
+    riveStreamBtn.textContent = 'RiveStream Server';
+    riveStreamBtn.style.cssText = `
+        padding: 10px 20px;
+        background: linear-gradient(45deg, #e74c3c, #c0392b);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    `;
+
+    riveStreamBtn.onmouseover = () => {
+        riveStreamBtn.style.background = 'linear-gradient(45deg, #c0392b, #a93226)';
+        riveStreamBtn.style.transform = 'translateY(-2px)';
+    };
+
+    riveStreamBtn.onmouseout = () => {
+        riveStreamBtn.style.background = 'linear-gradient(45deg, #e74c3c, #c0392b)';
+        riveStreamBtn.style.transform = 'translateY(0)';
+    };
+
+    riveStreamBtn.addEventListener('click', async () => {
+        const season = seasonSelect.value;
+        const episode = episodeSelect.value;
+
+        riveStreamBtn.textContent = 'Loading...';
+        riveStreamBtn.disabled = true;
+
+        try {
+            const serverData = await getRiveStreamServer(tmdbId, season, episode);
+
+            if (serverData.success) {
+                // Create video player modal
+                createVideoPlayer(serverData.url, `Season ${season} Episode ${episode}`);
+            } else {
+                alert(`Server error: ${serverData.error}`);
+            }
+        } catch (error) {
+            alert('Failed to load server. Please try again.');
+            console.error('Server loading error:', error);
+        } finally {
+            riveStreamBtn.textContent = 'RiveStream Server';
+            riveStreamBtn.disabled = false;
+        }
+    });
+
+    const selectorsContainer = document.createElement('div');
+    selectorsContainer.style.cssText = 'display: flex; align-items: center; margin-right: 15px;';
+
+    const seasonLabel = document.createElement('label');
+    seasonLabel.textContent = 'Season: ';
+    seasonLabel.style.cssText = 'color: #fff; margin-right: 5px;';
+
+    const episodeLabel = document.createElement('label');
+    episodeLabel.textContent = 'Episode: ';
+    episodeLabel.style.cssText = 'color: #fff; margin-right: 5px; margin-left: 10px;';
+
+    selectorsContainer.appendChild(seasonLabel);
+    selectorsContainer.appendChild(seasonSelect);
+    selectorsContainer.appendChild(episodeLabel);
+    selectorsContainer.appendChild(episodeSelect);
+
+    serverButtonsRow.appendChild(selectorsContainer);
+    serverButtonsRow.appendChild(riveStreamBtn);
+
+    serverContainer.appendChild(serverTitle);
+    serverContainer.appendChild(serverButtonsRow);
+
+    if (container) {
+        container.appendChild(serverContainer);
+    }
+
+    return serverContainer;
+}
+
+// Function to create video player modal
+function createVideoPlayer(videoUrl, title) {
+    // Remove existing player if any
+    const existingPlayer = document.getElementById('anime-video-player-modal');
+    if (existingPlayer) {
+        existingPlayer.remove();
+    }
+
+    const modal = document.createElement('div');
+    modal.id = 'anime-video-player-modal';
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.95);
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        box-sizing: border-box;
+    `;
+
+    const playerContainer = document.createElement('div');
+    playerContainer.style.cssText = `
+        width: 100%;
+        max-width: 1200px;
+        background: #000;
+        border-radius: 10px;
+        overflow: hidden;
+        position: relative;
+    `;
+
+    const header = document.createElement('div');
+    header.style.cssText = `
+        background: #333;
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    `;
+
+    const titleElement = document.createElement('h3');
+    titleElement.textContent = title;
+    titleElement.style.cssText = `
+        color: #fff;
+        margin: 0;
+        font-size: 1.1rem;
+    `;
+
+    const closeBtn = document.createElement('button');
+    closeBtn.innerHTML = '&times;';
+    closeBtn.style.cssText = `
+        background: none;
+        border: none;
+        color: #fff;
+        font-size: 24px;
+        cursor: pointer;
+        padding: 0;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    `;
+
+    closeBtn.addEventListener('click', () => {
+        modal.remove();
+    });
+
+    const videoElement = document.createElement('video');
+    videoElement.style.cssText = `
+        width: 100%;
+        height: 60vh;
+        background: #000;
+    `;
+    videoElement.controls = true;
+    videoElement.autoplay = true;
+    videoElement.src = videoUrl;
+
+    header.appendChild(titleElement);
+    header.appendChild(closeBtn);
+    playerContainer.appendChild(header);
+    playerContainer.appendChild(videoElement);
+    modal.appendChild(playerContainer);
+
+    document.body.appendChild(modal);
+
+    // Close modal when clicking outside player
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.remove();
+        }
+    });
+
+    // Close modal on Escape key
+    const escapeHandler = (e) => {
+        if (e.key === 'Escape') {
+            modal.remove();
+            document.removeEventListener('keydown', escapeHandler);
+        }
+    };
+    document.addEventListener('keydown', escapeHandler);
+}
+
+// Function to add server buttons to anime detail pages
+function addServerButtonsToDetailsPage() {
+    // Check if we're on a details page
+    const urlParams = new URLSearchParams(window.location.search);
+    const mediaType = urlParams.get('media');
+    const id = urlParams.get('id');
+
+    if (mediaType === 'tv' && id) {
+        // Find a suitable container to add server buttons
+        const detailsContainer = document.querySelector('.movie-details') ||
+                                document.querySelector('.details-container') ||
+                                document.querySelector('.main-content') ||
+                                document.body;
+
+        if (detailsContainer) {
+            // Add server buttons after a short delay to ensure page content is loaded
+            setTimeout(() => {
+                const serverButtons = createServerButtons(id, mediaType, null);
+                if (serverButtons) {
+                    detailsContainer.appendChild(serverButtons);
+                }
+            }, 1000);
+        }
+    }
+}
+
+// Function to create a modal with server buttons for anime items on the main page
+function createAnimeServerModal(anime) {
+    // Remove existing modal if any
+    const existingModal = document.getElementById('anime-server-modal');
+    if (existingModal) {
+        existingModal.remove();
+    }
+
+    const modal = document.createElement('div');
+    modal.id = 'anime-server-modal';
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0,0,0,0.92);
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        box-sizing: border-box;
+    `;
+
+    const content = document.createElement('div');
+    content.style.cssText = `
+        background: #181818;
+        border-radius: 12px;
+        padding: 32px 24px 24px 24px;
+        min-width: 340px;
+        max-width: 95vw;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    `;
+
+    // Close button
+    const closeBtn = document.createElement('button');
+    closeBtn.innerHTML = '&times;';
+    closeBtn.style.cssText = `
+        position: absolute;
+        top: 12px;
+        right: 16px;
+        background: none;
+        border: none;
+        color: #fff;
+        font-size: 2rem;
+        cursor: pointer;
+        z-index: 2;
+    `;
+    closeBtn.addEventListener('click', () => {
+        modal.remove();
+    });
+
+    // Anime title
+    const title = document.createElement('h2');
+    title.textContent = anime.name || anime.title || 'Anime';
+    title.style.cssText = `
+        color: #fff;
+        margin-bottom: 18px;
+        font-size: 1.3rem;
+        text-align: center;
+    `;
+
+    // Poster image
+    const img = document.createElement('img');
+    img.src = anime.backdrop_path
+        ? `https://image.tmdb.org/t/p/w500${anime.backdrop_path}`
+        : anime.poster_path
+            ? `https://image.tmdb.org/t/p/w500${anime.poster_path}`
+            : 'https://via.placeholder.com/500x281?text=No+Image';
+    img.alt = title.textContent;
+    img.style.cssText = `
+        width: 320px;
+        max-width: 90vw;
+        border-radius: 8px;
+        margin-bottom: 18px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+        object-fit: cover;
+    `;
+
+    // Server buttons
+    const serverButtons = createServerButtons(anime.id, 'tv', null);
+
+    content.appendChild(closeBtn);
+    content.appendChild(title);
+    content.appendChild(img);
+    content.appendChild(serverButtons);
+
+    modal.appendChild(content);
+    document.body.appendChild(modal);
+
+    // Close modal when clicking outside content
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.remove();
+        }
+    });
+
+    // Close modal on Escape key
+    const escapeHandler = (e) => {
+        if (e.key === 'Escape') {
+            modal.remove();
+            document.removeEventListener('keydown', escapeHandler);
+        }
+    };
+    document.addEventListener('keydown', escapeHandler);
+}
+
 // Document ready function
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize the anime page
@@ -44,6 +473,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize back to top button
     addBackToTopButton();
+
+    // Add server buttons to details page if on details page
+    addServerButtonsToDetailsPage();
 });
 
 // Initialize the anime page
@@ -173,7 +605,7 @@ function setupNavigationButtons() {
                     left: 300,
                     behavior: 'smooth'
                 });
-            });
+            }
         }
     });
 }
@@ -454,12 +886,13 @@ function fetchAnime(containerClass, genreOrKeyword) {
                     itemElement.appendChild(imgWrapper);
                     container.appendChild(itemElement);
 
-                    // Add click event to navigate to details page
+                    // Add click event to navigate to details page or show server modal
                     itemElement.addEventListener('click', () => {
                         if (containerClass === 'top-rated-anime-movie-container') {
                             window.location.href = `../movie_details/movie_details.html?media=movie&id=${anime.id}`;
                         } else {
-                            window.location.href = `../movie_details/movie_details.html?media=tv&id=${anime.id}`;
+                            // For anime TV shows, create a modal with server options instead of redirecting
+                            createAnimeServerModal(anime);
                         }
                     });
                 });

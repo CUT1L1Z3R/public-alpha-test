@@ -42,160 +42,6 @@ function showToast(message, type = 'info') {
     }, 3000);
 }
 
-// Function to fetch anime video URL from RiveStream API
-async function fetchAnimeVideoURL(apiURL, tvId, seasonNumber, episodeNumber) {
-    try {
-        showToast("Loading anime episode...", 'info');
-
-        const response = await fetch(apiURL, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error(`API responded with status: ${response.status}`);
-        }
-
-        const data = await response.json();
-
-        console.log('RiveStream API Response:', data);
-
-        // Check different possible response formats
-        let videoURL = null;
-        if (data && data.videoURL) {
-            videoURL = data.videoURL;
-        } else if (data && data.url) {
-            videoURL = data.url;
-        } else if (data && data.stream) {
-            videoURL = data.stream;
-        } else if (data && data.source) {
-            videoURL = data.source;
-        } else if (typeof data === 'string' && data.startsWith('http')) {
-            videoURL = data;
-        }
-
-        if (videoURL) {
-            // Create an iframe with the video URL
-            const iframe = document.getElementById('iframe');
-            iframe.setAttribute('src', videoURL);
-            iframe.setAttribute('playsinline', '');
-            iframe.setAttribute('webkit-playsinline', 'true');
-            iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen');
-            iframe.setAttribute('allowfullscreen', '');
-            iframe.style.display = "block";
-
-            // Hide the movie poster when the video is playing
-            const moviePoster = document.getElementById('movie-poster');
-            moviePoster.style.display = "none";
-
-            showToast("Anime episode loaded successfully!", 'success');
-
-            console.log(`Anime episode loaded from RiveStream: ${videoURL}`);
-        } else {
-            throw new Error('No video URL found in API response');
-        }
-
-    } catch (error) {
-        console.error('Error fetching anime video:', error);
-        showToast("Failed to load anime episode. Trying fallback servers...", 'error');
-
-        // Fallback to regular servers if anime API fails
-        const server = document.getElementById('server').value;
-        let fallbackURL = `https://vidlink.pro/tv/${tvId}/${seasonNumber}/${episodeNumber}?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
-
-        const iframe = document.getElementById('iframe');
-        iframe.setAttribute('src', fallbackURL);
-        iframe.setAttribute('playsinline', '');
-        iframe.setAttribute('webkit-playsinline', 'true');
-        iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen');
-        iframe.setAttribute('allowfullscreen', '');
-        iframe.style.display = "block";
-
-        const moviePoster = document.getElementById('movie-poster');
-        moviePoster.style.display = "none";
-    }
-}
-
-// Function to fetch anime movie URL from RiveStream API
-async function fetchAnimeMovieURL(apiURL) {
-    try {
-        showToast("Loading anime movie...", 'info');
-
-        const response = await fetch(apiURL, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error(`API responded with status: ${response.status}`);
-        }
-
-        const data = await response.json();
-
-        console.log('RiveStream Movie API Response:', data);
-
-        // Check different possible response formats
-        let videoURL = null;
-        if (data && data.videoURL) {
-            videoURL = data.videoURL;
-        } else if (data && data.url) {
-            videoURL = data.url;
-        } else if (data && data.stream) {
-            videoURL = data.stream;
-        } else if (data && data.source) {
-            videoURL = data.source;
-        } else if (typeof data === 'string' && data.startsWith('http')) {
-            videoURL = data;
-        }
-
-        if (videoURL) {
-            // Create an iframe with the video URL
-            const iframe = document.getElementById('iframe');
-            iframe.setAttribute('src', videoURL);
-            iframe.setAttribute('playsinline', '');
-            iframe.setAttribute('webkit-playsinline', 'true');
-            iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen');
-            iframe.setAttribute('allowfullscreen', '');
-            iframe.style.display = "block";
-
-            // Hide the movie poster when the video is playing
-            const moviePoster = document.getElementById('movie-poster');
-            moviePoster.style.display = "none";
-
-            showToast("Anime movie loaded successfully!", 'success');
-
-            console.log(`Anime movie loaded from RiveStream: ${videoURL}`);
-        } else {
-            throw new Error('No video URL found in API response');
-        }
-
-    } catch (error) {
-        console.error('Error fetching anime movie:', error);
-        showToast("Failed to load anime movie. Trying fallback servers...", 'error');
-
-        // Fallback to regular servers if anime API fails
-        const server = document.getElementById('server').value;
-        let fallbackURL = `https://vidlink.pro/movie/${id}?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
-
-        const iframe = document.getElementById('iframe');
-        iframe.setAttribute('src', fallbackURL);
-        iframe.setAttribute('playsinline', '');
-        iframe.setAttribute('webkit-playsinline', 'true');
-        iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen');
-        iframe.setAttribute('allowfullscreen', '');
-        iframe.style.display = "block";
-
-        const moviePoster = document.getElementById('movie-poster');
-        moviePoster.style.display = "none";
-    }
-}
-
 // Function to handle content download (declare early to avoid hoisting issues)
 function handleDownload() {
     let downloadUrl = '';
@@ -288,7 +134,6 @@ const api_Key = 'e79515e88dfd7d9f6eeca36e49101ac2';
 const params = new URLSearchParams(window.location.search);
 const id = params.get('id');
 const media = params.get("media");
-const streaming = params.get("streaming");
 
 // Function to fetch detailed information using its TMDb ID
 async function fetchMovieDetails(id) {
@@ -477,27 +322,7 @@ function loadMedia(embedURL, server) {
 // Function to handle video source change based on selected server
 async function changeServer() {
     const server = document.getElementById('server').value; // Get the selected server
-    const type = media === "movie" ? "movie" : "tv"; // Movie or TV type
-
-    // Check if RiveStream server is selected
-    if (server === "rivestream") {
-        // For RiveStream, check if we're viewing a TV show with episode selected
-        if (media === "tv" && seasonsContainer.style.display === "flex") {
-            // If an episode is already selected (playing), update it with the new server
-            const activeEpisode = document.querySelector('.episode-item.active');
-            if (activeEpisode) {
-                const seasonNumber = activeEpisode.dataset.seasonNumber;
-                const episodeNumber = activeEpisode.dataset.episodeNumber;
-                playEpisode(id, seasonNumber, episodeNumber);
-                return;
-            }
-        } else if (media === "movie") {
-            // For anime movies, use RiveStream API
-            const apiURL = `https://rivestream.net/api/backendfetch?requestID=movieVideoProvider&id=${id}&service=ee3&secretKey=LTUfm4fmX2ZTIwY2Uz&proxyMode=noProxy`;
-            fetchAnimeMovieURL(apiURL);
-            return;
-        }
-    }
+    const type = media === "movie" ? "movie" : (media === "anime" ? "anime" : "tv"); // Movie, TV, or Anime type
 
     // Check if we're viewing a TV show with episode selected
     if (type === "tv" && seasonsContainer.style.display === "flex") {
@@ -514,73 +339,72 @@ async function changeServer() {
     let embedURL = "";  // URL to embed video from the selected server
 
     // Set the video URL depending on the selected server and media type
-    if (type === "movie") {
-        // Set movie URL based on selected server
+    if (type === "anime") {
+        // For anime, we'll use Gogo-anime, 9anime or other anime-specific providers
+        // This is a placeholder implementation - these URLs are examples and may not work
         switch (server) {
-            case "rivestream":
-                // For RiveStream movies, use API
-                const apiURL = `https://rivestream.net/api/backendfetch?requestID=movieVideoProvider&id=${id}&service=ee3&secretKey=LTUfm4fmX2ZTIwY2Uz&proxyMode=noProxy`;
-                fetchAnimeMovieURL(apiURL);
-                return;
-            case "vidsrc.vip":
-                embedURL = `https://vidsrc.vip/movie/${id}`;
-                break;
             case "vidlink.pro":
-                embedURL = `https://vidlink.pro/movie/${id}?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
+                embedURL = `https://vidlink.pro/anime/${id}?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
                 break;
             case "vidsrc.cc":
-                embedURL = `https://vidsrc.cc/v2/embed/movie/${id}`;
+                embedURL = `https://vidsrc.cc/v2/embed/anime/${id}`;
                 break;
             case "vidsrc.me":
-                embedURL = `https://vidsrc.net/embed/movie/?tmdb=${id}`;
+                embedURL = `https://vidsrc.net/embed/anime/?mal=${id}`;
                 break;
             case "vidsrc.su":
-                embedURL = `https://vidsrc.su/embed/movie/${id}`;
+                embedURL = `https://vidsrc.su/embed/anime/${id}`;
+                break;
+            case "vidsrc.vip":
+                embedURL = `https://vidsrc.vip/anime/${id}`;
+                break;
+            case "2embed":
+                embedURL = `https://www.2embed.cc/embed/anime/${id}`;
+                break;
+            case "movieapi.club":
+                embedURL = `https://moviesapi.club/anime/${id}`;
+                break;
+            default:
+                // Fallback to a generic anime provider
+                embedURL = `https://vidlink.pro/anime/${id}?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
+                break;
+        }
+    } else {
+        // For movies and TV shows, use the existing providers
+        switch (server) {
+            case "vidlink.pro":
+                if (type === "tv") {
+                    // For TV shows, default to first episode of first season
+                    embedURL = `https://vidlink.pro/tv/${id}/1/1?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
+                } else {
+                    embedURL = `https://vidlink.pro/movie/${id}?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
+                }
+                break;
+            case "vidsrc.cc":
+                embedURL = `https://vidsrc.cc/v2/embed/${type}/${id}`;
+                break;
+            case "vidsrc.me":
+                embedURL = `https://vidsrc.net/embed/${type}/?tmdb=${id}`;
+                break;
+            case "vidsrc.su":
+                embedURL = `https://vidsrc.su/embed/${type}/${id}`;
+                break;
+            case "vidsrc.vip":
+                embedURL = `https://vidsrc.vip/${type}/${id}`;
                 break;
             case "2embed":
                 embedURL = `https://www.2embed.cc/embed/${id}`;
                 break;
             case "movieapi.club":
-                embedURL = `https://moviesapi.club/movie/${id}`;
+                embedURL = `https://moviesapi.club/${type}/${id}`;
                 break;
             default:
                 // Default to vidlink.pro as a fallback
-                embedURL = `https://vidlink.pro/movie/${id}?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
-                break;
-        }
-    } else {
-        // For TV shows, use the existing providers
-        switch (server) {
-            case "rivestream":
-                // For RiveStream TV shows, use API with first episode
-                const apiURL = `https://rivestream.net/api/backendfetch?requestID=tvVideoProvider&id=${id}&season=1&episode=1&service=ee3&secretKey=LTUfm4fmX2ZTIwY2Uz&proxyMode=noProxy`;
-                fetchAnimeVideoURL(apiURL, id, 1, 1);
-                return;
-            case "vidlink.pro":
-                // For TV shows, default to first episode of first season
-                embedURL = `https://vidlink.pro/tv/${id}/1/1?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
-                break;
-            case "vidsrc.cc":
-                embedURL = `https://vidsrc.cc/v2/embed/tv/${id}`;
-                break;
-            case "vidsrc.me":
-                embedURL = `https://vidsrc.net/embed/tv/?tmdb=${id}`;
-                break;
-            case "vidsrc.su":
-                embedURL = `https://vidsrc.su/embed/tv/${id}`;
-                break;
-            case "vidsrc.vip":
-                embedURL = `https://vidsrc.vip/tv/${id}`;
-                break;
-            case "2embed":
-                embedURL = `https://www.2embed.cc/embedtv/${id}&s=1&e=1`;
-                break;
-            case "movieapi.club":
-                embedURL = `https://moviesapi.club/tv/${id}/1/1`;
-                break;
-            default:
-                // Default to vidlink.pro as a fallback
-                embedURL = `https://vidlink.pro/tv/${id}/1/1?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
+                if (type === "tv") {
+                    embedURL = `https://vidlink.pro/tv/${id}/1/1?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
+                } else {
+                    embedURL = `https://vidlink.pro/movie/${id}?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
+                }
                 break;
         }
     }
@@ -622,12 +446,6 @@ function playEpisode(tvId, seasonNumber, episodeNumber) {
 
     // Update the URL for each server to include season and episode parameters
     switch (server) {
-        case "rivestream":
-            // Use RiveStream API for anime
-            const apiURL = `https://rivestream.net/api/backendfetch?requestID=tvVideoProvider&id=${tvId}&season=${seasonNumber}&episode=${episodeNumber}&service=ee3&secretKey=LTUfm4fmX2ZTIwY2Uz&proxyMode=noProxy`;
-            // For RiveStream, we need to fetch the actual video URL from the API
-            fetchAnimeVideoURL(apiURL, tvId, seasonNumber, episodeNumber);
-            return;
         case "vidsrc.vip":
             embedURL = `https://vidsrc.vip/tv/${tvId}/${seasonNumber}/${episodeNumber}`;
             break;
