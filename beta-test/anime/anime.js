@@ -121,14 +121,16 @@ function updateBannerForAnime() {
     playButton.addEventListener('click', () => {
         if (bannerItems.length > 0) {
             const item = bannerItems[currentBannerIndex];
-            window.location.href = `watch.html?type=tv&id=${item.id}&season=1&episode=1`;
+            // Navigate to watch page for anime
+            window.location.href = `watch.html?type=${item.mediaType || 'tv'}&id=${item.id}&season=1&episode=1`;
         }
     });
 
     moreInfoButton.addEventListener('click', () => {
         if (bannerItems.length > 0) {
             const item = bannerItems[currentBannerIndex];
-            window.location.href = `watch.html?type=tv&id=${item.id}&season=1&episode=1`;
+            // For more info, go to details page
+            window.location.href = `../movie_details/movie_details.html?media=${item.mediaType || 'tv'}&id=${item.id}`;
         }
     });
 }
@@ -454,11 +456,13 @@ function fetchAnime(containerClass, genreOrKeyword) {
                     itemElement.appendChild(imgWrapper);
                     container.appendChild(itemElement);
 
-                    // Add click event to navigate to watch page with Rive-style player
+                    // Add click event to navigate to watch page for anime
                     itemElement.addEventListener('click', () => {
                         if (containerClass === 'top-rated-anime-movie-container') {
+                            // For anime movies, go to watch page with movie type
                             window.location.href = `watch.html?type=movie&id=${anime.id}&season=1&episode=1`;
                         } else {
+                            // For anime TV shows, go to watch page with tv type
                             window.location.href = `watch.html?type=tv&id=${anime.id}&season=1&episode=1`;
                         }
                     });
@@ -525,7 +529,7 @@ function fetchAnime(containerClass, genreOrKeyword) {
                                         container.appendChild(itemElement);
 
                                         itemElement.addEventListener('click', () => {
-                                            window.location.href = `watch.html?type=tv&id=${anime.id}&season=1&episode=1`;
+                                            window.location.href = `../movie_details/movie_details.html?media=tv&id=${anime.id}`;
                                         });
                                     });
                                 }

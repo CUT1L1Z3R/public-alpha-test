@@ -1,484 +1,539 @@
 /**
- * Anime Watch Page JavaScript - Rive Style Multi-Server Player
- * Integrates with FreeFlix and provides RiveStream-inspired functionality
+ * JavaScript for FreeFlix Anime Watch Page
+ * Handles server selection, video streaming, and episode navigation
  */
-
-// Server providers inspired by RiveStream
-const VIDEO_PROVIDERS = [
-    { name: 'FLOWCAST', status: 'fetching', quality: 'HD', featured: true },
-    { name: 'SHADOW', status: 'available', quality: 'HD' },
-    { name: 'ASIACLOUD', status: 'available', quality: 'HD' },
-    { name: 'HINDICAST', status: 'available', quality: 'HD' },
-    { name: 'ANIME', status: 'available', quality: 'HD' },
-    { name: 'ANIMEZ', status: 'available', quality: 'HD' },
-    { name: 'GUARD', status: 'available', quality: 'HD' },
-    { name: 'CURVE', status: 'available', quality: 'HD' },
-    { name: 'HQ', status: 'available', quality: 'HD' },
-    { name: 'NINJA', status: 'available', quality: 'HD' },
-    { name: 'ALPHA', status: 'available', quality: 'HD' },
-    { name: 'KAZE', status: 'available', quality: 'HD' },
-    { name: 'ZENITH', status: 'available', quality: 'HD' },
-    { name: 'CAST', status: 'available', quality: 'HD' },
-    { name: 'GHOST', status: 'available', quality: 'HD' },
-    { name: 'HALO', status: 'available', quality: 'HD' },
-    { name: 'KINOECHO', status: 'available', quality: 'HD' },
-    { name: 'EE3', status: 'available', quality: 'HD' },
-    { name: 'VOLT', status: 'available', quality: 'HD' },
-    { name: 'PUTAFILME', status: 'available', quality: 'HD' },
-    { name: 'OPHIM', status: 'available', quality: 'HD' },
-    { name: 'KAGE', status: 'available', quality: 'HD' }
-];
 
 // Global variables
 let currentAnime = null;
 let currentSeason = 1;
 let currentEpisode = 1;
 let selectedServer = null;
-let embedMode = 'false';
-let loadingTimer = null;
+let embedMode = false;
+let episodes = [];
+let serverProviders = [];
 
-// TMDB API key (reuse from anime.js)
-const api_Key = '84259f99204eeb7d45c7e3d8e36c6123';
+// Server configurations
+const servers = {
+    FLOWCAST: {
+        name: 'FLOWCAST',
+        baseUrl: 'https://flowcast.example.com/embed/',
+        priority: 1,
+        status: 'fetching'
+    },
+    SHADOW: {
+        name: 'SHADOW',
+        baseUrl: 'https://shadow.example.com/embed/',
+        priority: 2,
+        status: 'available'
+    },
+    ASIACLOUD: {
+        name: 'ASIACLOUD',
+        baseUrl: 'https://asiacloud.example.com/embed/',
+        priority: 3,
+        status: 'available'
+    },
+    HINDICAST: {
+        name: 'HINDICAST',
+        baseUrl: 'https://hindicast.example.com/embed/',
+        priority: 4,
+        status: 'available'
+    },
+    ANIME: {
+        name: 'ANIME',
+        baseUrl: 'https://anime.example.com/embed/',
+        priority: 5,
+        status: 'available'
+    },
+    ANIMEZ: {
+        name: 'ANIMEZ',
+        baseUrl: 'https://animez.example.com/embed/',
+        priority: 6,
+        status: 'available'
+    },
+    GUARD: {
+        name: 'GUARD',
+        baseUrl: 'https://guard.example.com/embed/',
+        priority: 7,
+        status: 'available'
+    },
+    CURVE: {
+        name: 'CURVE',
+        baseUrl: 'https://curve.example.com/embed/',
+        priority: 8,
+        status: 'available'
+    },
+    HQ: {
+        name: 'HQ',
+        baseUrl: 'https://hq.example.com/embed/',
+        priority: 9,
+        status: 'available'
+    },
+    NINJA: {
+        name: 'NINJA',
+        baseUrl: 'https://ninja.example.com/embed/',
+        priority: 10,
+        status: 'available'
+    },
+    ALPHA: {
+        name: 'ALPHA',
+        baseUrl: 'https://alpha.example.com/embed/',
+        priority: 11,
+        status: 'available'
+    },
+    KAZE: {
+        name: 'KAZE',
+        baseUrl: 'https://kaze.example.com/embed/',
+        priority: 12,
+        status: 'available'
+    },
+    ZENITH: {
+        name: 'ZENITH',
+        baseUrl: 'https://zenith.example.com/embed/',
+        priority: 13,
+        status: 'available'
+    },
+    CAST: {
+        name: 'CAST',
+        baseUrl: 'https://cast.example.com/embed/',
+        priority: 14,
+        status: 'available'
+    },
+    GHOST: {
+        name: 'GHOST',
+        baseUrl: 'https://ghost.example.com/embed/',
+        priority: 15,
+        status: 'available'
+    },
+    HALO: {
+        name: 'HALO',
+        baseUrl: 'https://halo.example.com/embed/',
+        priority: 16,
+        status: 'available'
+    },
+    KINOECHO: {
+        name: 'KINOECHO',
+        baseUrl: 'https://kinoecho.example.com/embed/',
+        priority: 17,
+        status: 'available'
+    },
+    EE3: {
+        name: 'EE3',
+        baseUrl: 'https://ee3.example.com/embed/',
+        priority: 18,
+        status: 'available'
+    },
+    VOLT: {
+        name: 'VOLT',
+        baseUrl: 'https://volt.example.com/embed/',
+        priority: 19,
+        status: 'available'
+    },
+    PUTAFILME: {
+        name: 'PUTAFILME',
+        baseUrl: 'https://putafilme.example.com/embed/',
+        priority: 20,
+        status: 'available'
+    },
+    OPHIM: {
+        name: 'OPHIM',
+        baseUrl: 'https://ophim.example.com/embed/',
+        priority: 21,
+        status: 'available'
+    },
+    KAGE: {
+        name: 'KAGE',
+        baseUrl: 'https://kage.example.com/embed/',
+        priority: 22,
+        status: 'available'
+    }
+};
 
-// DOM Elements
-const loadingScreen = document.getElementById('loadingScreen');
-const playerContent = document.getElementById('playerContent');
-const animeTitle = document.getElementById('animeTitle');
-const episodeInfo = document.getElementById('episodeInfo');
-const serverSelect = document.getElementById('serverSelect');
-const embedSelect = document.getElementById('embedSelect');
-const serverList = document.getElementById('serverList');
-const featuredServer = document.getElementById('featuredServer');
-const animeDetails = document.getElementById('animeDetails');
-const playerStatus = document.getElementById('playerStatus');
-
-// Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', function() {
     initializeWatchPage();
     setupEventListeners();
-    populateServers();
-    simulateLoading();
+    loadAnimeFromURL();
 });
 
 // Initialize the watch page
 function initializeWatchPage() {
-    // Get URL parameters
-    const urlParams = new URLSearchParams(window.location.search);
-    const animeId = urlParams.get('id') || '281623';
-    const season = urlParams.get('season') || '1';
-    const episode = urlParams.get('episode') || '1';
-    const type = urlParams.get('type') || 'tv';
+    console.log('Initializing anime watch page...');
 
-    currentSeason = parseInt(season);
-    currentEpisode = parseInt(episode);
+    // Setup server select dropdown
+    setupServerSelect();
 
-    // Update episode info immediately
-    episodeInfo.textContent = `Season ${currentSeason} • Episode ${currentEpisode}`;
+    // Initialize server providers
+    initializeServerProviders();
 
-    // Fetch anime details
-    fetchAnimeDetails(animeId, type);
+    // Set default embed mode
+    embedMode = document.getElementById('embedMode').value === 'true';
 }
 
 // Setup event listeners
 function setupEventListeners() {
     // Server selection
-    serverSelect.addEventListener('change', (e) => {
-        if (e.target.value) {
-            selectServer(e.target.value);
+    document.querySelectorAll('.video-provider').forEach(provider => {
+        provider.addEventListener('click', function() {
+            if (!this.classList.contains('unavailable')) {
+                selectServer(this.dataset.server);
+            }
+        });
+    });
+
+    // Embed mode change
+    document.getElementById('embedMode').addEventListener('change', function() {
+        embedMode = this.value === 'true';
+        updateNonEmbedMessage();
+        if (selectedServer) {
+            loadVideoPlayer();
         }
     });
 
-    // Embed mode toggle
-    embedSelect.addEventListener('change', (e) => {
-        embedMode = e.target.value;
-        updatePlayerMode();
+    // Server dropdown change
+    document.getElementById('serverSelect').addEventListener('change', function() {
+        if (this.value) {
+            selectServer(this.value);
+        }
     });
 
     // Episode navigation
-    document.getElementById('prevEpisodeBtn').addEventListener('click', () => {
-        if (currentEpisode > 1) {
-            currentEpisode--;
-            updateEpisode();
-        }
+    document.getElementById('prevEpisode').addEventListener('click', function() {
+        navigateEpisode(-1);
     });
 
-    document.getElementById('nextEpisodeBtn').addEventListener('click', () => {
-        currentEpisode++;
-        updateEpisode();
+    document.getElementById('nextEpisode').addEventListener('click', function() {
+        navigateEpisode(1);
     });
 
-    // Torrent button
-    document.getElementById('torrentBtn').addEventListener('click', () => {
-        showTorrentOptions();
-    });
-
-    // More options
-    document.getElementById('moreOptionsBtn').addEventListener('click', () => {
-        showMoreOptions();
+    // Episode list toggle
+    document.getElementById('episodeList').addEventListener('click', function() {
+        toggleEpisodeList();
     });
 }
 
-// Populate server lists
-function populateServers() {
-    // Populate server select dropdown
-    VIDEO_PROVIDERS.forEach(provider => {
+// Setup server select dropdown
+function setupServerSelect() {
+    const serverSelect = document.getElementById('serverSelect');
+
+    Object.keys(servers).forEach(serverKey => {
         const option = document.createElement('option');
-        option.value = provider.name;
-        option.textContent = provider.name;
+        option.value = serverKey;
+        option.textContent = servers[serverKey].name;
         serverSelect.appendChild(option);
     });
-
-    // Populate server list panel
-    const regularServers = VIDEO_PROVIDERS.filter(p => !p.featured);
-
-    regularServers.forEach(provider => {
-        const serverItem = createServerItem(provider);
-        serverList.appendChild(serverItem);
-    });
-
-    // Update server count
-    document.getElementById('serverCount').textContent = `${VIDEO_PROVIDERS.length} servers available`;
 }
 
-// Create server item element
-function createServerItem(provider) {
-    const serverItem = document.createElement('div');
-    serverItem.className = 'server-item';
-    serverItem.dataset.server = provider.name;
+// Initialize server providers
+function initializeServerProviders() {
+    console.log('Initializing server providers...');
 
-    serverItem.innerHTML = `
-        <div class="server-info">
-            <div class="server-name">${provider.name}</div>
-            <div class="server-status ${provider.status}">${provider.status}</div>
-        </div>
-        <div class="server-quality">${provider.quality}</div>
-    `;
+    // Simulate server status checking
+    setTimeout(() => {
+        // Update FLOWCAST status
+        const flowcastProvider = document.querySelector('[data-server="FLOWCAST"]');
+        if (flowcastProvider) {
+            flowcastProvider.classList.remove('fetching');
+            flowcastProvider.classList.add('available');
+            flowcastProvider.querySelector('.video-provider-status').textContent = 'available';
+            servers.FLOWCAST.status = 'available';
+        }
+    }, 2000);
 
-    serverItem.addEventListener('click', () => {
-        selectServer(provider.name);
-    });
-
-    return serverItem;
+    // Set initial selected server to FLOWCAST
+    setTimeout(() => {
+        selectServer('FLOWCAST');
+    }, 2500);
 }
 
 // Select a server
 function selectServer(serverName) {
-    selectedServer = serverName;
+    console.log('Selecting server:', serverName);
 
-    // Update UI
-    serverSelect.value = serverName;
-
-    // Update active states
-    document.querySelectorAll('.server-item').forEach(item => {
-        item.classList.remove('active');
-    });
-
-    const selectedItem = document.querySelector(`[data-server="${serverName}"]`);
-    if (selectedItem) {
-        selectedItem.classList.add('active');
-    }
-
-    // Update featured server if it's FLOWCAST
-    if (serverName === 'FLOWCAST') {
-        const featuredItem = featuredServer.querySelector('.server-item');
-        featuredItem.classList.add('active');
-        featuredItem.querySelector('.server-status').textContent = 'active';
-        featuredItem.querySelector('.server-status').className = 'server-status available';
-    }
-
-    // Start "loading" the stream
-    loadingScreen.style.display = 'flex';
-    playerContent.style.display = 'none';
-
-    // Simulate server connection
-    setTimeout(() => {
-        hideLoading();
-        updatePlayerStatus(`Connected to ${serverName} server`);
-        showAnimeDetails();
-    }, 1500);
-}
-
-// Update player mode based on embed setting
-function updatePlayerMode() {
-    const isEmbed = embedMode === 'true';
-    const modeText = isEmbed ? 'Embed Mode' : 'NON Embed Mode (AD-free)';
-
-    if (selectedServer) {
-        updatePlayerStatus(`${selectedServer} - ${modeText}`);
-    }
-}
-
-// Simulate initial loading
-function simulateLoading() {
-    loadingTimer = setTimeout(() => {
-        // Update FLOWCAST status after initial load
-        const flowcastStatus = featuredServer.querySelector('.server-status');
-        flowcastStatus.textContent = 'available';
-        flowcastStatus.className = 'server-status available';
-
-        // Auto-select FLOWCAST if no server selected
-        if (!selectedServer) {
-            playerStatus.textContent = 'FLOWCAST server ready - Click to start watching';
-        }
-    }, 2000);
-}
-
-// Hide loading screen
-function hideLoading() {
-    loadingScreen.style.display = 'none';
-    playerContent.style.display = 'flex';
-}
-
-// Update player status
-function updatePlayerStatus(message) {
-    playerStatus.textContent = message;
-}
-
-// Update episode
-function updateEpisode() {
-    episodeInfo.textContent = `Season ${currentSeason} • Episode ${currentEpisode}`;
-
-    if (selectedServer) {
-        // Simulate loading new episode
-        loadingScreen.style.display = 'flex';
-        playerContent.style.display = 'none';
-
-        setTimeout(() => {
-            hideLoading();
-            updatePlayerStatus(`${selectedServer} - S${currentSeason}E${currentEpisode}`);
-        }, 1000);
-    }
-}
-
-// Fetch anime details from TMDB
-async function fetchAnimeDetails(animeId, type) {
-    try {
-        const response = await fetch(`https://api.themoviedb.org/3/${type}/${animeId}?api_key=${api_Key}`);
-        const data = await response.json();
-
-        currentAnime = data;
-        updateAnimeInfo(data);
-
-    } catch (error) {
-        console.error('Error fetching anime details:', error);
-        // Fallback anime info
-        animeTitle.textContent = 'SHIROHIYO - Reincarnated as a Neglected Noble';
-        updateAnimeInfo({
-            name: 'SHIROHIYO - Reincarnated as a Neglected Noble: Raising My Baby Brother with Memories from My Past Life',
-            first_air_date: '2024-01-01',
-            vote_average: 8.5,
-            genres: [{ name: 'Fantasy' }, { name: 'Drama' }, { name: 'Reincarnation' }],
-            overview: 'A heartwarming story about reincarnation and family bonds in a fantasy world.'
-        });
-    }
-}
-
-// Update anime information
-function updateAnimeInfo(anime) {
-    const title = anime.name || anime.title || 'Unknown Anime';
-    const year = anime.first_air_date || anime.release_date ?
-                 new Date(anime.first_air_date || anime.release_date).getFullYear() :
-                 '2024';
-    const rating = anime.vote_average ? anime.vote_average.toFixed(1) : 'N/A';
-
-    // Update title in loading screen
-    animeTitle.textContent = title;
-
-    // Update detailed info
-    document.getElementById('animeDetailTitle').textContent = title;
-    document.getElementById('animeYear').textContent = year;
-    document.getElementById('animeRating').textContent = `★ ${rating}`;
-    document.getElementById('animeType').textContent = anime.number_of_seasons ?
-                                                      `TV Series` : 'Movie';
-
-    // Update poster
-    if (anime.poster_path) {
-        document.getElementById('animePoster').innerHTML =
-            `<img src="https://image.tmdb.org/t/p/w300${anime.poster_path}" alt="${title}">`;
-    }
-
-    // Update genres
-    if (anime.genres) {
-        const genresContainer = document.getElementById('animeGenres');
-        genresContainer.innerHTML = '';
-        anime.genres.forEach(genre => {
-            const genreTag = document.createElement('span');
-            genreTag.className = 'genre-tag';
-            genreTag.textContent = genre.name;
-            genresContainer.appendChild(genreTag);
-        });
-    }
-
-    // Update description
-    if (anime.overview) {
-        document.getElementById('animeDescription').textContent = anime.overview;
-    }
-}
-
-// Show anime details panel
-function showAnimeDetails() {
-    animeDetails.style.display = 'block';
-}
-
-// Show torrent options
-function showTorrentOptions() {
-    alert('Torrent download feature coming soon!\n\nThis will provide direct download links for offline viewing.');
-}
-
-// Show more options
-function showMoreOptions() {
-    const options = [
-        'Report playback issues',
-        'Request better quality',
-        'Add to watchlist',
-        'Share episode',
-        'Download for offline'
-    ];
-
-    const choice = prompt('More Options:\n\n' + options.map((opt, i) => `${i + 1}. ${opt}`).join('\n') + '\n\nSelect option (1-5):');
-
-    if (choice && choice >= 1 && choice <= 5) {
-        alert(`Selected: ${options[choice - 1]}\n\nThis feature is coming soon!`);
-    }
-}
-
-// Search functionality
-function focusSearch() {
-    document.getElementById('searchModal').style.display = 'flex';
-    document.getElementById('modalSearchInput').focus();
-}
-
-function closeSearch() {
-    document.getElementById('searchModal').style.display = 'none';
-    document.getElementById('modalSearchInput').value = '';
-    document.getElementById('modalSearchResults').innerHTML = '';
-}
-
-// Search input handler
-document.getElementById('modalSearchInput').addEventListener('input', async (e) => {
-    const query = e.target.value;
-    if (query.length > 2) {
-        const results = await searchAnime(query);
-        displaySearchResults(results);
-    } else {
-        document.getElementById('modalSearchResults').innerHTML = '';
-    }
-});
-
-// Search anime function
-async function searchAnime(query) {
-    try {
-        const response = await fetch(`https://api.themoviedb.org/3/search/tv?api_key=${api_Key}&query=${query}&with_genres=16`);
-        const data = await response.json();
-        return data.results?.slice(0, 5) || [];
-    } catch (error) {
-        console.error('Search error:', error);
-        return [];
-    }
-}
-
-// Display search results
-function displaySearchResults(results) {
-    const container = document.getElementById('modalSearchResults');
-    container.innerHTML = '';
-
-    if (results.length === 0) {
-        container.innerHTML = '<div style="padding: 20px; text-align: center; color: #a7a89a;">No results found</div>';
+    if (!servers[serverName] || servers[serverName].status === 'unavailable') {
+        console.warn('Server not available:', serverName);
         return;
     }
 
-    results.forEach(anime => {
-        const resultItem = document.createElement('div');
-        resultItem.style.cssText = `
-            display: flex;
-            gap: 12px;
-            padding: 12px;
-            border-radius: 8px;
-            background: #2a2b32;
-            margin-bottom: 8px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        `;
+    // Update UI
+    document.querySelectorAll('.video-provider').forEach(provider => {
+        provider.classList.remove('selected');
+    });
 
-        resultItem.addEventListener('mouseenter', () => {
-            resultItem.style.background = '#383e48';
-        });
+    const selectedProvider = document.querySelector(`[data-server="${serverName}"]`);
+    if (selectedProvider) {
+        selectedProvider.classList.add('selected');
+    }
 
-        resultItem.addEventListener('mouseleave', () => {
-            resultItem.style.background = '#2a2b32';
-        });
+    // Update dropdown
+    document.getElementById('serverSelect').value = serverName;
 
-        const poster = anime.poster_path ?
-                      `https://image.tmdb.org/t/p/w92${anime.poster_path}` :
-                      'https://via.placeholder.com/92x138?text=No+Image';
+    selectedServer = serverName;
+    loadVideoPlayer();
+}
 
-        resultItem.innerHTML = `
-            <img src="${poster}" style="width: 60px; height: 90px; object-fit: cover; border-radius: 4px;">
-            <div style="flex: 1;">
-                <div style="font-weight: 600; margin-bottom: 4px;">${anime.name || 'Unknown'}</div>
-                <div style="font-size: 12px; color: #a7a89a;">
-                    ${anime.first_air_date ? new Date(anime.first_air_date).getFullYear() : 'Unknown'} •
-                    ★ ${anime.vote_average ? anime.vote_average.toFixed(1) : 'N/A'}
-                </div>
+// Load video player
+function loadVideoPlayer() {
+    if (!selectedServer || !currentAnime) {
+        console.warn('Cannot load video player: missing server or anime data');
+        return;
+    }
+
+    const videoPlayer = document.getElementById('videoPlayer');
+    const placeholder = document.querySelector('.video-placeholder');
+
+    // Generate video URL
+    const videoUrl = generateVideoUrl(selectedServer, currentAnime.id, currentSeason, currentEpisode);
+
+    console.log('Loading video:', videoUrl);
+
+    // Hide placeholder and show player
+    placeholder.style.display = 'none';
+    videoPlayer.style.display = 'block';
+    videoPlayer.src = videoUrl;
+
+    // Update status
+    updateServerStatus(selectedServer, 'loading');
+
+    // Simulate loading completion
+    setTimeout(() => {
+        updateServerStatus(selectedServer, 'playing');
+    }, 3000);
+}
+
+// Generate video URL
+function generateVideoUrl(serverName, animeId, season, episode) {
+    const server = servers[serverName];
+    if (!server) return '';
+
+    // For demo purposes, we'll use a placeholder video
+    // In a real implementation, this would connect to actual streaming servers
+    const demoUrls = [
+        'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+        'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
+        'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+        'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
+        'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4'
+    ];
+
+    // Select demo video based on episode
+    const demoIndex = (episode - 1) % demoUrls.length;
+
+    if (embedMode) {
+        // Return embedded player URL
+        return `data:text/html;charset=utf-8,
+            <html>
+                <body style="margin:0;padding:0;background:#000;">
+                    <video width="100%" height="100%" controls autoplay>
+                        <source src="${demoUrls[demoIndex]}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </body>
+            </html>`;
+    } else {
+        // Return direct video URL for non-embed mode
+        return demoUrls[demoIndex];
+    }
+}
+
+// Update server status
+function updateServerStatus(serverName, status) {
+    const provider = document.querySelector(`[data-server="${serverName}"]`);
+    if (!provider) return;
+
+    const statusElement = provider.querySelector('.video-provider-status');
+    if (!statusElement) return;
+
+    // Remove existing status classes
+    provider.classList.remove('fetching', 'available', 'unavailable', 'loading', 'playing');
+
+    // Add new status
+    provider.classList.add(status);
+
+    switch (status) {
+        case 'fetching':
+            statusElement.textContent = 'fetching';
+            break;
+        case 'loading':
+            statusElement.textContent = 'loading';
+            break;
+        case 'playing':
+            statusElement.textContent = 'playing';
+            break;
+        case 'available':
+            statusElement.textContent = 'available';
+            break;
+        case 'unavailable':
+            statusElement.textContent = 'unavailable';
+            break;
+        default:
+            statusElement.textContent = 'unknown';
+    }
+
+    servers[serverName].status = status;
+}
+
+// Navigate episodes
+function navigateEpisode(direction) {
+    const newEpisode = currentEpisode + direction;
+
+    if (newEpisode < 1 || newEpisode > episodes.length) {
+        console.warn('Episode out of range:', newEpisode);
+        return;
+    }
+
+    currentEpisode = newEpisode;
+    updateEpisodeDisplay();
+
+    if (selectedServer) {
+        loadVideoPlayer();
+    }
+}
+
+// Update episode display
+function updateEpisodeDisplay() {
+    document.getElementById('currentSeason').textContent = currentSeason;
+    document.getElementById('currentEpisode').textContent = currentEpisode;
+
+    // Update episode list
+    updateEpisodeList();
+}
+
+// Update episode list
+function updateEpisodeList() {
+    const episodeListContainer = document.getElementById('episodeList');
+    episodeListContainer.innerHTML = '';
+
+    episodes.forEach((episode, index) => {
+        const episodeItem = document.createElement('div');
+        episodeItem.className = 'episode-item';
+        if (index + 1 === currentEpisode) {
+            episodeItem.classList.add('active');
+        }
+
+        episodeItem.innerHTML = `
+            <div>
+                <div class="episode-number">Episode ${index + 1}</div>
+                <div class="episode-title">${episode.title || `Episode ${index + 1}`}</div>
             </div>
+            <div class="episode-duration">${episode.duration || '24 min'}</div>
         `;
 
-        resultItem.addEventListener('click', () => {
-            window.location.href = `watch.html?type=tv&id=${anime.id}&season=1&episode=1`;
+        episodeItem.addEventListener('click', function() {
+            currentEpisode = index + 1;
+            updateEpisodeDisplay();
+            if (selectedServer) {
+                loadVideoPlayer();
+            }
         });
 
-        container.appendChild(resultItem);
+        episodeListContainer.appendChild(episodeItem);
     });
 }
 
-// Close search modal when clicking outside
-document.getElementById('searchModal').addEventListener('click', (e) => {
-    if (e.target.id === 'searchModal') {
-        closeSearch();
-    }
-});
+// Toggle episode list
+function toggleEpisodeList() {
+    const episodeListContainer = document.querySelector('.episode-list-container');
+    episodeListContainer.style.display = episodeListContainer.style.display === 'none' ? 'block' : 'none';
+}
 
-// Keyboard shortcuts
-document.addEventListener('keydown', (e) => {
-    if (e.ctrlKey && e.key === 'k') {
-        e.preventDefault();
-        focusSearch();
+// Update non-embed message
+function updateNonEmbedMessage() {
+    const message = document.querySelector('.non-embed-switch-msg p');
+    if (embedMode) {
+        message.textContent = 'Embed Mode: Some ads may be present';
+    } else {
+        message.textContent = 'If Server not found, Then system will automatically switch to Embed Mode in 10 seconds';
+    }
+}
+
+// Load anime from URL parameters
+function loadAnimeFromURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const animeId = urlParams.get('id') || '281623';
+    const season = parseInt(urlParams.get('season')) || 1;
+    const episode = parseInt(urlParams.get('episode')) || 1;
+    const type = urlParams.get('type') || 'tv';
+
+    currentSeason = season;
+    currentEpisode = episode;
+
+    // Load anime data
+    loadAnimeData(animeId, type);
+}
+
+// Load anime data
+function loadAnimeData(animeId, type) {
+    console.log('Loading anime data for ID:', animeId);
+
+    // For demo purposes, use sample anime data
+    // In real implementation, this would fetch from an anime database
+    currentAnime = {
+        id: animeId,
+        title: 'SHIROHIYO - Reincarnated as a Neglected Noble',
+        year: '2024',
+        genres: ['Drama', 'Fantasy', 'Romance'],
+        rating: '8.2',
+        description: 'A heartwarming story about a person reincarnated as a neglected noble who decides to raise their baby brother with memories from their past life.',
+        type: type,
+        seasons: 1,
+        totalEpisodes: 12
+    };
+
+    // Generate episode list
+    episodes = [];
+    for (let i = 1; i <= currentAnime.totalEpisodes; i++) {
+        episodes.push({
+            number: i,
+            title: `Episode ${i}`,
+            duration: '24 min'
+        });
     }
 
-    if (e.key === 'Escape') {
-        closeSearch();
-    }
+    // Update UI
+    updateAnimeInfo();
+    updateEpisodeDisplay();
+}
 
-    // Arrow keys for episode navigation
-    if (e.key === 'ArrowLeft' && currentEpisode > 1) {
-        currentEpisode--;
-        updateEpisode();
-    }
+// Update anime information display
+function updateAnimeInfo() {
+    if (!currentAnime) return;
 
-    if (e.key === 'ArrowRight') {
-        currentEpisode++;
-        updateEpisode();
-    }
-});
+    document.getElementById('animeTitle').textContent = currentAnime.title;
+    document.getElementById('animeYear').textContent = currentAnime.year;
+    document.getElementById('animeGenres').textContent = currentAnime.genres.join(', ');
+    document.getElementById('animeRating').textContent = `★ ${currentAnime.rating}`;
+    document.getElementById('animeDescription').textContent = currentAnime.description;
 
-// Auto-hide Discord notification after 10 seconds
+    // Update page title
+    document.title = `FreeFlix - ${currentAnime.title} S${currentSeason}E${currentEpisode}`;
+}
+
+// Auto-fallback to embed mode
+function autoFallbackToEmbedMode() {
+    if (!embedMode) {
+        console.log('Auto-switching to embed mode...');
+        document.getElementById('embedMode').value = 'true';
+        embedMode = true;
+        updateNonEmbedMessage();
+
+        if (selectedServer) {
+            loadVideoPlayer();
+        }
+    }
+}
+
+// Simulate server timeout and fallback
 setTimeout(() => {
-    const notification = document.getElementById('discordNotification');
-    if (notification) {
-        notification.style.opacity = '0';
-        notification.style.transition = 'opacity 0.5s ease';
-        setTimeout(() => {
-            notification.style.display = 'none';
-        }, 500);
+    if (selectedServer && servers[selectedServer].status === 'fetching') {
+        console.log('Server timeout detected, falling back to embed mode');
+        autoFallbackToEmbedMode();
     }
 }, 10000);
 
-// Handle window resize
-window.addEventListener('resize', () => {
-    // Adjust layout for mobile
-    if (window.innerWidth <= 768) {
-        document.querySelector('.player-container').style.height = '400px';
-    } else {
-        document.querySelector('.player-container').style.height = 'calc(100vh - 140px)';
-    }
-});
+// Export functions for global access
+window.AnimePlayer = {
+    selectServer,
+    navigateEpisode,
+    updateEpisodeDisplay,
+    loadAnimeData
+};

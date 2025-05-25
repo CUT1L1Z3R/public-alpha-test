@@ -1,0 +1,343 @@
+/* Watch Page Styles */
+.watch-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    background: #080808;
+    color: #ffffff;
+}
+
+/* Episode Controls */
+.episode-controls {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    justify-content: flex-start;
+}
+
+.episode-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.episode-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Server Selection */
+.watch-selects {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    align-items: center;
+}
+
+.server-select,
+.embed-mode {
+    background: #2a2b32;
+    border: 1px solid #383e48;
+    color: #ffffff;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.server-select:focus,
+.embed-mode:focus {
+    outline: none;
+    border-color: #575a62;
+}
+
+/* Video Section */
+.video-section {
+    background: #161b25;
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+/* Video Providers */
+.video-providers {
+    margin-bottom: 2rem;
+}
+
+.video-providers-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.video-provider {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    padding: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 120px;
+    text-align: center;
+    position: relative;
+}
+
+.video-provider:hover {
+    transform: scale(1.05);
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.video-provider.selected {
+    transform: scale(1.1);
+    background: rgba(0, 255, 0, 0.1);
+    border-color: rgba(0, 255, 0, 0.3);
+}
+
+.video-provider.fetching {
+    background: rgba(255, 255, 0, 0.1);
+    border-color: rgba(255, 255, 0, 0.3);
+}
+
+.video-provider.available {
+    background: rgba(0, 255, 0, 0.05);
+    border-color: rgba(0, 255, 0, 0.2);
+}
+
+.video-provider.unavailable {
+    background: rgba(255, 0, 0, 0.05);
+    border-color: rgba(255, 0, 0, 0.2);
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.video-provider-name {
+    font-weight: bold;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    color: #ffffff;
+}
+
+.video-provider-status {
+    font-size: 0.8rem;
+    color: #a7a89a;
+    text-transform: lowercase;
+}
+
+.video-provider.fetching .video-provider-status {
+    color: #ffff00;
+}
+
+.video-provider.available .video-provider-status {
+    color: #00ff00;
+}
+
+.video-provider.unavailable .video-provider-status {
+    color: #ff0000;
+}
+
+/* Video Player */
+.video-player-container {
+    width: 100%;
+    height: 500px;
+    background: #000000;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+}
+
+#videoPlayer {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.video-placeholder {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #717780;
+    font-size: 1.1rem;
+}
+
+/* Non-embed Switch Message */
+.non-embed-switch-msg {
+    text-align: center;
+    margin-top: 1rem;
+    color: #717780;
+    font-size: 0.9rem;
+}
+
+/* Anime Info */
+.anime-info {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.anime-details h1 {
+    color: #ffffff;
+    margin-bottom: 1rem;
+    font-size: 2rem;
+}
+
+.anime-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    color: #a7a89a;
+    font-size: 0.9rem;
+}
+
+.separator {
+    color: #575a62;
+}
+
+.anime-details p {
+    color: #a7a89a;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+.episode-info h3 {
+    color: #ffffff;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+/* Episode List */
+.episode-list-container {
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.episode-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.episode-item {
+    padding: 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.episode-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.episode-item.active {
+    background: rgba(0, 255, 0, 0.1);
+    border-left: 3px solid #00ff00;
+}
+
+.episode-item:last-child {
+    border-bottom: none;
+}
+
+.episode-number {
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.episode-title {
+    color: #a7a89a;
+    font-size: 0.9rem;
+}
+
+.episode-duration {
+    color: #717780;
+    font-size: 0.8rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .watch-container {
+        padding: 1rem 0.5rem;
+    }
+
+    .anime-info {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .video-section {
+        padding: 1rem;
+    }
+
+    .video-player-container {
+        height: 300px;
+    }
+
+    .video-providers-list {
+        gap: 0.5rem;
+    }
+
+    .video-provider {
+        min-width: 100px;
+        padding: 0.75rem;
+    }
+
+    .episode-controls {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .watch-selects {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: stretch;
+    }
+}
+
+/* Loading Animation */
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.video-provider.fetching {
+    animation: pulse 1.5s infinite;
+}
+
+/* Scrollbar Styles */
+.episode-list-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.episode-list-container::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.episode-list-container::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+}
+
+.episode-list-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
