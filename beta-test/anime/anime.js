@@ -121,16 +121,14 @@ function updateBannerForAnime() {
     playButton.addEventListener('click', () => {
         if (bannerItems.length > 0) {
             const item = bannerItems[currentBannerIndex];
-            // Navigate to watch page for anime
-            window.location.href = `watch.html?type=${item.mediaType || 'tv'}&id=${item.id}&season=1&episode=1`;
+            window.location.href = `../movie_details/movie_details.html?media=tv&id=${item.id}&streaming=anime`;
         }
     });
 
     moreInfoButton.addEventListener('click', () => {
         if (bannerItems.length > 0) {
             const item = bannerItems[currentBannerIndex];
-            // For more info, go to details page
-            window.location.href = `../movie_details/movie_details.html?media=${item.mediaType || 'tv'}&id=${item.id}`;
+            window.location.href = `../movie_details/movie_details.html?media=tv&id=${item.id}&streaming=anime`;
         }
     });
 }
@@ -456,14 +454,13 @@ function fetchAnime(containerClass, genreOrKeyword) {
                     itemElement.appendChild(imgWrapper);
                     container.appendChild(itemElement);
 
-                    // Add click event to navigate to watch page for anime
+                    // Add click event to navigate to details page
                     itemElement.addEventListener('click', () => {
                         if (containerClass === 'top-rated-anime-movie-container') {
-                            // For anime movies, go to watch page with movie type
-                            window.location.href = `watch.html?type=movie&id=${anime.id}&season=1&episode=1`;
+                            window.location.href = `../movie_details/movie_details.html?media=movie&id=${anime.id}`;
                         } else {
-                            // For anime TV shows, go to watch page with tv type
-                            window.location.href = `watch.html?type=tv&id=${anime.id}&season=1&episode=1`;
+                            // Redirect to anime streaming page with anime details
+                            window.location.href = `../movie_details/movie_details.html?media=tv&id=${anime.id}&streaming=anime`;
                         }
                     });
                 });
@@ -529,7 +526,7 @@ function fetchAnime(containerClass, genreOrKeyword) {
                                         container.appendChild(itemElement);
 
                                         itemElement.addEventListener('click', () => {
-                                            window.location.href = `../movie_details/movie_details.html?media=tv&id=${anime.id}`;
+                                            window.location.href = `../movie_details/movie_details.html?media=tv&id=${anime.id}&streaming=anime`;
                                         });
                                     });
                                 }
@@ -698,13 +695,13 @@ function displaySearchResults(results) {
         const thumbnail = movieItem.querySelector('.search-item-thumbnail');
         const info = movieItem.querySelector('.search-item-info');
 
-        // Add event listener to navigate to watch page
+        // Add event listener to navigate to details page
         thumbnail.addEventListener('click', () => {
-            window.location.href = `watch.html?type=tv&id=${result.id}&season=1&episode=1`;
+            window.location.href = `../movie_details/movie_details.html?media=tv&id=${result.id}&streaming=anime`;
         });
 
         info.addEventListener('click', () => {
-            window.location.href = `watch.html?type=tv&id=${result.id}&season=1&episode=1`;
+            window.location.href = `../movie_details/movie_details.html?media=tv&id=${result.id}&streaming=anime`;
         });
 
         movieItem.setAttribute('class', 'movie-list');
