@@ -61,10 +61,26 @@ async function fetchAnimeVideoURL(apiURL, tvId, seasonNumber, episodeNumber) {
 
         const data = await response.json();
 
+        console.log('RiveStream API Response:', data);
+
+        // Check different possible response formats
+        let videoURL = null;
         if (data && data.videoURL) {
+            videoURL = data.videoURL;
+        } else if (data && data.url) {
+            videoURL = data.url;
+        } else if (data && data.stream) {
+            videoURL = data.stream;
+        } else if (data && data.source) {
+            videoURL = data.source;
+        } else if (typeof data === 'string' && data.startsWith('http')) {
+            videoURL = data;
+        }
+
+        if (videoURL) {
             // Create an iframe with the video URL
             const iframe = document.getElementById('iframe');
-            iframe.setAttribute('src', data.videoURL);
+            iframe.setAttribute('src', videoURL);
             iframe.setAttribute('playsinline', '');
             iframe.setAttribute('webkit-playsinline', 'true');
             iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen');
@@ -77,7 +93,7 @@ async function fetchAnimeVideoURL(apiURL, tvId, seasonNumber, episodeNumber) {
 
             showToast("Anime episode loaded successfully!", 'success');
 
-            console.log(`Anime episode loaded from RiveStream: ${data.videoURL}`);
+            console.log(`Anime episode loaded from RiveStream: ${videoURL}`);
         } else {
             throw new Error('No video URL found in API response');
         }
@@ -122,10 +138,26 @@ async function fetchAnimeMovieURL(apiURL) {
 
         const data = await response.json();
 
+        console.log('RiveStream Movie API Response:', data);
+
+        // Check different possible response formats
+        let videoURL = null;
         if (data && data.videoURL) {
+            videoURL = data.videoURL;
+        } else if (data && data.url) {
+            videoURL = data.url;
+        } else if (data && data.stream) {
+            videoURL = data.stream;
+        } else if (data && data.source) {
+            videoURL = data.source;
+        } else if (typeof data === 'string' && data.startsWith('http')) {
+            videoURL = data;
+        }
+
+        if (videoURL) {
             // Create an iframe with the video URL
             const iframe = document.getElementById('iframe');
-            iframe.setAttribute('src', data.videoURL);
+            iframe.setAttribute('src', videoURL);
             iframe.setAttribute('playsinline', '');
             iframe.setAttribute('webkit-playsinline', 'true');
             iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen');
@@ -138,7 +170,7 @@ async function fetchAnimeMovieURL(apiURL) {
 
             showToast("Anime movie loaded successfully!", 'success');
 
-            console.log(`Anime movie loaded from RiveStream: ${data.videoURL}`);
+            console.log(`Anime movie loaded from RiveStream: ${videoURL}`);
         } else {
             throw new Error('No video URL found in API response');
         }
@@ -447,9 +479,9 @@ async function changeServer() {
     const server = document.getElementById('server').value; // Get the selected server
     const type = media === "movie" ? "movie" : "tv"; // Movie or TV type
 
-    // Check if this is anime streaming
-    if (streaming === "anime") {
-        // For anime, check if we're viewing a TV show with episode selected
+    // Check if RiveStream server is selected
+    if (server === "rivestream") {
+        // For RiveStream, check if we're viewing a TV show with episode selected
         if (media === "tv" && seasonsContainer.style.display === "flex") {
             // If an episode is already selected (playing), update it with the new server
             const activeEpisode = document.querySelector('.episode-item.active');
@@ -485,6 +517,11 @@ async function changeServer() {
     if (type === "movie") {
         // Set movie URL based on selected server
         switch (server) {
+            case "rivestream":
+                // For RiveStream movies, use API
+                const apiURL = `https://rivestream.net/api/backendfetch?requestID=movieVideoProvider&id=${id}&service=ee3&secretKey=LTUfm4fmX2ZTIwY2Uz&proxyMode=noProxy`;
+                fetchAnimeMovieURL(apiURL);
+                return;
             case "vidsrc.vip":
                 embedURL = `https://vidsrc.vip/movie/${id}`;
                 break;
@@ -514,6 +551,11 @@ async function changeServer() {
     } else {
         // For TV shows, use the existing providers
         switch (server) {
+            case "rivestream":
+                // For RiveStream TV shows, use API with first episode
+                const apiURL = `https://rivestream.net/api/backendfetch?requestID=tvVideoProvider&id=${id}&season=1&episode=1&service=ee3&secretKey=LTUfm4fmX2ZTIwY2Uz&proxyMode=noProxy`;
+                fetchAnimeVideoURL(apiURL, id, 1, 1);
+                return;
             case "vidlink.pro":
                 // For TV shows, default to first episode of first season
                 embedURL = `https://vidlink.pro/tv/${id}/1/1?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
@@ -578,18 +620,14 @@ function playEpisode(tvId, seasonNumber, episodeNumber) {
     const server = document.getElementById('server').value;
     let embedURL = "";
 
-    // Check if this is anime streaming
-    if (streaming === "anime") {
-        // Use RiveStream API for anime
-        embedURL = `https://rivestream.net/api/backendfetch?requestID=tvVideoProvider&id=${tvId}&season=${seasonNumber}&episode=${episodeNumber}&service=ee3&secretKey=LTUfm4fmX2ZTIwY2Uz&proxyMode=noProxy`;
-
-        // For anime, we need to fetch the actual video URL from the API
-        fetchAnimeVideoURL(embedURL, tvId, seasonNumber, episodeNumber);
-        return;
-    }
-
     // Update the URL for each server to include season and episode parameters
     switch (server) {
+        case "rivestream":
+            // Use RiveStream API for anime
+            const apiURL = `https://rivestream.net/api/backendfetch?requestID=tvVideoProvider&id=${tvId}&season=${seasonNumber}&episode=${episodeNumber}&service=ee3&secretKey=LTUfm4fmX2ZTIwY2Uz&proxyMode=noProxy`;
+            // For RiveStream, we need to fetch the actual video URL from the API
+            fetchAnimeVideoURL(apiURL, tvId, seasonNumber, episodeNumber);
+            return;
         case "vidsrc.vip":
             embedURL = `https://vidsrc.vip/tv/${tvId}/${seasonNumber}/${episodeNumber}`;
             break;
