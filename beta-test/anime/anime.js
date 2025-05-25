@@ -605,7 +605,7 @@ function setupNavigationButtons() {
                     left: 300,
                     behavior: 'smooth'
                 });
-            }
+            });
         }
     });
 }

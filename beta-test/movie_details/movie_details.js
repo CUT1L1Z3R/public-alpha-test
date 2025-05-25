@@ -8,6 +8,153 @@ logo.addEventListener('click', () => {
 // Define server fallback chain
 const serverFallbackChain = ['vidsrc.su', 'vidsrc.vip', 'vidlink.pro'];
 
+// RiveStream server configuration for anime
+const RIVESTREAM_CONFIG = {
+    apiUrl: 'https://rivestream.net/api/backendfetch',
+    secretKey: 'LTUfm4fmX2ZTIwY2Uz',
+    service: 'ee3',
+    proxyMode: 'noProxy'
+};
+
+// Function to get RiveStream server URL for anime
+async function getRiveStreamServer(tmdbId, season = 1, episode = 1) {
+    try {
+        const params = new URLSearchParams({
+            requestID: 'tvVideoProvider',
+            id: tmdbId,
+            season: season,
+            episode: episode,
+            service: RIVESTREAM_CONFIG.service,
+            secretKey: RIVESTREAM_CONFIG.secretKey,
+            proxyMode: RIVESTREAM_CONFIG.proxyMode
+        });
+
+        const response = await fetch(`${RIVESTREAM_CONFIG.apiUrl}?${params}`);
+        const data = await response.json();
+
+        if (data && data.source) {
+            return {
+                success: true,
+                url: data.source,
+                quality: data.quality || 'HD',
+                server: 'RiveStream'
+            };
+        }
+
+        return { success: false, error: 'No source found' };
+    } catch (error) {
+        console.error('Error fetching RiveStream server:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+// Function to create video player modal
+function createVideoPlayer(videoUrl, title) {
+    // Remove existing player if any
+    const existingPlayer = document.getElementById('anime-video-player-modal');
+    if (existingPlayer) {
+        existingPlayer.remove();
+    }
+
+    const modal = document.createElement('div');
+    modal.id = 'anime-video-player-modal';
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.95);
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        box-sizing: border-box;
+    `;
+
+    const playerContainer = document.createElement('div');
+    playerContainer.style.cssText = `
+        width: 100%;
+        max-width: 1200px;
+        background: #000;
+        border-radius: 10px;
+        overflow: hidden;
+        position: relative;
+    `;
+
+    const header = document.createElement('div');
+    header.style.cssText = `
+        background: #333;
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    `;
+
+    const titleElement = document.createElement('h3');
+    titleElement.textContent = title;
+    titleElement.style.cssText = `
+        color: #fff;
+        margin: 0;
+        font-size: 1.1rem;
+    `;
+
+    const closeBtn = document.createElement('button');
+    closeBtn.innerHTML = '&times;';
+    closeBtn.style.cssText = `
+        background: none;
+        border: none;
+        color: #fff;
+        font-size: 24px;
+        cursor: pointer;
+        padding: 0;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    `;
+
+    closeBtn.addEventListener('click', () => {
+        modal.remove();
+    });
+
+    const videoElement = document.createElement('video');
+    videoElement.style.cssText = `
+        width: 100%;
+        height: 60vh;
+        background: #000;
+    `;
+    videoElement.controls = true;
+    videoElement.autoplay = true;
+    videoElement.src = videoUrl;
+
+    header.appendChild(titleElement);
+    header.appendChild(closeBtn);
+    playerContainer.appendChild(header);
+    playerContainer.appendChild(videoElement);
+    modal.appendChild(playerContainer);
+
+    document.body.appendChild(modal);
+
+    // Close modal when clicking outside player
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.remove();
+        }
+    });
+
+    // Close modal on Escape key
+    const escapeHandler = (e) => {
+        if (e.key === 'Escape') {
+            modal.remove();
+            document.removeEventListener('keydown', escapeHandler);
+        }
+    };
+    document.addEventListener('keydown', escapeHandler);
+}
+
 // Function to show toast notification
 function showToast(message, type = 'info') {
     // Check if a toast container already exists
@@ -336,6 +483,28 @@ async function changeServer() {
         }
     }
 
+    // RiveStream integration for anime TV shows
+    if (type === "tv" && server === "rivestream") {
+        // Try to get the currently selected episode, or default to S1E1
+        let seasonNumber = 1;
+        let episodeNumber = 1;
+        const activeEpisode = document.querySelector('.episode-item.active');
+        if (activeEpisode) {
+            seasonNumber = activeEpisode.dataset.seasonNumber;
+            episodeNumber = activeEpisode.dataset.episodeNumber;
+        } else if (seasonSelect && seasonSelect.value) {
+            seasonNumber = seasonSelect.value;
+        }
+        showToast("Loading from RiveStream...", "info");
+        const result = await getRiveStreamServer(id, seasonNumber, episodeNumber);
+        if (result.success) {
+            createVideoPlayer(result.url, `RiveStream - S${seasonNumber}E${episodeNumber}`);
+        } else {
+            showToast("RiveStream: " + (result.error || "No source found"), "error");
+        }
+        return;
+    }
+
     let embedURL = "";  // URL to embed video from the selected server
 
     // Set the video URL depending on the selected server and media type
@@ -364,6 +533,10 @@ async function changeServer() {
             case "movieapi.club":
                 embedURL = `https://moviesapi.club/anime/${id}`;
                 break;
+            case "rivestream":
+                // For anime movies, RiveStream is not supported, fallback to default
+                showToast("RiveStream is only available for anime TV shows.", "error");
+                return;
             default:
                 // Fallback to a generic anime provider
                 embedURL = `https://vidlink.pro/anime/${id}?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
@@ -398,6 +571,10 @@ async function changeServer() {
             case "movieapi.club":
                 embedURL = `https://moviesapi.club/${type}/${id}`;
                 break;
+            case "rivestream":
+                // Only support RiveStream for anime TV shows
+                showToast("RiveStream is only available for anime TV shows.", "error");
+                return;
             default:
                 // Default to vidlink.pro as a fallback
                 if (type === "tv") {
@@ -440,8 +617,38 @@ async function changeServer() {
 }
 
 // Function to play a specific episode
-function playEpisode(tvId, seasonNumber, episodeNumber) {
+async function playEpisode(tvId, seasonNumber, episodeNumber) {
     const server = document.getElementById('server').value;
+
+    // RiveStream integration for anime TV shows
+    if (server === "rivestream") {
+        showToast("Loading from RiveStream...", "info");
+        const result = await getRiveStreamServer(tvId, seasonNumber, episodeNumber);
+        if (result.success) {
+            createVideoPlayer(result.url, `RiveStream - S${seasonNumber}E${episodeNumber}`);
+        } else {
+            showToast("RiveStream: " + (result.error || "No source found"), "error");
+        }
+
+        // Mark the selected episode as active
+        const episodes = document.querySelectorAll('.episode-item');
+        episodes.forEach(item => item.classList.remove('active'));
+
+        const currentEpisode = document.querySelector(`.episode-item[data-season-number="${seasonNumber}"][data-episode-number="${episodeNumber}"]`);
+        if (currentEpisode) {
+            currentEpisode.classList.add('active');
+            episodesList.scrollTop = currentEpisode.offsetTop - episodesList.offsetTop - 10;
+        }
+
+        if (window.innerWidth <= 740) {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+        return;
+    }
+
     let embedURL = "";
 
     // Update the URL for each server to include season and episode parameters

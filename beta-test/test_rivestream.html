@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RiveStream API Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #1a1a1a;
+            color: white;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: #333;
+            border-radius: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        button:hover {
+            background: #c0392b;
+        }
+        #results {
+            margin-top: 20px;
+            padding: 10px;
+            background: #222;
+            border-radius: 5px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>FreeFlix RiveStream API Test</h1>
+    
+    <div class="test-section">
+        <h2>1. Test RiveStream API</h2>
+        <p>Testing with popular anime: Game of Thrones (TMDB ID: 1399)</p>
+        <button onclick="testRiveStreamAPI()">Test RiveStream API</button>
+        <div id="api-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. Test TMDB API</h2>
+        <p>Testing anime data fetch from TMDB</p>
+        <button onclick="testTMDBAPI()">Test TMDB API</button>
+        <div id="tmdb-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. Test Anime Page</h2>
+        <p>Open anime page in new tab</p>
+        <button onclick="openAnimePage()">Open Anime Page</button>
+        <button onclick="openAnimePageLocal()">Open Local Anime Page</button>
+    </div>
+
+    <script>
+        // RiveStream configuration
+        const RIVESTREAM_CONFIG = {
+            apiUrl: 'https://rivestream.net/api/backendfetch',
+            secretKey: 'LTUfm4fmX2ZTIwY2Uz',
+            service: 'ee3',
+            proxyMode: 'noProxy'
+        };
+
+        // TMDB API key
+        const api_Key = '84259f99204eeb7d45c7e3d8e36c6123';
+
+        async function testRiveStreamAPI() {
+            const resultsDiv = document.getElementById('api-results');
+            resultsDiv.innerHTML = '<p>Testing RiveStream API...</p>';
+
+            try {
+                const params = new URLSearchParams({
+                    requestID: 'tvVideoProvider',
+                    id: '1399', // Game of Thrones
+                    season: '1',
+                    episode: '1',
+                    service: RIVESTREAM_CONFIG.service,
+                    secretKey: RIVESTREAM_CONFIG.secretKey,
+                    proxyMode: RIVESTREAM_CONFIG.proxyMode
+                });
+
+                const url = `${RIVESTREAM_CONFIG.apiUrl}?${params}`;
+                console.log('Testing URL:', url);
+                
+                const response = await fetch(url);
+                const data = await response.json();
+
+                resultsDiv.innerHTML = `
+                    <h3>Response Status: ${response.status}</h3>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+
+                if (data && data.source) {
+                    resultsDiv.innerHTML += `
+                        <h4>✅ Success! Source URL found:</h4>
+                        <p>URL: ${data.source}</p>
+                        <p>Quality: ${data.quality || 'Unknown'}</p>
+                    `;
+                } else {
+                    resultsDiv.innerHTML += `
+                        <h4>❌ No source found in response</h4>
+                    `;
+                }
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <h3>❌ Error:</h3>
+                    <pre>${error.message}</pre>
+                `;
+                console.error('RiveStream API test error:', error);
+            }
+        }
+
+        async function testTMDBAPI() {
+            const resultsDiv = document.getElementById('tmdb-results');
+            resultsDiv.innerHTML = '<p>Testing TMDB API...</p>';
+
+            try {
+                const response = await fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&sort_by=popularity.desc`);
+                const data = await response.json();
+
+                resultsDiv.innerHTML = `
+                    <h3>Response Status: ${response.status}</h3>
+                    <p>Found ${data.results ? data.results.length : 0} anime results</p>
+                `;
+
+                if (data.results && data.results.length > 0) {
+                    const firstAnime = data.results[0];
+                    resultsDiv.innerHTML += `
+                        <h4>✅ Success! First anime:</h4>
+                        <p>Name: ${firstAnime.name}</p>
+                        <p>ID: ${firstAnime.id}</p>
+                        <p>Rating: ${firstAnime.vote_average}</p>
+                        <p>Backdrop: ${firstAnime.backdrop_path ? 'Available' : 'No backdrop'}</p>
+                    `;
+                } else {
+                    resultsDiv.innerHTML += `
+                        <h4>❌ No anime results found</h4>
+                    `;
+                }
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <h3>❌ Error:</h3>
+                    <pre>${error.message}</pre>
+                `;
+                console.error('TMDB API test error:', error);
+            }
+        }
+
+        function openAnimePage() {
+            window.open('anime/index.html', '_blank');
+        }
+
+        function openAnimePageLocal() {
+            window.open('http://localhost:8000/', '_blank');
+        }
+    </script>
+</body>
+</html>
