@@ -190,69 +190,10 @@
                 Please wait while we process your request. Loving what I do? You can support me by clicking the ADS.
             </div>
             <button class="download-btn" id="download-btn">Continue to Download</button>
-            <div class="ad-container" id="ad1">
-            <span class="loading-indicator">Loading advertisement...</span>
-            <script type="text/javascript">
-	atOptions = {
-		'key' : '90d50da178bce64b9fe0ee2a265eb294',
-		'format' : 'iframe',
-		'height' : 250,
-		'width' : 300,
-		'params' : {}
-	};
-</script>
-<script type="text/javascript" src="//www.highperformanceformat.com/90d50da178bce64b9fe0ee2a265eb294/invoke.js"></script>
+        </div>
+    </div>
 
     <script>
-        // Simulate ad loading
-        let adsLoaded = 0;
-        const totalAds = 1;
-        let countdownStarted = false;
-        let secondsLeft = 5; // Increased from 5 to 10 seconds
-
-        // Function to simulate loading an ad
-        function loadAd(adId, delay) {
-            return new Promise((resolve) => {
-                setTimeout(() => {
-                    const adContainer = document.getElementById(adId);
-                    adContainer.innerHTML = '<div style="width: 100%; height: 250px; background: linear-gradient(45deg, #f3f3f3, #e0e0e0); display: flex; justify-content: center; align-items: center; color: #555; font-weight: bold;">Ad Content</div>';
-                    adsLoaded++;
-                    updateStatus();
-                    resolve();
-                }, delay);
-            });
-        }
-
-        // Update the status display
-        function updateStatus() {
-            const countdownElement = document.getElementById('countdown');
-
-            // Start countdown only when all ads are loaded
-            if (adsLoaded === totalAds && !countdownStarted) {
-                countdownStarted = true;
-                countdownElement.textContent = `Download will be available in ${secondsLeft} seconds`;
-
-                // Start the countdown
-                const countdownInterval = setInterval(() => {
-                    secondsLeft--;
-                    countdownElement.textContent = `Download will be available in ${secondsLeft} seconds`;
-
-                    if (secondsLeft <= 0) {
-                        clearInterval(countdownInterval);
-                        countdownElement.textContent = 'Your download is ready!';
-                        document.getElementById('downloadBtn').disabled = false;
-                    }
-                }, 1000);
-            } else if (!countdownStarted) {
-                countdownElement.textContent = `Loading ads (${adsLoaded}/${totalAds})...`;
-            }
-        }
-
-        // Load ads with different delays to simulate network conditions
-        window.addEventListener('DOMContentLoaded', () => {
-            // Ad 1 loads after 3 seconds
-            loadAd('ad1', 3000);
-        
         // Get query parameters from URL
         const urlParams = new URLSearchParams(window.location.search);
         const downloadUrl = urlParams.get('url');
