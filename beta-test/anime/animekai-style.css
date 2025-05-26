@@ -1,0 +1,533 @@
+/* AnimeKai-inspired design for FreeFlix anime page */
+
+/* Import Poppins font like AnimeKai */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* Global Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #0f1419;
+    color: #ffffff;
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+/* Header Styling */
+.header {
+    background: rgba(15, 20, 25, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid #2c3645;
+    padding: 15px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.input-container {
+    position: relative;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.input-container input {
+    background: #1a1f29;
+    border: 1px solid #2c3645;
+    border-radius: 8px;
+    color: #ffffff;
+    padding: 12px 16px;
+    width: 100%;
+    font-size: 0.9rem;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.3s ease;
+}
+
+.input-container input:focus {
+    outline: none;
+    border-color: #63a6a7;
+    box-shadow: 0 0 0 2px rgba(99, 166, 167, 0.2);
+}
+
+.input-container input::placeholder {
+    color: #8c939f;
+}
+
+.watchList-Btn {
+    background: #63a6a7;
+    color: #ffffff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Poppins', sans-serif;
+}
+
+.watchList-Btn:hover {
+    background: #5a9596;
+    transform: translateY(-2px);
+}
+
+/* Navigation Menu */
+.nav-menu {
+    background: #0f1419;
+    border-bottom: 1px solid #2c3645;
+    padding: 0 20px;
+}
+
+.nav-list {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.nav-item {
+    position: relative;
+}
+
+.nav-item a {
+    color: #8c939f;
+    text-decoration: none;
+    padding: 15px 20px;
+    display: block;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    font-family: 'Poppins', sans-serif;
+}
+
+.nav-item.active a,
+.nav-item a:hover {
+    color: #63a6a7;
+}
+
+/* Main Container */
+.main-content {
+    background: #0f1419;
+    min-height: 100vh;
+    padding: 20px 0;
+}
+
+/* Section Headers */
+.anime-section h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin: 30px 0 20px 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Latest Updates Header Style */
+.latest-updates-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 30px 20px 20px 20px;
+}
+
+.latest-updates-header h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0;
+}
+
+.filter-tabs {
+    display: flex;
+    gap: 15px;
+}
+
+.filter-tab {
+    background: none;
+    border: none;
+    color: #8c939f;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    font-family: 'Poppins', sans-serif;
+}
+
+.filter-tab.active,
+.filter-tab:hover {
+    color: #63a6a7;
+}
+
+/* Banner Styling */
+.banner-container {
+    position: relative;
+    margin: 20px;
+    border-radius: 12px;
+    overflow: hidden;
+    max-height: 400px;
+}
+
+.banner-nav-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.6);
+    border: none;
+    color: #ffffff;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.banner-nav-button:hover {
+    background: rgba(99, 166, 167, 0.8);
+    transform: translateY(-50%) scale(1.1);
+}
+
+#banner-prev {
+    left: 20px;
+}
+
+#banner-next {
+    right: 20px;
+}
+
+/* Movie Container */
+.movie-container {
+    position: relative;
+    padding: 0 20px;
+    margin-bottom: 40px;
+}
+
+.movies-box {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 0;
+    max-height: none;
+    overflow: visible;
+}
+
+/* Movie Item Cards */
+.movie-item {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #1a1f29;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 3/4;
+}
+
+.movie-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.movie-item:hover .image-wrapper img {
+    transform: scale(1.05);
+}
+
+/* Overlay */
+.movie-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+    padding: 20px 15px 15px;
+    transform: translateY(0);
+    transition: all 0.3s ease;
+}
+
+.movie-title {
+    color: #ffffff;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Rating and Episode Info */
+.movie-rating {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.rating-star {
+    color: #ffc107;
+    font-size: 0.8rem;
+}
+
+.rating-value {
+    color: #ffffff;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.episode-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.episode-badge,
+.format-badge {
+    background: rgba(99, 166, 167, 0.2);
+    color: #63a6a7;
+    font-size: 0.7rem;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 4px;
+    border: 1px solid rgba(99, 166, 167, 0.3);
+}
+
+.status-badge {
+    font-size: 0.7rem;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.status-badge.airing {
+    background: rgba(46, 204, 113, 0.2);
+    color: #2ecc71;
+    border: 1px solid rgba(46, 204, 113, 0.3);
+}
+
+.status-badge.upcoming {
+    background: rgba(52, 152, 219, 0.2);
+    color: #3498db;
+    border: 1px solid rgba(52, 152, 219, 0.3);
+}
+
+.status-badge.completed {
+    background: rgba(155, 89, 182, 0.2);
+    color: #9b59b6;
+    border: 1px solid rgba(155, 89, 182, 0.3);
+}
+
+/* Navigation Buttons */
+.navigation-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.6);
+    border: none;
+    color: #ffffff;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.navigation-button:hover {
+    background: rgba(99, 166, 167, 0.8);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.navigation-button.previous {
+    left: -25px;
+}
+
+.navigation-button.next {
+    right: -25px;
+}
+
+/* Search Results */
+.search-results {
+    background: #1a1f29;
+    border-radius: 12px;
+    border: 1px solid #2c3645;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.search-item-thumbnail img {
+    border-radius: 8px;
+}
+
+.search-item-info h3 {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.search-item-info p {
+    color: #8c939f;
+    font-size: 0.8rem;
+}
+
+.watchListBtn {
+    background: #63a6a7;
+    color: #ffffff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.watchListBtn:hover {
+    background: #5a9596;
+    transform: translateY(-2px);
+}
+
+/* Banner Styles */
+#banner {
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+#banner-title {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+.banner-subtitle {
+    font-size: 0.9rem !important;
+    opacity: 0.9 !important;
+    margin-top: 8px !important;
+    font-weight: 400 !important;
+}
+
+/* Back to Top Button */
+#back-to-top-btn {
+    background: #63a6a7;
+    color: #ffffff;
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(99, 166, 167, 0.3);
+    z-index: 1000;
+}
+
+#back-to-top-btn:hover {
+    background: #5a9596;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(99, 166, 167, 0.5);
+}
+
+/* Error Message Styling */
+.error-container {
+    background: rgba(231, 76, 60, 0.1) !important;
+    border: 1px solid rgba(231, 76, 60, 0.3) !important;
+    border-radius: 12px !important;
+    color: #ffffff !important;
+}
+
+.error-container h3 {
+    color: #e74c3c !important;
+}
+
+.error-container button {
+    background: #e74c3c !important;
+    color: #ffffff !important;
+    border: none !important;
+    padding: 10px 20px !important;
+    border-radius: 6px !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+}
+
+.error-container button:hover {
+    background: #c0392b !important;
+    transform: translateY(-2px) !important;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .movies-box {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .movies-box {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 12px;
+    }
+
+    .movie-container {
+        padding: 0 15px;
+    }
+
+    .anime-section h1,
+    .latest-updates-header h1 {
+        font-size: 1.3rem;
+        margin-left: 15px;
+    }
+
+    .latest-updates-header {
+        margin: 20px 15px 15px 15px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .navigation-button {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .movies-box {
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+        gap: 10px;
+    }
+
+    .movie-title {
+        font-size: 0.8rem;
+        -webkit-line-clamp: 1;
+    }
+
+    .movie-overlay {
+        padding: 15px 10px 10px;
+    }
+}

@@ -79,7 +79,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize back to top button
     addBackToTopButton();
+
+    // Initialize filter tabs
+    initFilterTabs();
 });
+
+// Initialize filter tabs functionality
+function initFilterTabs() {
+    const filterTabs = document.querySelectorAll('.filter-tab');
+
+    filterTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            // Remove active class from all tabs
+            filterTabs.forEach(t => t.classList.remove('active'));
+
+            // Add active class to clicked tab
+            tab.classList.add('active');
+
+            // Get filter value
+            const filter = tab.dataset.filter;
+
+            // You can implement filtering logic here
+            // For now, just log the filter
+            console.log('Filter selected:', filter);
+        });
+    });
+}
 
 // Initialize the anime page
 function initAnimePage() {
@@ -802,6 +827,50 @@ function fetchAnime(containerClass, genreOrKeyword) {
                     // Add overlay elements
                     overlay.appendChild(titleElement);
                     overlay.appendChild(rating);
+
+                    // Add episode and status information
+                    const episodeInfo = document.createElement('div');
+                    episodeInfo.className = 'episode-info';
+
+                    // Add episode count
+                    if (anime.episodes) {
+                        const episodeBadge = document.createElement('span');
+                        episodeBadge.className = 'episode-badge';
+                        episodeBadge.textContent = anime.episodes;
+                        episodeInfo.appendChild(episodeBadge);
+                    }
+
+                    // Add format badge
+                    if (anime.format) {
+                        const formatBadge = document.createElement('span');
+                        formatBadge.className = 'format-badge';
+                        formatBadge.textContent = anime.format;
+                        episodeInfo.appendChild(formatBadge);
+                    }
+
+                    // Add status badge
+                    if (anime.status) {
+                        const statusBadge = document.createElement('span');
+                        let statusText = anime.status;
+                        let statusClass = 'status-badge';
+
+                        if (anime.status === 'RELEASING') {
+                            statusText = 'Airing';
+                            statusClass += ' airing';
+                        } else if (anime.status === 'NOT_YET_RELEASED') {
+                            statusText = 'Upcoming';
+                            statusClass += ' upcoming';
+                        } else if (anime.status === 'FINISHED') {
+                            statusText = 'Completed';
+                            statusClass += ' completed';
+                        }
+
+                        statusBadge.className = statusClass;
+                        statusBadge.textContent = statusText;
+                        episodeInfo.appendChild(statusBadge);
+                    }
+
+                    overlay.appendChild(episodeInfo);
 
                     imgWrapper.appendChild(img);
                     imgWrapper.appendChild(overlay);
