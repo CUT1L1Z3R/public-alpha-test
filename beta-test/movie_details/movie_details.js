@@ -542,14 +542,22 @@ function loadMediaWithFallback(embedURL, server, type) {
 
     let hasTriedDub = false;
     let retryTimeout;
+    let errorDetectionTimeout;
+    let popupObserver;
 
     // Setup error handling with anime sub-to-dub fallback
     const handleIframeError = () => {
         console.log(`Error loading: ${embedURL}`);
 
-        // Clear any existing retry timeout
+        // Clear any existing timeouts
         if (retryTimeout) {
             clearTimeout(retryTimeout);
+        }
+        if (errorDetectionTimeout) {
+            clearTimeout(errorDetectionTimeout);
+        }
+        if (popupObserver) {
+            popupObserver.disconnect();
         }
 
         // For anime on vidsrc.icu, try dub version if sub fails
@@ -613,20 +621,61 @@ function loadMediaWithFallback(embedURL, server, type) {
             console.log(`Check attempt ${checkAttempts} for URL: ${expectedURL}`);
 
             try {
-                // Check for visible error indicators in the page
-                const errorElements = document.querySelectorAll('*');
+                // Enhanced detection for vidsrc.icu popup errors and other indicators
+                const errorSelectors = [
+                    // Browser native popup/alert detection
+                    '[role="dialog"]',
+                    '[role="alert"]',
+                    '[role="alertdialog"]',
+                    // Common popup/modal classes
+                    '.popup',
+                    '.modal',
+                    '.dialog',
+                    '.alert',
+                    '.error-popup',
+                    '.notification',
+                    // Elements with specific text content
+                    '*'
+                ];
+
+                const errorElements = document.querySelectorAll(errorSelectors.join(','));
                 for (let element of errorElements) {
                     const text = element.textContent || element.innerText || '';
-                    // Look for common error messages that indicate iframe content failed
-                    if (text.includes('An error occurred while loading the video') ||
-                        text.includes('vidsrc.icu says') ||
-                        text.includes('Please try again later') ||
-                        text.includes('502 Bad Gateway') ||
-                        text.includes('404 Not Found') ||
-                        text.includes('Content not available') ||
-                        text.includes('Error loading') ||
-                        text.includes('Failed to load')) {
-                        console.log("Error detected in page content:", text.substring(0, 100));
+                    const isVisible = element.offsetParent !== null &&
+                                    window.getComputedStyle(element).visibility !== 'hidden' &&
+                                    window.getComputedStyle(element).display !== 'none';
+
+                    // Enhanced error patterns specifically for vidsrc.icu popup
+                    const errorPatterns = [
+                        'An embedded page at vidsrc.icu says',
+                        'An error occurred while loading the video',
+                        'vidsrc.icu says',
+                        'Please try again later',
+                        'Error loading video',
+                        'Video not found',
+                        'Content unavailable',
+                        'Server error',
+                        'Failed to load',
+                        'Network error',
+                        'Connection timeout',
+                        '502 Bad Gateway',
+                        '404 Not Found',
+                        '500 Internal Server Error',
+                        'Service temporarily unavailable',
+                        'Unable to play video',
+                        'Video player error',
+                        'Stream not available',
+                        'Content blocked',
+                        'Access denied'
+                    ];
+
+                    if (isVisible && errorPatterns.some(pattern =>
+                        text.toLowerCase().includes(pattern.toLowerCase()))) {
+                        console.log("Enhanced error detected in page content:", {
+                            text: text.substring(0, 100),
+                            element: element.className || element.tagName,
+                            isVisible: isVisible
+                        });
                         hasFoundError = true;
                         if (onFailure) onFailure();
                         return;
@@ -728,75 +777,260 @@ function loadMediaWithFallback(embedURL, server, type) {
         }
     };
 
-    // Add message listener for iframe errors
+    // Add message listener for iframe errors and browser alerts
     const messageListener = (event) => {
         // Listen for error messages from iframe
         if (event.data && typeof event.data === 'string') {
-            if (event.data.includes('error') ||
-                event.data.includes('failed') ||
-                event.data.includes('404') ||
-                event.data.includes('502')) {
+            const errorPatterns = [
+                'error',
+                'failed',
+                'An error occurred while loading the video',
+                'vidsrc.icu says',
+                'Please try again later',
+                '404',
+                '502',
+                '500'
+            ];
+
+            if (errorPatterns.some(pattern =>
+                event.data.toLowerCase().includes(pattern.toLowerCase()))) {
                 console.log("Error message received from iframe:", event.data);
                 handleIframeError();
             }
         }
     };
 
+    // Override browser alert functions to catch vidsrc.icu popup errors
+    const originalAlert = window.alert;
+    const originalConfirm = window.confirm;
+
+    const alertInterceptor = (message) => {
+        console.log("Alert intercepted:", message);
+        if (message && typeof message === 'string') {
+            const errorPatterns = [
+                'An embedded page at vidsrc.icu says',
+                'An error occurred while loading the video',
+                'vidsrc.icu says',
+                'Please try again later'
+            ];
+
+            if (errorPatterns.some(pattern =>
+                message.toLowerCase().includes(pattern.toLowerCase()))) {
+                console.log("vidsrc.icu error alert detected, triggering fallback");
+                handleIframeError();
+                return; // Don't show the alert
+            }
+        }
+        return originalAlert.call(window, message);
+    };
+
+    const confirmInterceptor = (message) => {
+        console.log("Confirm intercepted:", message);
+        if (message && typeof message === 'string') {
+            const errorPatterns = [
+                'An embedded page at vidsrc.icu says',
+                'An error occurred while loading the video',
+                'vidsrc.icu says',
+                'Please try again later'
+            ];
+
+            if (errorPatterns.some(pattern =>
+                message.toLowerCase().includes(pattern.toLowerCase()))) {
+                console.log("vidsrc.icu error confirm detected, triggering fallback");
+                handleIframeError();
+                return false; // Don't show the confirm
+            }
+        }
+        return originalConfirm.call(window, message);
+    };
+
+    // Temporarily override alert/confirm
+    window.alert = alertInterceptor;
+    window.confirm = confirmInterceptor;
+
+    // Add click event listener to detect OK button clicks on error popups
+    const clickListener = (event) => {
+        const target = event.target;
+        if (target && (target.textContent === 'OK' || target.textContent === 'ok' ||
+                      target.className.includes('ok') || target.className.includes('button'))) {
+            // Check if this click is on an error popup
+            const popup = target.closest('[role="dialog"], .popup, .modal, .alert');
+            if (popup) {
+                const popupText = popup.textContent || '';
+                if (popupText.includes('vidsrc.icu says') ||
+                    popupText.includes('An error occurred while loading the video')) {
+                    console.log("OK button clicked on vidsrc.icu error popup");
+                    setTimeout(handleIframeError, 100); // Small delay after popup closes
+                }
+            }
+        }
+    };
+
+    document.addEventListener('click', clickListener, true);
+
     // Add the listener
     window.addEventListener('message', messageListener);
 
-    // DOM Observer to detect error popups/dialogs
-    const observer = new MutationObserver((mutations) => {
+    // Enhanced DOM Observer to detect error popups/dialogs with better patterns
+    popupObserver = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
             mutation.addedNodes.forEach((node) => {
                 if (node.nodeType === 1) { // Element node
                     const text = node.textContent || node.innerText || '';
-                    // Check for error popup content
-                    if (text.includes('An error occurred while loading the video') ||
-                        text.includes('vidsrc.icu says') ||
-                        text.includes('Please try again later') ||
-                        text.includes('502 Bad Gateway') ||
-                        text.includes('404 Not Found')) {
-                        console.log("Error popup detected via DOM observer:", text.substring(0, 100));
-                        setTimeout(handleIframeError, 1000); // Small delay to let popup fully appear
+                    const classList = node.className || '';
+                    const nodeName = node.nodeName.toLowerCase();
+
+                    // Enhanced error patterns for vidsrc.icu
+                    const errorPatterns = [
+                        'An embedded page at vidsrc.icu says',
+                        'An error occurred while loading the video',
+                        'vidsrc.icu says',
+                        'Please try again later',
+                        'Error loading video',
+                        'Video not found',
+                        'Content unavailable',
+                        'Server error',
+                        'Failed to load',
+                        'Network error',
+                        'Connection timeout',
+                        '502 Bad Gateway',
+                        '404 Not Found',
+                        '500 Internal Server Error',
+                        'Service temporarily unavailable',
+                        'Unable to play video',
+                        'Video player error',
+                        'Stream not available',
+                        'Content blocked',
+                        'Access denied'
+                    ];
+
+                    // Check for common popup/modal/dialog elements
+                    const isPopupElement = classList.includes('popup') ||
+                                         classList.includes('modal') ||
+                                         classList.includes('dialog') ||
+                                         classList.includes('alert') ||
+                                         classList.includes('error') ||
+                                         classList.includes('notification') ||
+                                         nodeName === 'dialog' ||
+                                         node.getAttribute('role') === 'dialog' ||
+                                         node.getAttribute('role') === 'alert';
+
+                    // Check if text matches any error pattern
+                    const hasErrorText = errorPatterns.some(pattern =>
+                        text.toLowerCase().includes(pattern.toLowerCase())
+                    );
+
+                    if (hasErrorText || (isPopupElement && text.length > 10)) {
+                        console.log("Enhanced error popup detected:", {
+                            text: text.substring(0, 100),
+                            classList: classList,
+                            nodeName: nodeName,
+                            isPopupElement: isPopupElement
+                        });
+
+                        // Immediate error handling for critical errors
+                        if (hasErrorText) {
+                            setTimeout(handleIframeError, 500);
+                        } else if (isPopupElement) {
+                            // For popup elements without clear error text, wait a bit longer
+                            setTimeout(handleIframeError, 1500);
+                        }
                     }
                 }
             });
         });
     });
 
-    // Start observing
-    observer.observe(document.body, {
+    // Start observing with more comprehensive options
+    popupObserver.observe(document.body, {
         childList: true,
-        subtree: true
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['style', 'class']
     });
 
     // Clean up listeners after some time
     setTimeout(() => {
         window.removeEventListener('message', messageListener);
-        observer.disconnect();
+        document.removeEventListener('click', clickListener, true);
+        if (popupObserver) {
+            popupObserver.disconnect();
+        }
+        if (errorDetectionTimeout) {
+            clearTimeout(errorDetectionTimeout);
+        }
+        // Restore original alert/confirm functions
+        window.alert = originalAlert;
+        window.confirm = originalConfirm;
     }, 15000);
 
-    // Immediate error checking for fast failures
-    setTimeout(() => {
-        // Quick check for immediate errors
-        const errorElements = document.querySelectorAll('*');
-        for (let element of errorElements) {
+    // Enhanced immediate error checking with iframe-specific selectors
+    const performImmediateErrorCheck = () => {
+        // Check iframe content and surrounding elements
+        const iframeContainer = iframe.parentElement;
+        const possibleErrorElements = [
+            ...document.querySelectorAll('[class*="error"]'),
+            ...document.querySelectorAll('[class*="popup"]'),
+            ...document.querySelectorAll('[class*="modal"]'),
+            ...document.querySelectorAll('[class*="dialog"]'),
+            ...document.querySelectorAll('[class*="alert"]'),
+            ...document.querySelectorAll('div[style*="position: fixed"]'),
+            ...document.querySelectorAll('div[style*="position: absolute"]'),
+            ...(iframeContainer ? [iframeContainer] : [])
+        ];
+
+        const errorPatterns = [
+            'An embedded page at vidsrc.icu says',
+            'An error occurred while loading the video',
+            'vidsrc.icu says',
+            'Please try again later',
+            'Error loading video',
+            'Video not found',
+            'Content unavailable',
+            'Server error',
+            'Failed to load',
+            'Network error',
+            'Connection timeout',
+            '502 Bad Gateway',
+            '404 Not Found',
+            'Service temporarily unavailable',
+            'Unable to play video',
+            'Video player error',
+            'Stream not available'
+        ];
+
+        for (let element of possibleErrorElements) {
             const text = element.textContent || element.innerText || '';
-            if (text.includes('An error occurred while loading the video') ||
-                text.includes('vidsrc.icu says') ||
-                text.includes('Please try again later')) {
-                console.log("Immediate error detected:", text.substring(0, 100));
+            const isVisible = element.offsetParent !== null ||
+                            window.getComputedStyle(element).display !== 'none';
+
+            if (isVisible && errorPatterns.some(pattern =>
+                text.toLowerCase().includes(pattern.toLowerCase()))) {
+                console.log("Immediate error detected:", {
+                    text: text.substring(0, 100),
+                    element: element.className || element.tagName
+                });
                 handleIframeError();
-                return;
+                return true;
             }
         }
-    }, 100); // Very quick initial check
+        return false;
+    };
+
+    // Quick initial check
+    setTimeout(performImmediateErrorCheck, 100);
+
+    // Additional checks at intervals for popup errors that appear with delay
+    errorDetectionTimeout = setTimeout(performImmediateErrorCheck, 500);
+    setTimeout(performImmediateErrorCheck, 1500);
+    setTimeout(performImmediateErrorCheck, 3000);
 
     // Enhanced error detection with timeout - start checking immediately
     retryTimeout = setTimeout(() => {
-        checkIframeLoad(embedURL, handleIframeError);
-    }, 1000); // Reduced from 3000 to 1000 for faster detection
+        if (!performImmediateErrorCheck()) {
+            checkIframeLoad(embedURL, handleIframeError);
+        }
+    }, 1000);
 
     // Ensure iframe is visible and sized correctly
     iframe.style.display = "block";  // Show the iframe
