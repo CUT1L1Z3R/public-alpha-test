@@ -6,7 +6,7 @@ logo.addEventListener('click', () => {
 });
 
 // Define server fallback chain
-const serverFallbackChain = ['vidsrc.icu', 'vidsrc.su', 'vidsrc.vip', 'vidlink.pro'];
+const serverFallbackChain = ['vidsrc.su', 'vidsrc.vip', 'vidlink.pro'];
 
 // Function to show toast notification
 function showToast(message, type = 'info') {
@@ -135,239 +135,45 @@ const params = new URLSearchParams(window.location.search);
 const id = params.get('id');
 const media = params.get("media");
 
-// Function to fetch detailed information using its TMDb ID or AniList ID for anime
+// Function to fetch detailed information using its TMDb ID
 async function fetchMovieDetails(id) {
-    if (media === "anime") {
-        // Use AniList API for anime content
-        return await fetchAnimeDetails(id);
-    } else {
-        // For non-anime content, use TMDB API
-        const response = await fetch(`https://api.themoviedb.org/3/${media}/${id}?api_key=${api_Key}`);
-        const data = await response.json();
+    // For all media types including anime, use TMDB API
+    const response = await fetch(`https://api.themoviedb.org/3/${media}/${id}?api_key=${api_Key}`);
+    const data = await response.json();
 
-        // For TV shows, check if we have additional genre info to include
-        if (media === "tv" && data) {
-            // Check if this is likely anime by looking at genres
-            const isAnime = data.genres && data.genres.some(genre => genre.id === 16); // 16 is Animation genre
+    // For anime check if we have additional genre info to include
+    if (media === "tv" && data) {
+        // Check if this is likely anime by looking at genres
+        const isAnime = data.genres && data.genres.some(genre => genre.id === 16); // 16 is Animation genre
 
-            if (isAnime) {
-                // Mark this as anime content for specialized handling if needed
-                data.is_anime = true;
-            }
+        if (isAnime) {
+            // Mark this as anime content for specialized handling if needed
+            data.is_anime = true;
         }
-
-        return data;
-    }
-}
-
-// Helper function to create anime seasons based on episode count
-function createAnimeSeasons(totalEpisodes) {
-    if (!totalEpisodes || totalEpisodes === 'Unknown') {
-        return [{
-            season_number: 1,
-            episode_count: 50, // Default to 50 episodes for long-running anime
-            name: 'Season 1'
-        }];
     }
 
-    const episodesPerSeason = 50; // Group episodes into seasons of 50
-    const seasons = [];
-    let remainingEpisodes = totalEpisodes;
-    let seasonNumber = 1;
-
-    while (remainingEpisodes > 0) {
-        const episodesInThisSeason = Math.min(episodesPerSeason, remainingEpisodes);
-        seasons.push({
-            season_number: seasonNumber,
-            episode_count: episodesInThisSeason,
-            name: `Episodes ${(seasonNumber - 1) * episodesPerSeason + 1}-${(seasonNumber - 1) * episodesPerSeason + episodesInThisSeason}`
-        });
-
-        remainingEpisodes -= episodesInThisSeason;
-        seasonNumber++;
-    }
-
-    return seasons;
-}
-
-// Function to fetch anime details from AniList API
-async function fetchAnimeDetails(id) {
-    const query = `
-        query ($id: Int) {
-            Media (id: $id, type: ANIME) {
-                id
-                title {
-                    romaji
-                    english
-                    native
-                }
-                description
-                startDate {
-                    year
-                    month
-                    day
-                }
-                endDate {
-                    year
-                    month
-                    day
-                }
-                season
-                seasonYear
-                episodes
-                duration
-                status
-                genres
-                averageScore
-                popularity
-                studios {
-                    nodes {
-                        name
-                    }
-                }
-                coverImage {
-                    large
-                    medium
-                }
-                bannerImage
-                format
-                source
-                countryOfOrigin
-            }
-        }
-    `;
-
-    const variables = {
-        id: parseInt(id)
-    };
-
-    try {
-        const response = await fetch('https://graphql.anilist.co', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-            },
-            body: JSON.stringify({
-                query: query,
-                variables: variables
-            })
-        });
-
-        const data = await response.json();
-
-        if (data.data && data.data.Media) {
-            const anime = data.data.Media;
-
-            // Transform AniList data to match the expected structure
-            return {
-                id: anime.id,
-                title: anime.title.english || anime.title.romaji || anime.title.native,
-                name: anime.title.english || anime.title.romaji || anime.title.native,
-                overview: anime.description ? anime.description.replace(/<[^>]*>/g, '') : 'No description available', // Remove HTML tags
-                poster_path: anime.coverImage.large,
-                backdrop_path: anime.bannerImage || anime.coverImage.large,
-                first_air_date: anime.startDate ? `${anime.startDate.year}-${String(anime.startDate.month || 1).padStart(2, '0')}-${String(anime.startDate.day || 1).padStart(2, '0')}` : 'Unknown',
-                vote_average: anime.averageScore ? (anime.averageScore / 10).toFixed(1) : 'N/A',
-                genres: anime.genres ? anime.genres.map(genre => ({ name: genre })) : [{ name: 'Anime' }],
-                spoken_languages: [{ english_name: 'Japanese' }], // Default for anime
-                number_of_episodes: anime.episodes || 'Unknown',
-                status: anime.status || 'Unknown',
-                studios: anime.studios.nodes.map(studio => studio.name).join(', ') || 'Unknown',
-                is_anime: true,
-                seasons: createAnimeSeasons(anime.episodes)
-            };
-        } else {
-            // Fallback if AniList doesn't have the anime
-            return {
-                title: 'Anime Not Found',
-                name: 'Anime Not Found',
-                overview: 'This anime could not be found in the database.',
-                poster_path: null,
-                backdrop_path: null,
-                first_air_date: 'Unknown',
-                vote_average: 'N/A',
-                genres: [{ name: 'Anime' }],
-                spoken_languages: [{ english_name: 'Japanese' }],
-                is_anime: true
-            };
-        }
-    } catch (error) {
-        console.error('Error fetching anime details from AniList:', error);
-
-        // Fallback error response
-        return {
-            title: 'Error Loading Anime',
-            name: 'Error Loading Anime',
-            overview: 'There was an error loading this anime. Please try again later.',
-            poster_path: null,
-            backdrop_path: null,
-            first_air_date: 'Unknown',
-            vote_average: 'N/A',
-            genres: [{ name: 'Anime' }],
-            spoken_languages: [{ english_name: 'Japanese' }],
-            is_anime: true
-        };
-    }
+    return data;
 }
 
 // Function to fetch video details (trailers) for a movie or TV show
 async function fetchVideoDetails(id) {
-    if (media === "anime") {
-        // For anime, we don't typically have trailers in AniList, return empty array
-        return [];
-    } else {
-        const response = await fetch(`https://api.themoviedb.org/3/${media}/${id}/videos?api_key=${api_Key}`);
-        const data = await response.json();
-        return data.results;
-    }
+    const response = await fetch(`https://api.themoviedb.org/3/${media}/${id}/videos?api_key=${api_Key}`);
+    const data = await response.json();
+    return data.results;
 }
 
 // Function to fetch TV show seasons
 async function fetchTVSeasons(id) {
-    if (media === "anime") {
-        // For anime, we'll create seasons based on the episode count from AniList
-        const animeDetails = await fetchAnimeDetails(id);
-        return animeDetails.seasons || [];
-    } else {
-        const response = await fetch(`https://api.themoviedb.org/3/tv/${id}?api_key=${api_Key}`);
-        const data = await response.json();
-        return data.seasons;
-    }
+    const response = await fetch(`https://api.themoviedb.org/3/tv/${id}?api_key=${api_Key}`);
+    const data = await response.json();
+    return data.seasons;
 }
 
 // Function to fetch episodes for a specific season
 async function fetchSeasonEpisodes(tvId, seasonNumber) {
-    if (media === "anime") {
-        // For anime, create episodes based on the season structure
-        const animeDetails = await fetchAnimeDetails(tvId);
-        const seasons = animeDetails.seasons;
-
-        // Find the specific season
-        const season = seasons.find(s => s.season_number === parseInt(seasonNumber));
-        if (!season) return [];
-
-        const episodes = [];
-        const episodesPerSeason = 50;
-        const startEpisode = (seasonNumber - 1) * episodesPerSeason + 1;
-
-        for (let i = 0; i < season.episode_count; i++) {
-            const episodeNumber = startEpisode + i;
-            episodes.push({
-                episode_number: episodeNumber, // Global episode number (for the anime server)
-                season_number: parseInt(seasonNumber),
-                name: `Episode ${episodeNumber}`,
-                overview: `Episode ${episodeNumber} of ${animeDetails.title || animeDetails.name}`,
-                still_path: animeDetails.backdrop_path || animeDetails.poster_path, // Use anime poster/banner as thumbnail
-                air_date: null
-            });
-        }
-        return episodes;
-    } else {
-        const response = await fetch(`https://api.themoviedb.org/3/tv/${tvId}/season/${seasonNumber}?api_key=${api_Key}`);
-        const data = await response.json();
-        return data.episodes;
-    }
+    const response = await fetch(`https://api.themoviedb.org/3/tv/${tvId}/season/${seasonNumber}?api_key=${api_Key}`);
+    const data = await response.json();
+    return data.episodes;
 }
 
 document.getElementById('change-server-btn').addEventListener('click', () => {
@@ -442,28 +248,10 @@ function createEpisodesList(episodes) {
         // Create thumbnail image
         const thumbnail = document.createElement('img');
         thumbnail.className = 'episode-thumbnail';
-        // Handle different thumbnail sources based on media type
-        if (episode.still_path) {
-            if (media === 'anime' && !episode.still_path.startsWith('/')) {
-                // For anime, still_path might be a full URL from AniList
-                thumbnail.src = episode.still_path;
-            } else {
-                // For TV shows, still_path is TMDb path
-                thumbnail.src = `https://image.tmdb.org/t/p/w300${episode.still_path}`;
-            }
-        } else {
-            // Fallback for episodes without thumbnails
-            thumbnail.src = `https://via.placeholder.com/300x170/2c0e4c/ffffff?text=Episode+${episode.episode_number}`;
-        }
+        thumbnail.src = episode.still_path
+            ? `https://image.tmdb.org/t/p/w300${episode.still_path}`
+            : 'https://via.placeholder.com/300x170?text=No+Image';
         thumbnail.alt = `${episode.name} Thumbnail`;
-
-        // Add error handling for broken images
-        thumbnail.onerror = function() {
-            this.src = `https://via.placeholder.com/300x170/2c0e4c/ffffff?text=Episode+${episode.episode_number}`;
-        };
-
-        // Add loading attribute for better performance
-        thumbnail.loading = 'lazy';
 
         // Create episode number badge
         const episodeNumber = document.createElement('div');
@@ -531,517 +319,6 @@ function loadMedia(embedURL, server) {
     setTimeout(ensureControlsAccessible, 500);
 }
 
-// Enhanced function to handle media loading with sub-to-dub fallback for anime
-function loadMediaWithFallback(embedURL, server, type) {
-    // Update the iframe source with the correct video URL and set attributes
-    iframe.setAttribute('src', embedURL);
-    iframe.setAttribute('playsinline', '');
-    iframe.setAttribute('webkit-playsinline', 'true');
-    iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen');
-    iframe.setAttribute('allowfullscreen', '');
-
-    let hasTriedDub = false;
-    let retryTimeout;
-    let errorDetectionTimeout;
-    let popupObserver;
-
-    // Setup error handling with anime sub-to-dub fallback
-    const handleIframeError = () => {
-        console.log(`Error loading: ${embedURL}`);
-
-        // Clear any existing timeouts
-        if (retryTimeout) {
-            clearTimeout(retryTimeout);
-        }
-        if (errorDetectionTimeout) {
-            clearTimeout(errorDetectionTimeout);
-        }
-        if (popupObserver) {
-            popupObserver.disconnect();
-        }
-
-        // For anime on vidsrc.icu, try dub version if sub fails
-        if (type === "anime" && server === "vidsrc.icu" && !hasTriedDub) {
-            hasTriedDub = true;
-            console.log("Sub version failed, trying dub version...");
-
-            // Get episode number
-            const activeEpisode = document.querySelector('.episode-item.active');
-            let episodeNumber = 1;
-            if (activeEpisode) {
-                episodeNumber = activeEpisode.dataset.episodeNumber || 1;
-            }
-
-            // Create dub URL (change 0 to 1)
-            const dubURL = `https://vidsrc.icu/embed/anime/${id}/${episodeNumber}/1`;
-            console.log(`Trying dub version: ${dubURL}`);
-
-            // Show toast notification
-            showToast("Sub version unavailable, switching to dub...", 'info');
-
-            // Try loading dub version
-            iframe.setAttribute('src', dubURL);
-
-            // Set up error handling for dub version with improved detection
-            retryTimeout = setTimeout(() => {
-                checkIframeLoad(dubURL, () => {
-                    console.log("Dub version also failed, trying next server");
-                    tryNextServer();
-                });
-            }, 5000);
-            return;
-        }
-
-        // If dub also fails or not anime/vidsrc.icu, try next server in fallback chain
-        tryNextServer();
-    };
-
-    const tryNextServer = () => {
-        let currentIndex = serverFallbackChain.indexOf(server);
-        const nextIndex = currentIndex + 1;
-        if (nextIndex < serverFallbackChain.length) {
-            const nextServer = serverFallbackChain[nextIndex];
-            console.log(`Switching to next server: ${nextServer}`);
-            document.getElementById('server').value = nextServer;
-            showToast(`Switching to ${nextServer} server...`, 'info');
-            changeServer();
-        } else {
-            showToast("All servers failed to load content", 'error');
-        }
-    };
-
-    // Enhanced iframe load checking function with better error detection
-    const checkIframeLoad = (expectedURL, onFailure) => {
-        let checkAttempts = 0;
-        const maxAttempts = 4;
-        let hasFoundError = false;
-
-        const performCheck = () => {
-            checkAttempts++;
-            console.log(`Check attempt ${checkAttempts} for URL: ${expectedURL}`);
-
-            try {
-                // Enhanced detection for vidsrc.icu popup errors and other indicators
-                const errorSelectors = [
-                    // Browser native popup/alert detection
-                    '[role="dialog"]',
-                    '[role="alert"]',
-                    '[role="alertdialog"]',
-                    // Common popup/modal classes
-                    '.popup',
-                    '.modal',
-                    '.dialog',
-                    '.alert',
-                    '.error-popup',
-                    '.notification',
-                    // Elements with specific text content
-                    '*'
-                ];
-
-                const errorElements = document.querySelectorAll(errorSelectors.join(','));
-                for (let element of errorElements) {
-                    const text = element.textContent || element.innerText || '';
-                    const isVisible = element.offsetParent !== null &&
-                                    window.getComputedStyle(element).visibility !== 'hidden' &&
-                                    window.getComputedStyle(element).display !== 'none';
-
-                    // Enhanced error patterns specifically for vidsrc.icu popup
-                    const errorPatterns = [
-                        'An embedded page at vidsrc.icu says',
-                        'An error occurred while loading the video',
-                        'vidsrc.icu says',
-                        'Please try again later',
-                        'Error loading video',
-                        'Video not found',
-                        'Content unavailable',
-                        'Server error',
-                        'Failed to load',
-                        'Network error',
-                        'Connection timeout',
-                        '502 Bad Gateway',
-                        '404 Not Found',
-                        '500 Internal Server Error',
-                        'Service temporarily unavailable',
-                        'Unable to play video',
-                        'Video player error',
-                        'Stream not available',
-                        'Content blocked',
-                        'Access denied'
-                    ];
-
-                    if (isVisible && errorPatterns.some(pattern =>
-                        text.toLowerCase().includes(pattern.toLowerCase()))) {
-                        console.log("Enhanced error detected in page content:", {
-                            text: text.substring(0, 100),
-                            element: element.className || element.tagName,
-                            isVisible: isVisible
-                        });
-                        hasFoundError = true;
-                        if (onFailure) onFailure();
-                        return;
-                    }
-                }
-
-                // Check for loading indicators that persist too long
-                const loadingElements = document.querySelectorAll('.loading, .spinner, [class*="load"], [class*="spin"]');
-                let hasLoadingIndicator = false;
-                for (let element of loadingElements) {
-                    if (element.style.display !== 'none' && element.offsetParent !== null) {
-                        hasLoadingIndicator = true;
-                        break;
-                    }
-                }
-
-                // If still loading after many attempts, consider it a failure
-                if (hasLoadingIndicator && checkAttempts >= maxAttempts) {
-                    console.log("Loading indicator persists, considering as failure");
-                    if (onFailure) onFailure();
-                    return;
-                }
-
-                // Check if URL changed unexpectedly
-                const currentSrc = iframe.getAttribute('src');
-                if (currentSrc !== expectedURL) {
-                    console.log("URL changed, considering as potential failure");
-                    if (onFailure) onFailure();
-                    return;
-                }
-
-                // Check iframe dimensions and visibility
-                const iframeRect = iframe.getBoundingClientRect();
-                if (iframeRect.width === 0 || iframeRect.height === 0) {
-                    console.log("Iframe has no dimensions, potential failure");
-                    if (checkAttempts >= maxAttempts && onFailure) {
-                        onFailure();
-                        return;
-                    }
-                }
-
-                // Check iframe content window (this will usually throw cross-origin error for successful loads)
-                if (iframe.contentWindow) {
-                    try {
-                        const location = iframe.contentWindow.location.href;
-                        if (location === 'about:blank' || location.includes('error')) {
-                            console.log("Iframe showing blank or error page");
-                            if (checkAttempts >= maxAttempts && onFailure) {
-                                onFailure();
-                                return;
-                            }
-                        }
-                    } catch (e) {
-                        // Cross-origin error usually means content loaded successfully
-                        // But we should still check for other error indicators
-                        if (!hasFoundError && checkAttempts >= 2) {
-                            console.log("Content appears to be loaded (cross-origin restriction detected)");
-                            return; // Consider this a success
-                        }
-                    }
-                }
-
-                // If we've reached max attempts without detecting success, call failure handler
-                if (checkAttempts >= maxAttempts && !hasFoundError && onFailure) {
-                    console.log("Max attempts reached, considering as failure for anime sub-to-dub fallback");
-                    onFailure();
-                }
-            } catch (error) {
-                console.log("Error checking iframe content:", error);
-                if (checkAttempts >= maxAttempts && onFailure) {
-                    onFailure();
-                }
-            }
-        };
-
-        // Check immediately and then at intervals
-        setTimeout(performCheck, 500);  // Quick initial check
-        setTimeout(performCheck, 2000); // Early check
-        setTimeout(performCheck, 5000); // Medium check
-        setTimeout(performCheck, 8000); // Final check
-    };
-
-    // Set up iframe error detection
-    iframe.onerror = handleIframeError;
-
-    // Enhanced load event handler
-    iframe.onload = () => {
-        console.log(`Successfully loaded: ${embedURL}`);
-        // Clear any pending retry timeouts
-        if (retryTimeout) {
-            clearTimeout(retryTimeout);
-        }
-        // Reset error handlers for future loads
-        hasTriedDub = false;
-
-        // Show success message for dub fallback
-        if (hasTriedDub && type === "anime") {
-            showToast("Successfully loaded dub version", 'success');
-        }
-    };
-
-    // Add message listener for iframe errors and browser alerts
-    const messageListener = (event) => {
-        // Listen for error messages from iframe
-        if (event.data && typeof event.data === 'string') {
-            const errorPatterns = [
-                'error',
-                'failed',
-                'An error occurred while loading the video',
-                'vidsrc.icu says',
-                'Please try again later',
-                '404',
-                '502',
-                '500'
-            ];
-
-            if (errorPatterns.some(pattern =>
-                event.data.toLowerCase().includes(pattern.toLowerCase()))) {
-                console.log("Error message received from iframe:", event.data);
-                handleIframeError();
-            }
-        }
-    };
-
-    // Override browser alert functions to catch vidsrc.icu popup errors
-    const originalAlert = window.alert;
-    const originalConfirm = window.confirm;
-
-    const alertInterceptor = (message) => {
-        console.log("Alert intercepted:", message);
-        if (message && typeof message === 'string') {
-            const errorPatterns = [
-                'An embedded page at vidsrc.icu says',
-                'An error occurred while loading the video',
-                'vidsrc.icu says',
-                'Please try again later'
-            ];
-
-            if (errorPatterns.some(pattern =>
-                message.toLowerCase().includes(pattern.toLowerCase()))) {
-                console.log("vidsrc.icu error alert detected, triggering fallback");
-                handleIframeError();
-                return; // Don't show the alert
-            }
-        }
-        return originalAlert.call(window, message);
-    };
-
-    const confirmInterceptor = (message) => {
-        console.log("Confirm intercepted:", message);
-        if (message && typeof message === 'string') {
-            const errorPatterns = [
-                'An embedded page at vidsrc.icu says',
-                'An error occurred while loading the video',
-                'vidsrc.icu says',
-                'Please try again later'
-            ];
-
-            if (errorPatterns.some(pattern =>
-                message.toLowerCase().includes(pattern.toLowerCase()))) {
-                console.log("vidsrc.icu error confirm detected, triggering fallback");
-                handleIframeError();
-                return false; // Don't show the confirm
-            }
-        }
-        return originalConfirm.call(window, message);
-    };
-
-    // Temporarily override alert/confirm
-    window.alert = alertInterceptor;
-    window.confirm = confirmInterceptor;
-
-    // Add click event listener to detect OK button clicks on error popups
-    const clickListener = (event) => {
-        const target = event.target;
-        if (target && (target.textContent === 'OK' || target.textContent === 'ok' ||
-                      target.className.includes('ok') || target.className.includes('button'))) {
-            // Check if this click is on an error popup
-            const popup = target.closest('[role="dialog"], .popup, .modal, .alert');
-            if (popup) {
-                const popupText = popup.textContent || '';
-                if (popupText.includes('vidsrc.icu says') ||
-                    popupText.includes('An error occurred while loading the video')) {
-                    console.log("OK button clicked on vidsrc.icu error popup");
-                    setTimeout(handleIframeError, 100); // Small delay after popup closes
-                }
-            }
-        }
-    };
-
-    document.addEventListener('click', clickListener, true);
-
-    // Add the listener
-    window.addEventListener('message', messageListener);
-
-    // Enhanced DOM Observer to detect error popups/dialogs with better patterns
-    popupObserver = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            mutation.addedNodes.forEach((node) => {
-                if (node.nodeType === 1) { // Element node
-                    const text = node.textContent || node.innerText || '';
-                    const classList = node.className || '';
-                    const nodeName = node.nodeName.toLowerCase();
-
-                    // Enhanced error patterns for vidsrc.icu
-                    const errorPatterns = [
-                        'An embedded page at vidsrc.icu says',
-                        'An error occurred while loading the video',
-                        'vidsrc.icu says',
-                        'Please try again later',
-                        'Error loading video',
-                        'Video not found',
-                        'Content unavailable',
-                        'Server error',
-                        'Failed to load',
-                        'Network error',
-                        'Connection timeout',
-                        '502 Bad Gateway',
-                        '404 Not Found',
-                        '500 Internal Server Error',
-                        'Service temporarily unavailable',
-                        'Unable to play video',
-                        'Video player error',
-                        'Stream not available',
-                        'Content blocked',
-                        'Access denied'
-                    ];
-
-                    // Check for common popup/modal/dialog elements
-                    const isPopupElement = classList.includes('popup') ||
-                                         classList.includes('modal') ||
-                                         classList.includes('dialog') ||
-                                         classList.includes('alert') ||
-                                         classList.includes('error') ||
-                                         classList.includes('notification') ||
-                                         nodeName === 'dialog' ||
-                                         node.getAttribute('role') === 'dialog' ||
-                                         node.getAttribute('role') === 'alert';
-
-                    // Check if text matches any error pattern
-                    const hasErrorText = errorPatterns.some(pattern =>
-                        text.toLowerCase().includes(pattern.toLowerCase())
-                    );
-
-                    if (hasErrorText || (isPopupElement && text.length > 10)) {
-                        console.log("Enhanced error popup detected:", {
-                            text: text.substring(0, 100),
-                            classList: classList,
-                            nodeName: nodeName,
-                            isPopupElement: isPopupElement
-                        });
-
-                        // Immediate error handling for critical errors
-                        if (hasErrorText) {
-                            setTimeout(handleIframeError, 500);
-                        } else if (isPopupElement) {
-                            // For popup elements without clear error text, wait a bit longer
-                            setTimeout(handleIframeError, 1500);
-                        }
-                    }
-                }
-            });
-        });
-    });
-
-    // Start observing with more comprehensive options
-    popupObserver.observe(document.body, {
-        childList: true,
-        subtree: true,
-        attributes: true,
-        attributeFilter: ['style', 'class']
-    });
-
-    // Clean up listeners after some time
-    setTimeout(() => {
-        window.removeEventListener('message', messageListener);
-        document.removeEventListener('click', clickListener, true);
-        if (popupObserver) {
-            popupObserver.disconnect();
-        }
-        if (errorDetectionTimeout) {
-            clearTimeout(errorDetectionTimeout);
-        }
-        // Restore original alert/confirm functions
-        window.alert = originalAlert;
-        window.confirm = originalConfirm;
-    }, 15000);
-
-    // Enhanced immediate error checking with iframe-specific selectors
-    const performImmediateErrorCheck = () => {
-        // Check iframe content and surrounding elements
-        const iframeContainer = iframe.parentElement;
-        const possibleErrorElements = [
-            ...document.querySelectorAll('[class*="error"]'),
-            ...document.querySelectorAll('[class*="popup"]'),
-            ...document.querySelectorAll('[class*="modal"]'),
-            ...document.querySelectorAll('[class*="dialog"]'),
-            ...document.querySelectorAll('[class*="alert"]'),
-            ...document.querySelectorAll('div[style*="position: fixed"]'),
-            ...document.querySelectorAll('div[style*="position: absolute"]'),
-            ...(iframeContainer ? [iframeContainer] : [])
-        ];
-
-        const errorPatterns = [
-            'An embedded page at vidsrc.icu says',
-            'An error occurred while loading the video',
-            'vidsrc.icu says',
-            'Please try again later',
-            'Error loading video',
-            'Video not found',
-            'Content unavailable',
-            'Server error',
-            'Failed to load',
-            'Network error',
-            'Connection timeout',
-            '502 Bad Gateway',
-            '404 Not Found',
-            'Service temporarily unavailable',
-            'Unable to play video',
-            'Video player error',
-            'Stream not available'
-        ];
-
-        for (let element of possibleErrorElements) {
-            const text = element.textContent || element.innerText || '';
-            const isVisible = element.offsetParent !== null ||
-                            window.getComputedStyle(element).display !== 'none';
-
-            if (isVisible && errorPatterns.some(pattern =>
-                text.toLowerCase().includes(pattern.toLowerCase()))) {
-                console.log("Immediate error detected:", {
-                    text: text.substring(0, 100),
-                    element: element.className || element.tagName
-                });
-                handleIframeError();
-                return true;
-            }
-        }
-        return false;
-    };
-
-    // Quick initial check
-    setTimeout(performImmediateErrorCheck, 100);
-
-    // Additional checks at intervals for popup errors that appear with delay
-    errorDetectionTimeout = setTimeout(performImmediateErrorCheck, 500);
-    setTimeout(performImmediateErrorCheck, 1500);
-    setTimeout(performImmediateErrorCheck, 3000);
-
-    // Enhanced error detection with timeout - start checking immediately
-    retryTimeout = setTimeout(() => {
-        if (!performImmediateErrorCheck()) {
-            checkIframeLoad(embedURL, handleIframeError);
-        }
-    }, 1000);
-
-    // Ensure iframe is visible and sized correctly
-    iframe.style.display = "block";  // Show the iframe
-
-    // Hide the movie poster when the video is playing
-    moviePoster.style.display = "none";  // Hide the movie poster image
-
-    // Ensure controls are accessible after changing source
-    setTimeout(ensureControlsAccessible, 500);
-}
-
 // Function to handle video source change based on selected server
 async function changeServer() {
     const server = document.getElementById('server').value; // Get the selected server
@@ -1063,25 +340,9 @@ async function changeServer() {
 
     // Set the video URL depending on the selected server and media type
     if (type === "anime") {
-        // For anime, check for episode information to build proper vidsrc.icu URL
-        const activeEpisode = document.querySelector('.episode-item.active');
-        let episodeNumber = 1;
-
-        if (activeEpisode) {
-            episodeNumber = activeEpisode.dataset.episodeNumber || 1;
-        }
-
+        // For anime, we'll use Gogo-anime, 9anime or other anime-specific providers
+        // This is a placeholder implementation - these URLs are examples and may not work
         switch (server) {
-            case "vidsrc.icu":
-                // Use the dedicated anime server format: https://vidsrc.icu/embed/anime/{id}/{episode}/{dub}
-                // dub: 0 = sub, 1 = dub
-                const dubValue = 0; // Default to sub (0)
-                embedURL = `https://vidsrc.icu/embed/anime/${id}/${episodeNumber}/${dubValue}`;
-                break;
-            case "vidsrc.su":
-                // Use SHINOMIYA server for non-anime or fallback
-                embedURL = `https://vidsrc.su/embed/anime/${id}`;
-                break;
             case "vidlink.pro":
                 embedURL = `https://vidlink.pro/anime/${id}?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
                 break;
@@ -1090,6 +351,9 @@ async function changeServer() {
                 break;
             case "vidsrc.me":
                 embedURL = `https://vidsrc.net/embed/anime/?mal=${id}`;
+                break;
+            case "vidsrc.su":
+                embedURL = `https://vidsrc.su/embed/anime/${id}`;
                 break;
             case "vidsrc.vip":
                 embedURL = `https://vidsrc.vip/anime/${id}`;
@@ -1101,9 +365,8 @@ async function changeServer() {
                 embedURL = `https://moviesapi.club/anime/${id}`;
                 break;
             default:
-                // Default to vidsrc.icu for anime content
-                const defaultDubValue = 0; // Default to sub (0)
-                embedURL = `https://vidsrc.icu/embed/anime/${id}/${episodeNumber}/${defaultDubValue}`;
+                // Fallback to a generic anime provider
+                embedURL = `https://vidlink.pro/anime/${id}?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
                 break;
         }
     } else {
@@ -1115,6 +378,14 @@ async function changeServer() {
                     embedURL = `https://vidlink.pro/tv/${id}/1/1?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
                 } else {
                     embedURL = `https://vidlink.pro/movie/${id}?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
+                }
+                break;
+            case "iframe.pstream.org":
+                if (type === "tv") {
+                    // For TV shows, default to first episode of first season
+                    embedURL = `https://iframe.pstream.org/tv/${id}/1/1`;
+                } else {
+                    embedURL = `https://iframe.pstream.org/movie/${id}`;
                 }
                 break;
             case "vidsrc.cc":
@@ -1149,93 +420,91 @@ async function changeServer() {
     // Log the URL for debugging
     console.log(`Loading ${type} from: ${embedURL}`);
 
-    // Load media with sub-to-dub fallback for anime
-    loadMediaWithFallback(embedURL, server, type);
+    // Update the iframe source with the correct video URL and set attributes
+    iframe.setAttribute('src', embedURL);
+    iframe.setAttribute('playsinline', '');
+    iframe.setAttribute('webkit-playsinline', 'true');
+    iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen');
+    iframe.setAttribute('allowfullscreen', '');
+    // Setup fallback chain on error
+    let currentIndex = serverFallbackChain.indexOf(server);
+    iframe.onerror = () => {
+        const nextIndex = currentIndex + 1;
+        if (nextIndex < serverFallbackChain.length) {
+            const nextServer = serverFallbackChain[nextIndex];
+            document.getElementById('server').value = nextServer;
+            currentIndex = nextIndex;
+            changeServer();
+        }
+    };
+    // Ensure iframe is visible and sized correctly
+    iframe.style.display = "block";  // Show the iframe
+
+    // Hide the movie poster when the video is playing
+    moviePoster.style.display = "none";  // Hide the movie poster image
+
+    // Ensure controls are accessible after changing source
+    setTimeout(ensureControlsAccessible, 500);
 }
 
 // Function to play a specific episode
 function playEpisode(tvId, seasonNumber, episodeNumber) {
     const server = document.getElementById('server').value;
-    const type = media === "anime" ? "anime" : "tv";
     let embedURL = "";
 
-    // Handle anime content differently for vidsrc.icu
-    if (type === "anime") {
-        const dubValue = 0; // 0 = sub, 1 = dub (default to sub)
-
-        switch (server) {
-            case "vidsrc.icu":
-                // Use anime-specific URL format for vidsrc.icu
-                embedURL = `https://vidsrc.icu/embed/anime/${tvId}/${episodeNumber}/${dubValue}`;
-                break;
-            case "vidsrc.su":
-                embedURL = `https://vidsrc.su/embed/anime/${tvId}`;
-                break;
-            case "vidlink.pro":
-                embedURL = `https://vidlink.pro/anime/${tvId}?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
-                break;
-            case "vidsrc.cc":
-                embedURL = `https://vidsrc.cc/v2/embed/anime/${tvId}`;
-                break;
-            case "vidsrc.me":
-                embedURL = `https://vidsrc.net/embed/anime/?mal=${tvId}`;
-                break;
-            case "vidsrc.vip":
-                embedURL = `https://vidsrc.vip/anime/${tvId}`;
-                break;
-            case "2embed":
-                embedURL = `https://www.2embed.cc/embed/anime/${tvId}`;
-                break;
-            case "movieapi.club":
-                embedURL = `https://moviesapi.club/anime/${tvId}`;
-                break;
-            default:
-                // Default to vidsrc.icu for anime
-                const defaultDubValue = 0; // Default to sub (0)
-                embedURL = `https://vidsrc.icu/embed/anime/${tvId}/${episodeNumber}/${defaultDubValue}`;
-                break;
-        }
-    } else {
-        // Update the URL for each server to include season and episode parameters for TV shows
-        switch (server) {
-            case "vidsrc.icu":
-                // For non-anime TV shows, fallback to regular TV format
-                embedURL = `https://vidsrc.vip/tv/${tvId}/${seasonNumber}/${episodeNumber}`;
-                break;
-            case "vidsrc.vip":
-                embedURL = `https://vidsrc.vip/tv/${tvId}/${seasonNumber}/${episodeNumber}`;
-                break;
-            case "vidlink.pro":
-                embedURL = `https://vidlink.pro/tv/${tvId}/${seasonNumber}/${episodeNumber}?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
-                break;
-            case "vidsrc.cc":
-                embedURL = `https://vidsrc.cc/v2/embed/tv/${tvId}/${seasonNumber}/${episodeNumber}`;
-                break;
-            case "vidsrc.me":
-                embedURL = `https://vidsrc.net/embed/tv/?tmdb=${tvId}&season=${seasonNumber}&episode=${episodeNumber}`;
-                break;
-            case "vidsrc.su":
-                embedURL = `https://vidsrc.su/embed/tv/${tvId}/${seasonNumber}/${episodeNumber}`;
-                break;
-            case "2embed":
-                embedURL = `https://www.2embed.cc/embedtv/${tvId}&s=${seasonNumber}&e=${episodeNumber}`;
-                break;
-            case "movieapi.club":
-                embedURL = `https://moviesapi.club/tv/${tvId}/${seasonNumber}/${episodeNumber}`;
-                break;
-            default:
-                // Default to vidlink.pro as a fallback
-                embedURL = `https://vidlink.pro/tv/${tvId}/${seasonNumber}/${episodeNumber}?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
-                break;
-        }
+    // Update the URL for each server to include season and episode parameters
+    switch (server) {
+        case "vidsrc.vip":
+            embedURL = `https://vidsrc.vip/tv/${tvId}/${seasonNumber}/${episodeNumber}`;
+            break;
+        case "vidlink.pro":
+            embedURL = `https://vidlink.pro/tv/${tvId}/${seasonNumber}/${episodeNumber}?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
+            break;
+        case "iframe.pstream.org":
+            embedURL = `https://iframe.pstream.org/tv/${tvId}/${seasonNumber}/${episodeNumber}`;
+            break;
+        case "vidsrc.cc":
+            embedURL = `https://vidsrc.cc/v2/embed/tv/${tvId}/${seasonNumber}/${episodeNumber}`;
+            break;
+        case "vidsrc.me":
+            embedURL = `https://vidsrc.net/embed/tv/?tmdb=${tvId}&season=${seasonNumber}&episode=${episodeNumber}`;
+            break;
+        case "vidsrc.su":
+            embedURL = `https://vidsrc.su/embed/tv/${tvId}/${seasonNumber}/${episodeNumber}`;
+            break;
+        case "2embed":
+            embedURL = `https://www.2embed.cc/embedtv/${tvId}&s=${seasonNumber}&e=${episodeNumber}`;
+            break;
+        case "movieapi.club":
+            embedURL = `https://moviesapi.club/tv/${tvId}/${seasonNumber}/${episodeNumber}`;
+            break;
+        default:
+            // Default to vidlink.pro as a fallback
+            embedURL = `https://vidlink.pro/tv/${tvId}/${seasonNumber}/${episodeNumber}?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
+            break;
     }
 
     if (embedURL) {
         // Log the URL for debugging
         console.log(`Loading TV episode from: ${embedURL}`);
 
-        // Use the enhanced fallback mechanism for episodes
-        loadMediaWithFallback(embedURL, server, type);
+        // Update the iframe source with the episode URL and set attributes
+        iframe.setAttribute('src', embedURL);
+        iframe.setAttribute('playsinline', '');
+        iframe.setAttribute('webkit-playsinline', 'true');
+        iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen');
+        iframe.setAttribute('allowfullscreen', '');
+        // Setup fallback chain on error for episodes
+        let epIndex = serverFallbackChain.indexOf(server);
+        iframe.onerror = () => {
+            const nextEp = epIndex + 1;
+            if (nextEp < serverFallbackChain.length) {
+                const nextSrv = serverFallbackChain[nextEp];
+                document.getElementById('server').value = nextSrv;
+                epIndex = nextEp;
+                changeServer();
+            }
+        };
 
         iframe.style.display = "block";
         moviePoster.style.display = "none";
@@ -1306,8 +575,8 @@ async function displayMovieDetails() {
         movieYear.textContent = `${movieDetails.release_date || movieDetails.first_air_date || 'Unknown'}`;
         rating.textContent = movieDetails.vote_average || 'N/A';
 
-        // If this is a TV show or anime, setup the seasons and episodes section
-        if (media === "tv" || media === "anime") {
+        // If this is a TV show, setup the seasons and episodes section
+        if (media === "tv") {
             const seasons = await fetchTVSeasons(id);
             if (seasons && seasons.length > 0) {
                 createSeasonOptions(seasons);
@@ -1438,24 +707,6 @@ function initServerDropdown() {
     if (initialServerOption) {
         initialServerOption.classList.add('active');
         selectedServerDisplay.innerHTML = initialServerOption.innerHTML;
-    } else {
-        // If no server option found, set default based on content type
-        const urlParams = new URLSearchParams(window.location.search);
-        const pageMedia = urlParams.get('media');
-
-        if (pageMedia === "anime") {
-            const animeServerOption = document.querySelector('.server-option[data-server="vidsrc.icu"]');
-            if (animeServerOption) {
-                animeServerOption.classList.add('active');
-                selectedServerDisplay.innerHTML = animeServerOption.innerHTML;
-            }
-        } else {
-            const defaultServerOption = document.querySelector('.server-option[data-server="vidsrc.su"]');
-            if (defaultServerOption) {
-                defaultServerOption.classList.add('active');
-                selectedServerDisplay.innerHTML = defaultServerOption.innerHTML;
-            }
-        }
     }
 }
 
@@ -1502,18 +753,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Initialize everything when the window loads
 window.addEventListener('load', function() {
-    // Set a default server if none is selected, prioritizing vidsrc.icu for anime
+    // Set a default server if none is selected
     const serverSelect = document.getElementById('server');
     if (serverSelect && !serverSelect.value) {
-        // Check if this is anime content
-        const urlParams = new URLSearchParams(window.location.search);
-        const pageMedia = urlParams.get('media');
-
-        if (pageMedia === "anime") {
-            serverSelect.value = "vidsrc.icu"; // Default to anime dedicated server
-        } else {
-            serverSelect.value = "vidsrc.su"; // Default to shinomiya for other content
-        }
+        serverSelect.value = "vidlink.pro";
     }
 
     // Initialize server dropdown
