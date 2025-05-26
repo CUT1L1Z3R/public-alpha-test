@@ -22,27 +22,7 @@ const ANILIST_API_URL = 'https://graphql.anilist.co';
 // TMDB API configuration
 const TMDB_API_KEY = 'YOUR_TMDB_API_KEY_HERE'; // Replace with your actual TMDB API key
 const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
-const TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w1280'; // Use highest quality images
-
-// Jikan API configuration (MyAnimeList API)
-const JIKAN_API_URL = 'https://api.jikan.moe/v4';
-
-// Kitsu API configuration
-const KITSU_API_URL = 'https://kitsu.io/api/edge';
-
-// Rate limiting for API calls
-const API_CALL_DELAY = 200; // 200ms delay between API calls
-let lastAPICall = 0;
-
-// Helper function to enforce rate limiting
-async function enforceRateLimit() {
-    const now = Date.now();
-    const timeSinceLastCall = now - lastAPICall;
-    if (timeSinceLastCall < API_CALL_DELAY) {
-        await new Promise(resolve => setTimeout(resolve, API_CALL_DELAY - timeSinceLastCall));
-    }
-    lastAPICall = Date.now();
-}
+const TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w780'; // Use higher quality images
 
 // Helper function to make AniList API requests with retry logic
 async function makeAniListRequest(query, variables = {}, retries = 3) {
@@ -79,128 +59,6 @@ async function makeAniListRequest(query, variables = {}, retries = 3) {
     }
 }
 
-// Helper function to search Jikan API for anime titles
-async function searchJikanForAnime(title, retries = 2) {
-    for (let i = 0; i < retries; i++) {
-        try {
-            // Enforce rate limiting
-            await enforceRateLimit();
-            
-            // Clean the title for better search results
-            const cleanTitle = title.replace(/[^\w\s]/gi, '').trim();
-            const encodedTitle = encodeURIComponent(cleanTitle);
-
-            const url = `${JIKAN_API_URL}/anime?q=${encodedTitle}&limit=5&type=tv`;
-
-            console.log(`Searching Jikan for: ${cleanTitle}`);
-            const response = await fetch(url);
-
-            if (!response.ok) {
-                throw new Error(`Jikan HTTP error! status: ${response.status}`);
-            }
-
-            const data = await response.json();
-
-            // Look for the best match based on title similarity
-            const animeResults = data.data?.filter(result => {
-                return result.images && 
-                       (result.images.jpg || result.images.webp) && 
-                       result.title;
-            }) || [];
-
-            if (animeResults.length > 0) {
-                // Return the first match with the highest quality images
-                const match = animeResults[0];
-                console.log(`Found Jikan match for "${title}": ${match.title}`);
-                
-                // Get the highest quality images available
-                const images = match.images;
-                const jpgImages = images.jpg || {};
-                const webpImages = images.webp || {};
-                
-                return {
-                    // Prefer WebP for better quality and compression
-                    large_image_url: webpImages.large_image_url || jpgImages.large_image_url,
-                    image_url: webpImages.image_url || jpgImages.image_url,
-                    small_image_url: webpImages.small_image_url || jpgImages.small_image_url,
-                    jikan_id: match.mal_id,
-                    jikan_title: match.title,
-                    trailer: match.trailer
-                };
-            }
-
-            console.log(`No Jikan results found for: ${title}`);
-            return null;
-        } catch (error) {
-            console.warn(`Jikan search failed for "${title}" (attempt ${i + 1}/${retries}):`, error);
-            if (i === retries - 1) {
-                return null;
-            }
-            // Wait before retrying
-            await new Promise(resolve => setTimeout(resolve, 1000));
-        }
-    }
-}
-
-// Helper function to search Kitsu API for anime titles
-async function searchKitsuForAnime(title, retries = 2) {
-    for (let i = 0; i < retries; i++) {
-        try {
-            // Enforce rate limiting
-            await enforceRateLimit();
-            
-            // Clean the title for better search results
-            const cleanTitle = title.replace(/[^\w\s]/gi, '').trim();
-            const encodedTitle = encodeURIComponent(cleanTitle);
-
-            const url = `${KITSU_API_URL}/anime?filter[text]=${encodedTitle}&page[limit]=3`;
-
-            console.log(`Searching Kitsu for: ${cleanTitle}`);
-            const response = await fetch(url);
-
-            if (!response.ok) {
-                throw new Error(`Kitsu HTTP error! status: ${response.status}`);
-            }
-
-            const data = await response.json();
-
-            if (data.data && data.data.length > 0) {
-                // Return the first match with the highest quality images
-                const match = data.data[0];
-                const attributes = match.attributes;
-                
-                console.log(`Found Kitsu match for "${title}": ${attributes.canonicalTitle}`);
-                
-                // Get the highest quality images available
-                const posterImage = attributes.posterImage;
-                const coverImage = attributes.coverImage;
-                
-                return {
-                    // Prefer original size, then large, then medium
-                    poster_original: posterImage?.original,
-                    poster_large: posterImage?.large,
-                    poster_medium: posterImage?.medium,
-                    cover_original: coverImage?.original,
-                    cover_large: coverImage?.large,
-                    cover_medium: coverImage?.medium,
-                    kitsu_id: match.id,
-                    kitsu_title: attributes.canonicalTitle
-                };
-            }
-
-            console.log(`No Kitsu results found for: ${title}`);
-            return null;
-        } catch (error) {
-            console.warn(`Kitsu search failed for "${title}" (attempt ${i + 1}/${retries}):`, error);
-            if (i === retries - 1) {
-                return null;
-            }
-            // Wait before retrying
-            await new Promise(resolve => setTimeout(resolve, 1000));
-        }
-    }
-}
-
 // Helper function to search TMDB for anime titles
 async function searchTMDBForAnime(title, retries = 2) {
     // Skip TMDB search if API key is not configured
@@ -211,9 +69,6 @@ async function searchTMDBForAnime(title, retries = 2) {
 
     for (let i = 0; i < retries; i++) {
         try {
-            // Enforce rate limiting
-            await enforceRateLimit();
-            
             // Clean the title for better TMDB search results
             const cleanTitle = title.replace(/[^\w\s]/gi, '').trim();
             const encodedTitle = encodeURIComponent(cleanTitle);
@@ -242,8 +97,7 @@ async function searchTMDBForAnime(title, retries = 2) {
                 console.log(`Found TMDB match for "${title}": ${match.name}`);
                 return {
                     poster_path: TMDB_IMAGE_BASE_URL + match.poster_path,
-                    // Use the highest quality backdrop available
-                    backdrop_path: match.backdrop_path ? 'https://image.tmdb.org/t/p/original' + match.backdrop_path : null,
+                    backdrop_path: match.backdrop_path ? TMDB_IMAGE_BASE_URL.replace('w780', 'w1280') + match.backdrop_path : null,
                     tmdb_id: match.id,
                     tmdb_name: match.name
                 };
@@ -262,230 +116,31 @@ async function searchTMDBForAnime(title, retries = 2) {
     }
 }
 
-// Helper function to get the best banner image from multiple sources
-async function getBestBannerImage(anime, type = 'banner') {
-    const title = anime.title?.english || anime.title?.romaji || anime.title?.native || anime.title;
-    console.log(`\n🔍 Searching for ${type} images for: ${title}`);
-    
-    const imageOptions = [];
-    
-    // 1. Try Jikan API first (MyAnimeList has high-quality images)
-    try {
-        const jikanResult = await searchJikanForAnime(title);
-        if (jikanResult) {
-            if (jikanResult.large_image_url) {
-                imageOptions.push({
-                    url: jikanResult.large_image_url,
-                    source: 'Jikan (large)',
-                    quality: 'high'
-                });
-            }
-            if (jikanResult.image_url && jikanResult.image_url !== jikanResult.large_image_url) {
-                imageOptions.push({
-                    url: jikanResult.image_url,
-                    source: 'Jikan (medium)',
-                    quality: 'medium'
-                });
-            }
-        }
-    } catch (error) {
-        console.warn('Jikan search failed:', error);
-    }
-    
-    // 1.5. Try Kitsu API (often has high-quality cover images)
-    try {
-        const kitsuResult = await searchKitsuForAnime(title);
-        if (kitsuResult) {
-            if (type === 'banner' && kitsuResult.cover_original) {
-                imageOptions.push({
-                    url: kitsuResult.cover_original,
-                    source: 'Kitsu (cover original)',
-                    quality: 'high'
-                });
-            }
-            if (kitsuResult.poster_original) {
-                imageOptions.push({
-                    url: kitsuResult.poster_original,
-                    source: 'Kitsu (poster original)',
-                    quality: 'high'
-                });
-            }
-            if (type === 'banner' && kitsuResult.cover_large) {
-                imageOptions.push({
-                    url: kitsuResult.cover_large,
-                    source: 'Kitsu (cover large)',
-                    quality: 'medium-high'
-                });
-            }
-            if (kitsuResult.poster_large) {
-                imageOptions.push({
-                    url: kitsuResult.poster_large,
-                    source: 'Kitsu (poster large)',
-                    quality: 'medium-high'
-                });
-            }
-        }
-    } catch (error) {
-        console.warn('Kitsu search failed:', error);
-    }
-    
-    // 2. Try TMDB for backdrop if looking for banner
-    if (type === 'banner') {
-        try {
-            const tmdbResult = await searchTMDBForAnime(title);
-            if (tmdbResult?.backdrop_path) {
-                imageOptions.push({
-                    url: tmdbResult.backdrop_path,
-                    source: 'TMDB (backdrop)',
-                    quality: 'high'
-                });
-            }
-        } catch (error) {
-            console.warn('TMDB search failed:', error);
-        }
-    }
-    
-    // 3. AniList banner (if available)
-    if (anime.bannerImage) {
-        imageOptions.push({
-            url: anime.bannerImage,
-            source: 'AniList (banner)',
-            quality: 'variable'
-        });
-    }
-    
-    // 4. AniList cover images as fallback
-    if (anime.coverImage?.extraLarge) {
-        imageOptions.push({
-            url: anime.coverImage.extraLarge,
-            source: 'AniList (extraLarge)',
-            quality: 'high'
-        });
-    }
-    if (anime.coverImage?.large) {
-        imageOptions.push({
-            url: anime.coverImage.large,
-            source: 'AniList (large)',
-            quality: 'medium'
-        });
-    }
-    
-    // Test each image option and return the first one that loads successfully
-    for (const option of imageOptions) {
-        console.log(`📊 Testing image: ${option.source} - ${option.url}`);
-        
-        try {
-            const isValid = await testImageURL(option.url);
-            if (isValid) {
-                console.log(`✅ Using ${option.source} for ${title}: ${option.url}`);
-                return option.url;
-            }
-        } catch (error) {
-            console.warn(`❌ Failed to load ${option.source}:`, error.message);
-        }
-    }
-    
-    // Final fallback
-    const fallbackUrl = 'https://via.placeholder.com/1920x800/333333/ffffff?text=Image+Not+Available';
-    console.log(`🔄 Using fallback image for ${title}`);
-    return fallbackUrl;
-}
-
-// Helper function to test if an image URL is valid and accessible
-function testImageURL(url) {
-    return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.crossOrigin = 'anonymous';
-        
-        img.onload = function() {
-            console.log(`📐 Image loaded: ${img.naturalWidth}x${img.naturalHeight} - ${url}`);
-            resolve(true);
-        };
-        
-        img.onerror = function() {
-            reject(new Error(`Failed to load image: ${url}`));
-        };
-        
-        // Set timeout to avoid hanging
-        setTimeout(() => {
-            reject(new Error(`Image load timeout: ${url}`));
-        }, 10000);
-        
-        img.src = url;
-    });
-}
-
 // Helper function to get the best poster image with improved quality
 async function getBestPosterImage(anime) {
-    return await getBestBannerImage(anime, 'poster');
-}
-
-// Function to run image quality tests and report findings
-async function runImageQualityTest() {
-    console.log('\n🧪 Running Banner Image Quality Test...\n');
-    
-    const testTitles = [
-        'Attack on Titan',
-        'Demon Slayer',
-        'One Piece', 
-        'Naruto',
-        'Dragon Ball'
-    ];
-    
-    for (const title of testTitles) {
-        console.log(`\n🔍 Testing image sources for: ${title}`);
-        
-        // Test each API source
-        const sources = [];
-        
-        try {
-            const jikan = await searchJikanForAnime(title);
-            if (jikan?.large_image_url) {
-                sources.push({ name: 'Jikan', url: jikan.large_image_url });
-            }
-        } catch (e) {
-            console.warn('Jikan test failed:', e.message);
-        }
-        
-        try {
-            const kitsu = await searchKitsuForAnime(title);
-            if (kitsu?.poster_original) {
-                sources.push({ name: 'Kitsu', url: kitsu.poster_original });
-            }
-        } catch (e) {
-            console.warn('Kitsu test failed:', e.message);
-        }
-        
-        try {
-            const tmdb = await searchTMDBForAnime(title);
-            if (tmdb?.backdrop_path) {
-                sources.push({ name: 'TMDB', url: tmdb.backdrop_path });
-            }
-        } catch (e) {
-            console.warn('TMDB test failed:', e.message);
-        }
-        
-        // Test each source
-        for (const source of sources) {
-            try {
-                const isValid = await testImageURL(source.url);
-                if (isValid) {
-                    console.log(`✅ ${source.name}: Working`);
-                } else {
-                    console.log(`❌ ${source.name}: Failed`);
-                }
-            } catch (error) {
-                console.log(`❌ ${source.name}: ${error.message}`);
-            }
-        }
+    // Always use AniList's high-quality images first, as they are specifically for anime
+    // AniList provides better anime-specific artwork than TMDB
+    if (anime.coverImage?.extraLarge) {
+        return anime.coverImage.extraLarge;
     }
-    
-    console.log('\n🏁 Image Quality Test Complete\n');
-}
+    if (anime.coverImage?.large) {
+        return anime.coverImage.large;
+    }
 
-// Add test function to window for manual testing
-if (typeof window !== 'undefined') {
-    window.runImageQualityTest = runImageQualityTest;
+    try {
+        // Fallback to TMDB only if AniList doesn't have good images
+        const tmdbResult = await searchTMDBForAnime(anime.title.english || anime.title.romaji || anime.title.native);
+
+        if (tmdbResult && tmdbResult.poster_path) {
+            console.log(`Using TMDB poster for: ${anime.title.english || anime.title.romaji || anime.title.native}`);
+            return tmdbResult.poster_path;
+        }
+    } catch (error) {
+        console.warn('TMDB search failed:', error);
+    }
+
+    // Final fallback
+    return anime.coverImage?.extraLarge || anime.coverImage?.large || anime.coverImage?.medium || anime.bannerImage || 'https://via.placeholder.com/200x300?text=No+Image+Available';
 }
 
 // Document ready function
@@ -595,8 +250,7 @@ function updateBannerForAnime() {
                     episodes: anime.episodes,
                     status: anime.status,
                     format: anime.format,
-                    startDate: anime.startDate,
-                    originalAnime: anime // Keep reference to original data
+                    startDate: anime.startDate
                 }));
 
             if (bannerItems.length > 0) {
@@ -613,14 +267,14 @@ function updateBannerForAnime() {
     const bannerPrev = document.getElementById('banner-prev');
     const bannerNext = document.getElementById('banner-next');
 
-    bannerPrev.addEventListener('click', async () => {
+    bannerPrev.addEventListener('click', () => {
         currentBannerIndex = (currentBannerIndex - 1 + bannerItems.length) % bannerItems.length;
-        await showBannerAtIndex(currentBannerIndex);
+        showBannerAtIndex(currentBannerIndex);
     });
 
-    bannerNext.addEventListener('click', async () => {
+    bannerNext.addEventListener('click', () => {
         currentBannerIndex = (currentBannerIndex + 1) % bannerItems.length;
-        await showBannerAtIndex(currentBannerIndex);
+        showBannerAtIndex(currentBannerIndex);
     });
 
     // Add click handlers to play and info buttons
@@ -709,54 +363,26 @@ function startBannerSlideshow() {
 
     // Only start if we have multiple items
     if (bannerItems.length > 1) {
-        bannerInterval = setInterval(async () => {
+        bannerInterval = setInterval(() => {
             // Move to next banner
             currentBannerIndex = (currentBannerIndex + 1) % bannerItems.length;
 
             // Show the banner
-            await showBannerAtIndex(currentBannerIndex);
+            showBannerAtIndex(currentBannerIndex);
         }, 8000); // Change banner every 8 seconds
     }
 }
 
 // Function to show banner at specific index with enhanced styling
-async function showBannerAtIndex(index) {
+function showBannerAtIndex(index) {
     const item = bannerItems[index];
-    if (item) {
+    if (item && (item.backdrop_path || item.poster_path)) {
         const banner = document.getElementById('banner');
         const bannerTitle = document.getElementById('banner-title');
 
-        console.log(`\n🎬 Loading banner for: ${item.title}`);
-        
-        // Set loading state
-        banner.style.opacity = '0.3';
-        
-        try {
-            // Use our enhanced image selection function
-            const imageUrl = await getBestBannerImage(item.originalAnime || item, 'banner');
-            
-            // Preload the image to ensure it's fully loaded before displaying
-            const img = new Image();
-            img.crossOrigin = 'anonymous';
-
-            img.onload = function() {
-                banner.src = imageUrl;
-                banner.style.opacity = '1';
-                console.log(`🎉 Successfully loaded banner: ${img.naturalWidth}x${img.naturalHeight} - ${imageUrl}`);
-            };
-
-            img.onerror = function() {
-                console.error(`💥 Failed to load final banner image: ${imageUrl}`);
-                banner.src = 'https://via.placeholder.com/1920x800/333333/ffffff?text=Image+Not+Available';
-                banner.style.opacity = '1';
-            };
-
-            img.src = imageUrl;
-        } catch (error) {
-            console.error('Error loading banner:', error);
-            banner.src = 'https://via.placeholder.com/1920x800/333333/ffffff?text=Error+Loading+Image';
-            banner.style.opacity = '1';
-        }
+        // Set banner image - prefer banner image, fallback to cover image
+        const imageUrl = item.backdrop_path || item.poster_path;
+        banner.src = imageUrl;
 
         // Create a more detailed title with additional info
         const title = item.title;

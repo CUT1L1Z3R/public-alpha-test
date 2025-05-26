@@ -6,7 +6,7 @@ logo.addEventListener('click', () => {
 });
 
 // Define server fallback chain
-const serverFallbackChain = ['vidsrc.su', 'vidsrc.vip', 'vidlink.pro'];
+const serverFallbackChain = ['vidsrc.icu', 'vidsrc.su', 'vidsrc.vip', 'vidlink.pro'];
 
 // Function to show toast notification
 function showToast(message, type = 'info') {
@@ -340,9 +340,25 @@ async function changeServer() {
 
     // Set the video URL depending on the selected server and media type
     if (type === "anime") {
-        // For anime, we'll use Gogo-anime, 9anime or other anime-specific providers
-        // This is a placeholder implementation - these URLs are examples and may not work
+        // For anime, check for episode information to build proper vidsrc.icu URL
+        const activeEpisode = document.querySelector('.episode-item.active');
+        let episodeNumber = 1;
+        let dubStatus = 'sub'; // default to sub
+        let skipIntro = 'false'; // default to false
+
+        if (activeEpisode) {
+            episodeNumber = activeEpisode.dataset.episodeNumber || 1;
+        }
+
         switch (server) {
+            case "vidsrc.icu":
+                // Use the dedicated anime server format: https://vidsrc.icu/embed/anime/{id}/{episode}/{dub}/{skip}
+                embedURL = `https://vidsrc.icu/embed/anime/${id}/${episodeNumber}/${dubStatus}/${skipIntro}`;
+                break;
+            case "vidsrc.su":
+                // Use SHINOMIYA server for non-anime or fallback
+                embedURL = `https://vidsrc.su/embed/anime/${id}`;
+                break;
             case "vidlink.pro":
                 embedURL = `https://vidlink.pro/anime/${id}?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
                 break;
@@ -351,9 +367,6 @@ async function changeServer() {
                 break;
             case "vidsrc.me":
                 embedURL = `https://vidsrc.net/embed/anime/?mal=${id}`;
-                break;
-            case "vidsrc.su":
-                embedURL = `https://vidsrc.su/embed/anime/${id}`;
                 break;
             case "vidsrc.vip":
                 embedURL = `https://vidsrc.vip/anime/${id}`;
@@ -365,8 +378,8 @@ async function changeServer() {
                 embedURL = `https://moviesapi.club/anime/${id}`;
                 break;
             default:
-                // Fallback to a generic anime provider
-                embedURL = `https://vidlink.pro/anime/${id}?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
+                // Default to vidsrc.icu for anime content
+                embedURL = `https://vidsrc.icu/embed/anime/${id}/${episodeNumber}/${dubStatus}/${skipIntro}`;
                 break;
         }
     } else {
@@ -442,35 +455,78 @@ async function changeServer() {
 // Function to play a specific episode
 function playEpisode(tvId, seasonNumber, episodeNumber) {
     const server = document.getElementById('server').value;
+    const type = media === "anime" ? "anime" : "tv";
     let embedURL = "";
 
-    // Update the URL for each server to include season and episode parameters
-    switch (server) {
-        case "vidsrc.vip":
-            embedURL = `https://vidsrc.vip/tv/${tvId}/${seasonNumber}/${episodeNumber}`;
-            break;
-        case "vidlink.pro":
-            embedURL = `https://vidlink.pro/tv/${tvId}/${seasonNumber}/${episodeNumber}?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
-            break;
-        case "vidsrc.cc":
-            embedURL = `https://vidsrc.cc/v2/embed/tv/${tvId}/${seasonNumber}/${episodeNumber}`;
-            break;
-        case "vidsrc.me":
-            embedURL = `https://vidsrc.net/embed/tv/?tmdb=${tvId}&season=${seasonNumber}&episode=${episodeNumber}`;
-            break;
-        case "vidsrc.su":
-            embedURL = `https://vidsrc.su/embed/tv/${tvId}/${seasonNumber}/${episodeNumber}`;
-            break;
-        case "2embed":
-            embedURL = `https://www.2embed.cc/embedtv/${tvId}&s=${seasonNumber}&e=${episodeNumber}`;
-            break;
-        case "movieapi.club":
-            embedURL = `https://moviesapi.club/tv/${tvId}/${seasonNumber}/${episodeNumber}`;
-            break;
-        default:
-            // Default to vidlink.pro as a fallback
-            embedURL = `https://vidlink.pro/tv/${tvId}/${seasonNumber}/${episodeNumber}?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
-            break;
+    // Handle anime content differently for vidsrc.icu
+    if (type === "anime") {
+        const dubStatus = 'sub'; // default to sub
+        const skipIntro = 'false'; // default to false
+
+        switch (server) {
+            case "vidsrc.icu":
+                // Use anime-specific URL format for vidsrc.icu
+                embedURL = `https://vidsrc.icu/embed/anime/${tvId}/${episodeNumber}/${dubStatus}/${skipIntro}`;
+                break;
+            case "vidsrc.su":
+                embedURL = `https://vidsrc.su/embed/anime/${tvId}`;
+                break;
+            case "vidlink.pro":
+                embedURL = `https://vidlink.pro/anime/${tvId}?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
+                break;
+            case "vidsrc.cc":
+                embedURL = `https://vidsrc.cc/v2/embed/anime/${tvId}`;
+                break;
+            case "vidsrc.me":
+                embedURL = `https://vidsrc.net/embed/anime/?mal=${tvId}`;
+                break;
+            case "vidsrc.vip":
+                embedURL = `https://vidsrc.vip/anime/${tvId}`;
+                break;
+            case "2embed":
+                embedURL = `https://www.2embed.cc/embed/anime/${tvId}`;
+                break;
+            case "movieapi.club":
+                embedURL = `https://moviesapi.club/anime/${tvId}`;
+                break;
+            default:
+                // Default to vidsrc.icu for anime
+                embedURL = `https://vidsrc.icu/embed/anime/${tvId}/${episodeNumber}/${dubStatus}/${skipIntro}`;
+                break;
+        }
+    } else {
+        // Update the URL for each server to include season and episode parameters for TV shows
+        switch (server) {
+            case "vidsrc.icu":
+                // For non-anime TV shows, fallback to regular TV format
+                embedURL = `https://vidsrc.vip/tv/${tvId}/${seasonNumber}/${episodeNumber}`;
+                break;
+            case "vidsrc.vip":
+                embedURL = `https://vidsrc.vip/tv/${tvId}/${seasonNumber}/${episodeNumber}`;
+                break;
+            case "vidlink.pro":
+                embedURL = `https://vidlink.pro/tv/${tvId}/${seasonNumber}/${episodeNumber}?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
+                break;
+            case "vidsrc.cc":
+                embedURL = `https://vidsrc.cc/v2/embed/tv/${tvId}/${seasonNumber}/${episodeNumber}`;
+                break;
+            case "vidsrc.me":
+                embedURL = `https://vidsrc.net/embed/tv/?tmdb=${tvId}&season=${seasonNumber}&episode=${episodeNumber}`;
+                break;
+            case "vidsrc.su":
+                embedURL = `https://vidsrc.su/embed/tv/${tvId}/${seasonNumber}/${episodeNumber}`;
+                break;
+            case "2embed":
+                embedURL = `https://www.2embed.cc/embedtv/${tvId}&s=${seasonNumber}&e=${episodeNumber}`;
+                break;
+            case "movieapi.club":
+                embedURL = `https://moviesapi.club/tv/${tvId}/${seasonNumber}/${episodeNumber}`;
+                break;
+            default:
+                // Default to vidlink.pro as a fallback
+                embedURL = `https://vidlink.pro/tv/${tvId}/${seasonNumber}/${episodeNumber}?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
+                break;
+        }
     }
 
     if (embedURL) {
@@ -696,6 +752,24 @@ function initServerDropdown() {
     if (initialServerOption) {
         initialServerOption.classList.add('active');
         selectedServerDisplay.innerHTML = initialServerOption.innerHTML;
+    } else {
+        // If no server option found, set default based on content type
+        const urlParams = new URLSearchParams(window.location.search);
+        const pageMedia = urlParams.get('media');
+
+        if (pageMedia === "anime") {
+            const animeServerOption = document.querySelector('.server-option[data-server="vidsrc.icu"]');
+            if (animeServerOption) {
+                animeServerOption.classList.add('active');
+                selectedServerDisplay.innerHTML = animeServerOption.innerHTML;
+            }
+        } else {
+            const defaultServerOption = document.querySelector('.server-option[data-server="vidsrc.su"]');
+            if (defaultServerOption) {
+                defaultServerOption.classList.add('active');
+                selectedServerDisplay.innerHTML = defaultServerOption.innerHTML;
+            }
+        }
     }
 }
 
@@ -742,10 +816,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Initialize everything when the window loads
 window.addEventListener('load', function() {
-    // Set a default server if none is selected
+    // Set a default server if none is selected, prioritizing vidsrc.icu for anime
     const serverSelect = document.getElementById('server');
     if (serverSelect && !serverSelect.value) {
-        serverSelect.value = "vidlink.pro";
+        // Check if this is anime content
+        const urlParams = new URLSearchParams(window.location.search);
+        const pageMedia = urlParams.get('media');
+
+        if (pageMedia === "anime") {
+            serverSelect.value = "vidsrc.icu"; // Default to anime dedicated server
+        } else {
+            serverSelect.value = "vidsrc.su"; // Default to shinomiya for other content
+        }
     }
 
     // Initialize server dropdown
