@@ -506,8 +506,6 @@ async function changeServer() {
         // For anime, check for episode information to build proper vidsrc.icu URL
         const activeEpisode = document.querySelector('.episode-item.active');
         let episodeNumber = 1;
-        let dubStatus = 'sub'; // default to sub
-        let skipIntro = 'false'; // default to false
 
         if (activeEpisode) {
             episodeNumber = activeEpisode.dataset.episodeNumber || 1;
@@ -515,8 +513,10 @@ async function changeServer() {
 
         switch (server) {
             case "vidsrc.icu":
-                // Use the dedicated anime server format: https://vidsrc.icu/embed/anime/{id}/{episode}/{dub}/{skip}
-                embedURL = `https://vidsrc.icu/embed/anime/${id}/${episodeNumber}/${dubStatus}/${skipIntro}`;
+                // Use the dedicated anime server format: https://vidsrc.icu/embed/anime/{id}/{episode}/{dub}
+                // dub: 0 = sub, 1 = dub
+                const dubValue = 0; // Default to sub (0)
+                embedURL = `https://vidsrc.icu/embed/anime/${id}/${episodeNumber}/${dubValue}`;
                 break;
             case "vidsrc.su":
                 // Use SHINOMIYA server for non-anime or fallback
@@ -542,7 +542,8 @@ async function changeServer() {
                 break;
             default:
                 // Default to vidsrc.icu for anime content
-                embedURL = `https://vidsrc.icu/embed/anime/${id}/${episodeNumber}/${dubStatus}/${skipIntro}`;
+                const defaultDubValue = 0; // Default to sub (0)
+                embedURL = `https://vidsrc.icu/embed/anime/${id}/${episodeNumber}/${defaultDubValue}`;
                 break;
         }
     } else {
@@ -623,13 +624,12 @@ function playEpisode(tvId, seasonNumber, episodeNumber) {
 
     // Handle anime content differently for vidsrc.icu
     if (type === "anime") {
-        const dubStatus = 'sub'; // default to sub
-        const skipIntro = 'false'; // default to false
+        const dubValue = 0; // 0 = sub, 1 = dub (default to sub)
 
         switch (server) {
             case "vidsrc.icu":
                 // Use anime-specific URL format for vidsrc.icu
-                embedURL = `https://vidsrc.icu/embed/anime/${tvId}/${episodeNumber}/${dubStatus}/${skipIntro}`;
+                embedURL = `https://vidsrc.icu/embed/anime/${tvId}/${episodeNumber}/${dubValue}`;
                 break;
             case "vidsrc.su":
                 embedURL = `https://vidsrc.su/embed/anime/${tvId}`;
@@ -654,7 +654,8 @@ function playEpisode(tvId, seasonNumber, episodeNumber) {
                 break;
             default:
                 // Default to vidsrc.icu for anime
-                embedURL = `https://vidsrc.icu/embed/anime/${tvId}/${episodeNumber}/${dubStatus}/${skipIntro}`;
+                const defaultDubValue = 0; // Default to sub (0)
+                embedURL = `https://vidsrc.icu/embed/anime/${tvId}/${episodeNumber}/${defaultDubValue}`;
                 break;
         }
     } else {
