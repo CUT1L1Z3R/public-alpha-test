@@ -140,7 +140,7 @@ async function getBestPosterImage(anime) {
     }
 
     // Final fallback
-    return anime.coverImage?.extraLarge || anime.coverImage?.large || anime.coverImage?.medium || anime.bannerImage || 'https://via.placeholder.com/200x300?text=No+Image+Available';
+    return anime.coverImage?.extraLarge || anime.coverImage?.large || anime.coverImage?.medium || anime.bannerImage || 'https://via.placeholder.com/500x750?text=No+Image+Available';
 }
 
 // Document ready function
@@ -999,9 +999,9 @@ async function fetchAnime(containerClass, genreOrKeyword) {
                     const itemElement = document.createElement('div');
                     itemElement.className = 'movie-item';
 
-                    // Apply portrait dimensions for all anime containers
-                    itemElement.style.width = '200px';  // Portrait width
-                    itemElement.style.height = '300px'; // Portrait height (2:3 aspect ratio)
+                    // Apply landscape dimensions for all anime containers
+                    itemElement.style.width = '290px';  // Landscape width
+                    itemElement.style.height = '170px'; // Landscape height (16:9 aspect ratio)
 
                     // Set media type
                     if (containerClass === 'top-rated-anime-movie-container') {
@@ -1024,7 +1024,7 @@ async function fetchAnime(containerClass, genreOrKeyword) {
                     // Error handling for image loading
                     img.onerror = function() {
                         this.onerror = null;
-                        this.src = 'https://via.placeholder.com/200x300?text=Image+Error';
+                        this.src = 'https://via.placeholder.com/460x215?text=Image+Error';
                     };
 
                     // Create an overlay for anime info
