@@ -22,7 +22,7 @@ const ANILIST_API_URL = 'https://graphql.anilist.co';
 // TMDB API configuration
 const TMDB_API_KEY = 'YOUR_TMDB_API_KEY_HERE'; // Replace with your actual TMDB API key
 const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
-const TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w780'; // Use higher quality images
+const TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w1280'; // Use highest quality images
 
 // Helper function to make AniList API requests with retry logic
 async function makeAniListRequest(query, variables = {}, retries = 3) {
@@ -97,7 +97,7 @@ async function searchTMDBForAnime(title, retries = 2) {
                 console.log(`Found TMDB match for "${title}": ${match.name}`);
                 return {
                     poster_path: TMDB_IMAGE_BASE_URL + match.poster_path,
-                    backdrop_path: match.backdrop_path ? TMDB_IMAGE_BASE_URL.replace('w780', 'w1280') + match.backdrop_path : null,
+                    backdrop_path: match.backdrop_path ? 'https://image.tmdb.org/t/p/w1920_and_h800_multi_faces' + match.backdrop_path : null,
                     tmdb_id: match.id,
                     tmdb_name: match.name
                 };
@@ -250,7 +250,8 @@ function updateBannerForAnime() {
                     episodes: anime.episodes,
                     status: anime.status,
                     format: anime.format,
-                    startDate: anime.startDate
+                    startDate: anime.startDate,
+                    originalAnime: anime // Keep reference to original data
                 }));
 
             if (bannerItems.length > 0) {
@@ -267,14 +268,14 @@ function updateBannerForAnime() {
     const bannerPrev = document.getElementById('banner-prev');
     const bannerNext = document.getElementById('banner-next');
 
-    bannerPrev.addEventListener('click', () => {
+    bannerPrev.addEventListener('click', async () => {
         currentBannerIndex = (currentBannerIndex - 1 + bannerItems.length) % bannerItems.length;
-        showBannerAtIndex(currentBannerIndex);
+        await showBannerAtIndex(currentBannerIndex);
     });
 
-    bannerNext.addEventListener('click', () => {
+    bannerNext.addEventListener('click', async () => {
         currentBannerIndex = (currentBannerIndex + 1) % bannerItems.length;
-        showBannerAtIndex(currentBannerIndex);
+        await showBannerAtIndex(currentBannerIndex);
     });
 
     // Add click handlers to play and info buttons
@@ -363,25 +364,58 @@ function startBannerSlideshow() {
 
     // Only start if we have multiple items
     if (bannerItems.length > 1) {
-        bannerInterval = setInterval(() => {
+        bannerInterval = setInterval(async () => {
             // Move to next banner
             currentBannerIndex = (currentBannerIndex + 1) % bannerItems.length;
 
             // Show the banner
-            showBannerAtIndex(currentBannerIndex);
+            await showBannerAtIndex(currentBannerIndex);
         }, 8000); // Change banner every 8 seconds
     }
 }
 
 // Function to show banner at specific index with enhanced styling
-function showBannerAtIndex(index) {
+async function showBannerAtIndex(index) {
     const item = bannerItems[index];
     if (item && (item.backdrop_path || item.poster_path)) {
         const banner = document.getElementById('banner');
         const bannerTitle = document.getElementById('banner-title');
 
-        // Set banner image - prefer banner image, fallback to cover image
-        const imageUrl = item.backdrop_path || item.poster_path;
+        // Get the best banner image with TMDB fallback for better quality
+        let imageUrl = item.backdrop_path;
+
+        // If no banner image or it's low quality, try TMDB for backdrop
+        if (!imageUrl || imageUrl.includes('medium')) {
+            try {
+                const tmdbResult = await searchTMDBForAnime(item.title);
+                if (tmdbResult && tmdbResult.backdrop_path) {
+                    imageUrl = tmdbResult.backdrop_path;
+                    console.log(`Using TMDB backdrop for banner: ${item.title}`);
+                }
+            } catch (error) {
+                console.warn('Failed to get TMDB backdrop for banner:', error);
+            }
+        }
+
+        // Final fallback
+        if (!imageUrl) {
+            imageUrl = item.poster_path;
+        }
+
+        // Set up the image with proper loading and error handling
+        banner.onload = function() {
+            this.style.opacity = '1';
+        };
+
+        banner.onerror = function() {
+            console.warn(`Failed to load banner image: ${imageUrl}`);
+            // Fallback to poster image if banner fails
+            if (imageUrl !== item.poster_path && item.poster_path) {
+                this.src = item.poster_path;
+            }
+        };
+
+        banner.style.opacity = '0.8';
         banner.src = imageUrl;
 
         // Create a more detailed title with additional info
