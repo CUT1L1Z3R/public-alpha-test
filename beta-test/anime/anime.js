@@ -238,7 +238,7 @@ function updateBannerForAnime() {
             // Filter to anime with banner images, get up to 9 items
             bannerItems = animeList
                 .filter(anime => anime.bannerImage || anime.coverImage?.extraLarge || anime.coverImage?.large)
-                .slice(0, 9)
+                .slice(0, 6)
                 .map(anime => ({
                     id: anime.id,
                     title: anime.title.english || anime.title.romaji || anime.title.native,
