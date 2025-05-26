@@ -383,9 +383,9 @@ async function changeServer() {
             case "iframe.pstream.org":
                 if (type === "tv") {
                     // For TV shows, default to first episode of first season
-                    embedURL = `https://pstream.org/media/tmdb-tv-${id}-1-1`;
+                    embedURL = `https://iframe.pstream.org/media/tmdb-tv-${id}-1-1`;
                 } else {
-                    embedURL = `https://pstream.org/media/tmdb-movie-${id}`;
+                    embedURL = `https://iframe.pstream.org/media/tmdb-movie-${id}`;
                 }
                 break;
             case "vidsrc.cc":
@@ -461,7 +461,7 @@ function playEpisode(tvId, seasonNumber, episodeNumber) {
             embedURL = `https://vidlink.pro/tv/${tvId}/${seasonNumber}/${episodeNumber}?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
             break;
         case "iframe.pstream.org":
-            embedURL = `https://pstream.org/media/tmdb-tv-${tvId}-${seasonNumber}-${episodeNumber}`;
+            embedURL = `https://iframe.pstream.org/media/tmdb-tv-${tvId}-${seasonNumber}-${episodeNumber}`;
             break;
         case "vidsrc.cc":
             embedURL = `https://vidsrc.cc/v2/embed/tv/${tvId}/${seasonNumber}/${episodeNumber}`;
