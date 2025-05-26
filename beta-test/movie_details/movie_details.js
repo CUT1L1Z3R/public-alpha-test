@@ -137,16 +137,17 @@ const media = params.get("media");
 
 // Function to fetch detailed information using its TMDb ID
 async function fetchMovieDetails(id) {
-    // For all media types including anime, use TMDB API
-    const response = await fetch(`https://api.themoviedb.org/3/${media}/${id}?api_key=${api_Key}`);
+    // For anime, we need to use the TV endpoint since anime are typically TV series in TMDB
+    const apiMedia = media === "anime" ? "tv" : media;
+    const response = await fetch(`https://api.themoviedb.org/3/${apiMedia}/${id}?api_key=${api_Key}`);
     const data = await response.json();
 
-    // For anime check if we have additional genre info to include
-    if (media === "tv" && data) {
+    // For anime or TV shows, check if we have additional genre info to include
+    if ((media === "tv" || media === "anime") && data) {
         // Check if this is likely anime by looking at genres
         const isAnime = data.genres && data.genres.some(genre => genre.id === 16); // 16 is Animation genre
 
-        if (isAnime) {
+        if (isAnime || media === "anime") {
             // Mark this as anime content for specialized handling if needed
             data.is_anime = true;
         }
@@ -157,7 +158,9 @@ async function fetchMovieDetails(id) {
 
 // Function to fetch video details (trailers) for a movie or TV show
 async function fetchVideoDetails(id) {
-    const response = await fetch(`https://api.themoviedb.org/3/${media}/${id}/videos?api_key=${api_Key}`);
+    // For anime, we need to use the TV endpoint
+    const apiMedia = media === "anime" ? "tv" : media;
+    const response = await fetch(`https://api.themoviedb.org/3/${apiMedia}/${id}/videos?api_key=${api_Key}`);
     const data = await response.json();
     return data.results;
 }
@@ -620,8 +623,8 @@ async function displayMovieDetails() {
         movieYear.textContent = `${movieDetails.release_date || movieDetails.first_air_date || 'Unknown'}`;
         rating.textContent = movieDetails.vote_average || 'N/A';
 
-        // If this is a TV show, setup the seasons and episodes section
-        if (media === "tv") {
+        // If this is a TV show or anime, setup the seasons and episodes section
+        if (media === "tv" || media === "anime") {
             const seasons = await fetchTVSeasons(id);
             if (seasons && seasons.length > 0) {
                 createSeasonOptions(seasons);
