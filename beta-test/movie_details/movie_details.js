@@ -447,6 +447,14 @@ function createEpisodesList(episodes) {
             : 'https://via.placeholder.com/300x170?text=No+Image';
         thumbnail.alt = `${episode.name} Thumbnail`;
 
+        // Add error handling for broken images
+        thumbnail.onerror = function() {
+            this.src = 'https://via.placeholder.com/300x170/333333/ffffff?text=Episode+' + episode.episode_number;
+        };
+
+        // Add loading attribute for better performance
+        thumbnail.loading = 'lazy';
+
         // Create episode number badge
         const episodeNumber = document.createElement('div');
         episodeNumber.className = 'episode-number';
