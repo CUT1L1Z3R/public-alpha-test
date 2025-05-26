@@ -247,18 +247,6 @@ p {
     margin-right: 15px;
     border-radius: 5px;
     object-fit: cover;
-    background-color: #333;
-    display: block;
-    flex-shrink: 0;
-    transition: opacity 0.3s ease;
-}
-
-.episode-thumbnail:not([src]),
-.episode-thumbnail[src=""] {
-    opacity: 0.7;
-    background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYwIiBoZWlnaHQ9IjkwIiB2aWV3Qm94PSIwIDAgMTYwIDkwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cmVjdCB3aWR0aD0iMTYwIiBoZWlnaHQ9IjkwIiBmaWxsPSIjMzMzMzMzIi8+CjxwYXRoIGQ9Ik02MCA0MEw5MCA1NSA2MCA3MFY0MFoiIGZpbGw9IiM2NjY2NjYiLz4KPC9zdmc+');
-    background-size: cover;
-    background-position: center;
 }
 
 .episode-info {
@@ -268,7 +256,7 @@ p {
 }
 
 .episode-number {
-    background-color: rgba(51, 51, 51, 0.9);
+    background-color: #333;
     color: white;
     border-radius: 50%;
     width: 30px;
@@ -277,13 +265,9 @@ p {
     align-items: center;
     justify-content: center;
     font-weight: bold;
-    font-size: 12px;
     position: absolute;
-    bottom: 5px;
-    left: 5px;
-    z-index: 2;
-    border: 2px solid rgba(162, 9, 218, 0.8);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    bottom: 10px;
+    left: 10px;
 }
 
 .episode-title {
@@ -304,10 +288,6 @@ p {
 
 .thumbnail-container {
     position: relative;
-    display: flex;
-    flex-shrink: 0;
-    width: 160px;
-    height: 90px;
 }
 
 /* ---- Server dropdown & watchlist styles - unified design ---- */
@@ -727,6 +707,11 @@ p {
 /* Fast tag */
 .tag-fast {
     background-color: red;
+}
+
+/* New tag */
+.tag-new {
+    background-color: #ff9800;
 }
 
 /* Customize scrollbar for the server dropdown */
@@ -1159,17 +1144,10 @@ p {
     /* Thumbnail adjustments */
     .episode-thumbnail {
         width: 100%;
-        height: 180px;
+        height: auto;
         margin-right: 0;
         margin-bottom: 8px;
         box-sizing: border-box;
-        object-fit: cover;
-    }
-
-    /* Thumbnail container mobile adjustments */
-    .thumbnail-container {
-        width: 100%;
-        height: 180px;
     }
 
     /* Episode info sizing */
