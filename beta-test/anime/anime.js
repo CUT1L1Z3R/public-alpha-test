@@ -22,7 +22,7 @@ const ANILIST_API_URL = 'https://graphql.anilist.co';
 // TMDB API configuration
 const TMDB_API_KEY = 'YOUR_TMDB_API_KEY_HERE'; // Replace with your actual TMDB API key
 const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
-const TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w780'; // Use higher quality images
+const TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
 
 // Helper function to make AniList API requests with retry logic
 async function makeAniListRequest(query, variables = {}, retries = 3) {
@@ -72,37 +72,37 @@ async function searchTMDBForAnime(title, retries = 2) {
             // Clean the title for better TMDB search results
             const cleanTitle = title.replace(/[^\w\s]/gi, '').trim();
             const encodedTitle = encodeURIComponent(cleanTitle);
-
+            
             const url = `${TMDB_BASE_URL}/search/tv?api_key=${TMDB_API_KEY}&query=${encodedTitle}&with_genres=16&language=en-US`;
-
+            
             console.log(`Searching TMDB for: ${cleanTitle}`);
             const response = await fetch(url);
-
+            
             if (!response.ok) {
                 throw new Error(`TMDB HTTP error! status: ${response.status}`);
             }
-
+            
             const data = await response.json();
-
+            
             // Filter results by Animation genre (genre ID 16) and look for close title matches
             const animeResults = data.results?.filter(result => {
                 return result.genre_ids?.includes(16) && // Animation genre
                        result.poster_path && // Has poster image
                        result.name; // Has a name
             }) || [];
-
+            
             if (animeResults.length > 0) {
                 // Return the first match
                 const match = animeResults[0];
                 console.log(`Found TMDB match for "${title}": ${match.name}`);
                 return {
                     poster_path: TMDB_IMAGE_BASE_URL + match.poster_path,
-                    backdrop_path: match.backdrop_path ? TMDB_IMAGE_BASE_URL.replace('w780', 'w1280') + match.backdrop_path : null,
+                    backdrop_path: match.backdrop_path ? TMDB_IMAGE_BASE_URL.replace('w500', 'w780') + match.backdrop_path : null,
                     tmdb_id: match.id,
                     tmdb_name: match.name
                 };
             }
-
+            
             console.log(`No TMDB results found for: ${title}`);
             return null;
         } catch (error) {
@@ -116,31 +116,22 @@ async function searchTMDBForAnime(title, retries = 2) {
     }
 }
 
-// Helper function to get the best poster image with improved quality
+// Helper function to get the best poster image with TMDB fallback
 async function getBestPosterImage(anime) {
-    // Always use AniList's high-quality images first, as they are specifically for anime
-    // AniList provides better anime-specific artwork than TMDB
-    if (anime.coverImage?.extraLarge) {
-        return anime.coverImage.extraLarge;
-    }
-    if (anime.coverImage?.large) {
-        return anime.coverImage.large;
-    }
-
     try {
-        // Fallback to TMDB only if AniList doesn't have good images
+        // First try to get TMDB poster
         const tmdbResult = await searchTMDBForAnime(anime.title.english || anime.title.romaji || anime.title.native);
-
+        
         if (tmdbResult && tmdbResult.poster_path) {
             console.log(`Using TMDB poster for: ${anime.title.english || anime.title.romaji || anime.title.native}`);
             return tmdbResult.poster_path;
         }
     } catch (error) {
-        console.warn('TMDB search failed:', error);
+        console.warn('TMDB search failed, falling back to AniList image:', error);
     }
-
-    // Final fallback
-    return anime.coverImage?.extraLarge || anime.coverImage?.large || anime.coverImage?.medium || anime.bannerImage || 'https://via.placeholder.com/500x750?text=No+Image+Available';
+    
+    // Fallback to AniList images
+    return anime.coverImage?.large || anime.coverImage?.medium || anime.bannerImage || 'https://via.placeholder.com/460x215?text=No+Image+Available';
 }
 
 // Document ready function
@@ -210,7 +201,6 @@ function updateBannerForAnime() {
                     }
                     bannerImage
                     coverImage {
-                        extraLarge
                         large
                         medium
                     }
@@ -237,13 +227,13 @@ function updateBannerForAnime() {
 
             // Filter to anime with banner images, get up to 9 items
             bannerItems = animeList
-                .filter(anime => anime.bannerImage || anime.coverImage?.extraLarge || anime.coverImage?.large)
+                .filter(anime => anime.bannerImage || anime.coverImage?.large)
                 .slice(0, 9)
                 .map(anime => ({
                     id: anime.id,
                     title: anime.title.english || anime.title.romaji || anime.title.native,
                     backdrop_path: anime.bannerImage,
-                    poster_path: anime.coverImage?.extraLarge || anime.coverImage?.large,
+                    poster_path: anime.coverImage?.large,
                     vote_average: anime.averageScore ? anime.averageScore / 10 : 0,
                     overview: anime.description,
                     mediaType: 'anime',
@@ -492,7 +482,6 @@ async function fetchAnime(containerClass, genreOrKeyword) {
                             native
                         }
                         coverImage {
-                            extraLarge
                             large
                             medium
                         }
@@ -522,7 +511,6 @@ async function fetchAnime(containerClass, genreOrKeyword) {
                             native
                         }
                         coverImage {
-                            extraLarge
                             large
                             medium
                         }
@@ -552,7 +540,6 @@ async function fetchAnime(containerClass, genreOrKeyword) {
                             native
                         }
                         coverImage {
-                            extraLarge
                             large
                             medium
                         }
@@ -582,7 +569,6 @@ async function fetchAnime(containerClass, genreOrKeyword) {
                             native
                         }
                         coverImage {
-                            extraLarge
                             large
                             medium
                         }
@@ -612,7 +598,6 @@ async function fetchAnime(containerClass, genreOrKeyword) {
                             native
                         }
                         coverImage {
-                            extraLarge
                             large
                             medium
                         }
@@ -644,7 +629,6 @@ async function fetchAnime(containerClass, genreOrKeyword) {
                             native
                         }
                         coverImage {
-                            extraLarge
                             large
                             medium
                         }
@@ -674,7 +658,6 @@ async function fetchAnime(containerClass, genreOrKeyword) {
                             native
                         }
                         coverImage {
-                            extraLarge
                             large
                             medium
                         }
@@ -704,7 +687,6 @@ async function fetchAnime(containerClass, genreOrKeyword) {
                             native
                         }
                         coverImage {
-                            extraLarge
                             large
                             medium
                         }
@@ -734,7 +716,6 @@ async function fetchAnime(containerClass, genreOrKeyword) {
                             native
                         }
                         coverImage {
-                            extraLarge
                             large
                             medium
                         }
@@ -764,7 +745,6 @@ async function fetchAnime(containerClass, genreOrKeyword) {
                             native
                         }
                         coverImage {
-                            extraLarge
                             large
                             medium
                         }
@@ -794,7 +774,6 @@ async function fetchAnime(containerClass, genreOrKeyword) {
                             native
                         }
                         coverImage {
-                            extraLarge
                             large
                             medium
                         }
@@ -825,7 +804,6 @@ async function fetchAnime(containerClass, genreOrKeyword) {
                             native
                         }
                         coverImage {
-                            extraLarge
                             large
                             medium
                         }
@@ -864,7 +842,7 @@ async function fetchAnime(containerClass, genreOrKeyword) {
                 }
 
                 // Filter out items without cover images
-                const validResults = animeResults.filter(item => item.coverImage?.extraLarge || item.coverImage?.large || item.bannerImage);
+                const validResults = animeResults.filter(item => item.coverImage?.large || item.bannerImage);
 
                 if (validResults.length === 0) {
                     console.warn(`No valid image results found for ${containerClass}`);
@@ -968,7 +946,7 @@ async function fetchAnime(containerClass, genreOrKeyword) {
                     const batch = validResults.slice(i, i + batchSize);
                     const promises = batch.map(anime => processAnimeItem(anime, container));
                     await Promise.all(promises);
-
+                    
                     // Small delay between batches to be respectful to APIs
                     if (i + batchSize < validResults.length) {
                         await new Promise(resolve => setTimeout(resolve, 100));
@@ -1089,7 +1067,6 @@ async function fetchSearchResults(query) {
                             native
                         }
                         coverImage {
-                            extraLarge
                             large
                             medium
                         }
@@ -1117,7 +1094,7 @@ async function fetchSearchResults(query) {
 
         // Filter results to only those with cover images
         return (data.data?.Page?.media || [])
-            .filter(item => item.coverImage?.extraLarge || item.coverImage?.large || item.coverImage?.medium)
+            .filter(item => item.coverImage?.large || item.coverImage?.medium)
             .slice(0, 6); // Limit to 6 results
     } catch (error) {
         console.error('Error fetching search results:', error);
@@ -1139,7 +1116,7 @@ async function displaySearchResults(results) {
     for (const result of results) {
         const shortenedTitle = result.title.english || result.title.romaji || result.title.native || 'Unknown Title';
         const year = result.startDate?.year || '';
-
+        
         // Get the best poster image using TMDB fallback
         const imageUrl = await getBestPosterImage(result);
 
@@ -1166,7 +1143,7 @@ async function displaySearchResults(results) {
                 watchlist.push({
                     id: result.id,
                     title: shortenedTitle,
-                    poster_path: result.coverImage?.extraLarge || result.coverImage?.large || result.coverImage?.medium || 'https://via.placeholder.com/500x750?text=No+Image',
+                    poster_path: result.coverImage?.large || result.coverImage?.medium || 'https://via.placeholder.com/500x750?text=No+Image',
                     media_type: 'anime',
                     release_date: result.startDate?.year ? `${result.startDate.year}-01-01` : ''
                 });
