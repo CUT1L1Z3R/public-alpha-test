@@ -300,8 +300,6 @@ function updateBannerForAnime() {
 async function initializeAnimeSections() {
     // Initialize anime sections - run in parallel for better performance
     const sectionPromises = [
-        fetchAnime('anime-popular-season-container', 'popular_season'),
-        fetchAnime('anime-latest-episodes-container', 'latest_episodes'),
         fetchAnime('anime-recently-added-container', 'recently_added'),
         fetchAnime('anime-upcoming-new-container', 'truly_upcoming'),
         fetchAnime('top-rated-anime-movie-container', 'top_rated_anime_movies'),
@@ -482,99 +480,7 @@ async function fetchAnime(containerClass, genreOrKeyword) {
     let query = '';
     let variables = {};
 
-    if (genreOrKeyword === 'popular_season') {
-        // Get current season and year
-        const now = new Date();
-        const currentYear = now.getFullYear();
-        const currentMonth = now.getMonth() + 1; // JavaScript months are 0-indexed
-
-        // Determine season based on month
-        let season;
-        if (currentMonth >= 1 && currentMonth <= 3) {
-            season = 'WINTER';
-        } else if (currentMonth >= 4 && currentMonth <= 6) {
-            season = 'SPRING';
-        } else if (currentMonth >= 7 && currentMonth <= 9) {
-            season = 'SUMMER';
-        } else {
-            season = 'FALL';
-        }
-
-        query = `
-            query ($page: Int, $perPage: Int, $season: MediaSeason, $year: Int) {
-                Page(page: $page, perPage: $perPage) {
-                    media(type: ANIME, season: $season, seasonYear: $year, sort: POPULARITY_DESC, isAdult: false) {
-                        id
-                        title {
-                            romaji
-                            english
-                            native
-                        }
-                        coverImage {
-                            extraLarge
-                            large
-                            medium
-                        }
-                        bannerImage
-                        averageScore
-                        episodes
-                        status
-                        format
-                        startDate {
-                            year
-                            month
-                            day
-                        }
-                        description
-                        season
-                        seasonYear
-                    }
-                }
-            }
-        `;
-        variables = { page: 1, perPage: 20, season: season, year: currentYear };
-    } else if (genreOrKeyword === 'latest_episodes') {
-        query = `
-            query ($page: Int, $perPage: Int) {
-                Page(page: $page, perPage: $perPage) {
-                    airingSchedules(sort: TIME_DESC, notYetAired: false) {
-                        id
-                        airingAt
-                        episode
-                        media {
-                            id
-                            title {
-                                romaji
-                                english
-                                native
-                            }
-                            coverImage {
-                                extraLarge
-                                large
-                                medium
-                            }
-                            bannerImage
-                            averageScore
-                            episodes
-                            status
-                            format
-                            startDate {
-                                year
-                                month
-                                day
-                            }
-                            description
-                            nextAiringEpisode {
-                                episode
-                                airingAt
-                            }
-                        }
-                    }
-                }
-            }
-        `;
-        variables = { page: 1, perPage: 20 };
-    } else if (genreOrKeyword === 'popular') {
+    if (genreOrKeyword === 'popular') {
         query = `
             query ($page: Int, $perPage: Int) {
                 Page(page: $page, perPage: $perPage) {
@@ -943,30 +849,8 @@ async function fetchAnime(containerClass, genreOrKeyword) {
     console.log(`Fetching anime from AniList for ${containerClass}`);
     makeAniListRequest(query, variables)
         .then(async data => {
-            let animeResults = [];
-
-            if (genreOrKeyword === 'latest_episodes') {
-                // Handle airingSchedules data structure
-                const airingSchedules = data.data?.Page?.airingSchedules || [];
-                console.log(`Got airing schedules from AniList for ${containerClass}, found ${airingSchedules.length} items`);
-
-                // Extract unique media from airing schedules
-                const seenIds = new Set();
-                animeResults = airingSchedules
-                    .filter(schedule => schedule.media && !seenIds.has(schedule.media.id))
-                    .map(schedule => {
-                        seenIds.add(schedule.media.id);
-                        return {
-                            ...schedule.media,
-                            lastEpisode: schedule.episode,
-                            lastAiredAt: schedule.airingAt
-                        };
-                    });
-            } else {
-                // Handle normal media data structure
-                animeResults = data.data?.Page?.media || [];
-                console.log(`Got anime data from AniList for ${containerClass}, found ${animeResults.length} items`);
-            }
+            console.log(`Got anime data from AniList for ${containerClass}, found ${data.data?.Page?.media ? data.data.Page.media.length : 0} items`);
+            const animeResults = data.data?.Page?.media || [];
 
             // Process each container
             for (const container of containers) {
@@ -1060,40 +944,6 @@ async function fetchAnime(containerClass, genreOrKeyword) {
                     // Build the rating element
                     rating.appendChild(star);
                     rating.appendChild(ratingValue);
-
-                    // Add special episode info for latest episodes section
-                    if (genreOrKeyword === 'latest_episodes' && anime.lastEpisode) {
-                        const episodeInfo = document.createElement('div');
-                        episodeInfo.className = 'episode-info';
-                        episodeInfo.style.fontSize = '0.8rem';
-                        episodeInfo.style.color = '#4CAF50';
-                        episodeInfo.style.fontWeight = 'bold';
-                        episodeInfo.style.marginTop = '4px';
-                        episodeInfo.textContent = `Episode ${anime.lastEpisode}`;
-
-                        // Add aired time if available
-                        if (anime.lastAiredAt) {
-                            const airedDate = new Date(anime.lastAiredAt * 1000);
-                            const now = new Date();
-                            const diffHours = Math.floor((now - airedDate) / (1000 * 60 * 60));
-
-                            const timeInfo = document.createElement('div');
-                            timeInfo.style.fontSize = '0.7rem';
-                            timeInfo.style.color = '#999';
-                            timeInfo.style.marginTop = '2px';
-
-                            if (diffHours < 24) {
-                                timeInfo.textContent = `${diffHours}h ago`;
-                            } else {
-                                const diffDays = Math.floor(diffHours / 24);
-                                timeInfo.textContent = `${diffDays}d ago`;
-                            }
-
-                            episodeInfo.appendChild(timeInfo);
-                        }
-
-                        overlay.appendChild(episodeInfo);
-                    }
 
                     // Add overlay elements
                     overlay.appendChild(titleElement);
