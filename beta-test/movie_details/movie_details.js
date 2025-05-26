@@ -135,48 +135,208 @@ const params = new URLSearchParams(window.location.search);
 const id = params.get('id');
 const media = params.get("media");
 
-// Function to fetch detailed information using its TMDb ID
+// Function to fetch detailed information using its TMDb ID or AniList ID for anime
 async function fetchMovieDetails(id) {
-    // For anime, we need to use the TV endpoint since anime are typically TV series in TMDB
-    const apiMedia = media === "anime" ? "tv" : media;
-    const response = await fetch(`https://api.themoviedb.org/3/${apiMedia}/${id}?api_key=${api_Key}`);
-    const data = await response.json();
+    if (media === "anime") {
+        // Use AniList API for anime content
+        return await fetchAnimeDetails(id);
+    } else {
+        // For non-anime content, use TMDB API
+        const response = await fetch(`https://api.themoviedb.org/3/${media}/${id}?api_key=${api_Key}`);
+        const data = await response.json();
 
-    // For anime or TV shows, check if we have additional genre info to include
-    if ((media === "tv" || media === "anime") && data) {
-        // Check if this is likely anime by looking at genres
-        const isAnime = data.genres && data.genres.some(genre => genre.id === 16); // 16 is Animation genre
+        // For TV shows, check if we have additional genre info to include
+        if (media === "tv" && data) {
+            // Check if this is likely anime by looking at genres
+            const isAnime = data.genres && data.genres.some(genre => genre.id === 16); // 16 is Animation genre
 
-        if (isAnime || media === "anime") {
-            // Mark this as anime content for specialized handling if needed
-            data.is_anime = true;
+            if (isAnime) {
+                // Mark this as anime content for specialized handling if needed
+                data.is_anime = true;
+            }
         }
-    }
 
-    return data;
+        return data;
+    }
+}
+
+// Function to fetch anime details from AniList API
+async function fetchAnimeDetails(id) {
+    const query = `
+        query ($id: Int) {
+            Media (id: $id, type: ANIME) {
+                id
+                title {
+                    romaji
+                    english
+                    native
+                }
+                description
+                startDate {
+                    year
+                    month
+                    day
+                }
+                endDate {
+                    year
+                    month
+                    day
+                }
+                season
+                seasonYear
+                episodes
+                duration
+                status
+                genres
+                averageScore
+                popularity
+                studios {
+                    nodes {
+                        name
+                    }
+                }
+                coverImage {
+                    large
+                    medium
+                }
+                bannerImage
+                format
+                source
+                countryOfOrigin
+            }
+        }
+    `;
+
+    const variables = {
+        id: parseInt(id)
+    };
+
+    try {
+        const response = await fetch('https://graphql.anilist.co', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify({
+                query: query,
+                variables: variables
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.data && data.data.Media) {
+            const anime = data.data.Media;
+
+            // Transform AniList data to match the expected structure
+            return {
+                id: anime.id,
+                title: anime.title.english || anime.title.romaji || anime.title.native,
+                name: anime.title.english || anime.title.romaji || anime.title.native,
+                overview: anime.description ? anime.description.replace(/<[^>]*>/g, '') : 'No description available', // Remove HTML tags
+                poster_path: anime.coverImage.large,
+                backdrop_path: anime.bannerImage || anime.coverImage.large,
+                first_air_date: anime.startDate ? `${anime.startDate.year}-${String(anime.startDate.month || 1).padStart(2, '0')}-${String(anime.startDate.day || 1).padStart(2, '0')}` : 'Unknown',
+                vote_average: anime.averageScore ? (anime.averageScore / 10).toFixed(1) : 'N/A',
+                genres: anime.genres ? anime.genres.map(genre => ({ name: genre })) : [{ name: 'Anime' }],
+                spoken_languages: [{ english_name: 'Japanese' }], // Default for anime
+                number_of_episodes: anime.episodes || 'Unknown',
+                status: anime.status || 'Unknown',
+                studios: anime.studios.nodes.map(studio => studio.name).join(', ') || 'Unknown',
+                is_anime: true,
+                seasons: anime.episodes ? [{
+                    season_number: 1,
+                    episode_count: anime.episodes,
+                    name: `Season 1`
+                }] : []
+            };
+        } else {
+            // Fallback if AniList doesn't have the anime
+            return {
+                title: 'Anime Not Found',
+                name: 'Anime Not Found',
+                overview: 'This anime could not be found in the database.',
+                poster_path: null,
+                backdrop_path: null,
+                first_air_date: 'Unknown',
+                vote_average: 'N/A',
+                genres: [{ name: 'Anime' }],
+                spoken_languages: [{ english_name: 'Japanese' }],
+                is_anime: true
+            };
+        }
+    } catch (error) {
+        console.error('Error fetching anime details from AniList:', error);
+
+        // Fallback error response
+        return {
+            title: 'Error Loading Anime',
+            name: 'Error Loading Anime',
+            overview: 'There was an error loading this anime. Please try again later.',
+            poster_path: null,
+            backdrop_path: null,
+            first_air_date: 'Unknown',
+            vote_average: 'N/A',
+            genres: [{ name: 'Anime' }],
+            spoken_languages: [{ english_name: 'Japanese' }],
+            is_anime: true
+        };
+    }
 }
 
 // Function to fetch video details (trailers) for a movie or TV show
 async function fetchVideoDetails(id) {
-    // For anime, we need to use the TV endpoint
-    const apiMedia = media === "anime" ? "tv" : media;
-    const response = await fetch(`https://api.themoviedb.org/3/${apiMedia}/${id}/videos?api_key=${api_Key}`);
-    const data = await response.json();
-    return data.results;
+    if (media === "anime") {
+        // For anime, we don't typically have trailers in AniList, return empty array
+        return [];
+    } else {
+        const response = await fetch(`https://api.themoviedb.org/3/${media}/${id}/videos?api_key=${api_Key}`);
+        const data = await response.json();
+        return data.results;
+    }
 }
 
 // Function to fetch TV show seasons
 async function fetchTVSeasons(id) {
-    const response = await fetch(`https://api.themoviedb.org/3/tv/${id}?api_key=${api_Key}`);
-    const data = await response.json();
-    return data.seasons;
+    if (media === "anime") {
+        // For anime, we'll create seasons based on the episode count from AniList
+        const animeDetails = await fetchAnimeDetails(id);
+        return animeDetails.seasons || [];
+    } else {
+        const response = await fetch(`https://api.themoviedb.org/3/tv/${id}?api_key=${api_Key}`);
+        const data = await response.json();
+        return data.seasons;
+    }
 }
 
 // Function to fetch episodes for a specific season
 async function fetchSeasonEpisodes(tvId, seasonNumber) {
-    const response = await fetch(`https://api.themoviedb.org/3/tv/${tvId}/season/${seasonNumber}?api_key=${api_Key}`);
-    const data = await response.json();
-    return data.episodes;
+    if (media === "anime") {
+        // For anime, create episodes based on the total episode count
+        const animeDetails = await fetchAnimeDetails(tvId);
+        const episodeCount = animeDetails.number_of_episodes;
+
+        if (episodeCount && episodeCount !== 'Unknown') {
+            const episodes = [];
+            for (let i = 1; i <= episodeCount; i++) {
+                episodes.push({
+                    episode_number: i,
+                    season_number: seasonNumber,
+                    name: `Episode ${i}`,
+                    overview: `Episode ${i} of ${animeDetails.title || animeDetails.name}`,
+                    still_path: null,
+                    air_date: null
+                });
+            }
+            return episodes;
+        }
+        return [];
+    } else {
+        const response = await fetch(`https://api.themoviedb.org/3/tv/${tvId}/season/${seasonNumber}?api_key=${api_Key}`);
+        const data = await response.json();
+        return data.episodes;
+    }
 }
 
 document.getElementById('change-server-btn').addEventListener('click', () => {
