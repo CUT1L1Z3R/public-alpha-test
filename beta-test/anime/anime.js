@@ -3,6 +3,10 @@
  * Handles fetching, displaying, and UI interactions for anime.
  */
 
+// Enhanced TMDB and AniList integration
+import tmdbService from '../services/tmdb-service.js';
+import posterEnhancer from '../utils/poster-enhancement.js';
+
 // Get references to HTML elements
 const searchInput = document.getElementById('searchInput');
 const searchResults = document.getElementById('searchResults');
@@ -18,6 +22,13 @@ let bannerInterval; // Interval for auto-rotation
 
 // AniList GraphQL API endpoint
 const ANILIST_API_URL = 'https://graphql.anilist.co';
+
+// Enhancement statistics
+let enhancementStats = {
+    totalImages: 0,
+    enhancedImages: 0,
+    errors: 0
+};
 
 // Helper function to make AniList API requests with retry logic
 async function makeAniListRequest(query, variables = {}, retries = 3) {
@@ -54,6 +65,48 @@ async function makeAniListRequest(query, variables = {}, retries = 3) {
     }
 }
 
+// Enhanced poster enhancement function
+async function getEnhancedPoster(anime, options = {}) {
+    try {
+        enhancementStats.totalImages++;
+        
+        const result = await posterEnhancer.getEnhancedPoster(anime, {
+            preferredSize: 'LARGE',
+            timeoutMs: 3000,
+            ...options
+        });
+        
+        if (result.source === 'tmdb') {
+            enhancementStats.enhancedImages++;
+            console.log(`🎯 Enhanced poster quality for: ${posterEnhancer.extractTitle(anime)}`);
+        }
+        
+        return result.url;
+        
+    } catch (error) {
+        enhancementStats.errors++;
+        console.warn('Poster enhancement failed:', error.message);
+        
+        // Fallback to AniList image
+        return posterEnhancer.extractOriginalPoster(anime) || posterEnhancer.getPlaceholderImage();
+    }
+}
+
+// Legacy function for backward compatibility
+async function getTMDBPoster(animeTitle, year = null) {
+    try {
+        const fakeAnime = {
+            title: { english: animeTitle },
+            startDate: { year }
+        };
+        
+        return await getEnhancedPoster(fakeAnime);
+    } catch (error) {
+        console.warn('Error in legacy TMDB function:', error);
+        return null;
+    }
+}
+
 // Document ready function
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize the anime page
@@ -79,32 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize back to top button
     addBackToTopButton();
-
-    // Initialize filter tabs
-    initFilterTabs();
 });
-
-// Initialize filter tabs functionality
-function initFilterTabs() {
-    const filterTabs = document.querySelectorAll('.filter-tab');
-
-    filterTabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            // Remove active class from all tabs
-            filterTabs.forEach(t => t.classList.remove('active'));
-
-            // Add active class to clicked tab
-            tab.classList.add('active');
-
-            // Get filter value
-            const filter = tab.dataset.filter;
-
-            // You can implement filtering logic here
-            // For now, just log the filter
-            console.log('Filter selected:', filter);
-        });
-    });
-}
 
 // Initialize the anime page
 function initAnimePage() {
@@ -235,6 +263,7 @@ function updateBannerForAnime() {
 function initializeAnimeSections() {
     // Initialize anime sections
     fetchAnime('anime-upcoming-new-container', 'truly_upcoming');
+    fetchAnime('recently-added-anime-container', 'recently_added'); // Add this new section
     fetchAnime('top-rated-anime-movie-container', 'top_rated_anime_movies');
     fetchAnime('anime-popular-container', 'popular');
     fetchAnime('anime-top-container', 'top_rated');
@@ -404,7 +433,38 @@ function fetchAnime(containerClass, genreOrKeyword) {
     let query = '';
     let variables = {};
 
-    if (genreOrKeyword === 'popular') {
+    if (genreOrKeyword === 'recently_added') {
+        // Query for recently added anime based on when they were added to AniList database
+        query = `
+            query ($page: Int, $perPage: Int) {
+                Page(page: $page, perPage: $perPage) {
+                    media(type: ANIME, sort: [ID_DESC], isAdult: false, status_in: [FINISHED, RELEASING]) {
+                        id
+                        title {
+                            romaji
+                            english
+                            native
+                        }
+                        coverImage {
+                            large
+                            medium
+                        }
+                        bannerImage
+                        averageScore
+                        episodes
+                        status
+                        format
+                        startDate {
+                            year
+                        }
+                        description
+                        createdAt
+                    }
+                }
+            }
+        `;
+        variables = { page: 1, perPage: 20 };
+    } else if (genreOrKeyword === 'popular') {
         query = `
             query ($page: Int, $perPage: Int) {
                 Page(page: $page, perPage: $perPage) {
@@ -733,7 +793,7 @@ function fetchAnime(containerClass, genreOrKeyword) {
             console.log(`Got anime data from AniList for ${containerClass}, found ${data.data?.Page?.media ? data.data.Page.media.length : 0} items`);
             const animeResults = data.data?.Page?.media || [];
 
-            containers.forEach(container => {
+            containers.forEach(async (container) => {
                 container.innerHTML = ''; // Clear the container first to prevent duplicates
 
                 // Process each anime item
@@ -752,11 +812,29 @@ function fetchAnime(containerClass, genreOrKeyword) {
                     return;
                 }
 
-                validResults.forEach(anime => {
+                for (const anime of validResults) {
                     const title = anime.title.english || anime.title.romaji || anime.title.native || 'Unknown Title';
 
-                    // Use banner image if available, otherwise use cover image
-                    const imageUrl = anime.bannerImage || anime.coverImage?.large || anime.coverImage?.medium || 'https://via.placeholder.com/460x215?text=No+Image+Available';
+                    // Try to get enhanced TMDB poster first, fallback to AniList image
+                    let imageUrl = anime.bannerImage || anime.coverImage?.large || anime.coverImage?.medium;
+
+                    try {
+                        const enhancedPoster = await getEnhancedPoster(anime, {
+                            preferredSize: 'LARGE',
+                            timeoutMs: 2000 // Shorter timeout for list items
+                        });
+                        
+                        if (enhancedPoster) {
+                            imageUrl = enhancedPoster;
+                        }
+                    } catch (error) {
+                        console.warn('Failed to get enhanced poster for', title, error);
+                    }
+
+                    // Fallback to placeholder if no image
+                    if (!imageUrl) {
+                        imageUrl = posterEnhancer.getPlaceholderImage();
+                    }
 
                     // Create the main item element
                     const itemElement = document.createElement('div');
@@ -828,50 +906,6 @@ function fetchAnime(containerClass, genreOrKeyword) {
                     overlay.appendChild(titleElement);
                     overlay.appendChild(rating);
 
-                    // Add episode and status information
-                    const episodeInfo = document.createElement('div');
-                    episodeInfo.className = 'episode-info';
-
-                    // Add episode count
-                    if (anime.episodes) {
-                        const episodeBadge = document.createElement('span');
-                        episodeBadge.className = 'episode-badge';
-                        episodeBadge.textContent = anime.episodes;
-                        episodeInfo.appendChild(episodeBadge);
-                    }
-
-                    // Add format badge
-                    if (anime.format) {
-                        const formatBadge = document.createElement('span');
-                        formatBadge.className = 'format-badge';
-                        formatBadge.textContent = anime.format;
-                        episodeInfo.appendChild(formatBadge);
-                    }
-
-                    // Add status badge
-                    if (anime.status) {
-                        const statusBadge = document.createElement('span');
-                        let statusText = anime.status;
-                        let statusClass = 'status-badge';
-
-                        if (anime.status === 'RELEASING') {
-                            statusText = 'Airing';
-                            statusClass += ' airing';
-                        } else if (anime.status === 'NOT_YET_RELEASED') {
-                            statusText = 'Upcoming';
-                            statusClass += ' upcoming';
-                        } else if (anime.status === 'FINISHED') {
-                            statusText = 'Completed';
-                            statusClass += ' completed';
-                        }
-
-                        statusBadge.className = statusClass;
-                        statusBadge.textContent = statusText;
-                        episodeInfo.appendChild(statusBadge);
-                    }
-
-                    overlay.appendChild(episodeInfo);
-
                     imgWrapper.appendChild(img);
                     imgWrapper.appendChild(overlay);
                     itemElement.appendChild(imgWrapper);
@@ -883,7 +917,7 @@ function fetchAnime(containerClass, genreOrKeyword) {
                         // You might want to create a dedicated anime details page later
                         window.location.href = `../movie_details/movie_details.html?media=anime&id=${anime.id}`;
                     });
-                });
+                }
             });
         })
         .catch(error => {
