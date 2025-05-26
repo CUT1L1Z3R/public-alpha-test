@@ -531,6 +531,167 @@ function loadMedia(embedURL, server) {
     setTimeout(ensureControlsAccessible, 500);
 }
 
+// Enhanced function to handle media loading with sub-to-dub fallback for anime
+function loadMediaWithFallback(embedURL, server, type) {
+    // Update the iframe source with the correct video URL and set attributes
+    iframe.setAttribute('src', embedURL);
+    iframe.setAttribute('playsinline', '');
+    iframe.setAttribute('webkit-playsinline', 'true');
+    iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen');
+    iframe.setAttribute('allowfullscreen', '');
+
+    let hasTriedDub = false;
+    let retryTimeout;
+
+    // Setup error handling with anime sub-to-dub fallback
+    const handleIframeError = () => {
+        console.log(`Error loading: ${embedURL}`);
+
+        // Clear any existing retry timeout
+        if (retryTimeout) {
+            clearTimeout(retryTimeout);
+        }
+
+        // For anime on vidsrc.icu, try dub version if sub fails
+        if (type === "anime" && server === "vidsrc.icu" && !hasTriedDub) {
+            hasTriedDub = true;
+            console.log("Sub version failed, trying dub version...");
+
+            // Get episode number
+            const activeEpisode = document.querySelector('.episode-item.active');
+            let episodeNumber = 1;
+            if (activeEpisode) {
+                episodeNumber = activeEpisode.dataset.episodeNumber || 1;
+            }
+
+            // Create dub URL (change 0 to 1)
+            const dubURL = `https://vidsrc.icu/embed/anime/${id}/${episodeNumber}/1`;
+            console.log(`Trying dub version: ${dubURL}`);
+
+            // Show toast notification
+            showToast("Sub version unavailable, switching to dub...", 'info');
+
+            // Try loading dub version
+            iframe.setAttribute('src', dubURL);
+
+            // Set up error handling for dub version with improved detection
+            retryTimeout = setTimeout(() => {
+                checkIframeLoad(dubURL, () => {
+                    console.log("Dub version also failed, trying next server");
+                    tryNextServer();
+                });
+            }, 5000);
+            return;
+        }
+
+        // If dub also fails or not anime/vidsrc.icu, try next server in fallback chain
+        tryNextServer();
+    };
+
+    const tryNextServer = () => {
+        let currentIndex = serverFallbackChain.indexOf(server);
+        const nextIndex = currentIndex + 1;
+        if (nextIndex < serverFallbackChain.length) {
+            const nextServer = serverFallbackChain[nextIndex];
+            console.log(`Switching to next server: ${nextServer}`);
+            document.getElementById('server').value = nextServer;
+            showToast(`Switching to ${nextServer} server...`, 'info');
+            changeServer();
+        } else {
+            showToast("All servers failed to load content", 'error');
+        }
+    };
+
+    // Enhanced iframe load checking function
+    const checkIframeLoad = (expectedURL, onFailure) => {
+        let checkAttempts = 0;
+        const maxAttempts = 3;
+
+        const performCheck = () => {
+            checkAttempts++;
+
+            try {
+                // Multiple checks for iframe load failure
+                const currentSrc = iframe.getAttribute('src');
+
+                // Check if URL changed unexpectedly
+                if (currentSrc !== expectedURL) {
+                    console.log("URL changed, considering as potential failure");
+                    if (onFailure) onFailure();
+                    return;
+                }
+
+                // Check iframe content window
+                if (iframe.contentWindow) {
+                    try {
+                        // This will throw an error for successful cross-origin loads
+                        const location = iframe.contentWindow.location.href;
+                        if (location === 'about:blank') {
+                            console.log("Iframe still showing blank page");
+                            if (checkAttempts >= maxAttempts && onFailure) {
+                                onFailure();
+                                return;
+                            }
+                        }
+                    } catch (e) {
+                        // Cross-origin error usually means content loaded successfully
+                        console.log("Content appears to be loaded (cross-origin restriction)");
+                        return;
+                    }
+                }
+
+                // If we've reached max attempts without success, call failure handler
+                if (checkAttempts >= maxAttempts && onFailure) {
+                    onFailure();
+                }
+            } catch (error) {
+                console.log("Error checking iframe content:", error);
+                if (checkAttempts >= maxAttempts && onFailure) {
+                    onFailure();
+                }
+            }
+        };
+
+        // Check at different intervals for better detection
+        setTimeout(performCheck, 2000);
+        setTimeout(performCheck, 5000);
+        setTimeout(performCheck, 8000);
+    };
+
+    // Set up iframe error detection
+    iframe.onerror = handleIframeError;
+
+    // Enhanced load event handler
+    iframe.onload = () => {
+        console.log(`Successfully loaded: ${embedURL}`);
+        // Clear any pending retry timeouts
+        if (retryTimeout) {
+            clearTimeout(retryTimeout);
+        }
+        // Reset error handlers for future loads
+        hasTriedDub = false;
+
+        // Show success message for dub fallback
+        if (hasTriedDub && type === "anime") {
+            showToast("Successfully loaded dub version", 'success');
+        }
+    };
+
+    // Enhanced error detection with timeout
+    retryTimeout = setTimeout(() => {
+        checkIframeLoad(embedURL, handleIframeError);
+    }, 3000);
+
+    // Ensure iframe is visible and sized correctly
+    iframe.style.display = "block";  // Show the iframe
+
+    // Hide the movie poster when the video is playing
+    moviePoster.style.display = "none";  // Hide the movie poster image
+
+    // Ensure controls are accessible after changing source
+    setTimeout(ensureControlsAccessible, 500);
+}
+
 // Function to handle video source change based on selected server
 async function changeServer() {
     const server = document.getElementById('server').value; // Get the selected server
@@ -638,31 +799,8 @@ async function changeServer() {
     // Log the URL for debugging
     console.log(`Loading ${type} from: ${embedURL}`);
 
-    // Update the iframe source with the correct video URL and set attributes
-    iframe.setAttribute('src', embedURL);
-    iframe.setAttribute('playsinline', '');
-    iframe.setAttribute('webkit-playsinline', 'true');
-    iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen');
-    iframe.setAttribute('allowfullscreen', '');
-    // Setup fallback chain on error
-    let currentIndex = serverFallbackChain.indexOf(server);
-    iframe.onerror = () => {
-        const nextIndex = currentIndex + 1;
-        if (nextIndex < serverFallbackChain.length) {
-            const nextServer = serverFallbackChain[nextIndex];
-            document.getElementById('server').value = nextServer;
-            currentIndex = nextIndex;
-            changeServer();
-        }
-    };
-    // Ensure iframe is visible and sized correctly
-    iframe.style.display = "block";  // Show the iframe
-
-    // Hide the movie poster when the video is playing
-    moviePoster.style.display = "none";  // Hide the movie poster image
-
-    // Ensure controls are accessible after changing source
-    setTimeout(ensureControlsAccessible, 500);
+    // Load media with sub-to-dub fallback for anime
+    loadMediaWithFallback(embedURL, server, type);
 }
 
 // Function to play a specific episode
@@ -746,23 +884,8 @@ function playEpisode(tvId, seasonNumber, episodeNumber) {
         // Log the URL for debugging
         console.log(`Loading TV episode from: ${embedURL}`);
 
-        // Update the iframe source with the episode URL and set attributes
-        iframe.setAttribute('src', embedURL);
-        iframe.setAttribute('playsinline', '');
-        iframe.setAttribute('webkit-playsinline', 'true');
-        iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen');
-        iframe.setAttribute('allowfullscreen', '');
-        // Setup fallback chain on error for episodes
-        let epIndex = serverFallbackChain.indexOf(server);
-        iframe.onerror = () => {
-            const nextEp = epIndex + 1;
-            if (nextEp < serverFallbackChain.length) {
-                const nextSrv = serverFallbackChain[nextEp];
-                document.getElementById('server').value = nextSrv;
-                epIndex = nextEp;
-                changeServer();
-            }
-        };
+        // Use the enhanced fallback mechanism for episodes
+        loadMediaWithFallback(embedURL, server, type);
 
         iframe.style.display = "block";
         moviePoster.style.display = "none";
