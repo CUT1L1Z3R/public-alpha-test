@@ -602,32 +602,78 @@ function loadMediaWithFallback(embedURL, server, type) {
         }
     };
 
-    // Enhanced iframe load checking function
+    // Enhanced iframe load checking function with better error detection
     const checkIframeLoad = (expectedURL, onFailure) => {
         let checkAttempts = 0;
-        const maxAttempts = 3;
+        const maxAttempts = 4;
+        let hasFoundError = false;
 
         const performCheck = () => {
             checkAttempts++;
+            console.log(`Check attempt ${checkAttempts} for URL: ${expectedURL}`);
 
             try {
-                // Multiple checks for iframe load failure
-                const currentSrc = iframe.getAttribute('src');
+                // Check for visible error indicators in the page
+                const errorElements = document.querySelectorAll('*');
+                for (let element of errorElements) {
+                    const text = element.textContent || element.innerText || '';
+                    // Look for common error messages that indicate iframe content failed
+                    if (text.includes('An error occurred while loading the video') ||
+                        text.includes('vidsrc.icu says') ||
+                        text.includes('Please try again later') ||
+                        text.includes('502 Bad Gateway') ||
+                        text.includes('404 Not Found') ||
+                        text.includes('Content not available') ||
+                        text.includes('Error loading') ||
+                        text.includes('Failed to load')) {
+                        console.log("Error detected in page content:", text.substring(0, 100));
+                        hasFoundError = true;
+                        if (onFailure) onFailure();
+                        return;
+                    }
+                }
+
+                // Check for loading indicators that persist too long
+                const loadingElements = document.querySelectorAll('.loading, .spinner, [class*="load"], [class*="spin"]');
+                let hasLoadingIndicator = false;
+                for (let element of loadingElements) {
+                    if (element.style.display !== 'none' && element.offsetParent !== null) {
+                        hasLoadingIndicator = true;
+                        break;
+                    }
+                }
+
+                // If still loading after many attempts, consider it a failure
+                if (hasLoadingIndicator && checkAttempts >= maxAttempts) {
+                    console.log("Loading indicator persists, considering as failure");
+                    if (onFailure) onFailure();
+                    return;
+                }
 
                 // Check if URL changed unexpectedly
+                const currentSrc = iframe.getAttribute('src');
                 if (currentSrc !== expectedURL) {
                     console.log("URL changed, considering as potential failure");
                     if (onFailure) onFailure();
                     return;
                 }
 
-                // Check iframe content window
+                // Check iframe dimensions and visibility
+                const iframeRect = iframe.getBoundingClientRect();
+                if (iframeRect.width === 0 || iframeRect.height === 0) {
+                    console.log("Iframe has no dimensions, potential failure");
+                    if (checkAttempts >= maxAttempts && onFailure) {
+                        onFailure();
+                        return;
+                    }
+                }
+
+                // Check iframe content window (this will usually throw cross-origin error for successful loads)
                 if (iframe.contentWindow) {
                     try {
-                        // This will throw an error for successful cross-origin loads
                         const location = iframe.contentWindow.location.href;
-                        if (location === 'about:blank') {
-                            console.log("Iframe still showing blank page");
+                        if (location === 'about:blank' || location.includes('error')) {
+                            console.log("Iframe showing blank or error page");
                             if (checkAttempts >= maxAttempts && onFailure) {
                                 onFailure();
                                 return;
@@ -635,13 +681,17 @@ function loadMediaWithFallback(embedURL, server, type) {
                         }
                     } catch (e) {
                         // Cross-origin error usually means content loaded successfully
-                        console.log("Content appears to be loaded (cross-origin restriction)");
-                        return;
+                        // But we should still check for other error indicators
+                        if (!hasFoundError && checkAttempts >= 2) {
+                            console.log("Content appears to be loaded (cross-origin restriction detected)");
+                            return; // Consider this a success
+                        }
                     }
                 }
 
-                // If we've reached max attempts without success, call failure handler
-                if (checkAttempts >= maxAttempts && onFailure) {
+                // If we've reached max attempts without detecting success, call failure handler
+                if (checkAttempts >= maxAttempts && !hasFoundError && onFailure) {
+                    console.log("Max attempts reached, considering as failure for anime sub-to-dub fallback");
                     onFailure();
                 }
             } catch (error) {
@@ -652,10 +702,11 @@ function loadMediaWithFallback(embedURL, server, type) {
             }
         };
 
-        // Check at different intervals for better detection
-        setTimeout(performCheck, 2000);
-        setTimeout(performCheck, 5000);
-        setTimeout(performCheck, 8000);
+        // Check immediately and then at intervals
+        setTimeout(performCheck, 500);  // Quick initial check
+        setTimeout(performCheck, 2000); // Early check
+        setTimeout(performCheck, 5000); // Medium check
+        setTimeout(performCheck, 8000); // Final check
     };
 
     // Set up iframe error detection
@@ -677,10 +728,75 @@ function loadMediaWithFallback(embedURL, server, type) {
         }
     };
 
-    // Enhanced error detection with timeout
+    // Add message listener for iframe errors
+    const messageListener = (event) => {
+        // Listen for error messages from iframe
+        if (event.data && typeof event.data === 'string') {
+            if (event.data.includes('error') ||
+                event.data.includes('failed') ||
+                event.data.includes('404') ||
+                event.data.includes('502')) {
+                console.log("Error message received from iframe:", event.data);
+                handleIframeError();
+            }
+        }
+    };
+
+    // Add the listener
+    window.addEventListener('message', messageListener);
+
+    // DOM Observer to detect error popups/dialogs
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            mutation.addedNodes.forEach((node) => {
+                if (node.nodeType === 1) { // Element node
+                    const text = node.textContent || node.innerText || '';
+                    // Check for error popup content
+                    if (text.includes('An error occurred while loading the video') ||
+                        text.includes('vidsrc.icu says') ||
+                        text.includes('Please try again later') ||
+                        text.includes('502 Bad Gateway') ||
+                        text.includes('404 Not Found')) {
+                        console.log("Error popup detected via DOM observer:", text.substring(0, 100));
+                        setTimeout(handleIframeError, 1000); // Small delay to let popup fully appear
+                    }
+                }
+            });
+        });
+    });
+
+    // Start observing
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+
+    // Clean up listeners after some time
+    setTimeout(() => {
+        window.removeEventListener('message', messageListener);
+        observer.disconnect();
+    }, 15000);
+
+    // Immediate error checking for fast failures
+    setTimeout(() => {
+        // Quick check for immediate errors
+        const errorElements = document.querySelectorAll('*');
+        for (let element of errorElements) {
+            const text = element.textContent || element.innerText || '';
+            if (text.includes('An error occurred while loading the video') ||
+                text.includes('vidsrc.icu says') ||
+                text.includes('Please try again later')) {
+                console.log("Immediate error detected:", text.substring(0, 100));
+                handleIframeError();
+                return;
+            }
+        }
+    }, 100); // Very quick initial check
+
+    // Enhanced error detection with timeout - start checking immediately
     retryTimeout = setTimeout(() => {
         checkIframeLoad(embedURL, handleIframeError);
-    }, 3000);
+    }, 1000); // Reduced from 3000 to 1000 for faster detection
 
     // Ensure iframe is visible and sized correctly
     iframe.style.display = "block";  // Show the iframe
