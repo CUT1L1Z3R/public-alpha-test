@@ -358,7 +358,7 @@ async function fetchSeasonEpisodes(tvId, seasonNumber) {
                 season_number: parseInt(seasonNumber),
                 name: `Episode ${episodeNumber}`,
                 overview: `Episode ${episodeNumber} of ${animeDetails.title || animeDetails.name}`,
-                still_path: null,
+                still_path: animeDetails.backdrop_path || animeDetails.poster_path, // Use anime poster/banner as thumbnail
                 air_date: null
             });
         }
@@ -442,14 +442,24 @@ function createEpisodesList(episodes) {
         // Create thumbnail image
         const thumbnail = document.createElement('img');
         thumbnail.className = 'episode-thumbnail';
-        thumbnail.src = episode.still_path
-            ? `https://image.tmdb.org/t/p/w300${episode.still_path}`
-            : 'https://via.placeholder.com/300x170?text=No+Image';
+        // Handle different thumbnail sources based on media type
+        if (episode.still_path) {
+            if (media === 'anime' && !episode.still_path.startsWith('/')) {
+                // For anime, still_path might be a full URL from AniList
+                thumbnail.src = episode.still_path;
+            } else {
+                // For TV shows, still_path is TMDb path
+                thumbnail.src = `https://image.tmdb.org/t/p/w300${episode.still_path}`;
+            }
+        } else {
+            // Fallback for episodes without thumbnails
+            thumbnail.src = `https://via.placeholder.com/300x170/2c0e4c/ffffff?text=Episode+${episode.episode_number}`;
+        }
         thumbnail.alt = `${episode.name} Thumbnail`;
 
         // Add error handling for broken images
         thumbnail.onerror = function() {
-            this.src = 'https://via.placeholder.com/300x170/333333/ffffff?text=Episode+' + episode.episode_number;
+            this.src = `https://via.placeholder.com/300x170/2c0e4c/ffffff?text=Episode+${episode.episode_number}`;
         };
 
         // Add loading attribute for better performance
