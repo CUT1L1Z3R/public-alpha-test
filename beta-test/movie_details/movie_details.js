@@ -6,7 +6,7 @@ logo.addEventListener('click', () => {
 });
 
 // Define server fallback chain
-const serverFallbackChain = ['vidsrc.su', 'vidsrc.vip', 'vidlink.pro'];
+const serverFallbackChain = ['iframe.pstream.org', 'vidsrc.su', 'vidsrc.vip', 'vidlink.pro'];
 
 // Function to show toast notification
 function showToast(message, type = 'info') {
@@ -407,11 +407,11 @@ async function changeServer() {
                 embedURL = `https://moviesapi.club/${type}/${id}`;
                 break;
             default:
-                // Default to vidlink.pro as a fallback
+                // Default to iframe.pstream.org as primary fallback
                 if (type === "tv") {
-                    embedURL = `https://vidlink.pro/tv/${id}/1/1?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
+                    embedURL = `https://iframe.pstream.org/embed/tmdb-tv-${id}?theme=purple&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=false&scale=1.0&fedapi=false&interface-settings=false&tips=false&has-watchparty=false`;
                 } else {
-                    embedURL = `https://vidlink.pro/movie/${id}?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
+                    embedURL = `https://iframe.pstream.org/embed/tmdb-movie-${id}?theme=purple&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=false&scale=1.0&fedapi=false&interface-settings=false&tips=false&has-watchparty=false`;
                 }
                 break;
         }
@@ -479,8 +479,8 @@ function playEpisode(tvId, seasonNumber, episodeNumber) {
             embedURL = `https://moviesapi.club/tv/${tvId}/${seasonNumber}/${episodeNumber}`;
             break;
         default:
-            // Default to vidlink.pro as a fallback
-            embedURL = `https://vidlink.pro/tv/${tvId}/${seasonNumber}/${episodeNumber}?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
+            // Default to iframe.pstream.org as primary fallback
+            embedURL = `https://iframe.pstream.org/embed/tmdb-tv-${tvId}?season=${seasonNumber}&episode=${episodeNumber}&theme=purple&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=false&scale=1.0&fedapi=false&interface-settings=false&tips=false&has-watchparty=false`;
             break;
     }
 
@@ -756,7 +756,7 @@ window.addEventListener('load', function() {
     // Set a default server if none is selected
     const serverSelect = document.getElementById('server');
     if (serverSelect && !serverSelect.value) {
-        serverSelect.value = "vidlink.pro";
+        serverSelect.value = "iframe.pstream.org";
     }
 
     // Initialize server dropdown
