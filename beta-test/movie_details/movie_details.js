@@ -160,6 +160,36 @@ async function fetchMovieDetails(id) {
     }
 }
 
+// Helper function to create anime seasons based on episode count
+function createAnimeSeasons(totalEpisodes) {
+    if (!totalEpisodes || totalEpisodes === 'Unknown') {
+        return [{
+            season_number: 1,
+            episode_count: 50, // Default to 50 episodes for long-running anime
+            name: 'Season 1'
+        }];
+    }
+
+    const episodesPerSeason = 50; // Group episodes into seasons of 50
+    const seasons = [];
+    let remainingEpisodes = totalEpisodes;
+    let seasonNumber = 1;
+
+    while (remainingEpisodes > 0) {
+        const episodesInThisSeason = Math.min(episodesPerSeason, remainingEpisodes);
+        seasons.push({
+            season_number: seasonNumber,
+            episode_count: episodesInThisSeason,
+            name: `Episodes ${(seasonNumber - 1) * episodesPerSeason + 1}-${(seasonNumber - 1) * episodesPerSeason + episodesInThisSeason}`
+        });
+
+        remainingEpisodes -= episodesInThisSeason;
+        seasonNumber++;
+    }
+
+    return seasons;
+}
+
 // Function to fetch anime details from AniList API
 async function fetchAnimeDetails(id) {
     const query = `
@@ -245,11 +275,7 @@ async function fetchAnimeDetails(id) {
                 status: anime.status || 'Unknown',
                 studios: anime.studios.nodes.map(studio => studio.name).join(', ') || 'Unknown',
                 is_anime: true,
-                seasons: anime.episodes ? [{
-                    season_number: 1,
-                    episode_count: anime.episodes,
-                    name: `Season 1`
-                }] : []
+                seasons: createAnimeSeasons(anime.episodes)
             };
         } else {
             // Fallback if AniList doesn't have the anime
@@ -313,25 +339,30 @@ async function fetchTVSeasons(id) {
 // Function to fetch episodes for a specific season
 async function fetchSeasonEpisodes(tvId, seasonNumber) {
     if (media === "anime") {
-        // For anime, create episodes based on the total episode count
+        // For anime, create episodes based on the season structure
         const animeDetails = await fetchAnimeDetails(tvId);
-        const episodeCount = animeDetails.number_of_episodes;
+        const seasons = animeDetails.seasons;
 
-        if (episodeCount && episodeCount !== 'Unknown') {
-            const episodes = [];
-            for (let i = 1; i <= episodeCount; i++) {
-                episodes.push({
-                    episode_number: i,
-                    season_number: seasonNumber,
-                    name: `Episode ${i}`,
-                    overview: `Episode ${i} of ${animeDetails.title || animeDetails.name}`,
-                    still_path: null,
-                    air_date: null
-                });
-            }
-            return episodes;
+        // Find the specific season
+        const season = seasons.find(s => s.season_number === parseInt(seasonNumber));
+        if (!season) return [];
+
+        const episodes = [];
+        const episodesPerSeason = 50;
+        const startEpisode = (seasonNumber - 1) * episodesPerSeason + 1;
+
+        for (let i = 0; i < season.episode_count; i++) {
+            const episodeNumber = startEpisode + i;
+            episodes.push({
+                episode_number: episodeNumber, // Global episode number (for the anime server)
+                season_number: parseInt(seasonNumber),
+                name: `Episode ${episodeNumber}`,
+                overview: `Episode ${episodeNumber} of ${animeDetails.title || animeDetails.name}`,
+                still_path: null,
+                air_date: null
+            });
         }
-        return [];
+        return episodes;
     } else {
         const response = await fetch(`https://api.themoviedb.org/3/tv/${tvId}/season/${seasonNumber}?api_key=${api_Key}`);
         const data = await response.json();
