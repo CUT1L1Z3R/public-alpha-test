@@ -643,13 +643,13 @@ input::-webkit-input-placeholder {
 
 /* Remove the anime-specific height since all containers now use landscape */
 .anime-container {
-  min-height: 200px !important;
+  min-height: 290px !important;
 }
 
-/* Specific styles for anime containers that use landscape images */
+/* Specific styles for anime containers that use portrait images */
 .anime-section .movie-item {
-  width: 290px;
-  height: 170px;
+  width: 180px;
+  height: 260px;
   margin: 15px 5px;
 }
 
@@ -668,12 +668,12 @@ input::-webkit-input-placeholder {
 
 /* Special heights for anime section navigation buttons */
 .anime-section .navigation-button {
-  height: 170px !important;
+  height: 260px !important;
 }
 
 /* Adjust height for all anime containers */
 .anime-section .movies-box {
-  min-height: 200px;
+  min-height: 290px;
 }
 
 /* Special height for Netflix container */
@@ -1323,16 +1323,16 @@ input::-webkit-input-placeholder {
   }
 
   .anime-section .movie-item {
-    width: 220px;
-    height: 130px;
+    width: 140px;
+    height: 200px;
   }
 
   .anime-section .navigation-button {
-    height: 130px !important;
+    height: 200px !important;
   }
 
   .anime-section .movies-box {
-    min-height: 150px;
+    min-height: 230px;
   }
 
   /* Set Netflix container to same height as other containers in mobile */
@@ -1368,11 +1368,11 @@ input::-webkit-input-placeholder {
     height: 340px;
   }
 
-  /* Match anime posters to horror movies size on mobile */
+  /* Portrait anime posters on mobile */
   .anime-container .movie-item,
   .anime-section .movie-item {
-    width: 220px;
-    height: 130px;
+    width: 140px;
+    height: 200px;
   }
 }
 
@@ -1600,12 +1600,12 @@ input::-webkit-input-placeholder {
   }
 
   .anime-section .movie-item {
-    width: 220px;
-    height: 130px;
+    width: 160px;
+    height: 230px;
   }
 
   .anime-section .navigation-button {
-    height: 140px !important;
+    height: 230px !important;
   }
 }
 
@@ -1762,6 +1762,10 @@ input::-webkit-input-placeholder {
     top: 50%;
     transform: translateY(-50%);
     color: #8d16c9;
+  }
+
+  .anime-section .navigation-button {
+    height: 260px;
   }
 
   .netflix-previous, .netflix-next {
