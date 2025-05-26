@@ -3,10 +3,6 @@
  * Handles fetching, displaying, and UI interactions for anime.
  */
 
-// Enhanced TMDB and AniList integration
-import tmdbService from '../services/tmdb-service.js';
-import posterEnhancer from '../utils/poster-enhancement.js';
-
 // Get references to HTML elements
 const searchInput = document.getElementById('searchInput');
 const searchResults = document.getElementById('searchResults');
@@ -23,12 +19,10 @@ let bannerInterval; // Interval for auto-rotation
 // AniList GraphQL API endpoint
 const ANILIST_API_URL = 'https://graphql.anilist.co';
 
-// Enhancement statistics
-let enhancementStats = {
-    totalImages: 0,
-    enhancedImages: 0,
-    errors: 0
-};
+// TMDB API configuration
+const TMDB_API_KEY = 'YOUR_TMDB_API_KEY_HERE'; // Replace with your actual TMDB API key
+const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
+const TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w780'; // Use higher quality images
 
 // Helper function to make AniList API requests with retry logic
 async function makeAniListRequest(query, variables = {}, retries = 3) {
@@ -65,46 +59,88 @@ async function makeAniListRequest(query, variables = {}, retries = 3) {
     }
 }
 
-// Enhanced poster enhancement function
-async function getEnhancedPoster(anime, options = {}) {
-    try {
-        enhancementStats.totalImages++;
-        
-        const result = await posterEnhancer.getEnhancedPoster(anime, {
-            preferredSize: 'LARGE',
-            timeoutMs: 3000,
-            ...options
-        });
-        
-        if (result.source === 'tmdb') {
-            enhancementStats.enhancedImages++;
-            console.log(`🎯 Enhanced poster quality for: ${posterEnhancer.extractTitle(anime)}`);
+// Helper function to search TMDB for anime titles
+async function searchTMDBForAnime(title, retries = 2) {
+    // Skip TMDB search if API key is not configured
+    if (TMDB_API_KEY === 'YOUR_TMDB_API_KEY_HERE' || !TMDB_API_KEY) {
+        console.log('TMDB API key not configured, skipping TMDB search');
+        return null;
+    }
+
+    for (let i = 0; i < retries; i++) {
+        try {
+            // Clean the title for better TMDB search results
+            const cleanTitle = title.replace(/[^\w\s]/gi, '').trim();
+            const encodedTitle = encodeURIComponent(cleanTitle);
+
+            const url = `${TMDB_BASE_URL}/search/tv?api_key=${TMDB_API_KEY}&query=${encodedTitle}&with_genres=16&language=en-US`;
+
+            console.log(`Searching TMDB for: ${cleanTitle}`);
+            const response = await fetch(url);
+
+            if (!response.ok) {
+                throw new Error(`TMDB HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            // Filter results by Animation genre (genre ID 16) and look for close title matches
+            const animeResults = data.results?.filter(result => {
+                return result.genre_ids?.includes(16) && // Animation genre
+                       result.poster_path && // Has poster image
+                       result.name; // Has a name
+            }) || [];
+
+            if (animeResults.length > 0) {
+                // Return the first match
+                const match = animeResults[0];
+                console.log(`Found TMDB match for "${title}": ${match.name}`);
+                return {
+                    poster_path: TMDB_IMAGE_BASE_URL + match.poster_path,
+                    backdrop_path: match.backdrop_path ? TMDB_IMAGE_BASE_URL.replace('w780', 'w1280') + match.backdrop_path : null,
+                    tmdb_id: match.id,
+                    tmdb_name: match.name
+                };
+            }
+
+            console.log(`No TMDB results found for: ${title}`);
+            return null;
+        } catch (error) {
+            console.warn(`TMDB search failed for "${title}" (attempt ${i + 1}/${retries}):`, error);
+            if (i === retries - 1) {
+                return null;
+            }
+            // Wait before retrying
+            await new Promise(resolve => setTimeout(resolve, 1000));
         }
-        
-        return result.url;
-        
-    } catch (error) {
-        enhancementStats.errors++;
-        console.warn('Poster enhancement failed:', error.message);
-        
-        // Fallback to AniList image
-        return posterEnhancer.extractOriginalPoster(anime) || posterEnhancer.getPlaceholderImage();
     }
 }
 
-// Legacy function for backward compatibility
-async function getTMDBPoster(animeTitle, year = null) {
-    try {
-        const fakeAnime = {
-            title: { english: animeTitle },
-            startDate: { year }
-        };
-        
-        return await getEnhancedPoster(fakeAnime);
-    } catch (error) {
-        console.warn('Error in legacy TMDB function:', error);
-        return null;
+// Helper function to get the best poster image with improved quality
+async function getBestPosterImage(anime) {
+    // Always use AniList's high-quality images first, as they are specifically for anime
+    // AniList provides better anime-specific artwork than TMDB
+    if (anime.coverImage?.extraLarge) {
+        return anime.coverImage.extraLarge;
     }
+    if (anime.coverImage?.large) {
+        return anime.coverImage.large;
+    }
+
+    try {
+        // Fallback to TMDB only if AniList doesn't have good images
+        const tmdbResult = await searchTMDBForAnime(anime.title.english || anime.title.romaji || anime.title.native);
+
+        if (tmdbResult && tmdbResult.poster_path) {
+            console.log(`Using TMDB poster for: ${anime.title.english || anime.title.romaji || anime.title.native}`);
+            return tmdbResult.poster_path;
+        }
+    } catch (error) {
+        console.warn('TMDB search failed:', error);
+    }
+
+    // Final fallback
+    return anime.coverImage?.extraLarge || anime.coverImage?.large || anime.coverImage?.medium || anime.bannerImage || 'https://via.placeholder.com/500x750?text=No+Image+Available';
 }
 
 // Document ready function
@@ -174,6 +210,7 @@ function updateBannerForAnime() {
                     }
                     bannerImage
                     coverImage {
+                        extraLarge
                         large
                         medium
                     }
@@ -200,13 +237,13 @@ function updateBannerForAnime() {
 
             // Filter to anime with banner images, get up to 9 items
             bannerItems = animeList
-                .filter(anime => anime.bannerImage || anime.coverImage?.large)
+                .filter(anime => anime.bannerImage || anime.coverImage?.extraLarge || anime.coverImage?.large)
                 .slice(0, 9)
                 .map(anime => ({
                     id: anime.id,
                     title: anime.title.english || anime.title.romaji || anime.title.native,
                     backdrop_path: anime.bannerImage,
-                    poster_path: anime.coverImage?.large,
+                    poster_path: anime.coverImage?.extraLarge || anime.coverImage?.large,
                     vote_average: anime.averageScore ? anime.averageScore / 10 : 0,
                     overview: anime.description,
                     mediaType: 'anime',
@@ -260,18 +297,30 @@ function updateBannerForAnime() {
 }
 
 // Initialize sections for anime
-function initializeAnimeSections() {
-    // Initialize anime sections
-    fetchAnime('anime-upcoming-new-container', 'truly_upcoming');
-    fetchAnime('recently-added-anime-container', 'recently_added'); // Add this new section
-    fetchAnime('top-rated-anime-movie-container', 'top_rated_anime_movies');
-    fetchAnime('anime-popular-container', 'popular');
-    fetchAnime('anime-top-container', 'top_rated');
-    fetchAnime('anime-upcoming-container', 'upcoming');
-    fetchAnime('adventure-anime-container', 'adventure');
-    fetchAnime('drama-anime-container', 'drama');
-    fetchAnime('anime-comedy-container', 'comedy');
-    fetchAnime('anime-romance-container', 'romance');
+async function initializeAnimeSections() {
+    // Initialize anime sections - run in parallel for better performance
+    const sectionPromises = [
+        fetchAnime('anime-popular-season-container', 'popular_season'),
+        fetchAnime('anime-latest-episodes-container', 'latest_episodes'),
+        fetchAnime('anime-recently-added-container', 'recently_added'),
+        fetchAnime('anime-upcoming-new-container', 'truly_upcoming'),
+        fetchAnime('top-rated-anime-movie-container', 'top_rated_anime_movies'),
+        fetchAnime('anime-popular-container', 'popular'),
+        fetchAnime('anime-top-container', 'top_rated'),
+        fetchAnime('anime-upcoming-container', 'upcoming'),
+        fetchAnime('adventure-anime-container', 'adventure'),
+        fetchAnime('drama-anime-container', 'drama'),
+        fetchAnime('anime-comedy-container', 'comedy'),
+        fetchAnime('anime-romance-container', 'romance')
+    ];
+
+    // Wait for all sections to load
+    try {
+        await Promise.all(sectionPromises);
+        console.log('All anime sections loaded successfully');
+    } catch (error) {
+        console.error('Error loading some anime sections:', error);
+    }
 
     // Set up navigation buttons for each section
     setupNavigationButtons();
@@ -420,7 +469,7 @@ function showBannerAtIndex(index) {
 }
 
 // Function to fetch anime from AniList API
-function fetchAnime(containerClass, genreOrKeyword) {
+async function fetchAnime(containerClass, genreOrKeyword) {
     console.log(`Fetching anime for ${containerClass} with AniList API using genre/keyword: ${genreOrKeyword}`);
     const containers = document.querySelectorAll(`.${containerClass}`);
 
@@ -433,12 +482,28 @@ function fetchAnime(containerClass, genreOrKeyword) {
     let query = '';
     let variables = {};
 
-    if (genreOrKeyword === 'recently_added') {
-        // Query for recently added anime based on when they were added to AniList database
+    if (genreOrKeyword === 'popular_season') {
+        // Get current season and year
+        const now = new Date();
+        const currentYear = now.getFullYear();
+        const currentMonth = now.getMonth() + 1; // JavaScript months are 0-indexed
+
+        // Determine season based on month
+        let season;
+        if (currentMonth >= 1 && currentMonth <= 3) {
+            season = 'WINTER';
+        } else if (currentMonth >= 4 && currentMonth <= 6) {
+            season = 'SPRING';
+        } else if (currentMonth >= 7 && currentMonth <= 9) {
+            season = 'SUMMER';
+        } else {
+            season = 'FALL';
+        }
+
         query = `
-            query ($page: Int, $perPage: Int) {
+            query ($page: Int, $perPage: Int, $season: MediaSeason, $year: Int) {
                 Page(page: $page, perPage: $perPage) {
-                    media(type: ANIME, sort: [ID_DESC], isAdult: false, status_in: [FINISHED, RELEASING]) {
+                    media(type: ANIME, season: $season, seasonYear: $year, sort: POPULARITY_DESC, isAdult: false) {
                         id
                         title {
                             romaji
@@ -446,6 +511,7 @@ function fetchAnime(containerClass, genreOrKeyword) {
                             native
                         }
                         coverImage {
+                            extraLarge
                             large
                             medium
                         }
@@ -456,9 +522,53 @@ function fetchAnime(containerClass, genreOrKeyword) {
                         format
                         startDate {
                             year
+                            month
+                            day
                         }
                         description
-                        createdAt
+                        season
+                        seasonYear
+                    }
+                }
+            }
+        `;
+        variables = { page: 1, perPage: 20, season: season, year: currentYear };
+    } else if (genreOrKeyword === 'latest_episodes') {
+        query = `
+            query ($page: Int, $perPage: Int) {
+                Page(page: $page, perPage: $perPage) {
+                    airingSchedules(sort: TIME_DESC, notYetAired: false) {
+                        id
+                        airingAt
+                        episode
+                        media {
+                            id
+                            title {
+                                romaji
+                                english
+                                native
+                            }
+                            coverImage {
+                                extraLarge
+                                large
+                                medium
+                            }
+                            bannerImage
+                            averageScore
+                            episodes
+                            status
+                            format
+                            startDate {
+                                year
+                                month
+                                day
+                            }
+                            description
+                            nextAiringEpisode {
+                                episode
+                                airingAt
+                            }
+                        }
                     }
                 }
             }
@@ -476,6 +586,7 @@ function fetchAnime(containerClass, genreOrKeyword) {
                             native
                         }
                         coverImage {
+                            extraLarge
                             large
                             medium
                         }
@@ -505,6 +616,7 @@ function fetchAnime(containerClass, genreOrKeyword) {
                             native
                         }
                         coverImage {
+                            extraLarge
                             large
                             medium
                         }
@@ -534,6 +646,7 @@ function fetchAnime(containerClass, genreOrKeyword) {
                             native
                         }
                         coverImage {
+                            extraLarge
                             large
                             medium
                         }
@@ -563,6 +676,7 @@ function fetchAnime(containerClass, genreOrKeyword) {
                             native
                         }
                         coverImage {
+                            extraLarge
                             large
                             medium
                         }
@@ -573,6 +687,38 @@ function fetchAnime(containerClass, genreOrKeyword) {
                         format
                         startDate {
                             year
+                        }
+                        description
+                    }
+                }
+            }
+        `;
+        variables = { page: 1, perPage: 20 };
+    } else if (genreOrKeyword === 'recently_added') {
+        query = `
+            query ($page: Int, $perPage: Int) {
+                Page(page: $page, perPage: $perPage) {
+                    media(type: ANIME, sort: START_DATE_DESC, isAdult: false, status_in: [FINISHED, RELEASING]) {
+                        id
+                        title {
+                            romaji
+                            english
+                            native
+                        }
+                        coverImage {
+                            extraLarge
+                            large
+                            medium
+                        }
+                        bannerImage
+                        averageScore
+                        episodes
+                        status
+                        format
+                        startDate {
+                            year
+                            month
+                            day
                         }
                         description
                     }
@@ -592,6 +738,7 @@ function fetchAnime(containerClass, genreOrKeyword) {
                             native
                         }
                         coverImage {
+                            extraLarge
                             large
                             medium
                         }
@@ -621,6 +768,7 @@ function fetchAnime(containerClass, genreOrKeyword) {
                             native
                         }
                         coverImage {
+                            extraLarge
                             large
                             medium
                         }
@@ -650,6 +798,7 @@ function fetchAnime(containerClass, genreOrKeyword) {
                             native
                         }
                         coverImage {
+                            extraLarge
                             large
                             medium
                         }
@@ -679,6 +828,7 @@ function fetchAnime(containerClass, genreOrKeyword) {
                             native
                         }
                         coverImage {
+                            extraLarge
                             large
                             medium
                         }
@@ -708,6 +858,7 @@ function fetchAnime(containerClass, genreOrKeyword) {
                             native
                         }
                         coverImage {
+                            extraLarge
                             large
                             medium
                         }
@@ -737,6 +888,7 @@ function fetchAnime(containerClass, genreOrKeyword) {
                             native
                         }
                         coverImage {
+                            extraLarge
                             large
                             medium
                         }
@@ -767,6 +919,7 @@ function fetchAnime(containerClass, genreOrKeyword) {
                             native
                         }
                         coverImage {
+                            extraLarge
                             large
                             medium
                         }
@@ -789,52 +942,58 @@ function fetchAnime(containerClass, genreOrKeyword) {
     // Fetch anime data from AniList
     console.log(`Fetching anime from AniList for ${containerClass}`);
     makeAniListRequest(query, variables)
-        .then(data => {
-            console.log(`Got anime data from AniList for ${containerClass}, found ${data.data?.Page?.media ? data.data.Page.media.length : 0} items`);
-            const animeResults = data.data?.Page?.media || [];
+        .then(async data => {
+            let animeResults = [];
 
-            containers.forEach(async (container) => {
+            if (genreOrKeyword === 'latest_episodes') {
+                // Handle airingSchedules data structure
+                const airingSchedules = data.data?.Page?.airingSchedules || [];
+                console.log(`Got airing schedules from AniList for ${containerClass}, found ${airingSchedules.length} items`);
+
+                // Extract unique media from airing schedules
+                const seenIds = new Set();
+                animeResults = airingSchedules
+                    .filter(schedule => schedule.media && !seenIds.has(schedule.media.id))
+                    .map(schedule => {
+                        seenIds.add(schedule.media.id);
+                        return {
+                            ...schedule.media,
+                            lastEpisode: schedule.episode,
+                            lastAiredAt: schedule.airingAt
+                        };
+                    });
+            } else {
+                // Handle normal media data structure
+                animeResults = data.data?.Page?.media || [];
+                console.log(`Got anime data from AniList for ${containerClass}, found ${animeResults.length} items`);
+            }
+
+            // Process each container
+            for (const container of containers) {
                 container.innerHTML = ''; // Clear the container first to prevent duplicates
 
                 // Process each anime item
                 if (animeResults.length === 0) {
                     console.warn(`No anime results found for ${containerClass}`);
                     container.innerHTML = '<div style="color: white; padding: 20px; text-align: center;">No anime content available at this time. Please try again later.</div>';
-                    return;
+                    continue;
                 }
 
                 // Filter out items without cover images
-                const validResults = animeResults.filter(item => item.coverImage?.large || item.bannerImage);
+                const validResults = animeResults.filter(item => item.coverImage?.extraLarge || item.coverImage?.large || item.bannerImage);
 
                 if (validResults.length === 0) {
                     console.warn(`No valid image results found for ${containerClass}`);
                     container.innerHTML = '<div style="color: white; padding: 20px; text-align: center;">No anime content with images available at this time. Please try again later.</div>';
-                    return;
+                    continue;
                 }
 
-                for (const anime of validResults) {
+                // Process anime items with TMDB integration
+                const processAnimeItem = async (anime, container) => {
                     const title = anime.title.english || anime.title.romaji || anime.title.native || 'Unknown Title';
 
-                    // Try to get enhanced TMDB poster first, fallback to AniList image
-                    let imageUrl = anime.bannerImage || anime.coverImage?.large || anime.coverImage?.medium;
-
-                    try {
-                        const enhancedPoster = await getEnhancedPoster(anime, {
-                            preferredSize: 'LARGE',
-                            timeoutMs: 2000 // Shorter timeout for list items
-                        });
-                        
-                        if (enhancedPoster) {
-                            imageUrl = enhancedPoster;
-                        }
-                    } catch (error) {
-                        console.warn('Failed to get enhanced poster for', title, error);
-                    }
-
-                    // Fallback to placeholder if no image
-                    if (!imageUrl) {
-                        imageUrl = posterEnhancer.getPlaceholderImage();
-                    }
+                    // Get the best poster image using TMDB fallback
+                    const imageUrl = await getBestPosterImage(anime);
 
                     // Create the main item element
                     const itemElement = document.createElement('div');
@@ -902,6 +1061,40 @@ function fetchAnime(containerClass, genreOrKeyword) {
                     rating.appendChild(star);
                     rating.appendChild(ratingValue);
 
+                    // Add special episode info for latest episodes section
+                    if (genreOrKeyword === 'latest_episodes' && anime.lastEpisode) {
+                        const episodeInfo = document.createElement('div');
+                        episodeInfo.className = 'episode-info';
+                        episodeInfo.style.fontSize = '0.8rem';
+                        episodeInfo.style.color = '#4CAF50';
+                        episodeInfo.style.fontWeight = 'bold';
+                        episodeInfo.style.marginTop = '4px';
+                        episodeInfo.textContent = `Episode ${anime.lastEpisode}`;
+
+                        // Add aired time if available
+                        if (anime.lastAiredAt) {
+                            const airedDate = new Date(anime.lastAiredAt * 1000);
+                            const now = new Date();
+                            const diffHours = Math.floor((now - airedDate) / (1000 * 60 * 60));
+
+                            const timeInfo = document.createElement('div');
+                            timeInfo.style.fontSize = '0.7rem';
+                            timeInfo.style.color = '#999';
+                            timeInfo.style.marginTop = '2px';
+
+                            if (diffHours < 24) {
+                                timeInfo.textContent = `${diffHours}h ago`;
+                            } else {
+                                const diffDays = Math.floor(diffHours / 24);
+                                timeInfo.textContent = `${diffDays}d ago`;
+                            }
+
+                            episodeInfo.appendChild(timeInfo);
+                        }
+
+                        overlay.appendChild(episodeInfo);
+                    }
+
                     // Add overlay elements
                     overlay.appendChild(titleElement);
                     overlay.appendChild(rating);
@@ -917,8 +1110,21 @@ function fetchAnime(containerClass, genreOrKeyword) {
                         // You might want to create a dedicated anime details page later
                         window.location.href = `../movie_details/movie_details.html?media=anime&id=${anime.id}`;
                     });
+                };
+
+                // Process items in small batches to prevent overwhelming TMDB API
+                const batchSize = 5;
+                for (let i = 0; i < validResults.length; i += batchSize) {
+                    const batch = validResults.slice(i, i + batchSize);
+                    const promises = batch.map(anime => processAnimeItem(anime, container));
+                    await Promise.all(promises);
+
+                    // Small delay between batches to be respectful to APIs
+                    if (i + batchSize < validResults.length) {
+                        await new Promise(resolve => setTimeout(resolve, 100));
+                    }
                 }
-            });
+            }
         })
         .catch(error => {
             console.error('Error fetching anime data:', error);
@@ -970,16 +1176,19 @@ function initSearch() {
     });
 
     // Event listener for search input focus to reshow results if there was a query
-    searchInput.addEventListener('focus', () => {
+    searchInput.addEventListener('focus', async () => {
         const query = searchInput.value;
         if (query.length > 2) {
             // Re-show search results if they were previously hidden
-            fetchSearchResults(query).then(results => {
+            try {
+                const results = await fetchSearchResults(query);
                 if (results.length !== 0) {
-                    displaySearchResults(results);
+                    await displaySearchResults(results);
                     searchResults.style.visibility = "visible";
                 }
-            });
+            } catch (error) {
+                console.error('Error re-showing search results:', error);
+            }
         }
     });
 
@@ -1009,7 +1218,7 @@ async function handleSearchInput() {
         if (results.length !== 0) {
             searchResults.style.visibility = "visible";
         }
-        displaySearchResults(results);
+        await displaySearchResults(results);
     } else {
         searchResults.innerHTML = '';
         searchResults.style.visibility = "hidden";
@@ -1030,6 +1239,7 @@ async function fetchSearchResults(query) {
                             native
                         }
                         coverImage {
+                            extraLarge
                             large
                             medium
                         }
@@ -1057,7 +1267,7 @@ async function fetchSearchResults(query) {
 
         // Filter results to only those with cover images
         return (data.data?.Page?.media || [])
-            .filter(item => item.coverImage?.large || item.coverImage?.medium)
+            .filter(item => item.coverImage?.extraLarge || item.coverImage?.large || item.coverImage?.medium)
             .slice(0, 6); // Limit to 6 results
     } catch (error) {
         console.error('Error fetching search results:', error);
@@ -1066,7 +1276,7 @@ async function fetchSearchResults(query) {
 }
 
 // Function to display search results
-function displaySearchResults(results) {
+async function displaySearchResults(results) {
     searchResults.innerHTML = '';
 
     if (results.length === 0) {
@@ -1075,14 +1285,18 @@ function displaySearchResults(results) {
         return;
     }
 
-    results.forEach(result => {
+    // Process search results with TMDB integration
+    for (const result of results) {
         const shortenedTitle = result.title.english || result.title.romaji || result.title.native || 'Unknown Title';
         const year = result.startDate?.year || '';
 
+        // Get the best poster image using TMDB fallback
+        const imageUrl = await getBestPosterImage(result);
+
         const movieItem = document.createElement('div');
-        // Create HTML structure for each item using AniList data
+        // Create HTML structure for each item using enhanced image data
         movieItem.innerHTML = `<div class="search-item-thumbnail">
-                                <img src="${result.coverImage?.medium || result.coverImage?.large || 'https://via.placeholder.com/92x138?text=No+Image'}">
+                                <img src="${imageUrl}">
                             </div>
                             <div class="search-item-info">
                                 <h3>${shortenedTitle}</h3>
@@ -1102,7 +1316,7 @@ function displaySearchResults(results) {
                 watchlist.push({
                     id: result.id,
                     title: shortenedTitle,
-                    poster_path: result.coverImage?.large || result.coverImage?.medium || 'https://via.placeholder.com/500x750?text=No+Image',
+                    poster_path: result.coverImage?.extraLarge || result.coverImage?.large || result.coverImage?.medium || 'https://via.placeholder.com/500x750?text=No+Image',
                     media_type: 'anime',
                     release_date: result.startDate?.year ? `${result.startDate.year}-01-01` : ''
                 });
@@ -1132,7 +1346,7 @@ function displaySearchResults(results) {
 
         // Append movie item to search results
         searchResults.appendChild(movieItem);
-    });
+    }
 
     searchResults.style.visibility = "visible";
 }
