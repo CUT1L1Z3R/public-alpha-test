@@ -383,9 +383,9 @@ async function changeServer() {
             case "iframe.pstream.org":
                 if (type === "tv") {
                     // For TV shows, default to first episode of first season
-                    embedURL = `https://iframe.pstream.org/embed/tmdb-tv-${id}?theme=purple&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=false&scale=1.0&fedapi=false&interface-settings=false&tips=false&has-watchparty=false`;
+                    embedURL = `https://iframe.pstream.org/embed/tmdb-tv-${id}?theme=violet&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=false&scale=1.0&fedapi=false&interface-settings=false&tips=false&has-watchparty=false`;
                 } else {
-                    embedURL = `https://iframe.pstream.org/embed/tmdb-movie-${id}?theme=purple&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=false&scale=1.0&fedapi=false&interface-settings=false&tips=false&has-watchparty=false`;
+                    embedURL = `https://iframe.pstream.org/embed/tmdb-movie-${id}?theme=violet&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=false&scale=1.0&fedapi=false&interface-settings=false&tips=false&has-watchparty=false`;
                 }
                 break;
             case "vidsrc.cc":
@@ -409,9 +409,9 @@ async function changeServer() {
             default:
                 // Default to iframe.pstream.org as primary fallback
                 if (type === "tv") {
-                    embedURL = `https://iframe.pstream.org/embed/tmdb-tv-${id}?theme=purple&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=false&scale=1.0&fedapi=false&interface-settings=false&tips=false&has-watchparty=false`;
+                    embedURL = `https://iframe.pstream.org/embed/tmdb-tv-${id}?theme=violet&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=false&scale=1.0&fedapi=false&interface-settings=false&tips=false&has-watchparty=false`;
                 } else {
-                    embedURL = `https://iframe.pstream.org/embed/tmdb-movie-${id}?theme=purple&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=false&scale=1.0&fedapi=false&interface-settings=false&tips=false&has-watchparty=false`;
+                    embedURL = `https://iframe.pstream.org/embed/tmdb-movie-${id}?theme=violet&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=false&scale=1.0&fedapi=false&interface-settings=false&tips=false&has-watchparty=false`;
                 }
                 break;
         }
@@ -461,7 +461,7 @@ function playEpisode(tvId, seasonNumber, episodeNumber) {
             embedURL = `https://vidlink.pro/tv/${tvId}/${seasonNumber}/${episodeNumber}?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
             break;
         case "iframe.pstream.org":
-            embedURL = `https://iframe.pstream.org/embed/tmdb-tv-${tvId}?season=${seasonNumber}&episode=${episodeNumber}&theme=purple&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=false&scale=1.0&fedapi=false&interface-settings=false&tips=false&has-watchparty=false`;
+            embedURL = `https://iframe.pstream.org/embed/tmdb-tv-${tvId}?season=${seasonNumber}&episode=${episodeNumber}&theme=violet&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=false&scale=1.0&fedapi=false&interface-settings=false&tips=false&has-watchparty=false`;
             break;
         case "vidsrc.cc":
             embedURL = `https://vidsrc.cc/v2/embed/tv/${tvId}/${seasonNumber}/${episodeNumber}`;
@@ -480,7 +480,7 @@ function playEpisode(tvId, seasonNumber, episodeNumber) {
             break;
         default:
             // Default to iframe.pstream.org as primary fallback
-            embedURL = `https://iframe.pstream.org/embed/tmdb-tv-${tvId}?season=${seasonNumber}&episode=${episodeNumber}&theme=purple&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=false&scale=1.0&fedapi=false&interface-settings=false&tips=false&has-watchparty=false`;
+            embedURL = `https://iframe.pstream.org/embed/tmdb-tv-${tvId}?season=${seasonNumber}&episode=${episodeNumber}&theme=violet&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=false&scale=1.0&fedapi=false&interface-settings=false&tips=false&has-watchparty=false`;
             break;
     }
 
