@@ -1061,39 +1061,7 @@ async function fetchAnime(containerClass, genreOrKeyword) {
                     rating.appendChild(star);
                     rating.appendChild(ratingValue);
 
-                    // Add special episode info for latest episodes section
-                    if (genreOrKeyword === 'latest_episodes' && anime.lastEpisode) {
-                        const episodeInfo = document.createElement('div');
-                        episodeInfo.className = 'episode-info';
-                        episodeInfo.style.fontSize = '0.8rem';
-                        episodeInfo.style.color = '#4CAF50';
-                        episodeInfo.style.fontWeight = 'bold';
-                        episodeInfo.style.marginTop = '4px';
-                        episodeInfo.textContent = `Episode ${anime.lastEpisode}`;
 
-                        // Add aired time if available
-                        if (anime.lastAiredAt) {
-                            const airedDate = new Date(anime.lastAiredAt * 1000);
-                            const now = new Date();
-                            const diffHours = Math.floor((now - airedDate) / (1000 * 60 * 60));
-
-                            const timeInfo = document.createElement('div');
-                            timeInfo.style.fontSize = '0.7rem';
-                            timeInfo.style.color = '#999';
-                            timeInfo.style.marginTop = '2px';
-
-                            if (diffHours < 24) {
-                                timeInfo.textContent = `${diffHours}h ago`;
-                            } else {
-                                const diffDays = Math.floor(diffHours / 24);
-                                timeInfo.textContent = `${diffDays}d ago`;
-                            }
-
-                            episodeInfo.appendChild(timeInfo);
-                        }
-
-                        overlay.appendChild(episodeInfo);
-                    }
 
                     // Add overlay elements
                     overlay.appendChild(titleElement);
