@@ -409,9 +409,9 @@ async function changeServer() {
             default:
                 // Default to iframe.pstream.org as primary fallback
                 if (type === "tv") {
-                    embedURL = `https://iframe.pstream.org/embed/tmdb-tv-${id}?theme=dark&language=en&logo=0&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=false&scale=1.0&fedapi=false&interface-settings=false&tips=false&has-watchparty=false&subtitles=true&branding=false&watermark=false`;
+                    embedURL = `https://iframe.pstream.org/embed/tmdb-tv-${id}?theme=dark&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=false&scale=1.0&fedapi=false&interface-settings=false&tips=false&has-watchparty=false&subtitles=true&branding=false&watermark=false`;
                 } else {
-                    embedURL = `https://iframe.pstream.org/embed/tmdb-movie-${id}?theme=dark&language=en&logo=0&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=false&scale=1.0&fedapi=false&interface-settings=false&tips=false&has-watchparty=false&subtitles=true&branding=false&watermark=false`;
+                    embedURL = `https://iframe.pstream.org/embed/tmdb-movie-${id}?theme=dark&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=false&scale=1.0&fedapi=false&interface-settings=false&tips=false&has-watchparty=false&subtitles=true&branding=false&watermark=false`;
                 }
                 break;
         }
@@ -480,7 +480,7 @@ function playEpisode(tvId, seasonNumber, episodeNumber) {
             break;
         default:
             // Default to iframe.pstream.org as primary fallback
-            embedURL = `https://iframe.pstream.org/embed/tmdb-tv-${tvId}?season=${seasonNumber}&episode=${episodeNumber}&theme=dark&language=en&logo=0&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=false&scale=1.0&fedapi=false&interface-settings=false&tips=false&has-watchparty=false&subtitles=true&branding=false&watermark=false`;
+            embedURL = `https://iframe.pstream.org/embed/tmdb-tv-${tvId}?season=${seasonNumber}&episode=${episodeNumber}&theme=dark&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=false&scale=1.0&fedapi=false&interface-settings=false&tips=false&has-watchparty=false&subtitles=true&branding=false&watermark=false`;
             break;
     }
 
