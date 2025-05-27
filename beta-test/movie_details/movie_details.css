@@ -1940,3 +1940,114 @@ p {
         gap: 8px;
     }
 }
+
+/* Subtitle Availability Indicator */
+.subtitle-indicator {
+    display: flex;
+    align-items: center;
+    margin-top: 12px;
+    margin-bottom: 8px;
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #fff;
+    background: linear-gradient(135deg, rgba(0, 191, 255, 0.15), rgba(0, 191, 255, 0.05));
+    border: 1px solid rgba(0, 191, 255, 0.3);
+    backdrop-filter: blur(10px);
+    padding: 10px 14px;
+    border-radius: 8px;
+    max-width: 320px;
+    font-size: 14px;
+    user-select: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 191, 255, 0.1);
+}
+
+.subtitle-indicator:hover {
+    background: linear-gradient(135deg, rgba(0, 191, 255, 0.25), rgba(0, 191, 255, 0.1));
+    border-color: rgba(0, 191, 255, 0.5);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(0, 191, 255, 0.15);
+}
+
+.subtitle-icon {
+    margin-right: 10px;
+    color: #00bfff;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.subtitle-icon svg {
+    width: 22px;
+    height: 22px;
+    filter: drop-shadow(0 2px 4px rgba(0, 191, 255, 0.3));
+}
+
+.subtitle-info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
+    flex: 1;
+}
+
+.subtitle-status {
+    font-weight: 600;
+    font-size: 14px;
+    color: #fff;
+    margin-bottom: 2px;
+}
+
+.subtitle-instructions {
+    font-size: 12px;
+    color: #b3b3b3;
+    font-weight: 400;
+    opacity: 0.9;
+}
+
+/* Mobile responsive design for subtitle indicator */
+@media (max-width: 768px) {
+    .subtitle-indicator {
+        max-width: 100%;
+        margin: 8px 0;
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+
+    .subtitle-icon svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .subtitle-status {
+        font-size: 13px;
+    }
+
+    .subtitle-instructions {
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 480px) {
+    .subtitle-indicator {
+        padding: 6px 10px;
+        margin: 6px 0;
+    }
+
+    .subtitle-icon {
+        margin-right: 8px;
+    }
+
+    .subtitle-icon svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .subtitle-status {
+        font-size: 12px;
+    }
+
+    .subtitle-instructions {
+        font-size: 10px;
+        line-height: 1.2;
+    }
+}
