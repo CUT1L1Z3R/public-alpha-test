@@ -211,6 +211,69 @@
         </div>
     </div>
 
+    <!-- You Might Also Like Section -->
+    <div class="recommendations-section">
+        <div class="recommendations-container">
+            <h2 class="recommendations-title">You Might Also Like</h2>
+
+            <!-- Recommended For You -->
+            <div class="recommendation-category">
+                <h3 class="category-title">Recommended For You</h3>
+                <div class="recommendations-grid" id="recommendationsGrid">
+                    <!-- Recommendations will be populated here -->
+                </div>
+                <div class="recommendations-loading" id="recommendationsLoading">
+                    <div class="loading-spinner"></div>
+                    <p>Finding similar content...</p>
+                </div>
+            </div>
+
+            <!-- Similar Movies/Shows -->
+            <div class="recommendation-category">
+                <h3 class="category-title">More Like This</h3>
+                <div class="recommendations-grid" id="similarGrid">
+                    <!-- Similar content will be populated here -->
+                </div>
+                <div class="recommendations-loading hidden" id="similarLoading">
+                    <div class="loading-spinner"></div>
+                    <p>Loading similar content...</p>
+                </div>
+            </div>
+
+            <!-- Trending Now -->
+            <div class="recommendation-category">
+                <h3 class="category-title">Trending Now</h3>
+                <div class="recommendations-grid" id="trendingGrid">
+                    <!-- Trending content will be populated here -->
+                </div>
+                <div class="recommendations-loading hidden" id="trendingLoading">
+                    <div class="loading-spinner"></div>
+                    <p>Loading trending content...</p>
+                </div>
+            </div>
+
+            <!-- Same Genre -->
+            <div class="recommendation-category">
+                <h3 class="category-title" id="genreTitle">More Action Movies</h3>
+                <div class="recommendations-grid" id="genreGrid">
+                    <!-- Genre-based content will be populated here -->
+                </div>
+                <div class="recommendations-loading hidden" id="genreLoading">
+                    <div class="loading-spinner"></div>
+                    <p>Loading genre content...</p>
+                </div>
+            </div>
+
+            <!-- Load More Button -->
+            <div class="load-more-container">
+                <button class="load-more-btn" id="loadMoreBtn">
+                    <span>Load More Recommendations</span>
+                    <div class="load-more-icon">↓</div>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script src="movie_details.js"></script>
 </body>
 
