@@ -1,4 +1,3 @@
-/**
  * JavaScript file for the anime page of the FreeFlix streaming site.
  * Handles fetching, displaying, and UI interactions for anime.
  */
