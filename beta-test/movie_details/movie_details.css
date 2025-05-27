@@ -173,7 +173,6 @@ body {
     position: relative;
     height: 600px;
     overflow: hidden;
-    margin-top: 0; /* Ensure no extra margin on desktop */
 }
 
 .hero-backdrop {
@@ -862,14 +861,16 @@ iframe {
         align-self: center;
     }
 
-    .hero-section {
-        margin-top: 80px; /* Account for mobile header height */
-        height: 520px; /* Reduce height slightly to compensate */
+   .hero-section {
+    margin-top: 160px; /* Push hero section below tall mobile header */
+    height: 460px; /* Reduce height to compensate */
     }
 
     .hero-overlay {
-        padding: 30px 20px;
-        padding-top: 50px; /* Extra top padding to ensure title visibility */
+    padding: 30px 20px;
+    padding-top: 120px; /* Extra top padding for title visibility */
+    align-items: flex-start; /* Change from flex-end to flex-start */
+    justify-content: flex-start; /* Ensure content starts from top */
     }
 
     .hero-title {
@@ -891,10 +892,6 @@ iframe {
         flex-direction: column;
         align-items: flex-start;
         gap: 15px;
-    }
-
-    .hero-content {
-        padding-top: 20px; /* Additional spacing for mobile */
     }
 
     .hero-actions {
