@@ -597,8 +597,7 @@ let currentMovieDetails = null;
 let loadedPages = {
     recommendations: 1,
     similar: 1,
-    trending: 1,
-    genre: 1
+    trending: 1
 };
 let maxPages = 3; // Limit to prevent too many API calls
 
@@ -608,8 +607,7 @@ async function loadRecommendations(currentItem) {
     Promise.all([
         loadRecommendedForYou(),
         loadSimilarContent(),
-        loadTrendingContent(),
-        loadGenreContent()
+        loadTrendingContent()
     ]).then(() => {
         setupLoadMoreButton();
     }).catch(error => {
@@ -662,26 +660,7 @@ async function loadTrendingContent() {
     }
 }
 
-// Function to load genre-based content
-async function loadGenreContent() {
-    const grid = document.getElementById('genreGrid');
-    const loading = document.getElementById('genreLoading');
-    const genreTitle = document.getElementById('genreTitle');
-    if (!grid || !loading || !genreTitle) return;
-    try {
-        loading.classList.remove('hidden');
-        if (currentMovieDetails && currentMovieDetails.genres && currentMovieDetails.genres.length > 0) {
-            const primaryGenre = currentMovieDetails.genres[0];
-            const mediaType = media === 'movie' ? 'Movies' : 'TV Shows';
-            genreTitle.textContent = `More ${primaryGenre.name} ${mediaType}`;
-        }
-        const genreContent = await fetchGenreBasedContent();
-        displayContentInGrid(genreContent, grid, loading);
-    } catch (error) {
-        console.error('Error loading genre content:', error);
-        loading.classList.add('hidden');
-    }
-}
+
 
 // Enhanced fetch functions for different content types
 async function fetchRecommendations() {
@@ -690,13 +669,13 @@ async function fetchRecommendations() {
         const response = await fetch(`https://api.themoviedb.org/3/${media}/${id}/recommendations?api_key=${api_Key}&page=${loadedPages.recommendations}`);
         const data = await response.json();
         if (data.results && data.results.length > 0) {
-            recommendations.push(...data.results.slice(0, 12));
+            recommendations.push(...data.results.slice(0, 15));
         }
-        if (recommendations.length < 8) {
+        if (recommendations.length < 10) {
             const similarResponse = await fetch(`https://api.themoviedb.org/3/${media}/${id}/similar?api_key=${api_Key}&page=1`);
             const similarData = await similarResponse.json();
             if (similarData.results && similarData.results.length > 0) {
-                const needed = 12 - recommendations.length;
+                const needed = 15 - recommendations.length;
                 recommendations.push(...similarData.results.slice(0, needed));
             }
         }
@@ -711,7 +690,7 @@ async function fetchSimilarMovies() {
     try {
         const response = await fetch(`https://api.themoviedb.org/3/${media}/${id}/similar?api_key=${api_Key}&page=${loadedPages.similar}`);
         const data = await response.json();
-        return data.results ? data.results.slice(0, 12) : [];
+        return data.results ? data.results.slice(0, 15) : [];
     } catch (error) {
         console.error('Error fetching similar movies:', error);
         return [];
@@ -723,40 +702,14 @@ async function fetchTrendingContent() {
         const response = await fetch(`https://api.themoviedb.org/3/trending/${media}/week?api_key=${api_Key}&page=${loadedPages.trending}`);
         const data = await response.json();
         const filtered = data.results ? data.results.filter(item => item.id !== parseInt(id)) : [];
-        return filtered.slice(0, 12);
+        return filtered.slice(0, 15);
     } catch (error) {
         console.error('Error fetching trending content:', error);
         return [];
     }
 }
 
-async function fetchGenreBasedContent() {
-    try {
-        if (!currentMovieDetails || !currentMovieDetails.genres || currentMovieDetails.genres.length === 0) {
-            return await fetchPopularContent();
-        }
-        const genreId = currentMovieDetails.genres[0].id;
-        const response = await fetch(`https://api.themoviedb.org/3/discover/${media}?api_key=${api_Key}&with_genres=${genreId}&sort_by=popularity.desc&page=${loadedPages.genre}`);
-        const data = await response.json();
-        const filtered = data.results ? data.results.filter(item => item.id !== parseInt(id)) : [];
-        return filtered.slice(0, 12);
-    } catch (error) {
-        console.error('Error fetching genre content:', error);
-        return await fetchPopularContent();
-    }
-}
 
-async function fetchPopularContent() {
-    try {
-        const response = await fetch(`https://api.themoviedb.org/3/${media}/popular?api_key=${api_Key}&page=1`);
-        const data = await response.json();
-        const filtered = data.results ? data.results.filter(item => item.id !== parseInt(id)) : [];
-        return filtered.slice(0, 12);
-    } catch (error) {
-        console.error('Error fetching popular content:', error);
-        return [];
-    }
-}
 
 // Enhanced display function
 function displayContentInGrid(content, grid, loading) {
@@ -841,8 +794,7 @@ function setupLoadMoreButton() {
             await Promise.all([
                 loadMoreForCategory('recommendationsGrid', 'recommendationsLoading', fetchRecommendations),
                 loadMoreForCategory('similarGrid', 'similarLoading', fetchSimilarMovies),
-                loadMoreForCategory('trendingGrid', 'trendingLoading', fetchTrendingContent),
-                loadMoreForCategory('genreGrid', 'genreLoading', fetchGenreBasedContent)
+                loadMoreForCategory('trendingGrid', 'trendingLoading', fetchTrendingContent)
             ]);
             const allPagesLoaded = Object.values(loadedPages).every(page => page >= maxPages);
             if (allPagesLoaded) {
