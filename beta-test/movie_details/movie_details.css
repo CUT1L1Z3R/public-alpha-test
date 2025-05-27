@@ -682,53 +682,6 @@ iframe {
     background-color: #000000;
 }
 
-.subtitle-info {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    text-align: center;
-    flex: 1;
-}
-
-.subtitle-status {
-    font-weight: 600;
-    color: #be7dc0;
-    font-size: 16px;
-}
-
-.subtitle-instructions {
-    font-size: 13px;
-    color: #cccccc;
-    line-height: 1.3;
-}
-
-/* Loading animation for subtitle indicator */
-.subtitle-indicator.loading {
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0% {
-        transform: translate(-50%, -50%) scale(1);
-        opacity: 0.8;
-    }
-    50% {
-        transform: translate(-50%, -50%) scale(1.02);
-        opacity: 1;
-    }
-    100% {
-        transform: translate(-50%, -50%) scale(1);
-        opacity: 0.8;
-    }
-}
-
-/* Hide subtitle indicator initially */
-.subtitle-indicator.hidden {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0.9);
-    pointer-events: none;
-}
-
 /* Recommendations sidebar */
 .recommendations-sidebar {
     background-color: #1a1a1a;
