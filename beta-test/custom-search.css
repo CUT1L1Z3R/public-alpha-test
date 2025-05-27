@@ -3,8 +3,48 @@
  * Ensures consistent search results positioning across all pages
  */
 
-/* Search results container */
-#searchResults {
+/* Search container styling */
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  z-index: 2;
+  color: #aaa;
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px 20px 10px 40px;
+  background-color: #333;
+  border: 1px solid #555;
+  border-radius: 20px;
+  color: white;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  border-color: #8d16c9;
+  background-color: #444;
+  box-shadow: 0 0 0 2px rgba(141, 22, 201, 0.2);
+}
+
+.search-input::placeholder {
+  color: #aaa;
+}
+
+/* Search results container - supports both old and new IDs */
+#searchResults,
+.search-results {
   position: absolute !important;
   top: 45px !important; /* Reduced from previous value to be closer to search button */
   left: 50% !important;
@@ -19,10 +59,20 @@
   overflow-y: auto !important;
   border: 1px solid #8d16c9 !important;
   margin-top: 0 !important; /* Removed margin to position exactly */
+  display: none; /* Hidden by default */
+  visibility: hidden;
+}
+
+/* Show search results when they have content */
+#searchResults:not(:empty),
+.search-results:not(:empty) {
+  display: block !important;
+  visibility: visible !important;
 }
 
 /* Search results items */
-.movie-list {
+.movie-list,
+.search-item {
   padding: 10px;
   border-bottom: 1px solid #333;
   display: flex;
@@ -32,7 +82,8 @@
   position: relative;
 }
 
-.movie-list:hover {
+.movie-list:hover,
+.search-item:hover {
   background-color: #2a2a2a;
 }
 
@@ -85,7 +136,17 @@
   background: linear-gradient(135deg, #8a14ca 0%, #a710e0 100%);
 }
 
-#searchResults p {
+/* No results message */
+.no-results {
+  color: #fff;
+  text-align: center;
+  margin: 10px 0;
+  padding: 20px;
+  font-style: italic;
+}
+
+#searchResults p,
+.search-results p {
   color: #fff;
   text-align: center;
   margin: 10px 0;
@@ -93,16 +154,27 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  #searchResults {
+  #searchResults,
+  .search-results {
     width: 80% !important; /* Wider on mobile */
     max-width: 300px !important;
     top: 40px !important; /* Even closer on mobile */
+  }
+
+  .search-container {
+    max-width: 280px;
+  }
+
+  .search-input {
+    font-size: 13px;
+    padding: 8px 16px 8px 36px;
   }
 }
 
 /* Mobile optimizations for search results */
 @media (max-width: 480px) {
-  #searchResults {
+  #searchResults,
+  .search-results {
     width: 85% !important;
     max-width: 280px !important;
     top: 45px !important;
@@ -113,7 +185,8 @@
     max-height: 70vh !important; /* Limit height to prevent overflow */
   }
 
-  .movie-list {
+  .movie-list,
+  .search-item {
     padding: 12px 10px;
     align-items: flex-start;
   }
@@ -139,9 +212,25 @@
     margin-left: 5px;
   }
 
-  .movie-list img {
+  .movie-list img,
+  .search-item img {
     max-width: 60px;
     height: auto;
     margin-right: 10px;
+  }
+
+  .search-container {
+    max-width: 240px;
+  }
+
+  .search-input {
+    font-size: 12px;
+    padding: 6px 14px 6px 32px;
+  }
+
+  .search-icon {
+    left: 10px;
+    width: 16px;
+    height: 16px;
   }
 }
