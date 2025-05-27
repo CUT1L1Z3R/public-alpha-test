@@ -469,3 +469,220 @@ window.addEventListener('resize', () => {
 });
 
 console.log('FreeFlix Movie Details - andoks.cc Layout Loaded');
+
+// Mobile-specific functionality
+let isMobileCollapsed = false;
+const MOBILE_EPISODE_LIMIT = 3; // Show only first 3 episodes on mobile by default
+
+// Mobile navigation functions
+function scrollToSection(sectionName) {
+    let targetElement;
+
+    switch(sectionName) {
+        case 'overview':
+            targetElement = document.querySelector('.overview-section');
+            break;
+        case 'episodes':
+            targetElement = document.querySelector('.episodes-container');
+            break;
+        case 'recommendations':
+            targetElement = document.querySelector('.recommendations-sidebar');
+            break;
+        default:
+            return;
+    }
+
+    if (targetElement) {
+        targetElement.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+            inline: 'nearest'
+        });
+
+        // Update active pill
+        document.querySelectorAll('.nav-pill').forEach(pill => pill.classList.remove('active'));
+        event.target.classList.add('active');
+    }
+}
+
+// Enhanced episode list generation with mobile collapse functionality
+function generateEpisodeListMobile(seasonData) {
+    if (!episodesList || !seasonData?.episodes) return;
+
+    const episodesListContainer = document.getElementById('episodesListContainer');
+    const episodesCountInfo = document.getElementById('episodesCountInfo');
+    const episodesToggleBtn = document.getElementById('episodesToggleBtn');
+    const episodesNavPill = document.getElementById('episodesNavPill');
+
+    if (!episodesListContainer) return;
+
+    episodesListContainer.innerHTML = '';
+
+    // Show episodes nav pill for TV shows
+    if (media === 'tv' && episodesNavPill) {
+        episodesNavPill.style.display = 'inline-block';
+    }
+
+    // Show episode count info
+    if (episodesCountInfo && seasonData.episodes.length > MOBILE_EPISODE_LIMIT) {
+        episodesCountInfo.style.display = 'block';
+        episodesCountInfo.textContent = `${seasonData.episodes.length} episodes in this season`;
+    }
+
+    seasonData.episodes.forEach((episode, index) => {
+        const episodeDiv = document.createElement('div');
+        episodeDiv.className = 'episode-item';
+        episodeDiv.dataset.seasonNumber = seasonData.season_number;
+        episodeDiv.dataset.episodeNumber = episode.episode_number;
+
+        // Check if episode should be hidden on mobile initially
+        const isMobile = window.innerWidth <= 768;
+        if (isMobile && index >= MOBILE_EPISODE_LIMIT) {
+            episodeDiv.classList.add('hidden-mobile');
+        }
+
+        // Mark first episode as active initially
+        if (index === 0) {
+            episodeDiv.classList.add('active');
+        }
+
+        episodeDiv.innerHTML = `
+            <div class="episode-number">${episode.episode_number}</div>
+            <img src="https://image.tmdb.org/t/p/w300${episode.still_path || '/default-episode.jpg'}"
+                 alt="Episode ${episode.episode_number}"
+                 class="episode-thumbnail"
+                 onerror="this.src='https://via.placeholder.com/300x169/1a1a1a/ffffff?text=Episode+${episode.episode_number}'">
+            <div class="episode-info">
+                <div class="episode-title">${episode.name || `Episode ${episode.episode_number}`}</div>
+                <div class="episode-description">${episode.overview || 'No description available.'}</div>
+            </div>
+        `;
+
+        episodeDiv.addEventListener('click', () => {
+            // Remove active class from all episodes
+            document.querySelectorAll('.episode-item').forEach(ep => ep.classList.remove('active'));
+
+            // Add active class to clicked episode
+            episodeDiv.classList.add('active');
+
+            // Update current episode
+            currentEpisode = episode.episode_number;
+
+            // Update play button text
+            if (playBtn) {
+                playBtn.textContent = `▶ Play S${seasonData.season_number}E${episode.episode_number}`;
+            }
+
+            // Load the episode
+            loadContent();
+
+            showToast(`Now playing: S${seasonData.season_number}E${episode.episode_number}`, 'success');
+        });
+
+        episodesListContainer.appendChild(episodeDiv);
+    });
+
+    // Setup mobile collapse functionality
+    setupMobileEpisodeToggle(seasonData.episodes.length);
+}
+
+// Setup mobile episode toggle functionality
+function setupMobileEpisodeToggle(totalEpisodes) {
+    const episodesToggleBtn = document.getElementById('episodesToggleBtn');
+    const episodesListContainer = document.getElementById('episodesListContainer');
+
+    if (!episodesToggleBtn || !episodesListContainer) return;
+
+    const isMobile = window.innerWidth <= 768;
+
+    if (isMobile && totalEpisodes > MOBILE_EPISODE_LIMIT) {
+        episodesToggleBtn.style.display = 'inline-block';
+        isMobileCollapsed = true;
+        episodesListContainer.classList.add('mobile-collapsed');
+        episodesToggleBtn.textContent = `Show All ${totalEpisodes} Episodes`;
+
+        episodesToggleBtn.addEventListener('click', toggleMobileEpisodes);
+    } else {
+        episodesToggleBtn.style.display = 'none';
+        episodesListContainer.classList.remove('mobile-collapsed');
+    }
+}
+
+// Toggle mobile episodes visibility
+function toggleMobileEpisodes() {
+    const episodesToggleBtn = document.getElementById('episodesToggleBtn');
+    const episodesListContainer = document.getElementById('episodesListContainer');
+    const hiddenEpisodes = document.querySelectorAll('.episode-item.hidden-mobile');
+
+    if (!episodesToggleBtn || !episodesListContainer) return;
+
+    if (isMobileCollapsed) {
+        // Show all episodes
+        episodesListContainer.classList.remove('mobile-collapsed');
+        hiddenEpisodes.forEach(episode => episode.style.display = 'flex');
+        episodesToggleBtn.textContent = 'Show Less';
+        isMobileCollapsed = false;
+    } else {
+        // Hide episodes beyond limit
+        episodesListContainer.classList.add('mobile-collapsed');
+        hiddenEpisodes.forEach(episode => episode.style.display = 'none');
+        const totalEpisodes = document.querySelectorAll('.episode-item').length;
+        episodesToggleBtn.textContent = `Show All ${totalEpisodes} Episodes`;
+        isMobileCollapsed = true;
+
+        // Scroll to episodes section
+        document.querySelector('.episodes-container').scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
+    }
+}
+
+// Override the original generateEpisodeList function
+const originalGenerateEpisodeList = generateEpisodeList;
+function generateEpisodeList(seasonData) {
+    // Use the mobile-enhanced version
+    generateEpisodeListMobile(seasonData);
+}
+
+// Handle window resize for mobile responsiveness
+window.addEventListener('resize', () => {
+    const isMobile = window.innerWidth <= 768;
+    const episodesToggleBtn = document.getElementById('episodesToggleBtn');
+    const episodesListContainer = document.getElementById('episodesListContainer');
+
+    if (isMobile) {
+        // Reset mobile collapse state when switching to mobile
+        const totalEpisodes = document.querySelectorAll('.episode-item').length;
+        if (totalEpisodes > MOBILE_EPISODE_LIMIT) {
+            setupMobileEpisodeToggle(totalEpisodes);
+        }
+    } else {
+        // Show all episodes on desktop
+        if (episodesToggleBtn) episodesToggleBtn.style.display = 'none';
+        if (episodesListContainer) episodesListContainer.classList.remove('mobile-collapsed');
+        document.querySelectorAll('.episode-item.hidden-mobile').forEach(episode => {
+            episode.style.display = 'flex';
+        });
+    }
+});
+
+// Add smooth scrolling behavior for better UX
+document.addEventListener('DOMContentLoaded', () => {
+    // Add smooth scrolling to all anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+});
+
+// Global function to make it accessible from HTML onclick
+window.scrollToSection = scrollToSection;
