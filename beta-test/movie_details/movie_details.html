@@ -40,16 +40,8 @@
         <nav class="header-nav">
             <a href="/movies/" class="nav-link">Movie</a>
             <a href="/tvshows/" class="nav-link">Series</a>
-            <a href="/genre/" class="nav-link">Genres</a>
-            <button class="search-btn">🔍</button>
+            <a href="/anime/" class="nav-link">Anime</a>
         </nav>
-        <div class="header-right">
-            <button class="notification-btn">🔔</button>
-            <div class="user-menu">
-                <span class="user-label">User</span>
-                <span class="user-status">FREE</span>
-            </div>
-        </div>
     </header>
 
     <!-- Main content layout -->
@@ -61,24 +53,37 @@
                 <div class="hero-overlay">
                     <div class="hero-content">
                         <div class="hero-info">
-                            <div class="focus-mode">
-                                <span class="focus-icon">⚫</span>
-                                <span>Focus Mode: Distraction-free viewing</span>
-                            </div>
+
                             <h1 id="movieTitle" class="hero-title">The Last of Us</h1>
                             <div class="hero-meta">
                                 <span id="movieYear" class="year">2023</span>
                                 <span id="genre" class="genre-tag">Drama</span>
                             </div>
                             <div class="hero-details">
-                                <div class="detail-item">
+                                <!-- TV Show specific details -->
+                                <div class="detail-item tv-only" id="seasonsDetail">
                                     <span>Seasons:</span>
                                     <span id="seasonsCount">2</span>
                                 </div>
-                                <div class="detail-item">
+                                <div class="detail-item tv-only" id="statusDetail">
                                     <span>Status:</span>
                                     <span id="status">Returning Series</span>
                                 </div>
+
+                                <!-- Movie specific details -->
+                                <div class="detail-item movie-only" id="runtimeDetail" style="display: none;">
+                                    <span>Runtime:</span>
+                                    <span id="runtime">2h 6m</span>
+                                </div>
+                                <div class="detail-item movie-only" id="languageDetail" style="display: none;">
+                                    <span>Language:</span>
+                                    <span id="language">English</span>
+                                </div>
+                                <div class="detail-item movie-only" id="movieStatusDetail" style="display: none;">
+                                    <span>Status:</span>
+                                    <span id="movieStatus">Released</span>
+                                </div>
+
                                 <div class="tmdb-score">
                                     <span class="score" id="rating">8.6</span>
                                     <span class="score-label">TMDB Score</span>
