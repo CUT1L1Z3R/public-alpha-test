@@ -201,20 +201,25 @@ function startBannerSlideshow() {
     }
 }
 
-// Function to show banner at specific index with enhanced styling
+// Function to show banner at specific index with enhanced styling and fade animation
 function showBannerAtIndex(index) {
     const item = bannerItems[index];
     if (item && item.backdrop_path) {
         const banner = document.getElementById('banner');
         const bannerTitle = document.getElementById('banner-title');
 
-        // Set banner image with high quality
-        banner.src = `https://image.tmdb.org/t/p/original${item.backdrop_path}`;
+        // Add fade out animation
+        banner.style.opacity = '0';
+        bannerTitle.style.opacity = '0';
 
-        // Create a more detailed title with additional info
-        const title = item.title || item.name;
+        setTimeout(() => {
+            // Set banner image with high quality
+            banner.src = `https://image.tmdb.org/t/p/original${item.backdrop_path}`;
 
-        // Add subtitle information if available
+            // Create a more detailed title with additional info
+            const title = item.title || item.name;
+
+            // Add subtitle information if available
         const extraInfo = [];
         if (item.release_date) {
             extraInfo.push(new Date(item.release_date).getFullYear());
@@ -274,9 +279,16 @@ function showBannerAtIndex(index) {
             bannerTitle.textContent = title;
         }
 
-        // Update the banner image to have better display
-        banner.style.objectFit = 'cover';
-        banner.style.transition = 'opacity 0.5s ease-in-out';
+            // Update the banner image to have better display
+            banner.style.objectFit = 'cover';
+
+            // Fade in animation
+            banner.style.transition = 'opacity 1s ease-in-out';
+            bannerTitle.style.transition = 'opacity 1s ease-in-out';
+
+            banner.style.opacity = '1';
+            bannerTitle.style.opacity = '1';
+        }, 300); // Short delay for fade out to complete
     }
 }
 
