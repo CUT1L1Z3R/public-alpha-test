@@ -27,316 +27,190 @@
     <link rel="stylesheet" href="movie_details.css">
     <link rel="icon" href="/assets/freeflix.ico">
     <title>FreeFlix - Movie & TV Show Details</title>
-    <!-- Import Poppins font for aesthetics -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap" rel="stylesheet">
-
-    <!-- Mobile layout fixes -->
-    <style>
-        @media (max-width: 560px) {
-            html, body {
-                overflow-x: hidden;
-                width: 100%;
-                max-width: 100%;
-                position: relative;
-            }
-
-            body {
-                font-size: 14px;
-            }
-
-            /* Prevent any content from creating horizontal overflow */
-            * {
-                max-width: 100vw;
-                box-sizing: border-box;
-            }
-
-            /* Make sure images don't overflow */
-            img {
-                max-width: 100%;
-                height: auto;
-            }
-
-            /* Make sure text elements don't overflow */
-            p, h1, h2, h3, h4, h5, h6, span, div {
-                overflow-wrap: break-word;
-                word-wrap: break-word;
-            }
-        }
-
-        /* Subtitle indicator styling - mobile optimized */
-        .subtitle-indicator {
-            display: flex;
-            align-items: center;
-            margin-top: 8px;
-            font-family: 'Poppins', sans-serif;
-            color: #fff;
-            background-color: rgba(0, 0, 0, 0.6);
-            padding: 6px 12px;
-            border-radius: 6px;
-            max-width: 300px;
-            font-size: 14px;
-            user-select: none;
-        }
-
-        .subtitle-icon {
-            margin-right: 8px;
-            color: #00bfff;
-            flex-shrink: 0;
-        }
-
-        .subtitle-info {
-            display: flex;
-            flex-direction: column;
-            line-height: 1.2;
-        }
-
-        .subtitle-status {
-            font-weight: 600;
-        }
-
-        .subtitle-instructions {
-            font-size: 12px;
-            color: #ccc;
-        }
-
-        /* Mobile compact styles */
-        @media (max-width: 560px) {
-            .subtitle-indicator {
-                padding: 4px 8px;
-                margin-top: 6px;
-                font-size: 12px;
-                border-radius: 5px;
-            }
-
-            .subtitle-icon {
-                margin-right: 6px;
-            }
-
-            .subtitle-status {
-                font-size: 11px;
-            }
-
-            .subtitle-instructions {
-                font-size: 9px;
-            }
-        }
-    </style>
+    <!-- Import Poppins and Inter fonts for aesthetics -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 
-<body style="overflow-x: hidden; max-width: 100%; width: 100%;">
+<body>
     <!-- Header section -->
     <header class="header">
-        <img src="/assets/freeflix.png" alt="FreeFlix logo" class="logo" width="150" height="47" loading="eager" fetchpriority="high">
+        <div class="header-left">
+            <img src="../assets/freeflix.png" alt="FreeFlix logo" class="logo" width="150" height="47" loading="eager" fetchpriority="high">
+        </div>
+        <nav class="header-nav">
+            <a href="/movies/" class="nav-link">Movie</a>
+            <a href="/tvshows/" class="nav-link">Series</a>
+            <a href="/genre/" class="nav-link">Genres</a>
+            <button class="search-btn">🔍</button>
+        </nav>
+        <div class="header-right">
+            <button class="notification-btn">🔔</button>
+            <div class="user-menu">
+                <span class="user-label">User</span>
+                <span class="user-status">FREE</span>
+            </div>
+        </div>
     </header>
 
-    <!-- Movie details section -->
-    <div class="movie-details">
+    <!-- Main content layout -->
+    <div class="main-content">
+        <!-- Hero section with backdrop and play controls -->
+        <div class="hero-section">
+            <div class="hero-backdrop">
+                <img id="backdropImage" src="" alt="Movie backdrop" class="backdrop-image">
+                <div class="hero-overlay">
+                    <div class="hero-content">
+                        <div class="hero-info">
+                            <div class="focus-mode">
+                                <span class="focus-icon">⚫</span>
+                                <span>Focus Mode: Distraction-free viewing</span>
+                            </div>
+                            <h1 id="movieTitle" class="hero-title">The Last of Us</h1>
+                            <div class="hero-meta">
+                                <span id="movieYear" class="year">2023</span>
+                                <span id="genre" class="genre-tag">Drama</span>
+                            </div>
+                            <div class="hero-details">
+                                <div class="detail-item">
+                                    <span>Seasons:</span>
+                                    <span id="seasonsCount">2</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span>Status:</span>
+                                    <span id="status">Returning Series</span>
+                                </div>
+                                <div class="tmdb-score">
+                                    <span class="score" id="rating">8.6</span>
+                                    <span class="score-label">TMDB Score</span>
+                                </div>
+                            </div>
 
-        <!-- Movie poster section -->
-        <div class="movie-poster">
-            <img id="moviePoster" src="" alt="Movie Poster" width="300" height="450" loading="eager">
-            <iframe id="iframe" frameborder="0" allowfullscreen playsinline
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"></iframe>
+                            <!-- Source info section -->
+                            <div class="source-info">
+                                <span>Source</span>
+                                <span class="server-tag stable">Stable</span>
+                                <span class="server-tag has-4k">Has 4K</span>
+                                <span class="server-tag hd">HD</span>
+                            </div>
 
-            <!-- Subtitle Availability Indicator -->
-            <div id="subtitle-indicator" class="subtitle-indicator">
-                <div class="subtitle-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="2" y="5" width="20" height="14" rx="2" stroke="currentColor" stroke-width="2"/>
-                        <path d="M6 16h2m4 0h6m-8-3h4m-4-3h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                </div>
-                <div class="subtitle-info">
-                    <span class="subtitle-status">Streaming Optimization Notice!</span>
-                    <span class="subtitle-instructions">Please wait while the system finds the best server.</span>
-                </div>
-            </div>
-
-            <div id="player-controls-spacer"></div>
-
-            <!-- Season selector (visible only for TV shows) -->
-            <div id="seasons-container" class="seasons-container">
-                <div class="season-dropdown">
-                    <div class="season-selector">
-                        <span>Season</span>
-                        <select id="season-select" class="season-select">
-                            <!-- Seasons will be populated here -->
-                        </select>
+                            <!-- Action buttons -->
+                            <div class="hero-actions">
+                                <button class="play-btn">▶ Play S1E1</button>
+                                <button class="watchlist-btn">📁 Watchlist</button>
+                                <button class="download-btn">⬇ Download</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <div id="episodes-list" class="episodes-list">
+        <!-- Content area -->
+        <div class="content-area">
+            <!-- Left side - Episode list and overview -->
+            <div class="left-content">
+                <div class="overview-section">
+                    <h2>Overview</h2>
+                    <p id="plot" class="overview-text">
+                        Twenty years after modern civilization has been destroyed, Joel, a hardened survivor, is hired to smuggle Ellie, a 14-year-old girl, out of an oppressive quarantine zone. What starts as a small job soon becomes a brutal, heartbreaking journey, as they both must traverse the United States and depend on each other for survival.
+                    </p>
+                </div>
+
+                <!-- Season selector -->
+                <div class="season-selector">
+                    <label for="season-select">Season</label>
+                    <select id="season-select" class="season-dropdown">
+                        <option value="1">Season 1 (9 Episodes)</option>
+                    </select>
+                </div>
+
+                <!-- Episodes list -->
+                <div class="episodes-container" id="episodesList">
                     <!-- Episodes will be populated here -->
                 </div>
-            </div>
-        </div>
 
-        <!-- Movie information section -->
-        <div class="movie-info">
-            <h1 id="movieTitle"></h1>
-            <p id="plot"></p>
-
-            <div class="movie-data">
-                <div class="design">
-                    <span>Released :</span>
-                    <p id="movieYear"></p>
-                </div>
-
-                <div class="design">
-                    <span>Language :</span>
-                    <p id="language"></p>
-                </div>
-            </div>
-
-            <div class="movie-data rating-data">
-                <div class="design">
-                    <span>Rating :</span>
-                    <p id="rating"></p>
-                </div>
-                <div class="design">
-                    <span>Genre :</span>
-                    <p id="genre"></p>
-                </div>
-            </div>
-
-            <!-- watchList button section -->
-            <button class="watchListBtn">Add To WatchList</button>
-
-            <!-- Download button section -->
-            <button class="downloadBtn">DOWNLOAD</button>
-
-            <!-- Servers Section with Dedicated Space -->
-            <div class="servers-section">
-                <!-- Server Dropdown - Redesigned to match watchlist button -->
-                <div class="server-dropdown">
-                    <div class="server-dropdown-header">
-                        <div class="selected-server">
-                            <span class="server-name">SHOUKO</span>
-                            <span class="server-tag tag-recommended">RECOMMENDED</span>
-                            <span class="server-tag tag-stable">Stable</span>
-                            <span class="server-tag tag-4k">4K</span>
+                <!-- Server selector dropdown -->
+                <div class="servers-section">
+                    <div class="server-dropdown">
+                        <div class="server-dropdown-header">
+                            <div class="selected-server">
+                                <span class="server-name">SHOUKO</span>
+                                <span class="server-tag tag-recommended">RECOMMENDED</span>
+                                <span class="server-tag tag-stable">Stable</span>
+                                <span class="server-tag tag-4k">4K</span>
+                            </div>
+                            <span class="dropdown-arrow">▼</span>
                         </div>
-                        <span class="dropdown-arrow">▼</span>
+                        <div class="server-dropdown-content">
+                            <div class="server-option" data-server="iframe.pstream.org">
+                                <span class="server-name">SHOUKO</span>
+                                <span class="server-tag tag-recommended">RECOMMENDED</span>
+                                <span class="server-tag tag-stable">Stable</span>
+                                <span class="server-tag tag-4k">4K</span>
+                            </div>
+                            <div class="server-option" data-server="vidsrc.su">
+                                <span class="server-name">SHINOMIYA</span>
+                                <span class="server-tag tag-recommended">RECOMMENDED</span>
+                                <span class="server-tag tag-4k">4K</span>
+                                <span class="server-tag tag-fast">FAST</span>
+                            </div>
+                            <div class="server-option" data-server="vidsrc.vip">
+                                <span class="server-name">MAFUYU</span>
+                                <span class="server-tag tag-stable">Stable</span>
+                                <span class="server-tag tag-4k">4K</span>
+                            </div>
+                            <div class="server-option" data-server="vidlink.pro">
+                                <span class="server-name">MIZUKI</span>
+                                <span class="server-tag tag-stable">Stable</span>
+                                <span class="server-tag tag-4k">4K</span>
+                                <span class="server-tag tag-hd">HD</span>
+                            </div>
+                            <div class="server-option" data-server="vidsrc.cc">
+                                <span class="server-name">KANADE</span>
+                                <span class="server-tag tag-stable">Stable</span>
+                                <span class="server-tag tag-hd">HD</span>
+                            </div>
+                            <div class="server-option" data-server="movieapi.club">
+                                <span class="server-name">SAKI</span>
+                                <span class="server-tag tag-4k">4K</span>
+                            </div>
+                            <div class="server-option" data-server="vidsrc.me">
+                                <span class="server-name">OTORI</span>
+                                <span class="server-tag tag-hd">HD</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="server-dropdown-content">
-                        <div class="server-option" data-server="iframe.pstream.org">
-                            <span class="server-name">SHOUKO</span>
-                            <span class="server-tag tag-recommended">RECOMMENDED</span>
-                            <span class="server-tag tag-stable">Stable</span>
-                            <span class="server-tag tag-4k">4K</span>
+                </div>
+
+                <!-- Video player iframe -->
+                <div class="video-container">
+                    <iframe id="iframe" frameborder="0" allowfullscreen playsinline
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"></iframe>
+
+                    <!-- Subtitle indicator -->
+                    <div id="subtitle-indicator" class="subtitle-indicator">
+                        <div class="subtitle-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="2" y="5" width="20" height="14" rx="2" stroke="currentColor" stroke-width="2"/>
+                                <path d="M6 16h2m4 0h6m-8-3h4m-4-3h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
                         </div>
-                        <div class="server-option" data-server="vidsrc.su">
-                            <span class="server-name">SHINOMIYA</span>
-                            <span class="server-tag tag-recommended">RECOMMENDED</span>
-                            <span class="server-tag tag-4k">4K</span>
-                            <span class="server-tag tag-fast">FAST</span>
-                        </div>
-                        <div class="server-option" data-server="vidsrc.vip">
-                            <span class="server-name">MAFUYU</span>
-                            <span class="server-tag tag-stable">Stable</span>
-                            <span class="server-tag tag-4k">4K</span>
-                        </div>
-                        <div class="server-option" data-server="vidlink.pro">
-                            <span class="server-name">MIZUKI</span>
-                            <span class="server-tag tag-stable">Stable</span>
-                            <span class="server-tag tag-4k">4K</span>
-                            <span class="server-tag tag-hd">HD</span>
-                        </div>
-                        <div class="server-option" data-server="vidsrc.cc">
-                            <span class="server-name">KANADE</span>
-                            <span class="server-tag tag-stable">Stable</span>
-                            <span class="server-tag tag-hd">HD</span>
-                        </div>
-                        <div class="server-option" data-server="movieapi.club">
-                            <span class="server-name">SAKI</span>
-                            <span class="server-tag tag-4k">4K</span>
-                        </div>
-                        <div class="server-option" data-server="vidsrc.me">
-                            <span class="server-name">OTORI</span>
-                            <span class="server-tag tag-hd">HD</span>
+                        <div class="subtitle-info">
+                            <span class="subtitle-status">Streaming Optimization Notice!</span>
+                            <span class="subtitle-instructions">Please wait while the system finds the best server.</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Old Server selector dropdown - hidden, kept for backward compatibility -->
-            <button id="change-server-btn" class="change-server-btn" style="display: none;"><b>CHANGE SERVER</b></button>
-            <div id="server-selector" class="server-selector-dropdown" style="display: none;">
-                <label for="server">Select Server:</label>
-                <select id="server" class="server-selector-select">
-                    <option value="iframe.pstream.org">SHOUKO (RECOMMENDED 4K STABLE)</option>
-                    <option value="vidsrc.su">SHINOMIYA (RECOMMENDED 4K FAST)</option>
-                    <option value="vidlink.pro">Vidlink.pro</option>
-                    <option value="vidsrc.vip">Vidsrc.vip</option>
-                    <option value="vidsrc.cc">Vidsrc.cc</option>
-                    <option value="movieapi.club">Movieapi.club</option>
-                    <option value="vidsrc.me">MAFUYU 1080P FAST</option>
-                    <option value="2embed">OTORI 720P SLOW</option>
-                </select>
-                <button class="close-button" style="position: absolute; top: 10px; right: 10px;">Close</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- You Might Also Like Section -->
-    <div class="recommendations-section">
-        <div class="recommendations-container">
-            <h2 class="recommendations-title">You Might Also Like</h2>
-
-            <!-- Recommended For You -->
-            <div class="recommendation-category">
-                <h3 class="category-title">Recommended For You</h3>
-                <div class="recommendations-grid" id="recommendationsGrid">
-                    <!-- Recommendations will be populated here -->
+            <!-- Right side - Recommendations -->
+            <div class="right-content">
+                <div class="recommendations-sidebar">
+                    <h3 class="sidebar-title">You Might Also Like</h3>
+                    <div class="recommendations-list" id="recommendationsList">
+                        <!-- Recommendations will be populated here -->
+                    </div>
                 </div>
-                <div class="recommendations-loading" id="recommendationsLoading">
-                    <div class="loading-spinner"></div>
-                    <p>Finding similar content...</p>
-                </div>
-            </div>
-
-            <!-- Similar Movies/Shows -->
-            <div class="recommendation-category">
-                <h3 class="category-title">More Like This</h3>
-                <div class="recommendations-grid" id="similarGrid">
-                    <!-- Similar content will be populated here -->
-                </div>
-                <div class="recommendations-loading hidden" id="similarLoading">
-                    <div class="loading-spinner"></div>
-                    <p>Loading similar content...</p>
-                </div>
-            </div>
-
-            <!-- Trending Now -->
-            <div class="recommendation-category">
-                <h3 class="category-title">Trending Now</h3>
-                <div class="recommendations-grid" id="trendingGrid">
-                    <!-- Trending content will be populated here -->
-                </div>
-                <div class="recommendations-loading hidden" id="trendingLoading">
-                    <div class="loading-spinner"></div>
-                    <p>Loading trending content...</p>
-                </div>
-            </div>
-
-            <!-- Same Genre -->
-            <div class="recommendation-category">
-                <h3 class="category-title" id="genreTitle">More Action Movies</h3>
-                <div class="recommendations-grid" id="genreGrid">
-                    <!-- Genre-based content will be populated here -->
-                </div>
-                <div class="recommendations-loading hidden" id="genreLoading">
-                    <div class="loading-spinner"></div>
-                    <p>Loading genre content...</p>
-                </div>
-            </div>
-
-            <!-- Load More Button -->
-            <div class="load-more-container">
-                <button class="load-more-btn" id="loadMoreBtn">
-                    <span>Load More Recommendations</span>
-                    <div class="load-more-icon">↓</div>
-                </button>
             </div>
         </div>
     </div>
