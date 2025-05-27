@@ -217,11 +217,7 @@ function loadContent() {
         iframe.src = url;
         console.log(`Loading: ${url}`);
 
-        // Show subtitle indicator while loading
-        const subtitleIndicator = document.getElementById('subtitle-indicator');
-        if (subtitleIndicator) {
-            subtitleIndicator.style.display = 'flex';
-        }
+
 
         // Set loading timeout for iframe.pstream.org
         let loadingTimeout;
@@ -238,11 +234,7 @@ function loadContent() {
             console.log('Iframe loaded successfully');
             clearTimeout(loadingTimeout);
 
-            // Hide subtitle indicator when content loads
-            const subtitleIndicator = document.getElementById('subtitle-indicator');
-            if (subtitleIndicator) {
-                subtitleIndicator.style.display = 'none';
-            }
+
         };
 
         iframe.onerror = function() {
