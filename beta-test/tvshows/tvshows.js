@@ -247,10 +247,17 @@ function startBannerSlideshow() {
 function showBannerAtIndex(index) {
     const item = bannerItems[index];
     if (item && item.backdrop_path && bannerElement) {
-        bannerElement.src = `https://image.tmdb.org/t/p/original${item.backdrop_path}`;
-
+        // Add fade out animation
+        bannerElement.style.opacity = '0';
         if (bannerTitleElement) {
-            const title = item.name;
+            bannerTitleElement.style.opacity = '0';
+        }
+
+        setTimeout(() => {
+            bannerElement.src = `https://image.tmdb.org/t/p/original${item.backdrop_path}`;
+
+            if (bannerTitleElement) {
+                const title = item.name;
             const extraInfo = [];
             if (item.first_air_date) {
                 extraInfo.push(new Date(item.first_air_date).getFullYear());
@@ -310,11 +317,21 @@ function showBannerAtIndex(index) {
             };
         }
 
-        if (moreInfoButton) {
-            moreInfoButton.onclick = () => {
-                window.location.href = `../movie_details/movie_details.html?media=tv&id=${item.id}`;
-            };
-        }
+            if (moreInfoButton) {
+                moreInfoButton.onclick = () => {
+                    window.location.href = `../movie_details/movie_details.html?media=tv&id=${item.id}`;
+                };
+            }
+
+            // Fade in animation
+            bannerElement.style.transition = 'opacity 1s ease-in-out';
+            bannerElement.style.opacity = '1';
+
+            if (bannerTitleElement) {
+                bannerTitleElement.style.transition = 'opacity 1s ease-in-out';
+                bannerTitleElement.style.opacity = '1';
+            }
+        }, 300); // Short delay for fade out to complete
     }
 }
 
