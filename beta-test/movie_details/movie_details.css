@@ -979,13 +979,13 @@ p {
     background-color: rgb(47, 10, 53);
     backdrop-filter: blur(1px);
     color: #ffffff;
-    padding: 6px 12px;
-    border-radius: 12px;
+    padding: 8px 15px;
+    border-radius: 15px;
     display: flex;
     align-items: center;
     gap: 10px;
     z-index: 1000;
-    font-size: 14px;
+    font-size: 16px;
 }
 
 .server-notice-banner p {
