@@ -1017,12 +1017,14 @@ p {
 /* Extra small devices - specific mobile optimization for video player */
 @media (max-width: 480px) {
     /*
-      On extra-small mobile screens, provide a better video viewing experience
-      with properly sized player that maintains usability while being mobile-friendly.
+      On extra-small mobile screens, maximize the video viewing area
+      to provide the best possible mobile viewing experience.
     */
     #iframe,
     iframe {
-        height: 250px !important; /* Much larger height for better mobile viewing */
+        height: 40vh !important; /* Use 40% of viewport height for better space utilization */
+        min-height: 300px !important; /* Minimum height for usability */
+        max-height: 400px !important; /* Maximum height to prevent oversizing */
         width: 98vw !important;  /* Use almost full width */
         max-width: 98vw !important;
         margin-left: 1vw; /* Minimal margins for maximum space usage */
@@ -1069,7 +1071,9 @@ p {
     /* Video frame optimization */
     #iframe,
     iframe {
-        height: 280px !important; /* Much larger height for better mobile viewing */
+        height: 35vh !important; /* Use 35% of viewport height for optimal space usage */
+        min-height: 320px !important; /* Minimum height for good viewing */
+        max-height: 450px !important; /* Maximum height to prevent oversizing */
         width: 98vw !important; /* Use almost full width */
         max-width: 98vw !important;
         margin-left: 1vw; /* Minimal margins for maximum space usage */
@@ -1244,7 +1248,7 @@ p {
 
     #iframe,
     iframe {
-        height: 380px !important; /* Increased height for tablet viewing */
+        height: 420px !important; /* Further increased height for tablet viewing */
         width: 98%; /* Increased width to use more space */
         margin: 0 auto 20px auto;
         box-sizing: border-box;
