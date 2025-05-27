@@ -916,19 +916,3 @@ iframe {
     .recommendation-rating {
         font-size: 12px;
     }
-
-    /* Mobile subtitle indicator adjustments */
-    .subtitle-indicator {
-        min-width: 200px;
-        padding: 12px 16px;
-        font-size: 13px;
-    }
-
-    .subtitle-status {
-        font-size: 14px;
-    }
-
-    .subtitle-instructions {
-        font-size: 12px;
-    }
-}
