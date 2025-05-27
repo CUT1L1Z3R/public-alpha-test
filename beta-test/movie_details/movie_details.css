@@ -919,3 +919,40 @@ iframe {
         font-size: 12px;
     }
 }
+
+/* Purple scrollbar styling for movie details page */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+*::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track,
+*::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb,
+*::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg, #8d16c9, #a020f0);
+    border-radius: 10px;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+}
+
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover,
+*::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(45deg, #a020f0, #8d16c9);
+}
+
+/* Firefox scrollbar support */
+html,
+body,
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #8d16c9 rgba(0, 0, 0, 0.2);
+}
