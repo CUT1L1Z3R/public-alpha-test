@@ -88,10 +88,20 @@ const watchListBtn = document.querySelector('.watchListBtn');
 const downloadBtn = document.querySelector('.downloadBtn');
 const watchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
 
-// Season and Episode selectors
+// Season and Episode selectors - Updated for relocated design
 const seasonsContainer = document.getElementById('seasons-container');
 const seasonSelect = document.getElementById('season-select');
 const episodesList = document.getElementById('episodes-list');
+
+// Function to update season container class for new design
+function updateSeasonContainerClass() {
+    if (seasonsContainer) {
+        seasonsContainer.className = 'seasons-container-relocated';
+        if (episodesList) {
+            episodesList.className = 'episodes-list-relocated';
+        }
+    }
+}
 
 // API key for TMDB API
 const api_Key = 'e79515e88dfd7d9f6eeca36e49101ac2';
@@ -371,9 +381,9 @@ async function changeServer() {
                 break;
             case "iframe.pstream.org":
                 if (type === "tv") {
-                    embedURL = `https://iframe.pstream.org/embed/tmdb-tv-${id}/1/1?theme=grape&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=true&scale=1.0&backlink=https%3A%2F%2Ffreeflix.top&fedapi=false&interface-settings=false&tips=false&has-watchparty=false&subtitles=true`;
+                    embedURL = `https://iframe.pstream.org/embed/tmdb-tv-${id}/1/1?theme=grape&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=true&scale=1.0&backlink=https%3A%2F%2Ffreeflix.top&fedapi=false&interface-settings=false&tips=false&has-watchparty=false`;
                 } else {
-                    embedURL = `https://iframe.pstream.org/embed/tmdb-movie-${id}?theme=grape&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=true&scale=1.0&backlink=https%3A%2F%2Ffreeflix.top&fedapi=false&interface-settings=false&tips=false&has-watchparty=false&subtitles=true`;
+                    embedURL = `https://iframe.pstream.org/embed/tmdb-movie-${id}?theme=grape&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=true&scale=1.0&backlink=https%3A%2F%2Ffreeflix.top&fedapi=false&interface-settings=false&tips=false&has-watchparty=false`;
                 }
                 break;
             case "vidsrc.cc":
@@ -396,9 +406,9 @@ async function changeServer() {
                 break;
             default:
                 if (type === "tv") {
-                    embedURL = `https://iframe.pstream.org/embed/tmdb-tv-${id}/1/1?theme=grape&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=true&scale=1.0&backlink=https%3A%2F%2Ffreeflix.top&fedapi=false&interface-settings=false&tips=false&has-watchparty=false&subtitles=true`;
+                    embedURL = `https://iframe.pstream.org/embed/tmdb-tv-${id}/1/1?theme=grape&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=true&scale=1.0&backlink=https%3A%2F%2Ffreeflix.top&fedapi=false&interface-settings=false&tips=false&has-watchparty=false`;
                 } else {
-                    embedURL = `https://iframe.pstream.org/embed/tmdb-movie-${id}?theme=grape&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=true&scale=1.0&backlink=https%3A%2F%2Ffreeflix.top&fedapi=false&interface-settings=false&tips=false&has-watchparty=false&subtitles=true`;
+                    embedURL = `https://iframe.pstream.org/embed/tmdb-movie-${id}?theme=grape&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=true&scale=1.0&backlink=https%3A%2F%2Ffreeflix.top&fedapi=false&interface-settings=false&tips=false&has-watchparty=false`;
                 }
                 break;
         }
@@ -436,7 +446,7 @@ function playEpisode(tvId, seasonNumber, episodeNumber) {
             embedURL = `https://vidlink.pro/tv/${tvId}/${seasonNumber}/${episodeNumber}?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
             break;
         case "iframe.pstream.org":
-            embedURL = `https://iframe.pstream.org/embed/tmdb-tv-${tvId}/${seasonNumber}/${episodeNumber}?theme=purple&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=true&scale=1.0&backlink=https%3A%2F%2Ffreeflix.top&fedapi=false&interface-settings=false&tips=false&has-watchparty=false&subtitles=true`;
+            embedURL = `https://iframe.pstream.org/embed/tmdb-tv-${tvId}/${seasonNumber}/${episodeNumber}?theme=purple&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=true&scale=1.0&backlink=https%3A%2F%2Ffreeflix.top&fedapi=false&interface-settings=false&tips=false&has-watchparty=false`;
             break;
         case "vidsrc.cc":
             embedURL = `https://vidsrc.cc/v2/embed/tv/${tvId}/${seasonNumber}/${episodeNumber}`;
@@ -454,7 +464,7 @@ function playEpisode(tvId, seasonNumber, episodeNumber) {
             embedURL = `https://moviesapi.club/tv/${tvId}/${seasonNumber}/${episodeNumber}`;
             break;
         default:
-            embedURL = `https://iframe.pstream.org/embed/tmdb-tv-${tvId}/${seasonNumber}/${episodeNumber}?theme=purple&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=true&scale=1.0&backlink=https%3A%2F%2Ffreeflix.top&fedapi=false&interface-settings=false&tips=false&has-watchparty=false&subtitles=true`;
+            embedURL = `https://iframe.pstream.org/embed/tmdb-tv-${tvId}/${seasonNumber}/${episodeNumber}?theme=purple&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=true&scale=1.0&backlink=https%3A%2F%2Ffreeflix.top&fedapi=false&interface-settings=false&tips=false&has-watchparty=false`;
             break;
     }
     if (embedURL) {
@@ -530,6 +540,7 @@ async function displayMovieDetails() {
             const seasons = await fetchTVSeasons(id);
             if (seasons && seasons.length > 0) {
                 createSeasonOptions(seasons);
+                updateSeasonContainerClass(); // Apply new aesthetic design
                 seasonsContainer.style.display = "flex";
             }
         }
@@ -1054,3 +1065,262 @@ async function loadMoreForCategory(gridId, loadingId, fetchFunction) {
         console.error(`Error loading more content for ${gridId}:`, error);
     }
 }
+
+// Subtitle Indicator Functionality
+function initializeSubtitleIndicator() {
+    const subtitleIndicator = document.getElementById('subtitle-indicator');
+    const iframe = document.getElementById('iframe');
+
+    if (!subtitleIndicator) return;
+
+    // Enhanced subtitle detection
+    function checkSubtitleAvailability() {
+        // Check if video player is loaded
+        if (iframe && iframe.src) {
+            // Show subtitle indicator for all video content
+            subtitleIndicator.style.display = 'flex';
+            updateSubtitleInstructions();
+        } else {
+            // Hide indicator when no video is loaded
+            subtitleIndicator.style.display = 'none';
+        }
+    }
+
+    // Update instructions based on device type
+    function updateSubtitleInstructions() {
+        const instructionsElement = subtitleIndicator.querySelector('.subtitle-instructions');
+        const isMobile = window.innerWidth <= 768;
+
+        if (isMobile) {
+            instructionsElement.textContent = 'Tap player controls → CC/Subtitles';
+        } else {
+            instructionsElement.textContent = 'Right-click player → Subtitles/CC to enable';
+        }
+    }
+
+    // Enhanced click functionality
+    subtitleIndicator.addEventListener('click', function() {
+        showSubtitleModal();
+    });
+
+    // Subtitle help modal
+    function showSubtitleModal() {
+        const modal = document.createElement('div');
+        modal.className = 'subtitle-modal-overlay';
+        modal.innerHTML = `
+            <div class="subtitle-modal">
+                <div class="subtitle-modal-header">
+                    <h3>How to Enable Subtitles</h3>
+                    <button class="subtitle-modal-close">&times;</button>
+                </div>
+                <div class="subtitle-modal-content">
+                    <div class="subtitle-step">
+                        <div class="step-number">1</div>
+                        <div class="step-text">
+                            <strong>Desktop:</strong> Right-click on the video player
+                        </div>
+                    </div>
+                    <div class="subtitle-step">
+                        <div class="step-number">2</div>
+                        <div class="step-text">
+                            <strong>Mobile:</strong> Tap the player controls (CC icon)
+                        </div>
+                    </div>
+                    <div class="subtitle-step">
+                        <div class="step-number">3</div>
+                        <div class="step-text">
+                            Select "Subtitles" or "Closed Captions" from the menu
+                        </div>
+                    </div>
+                    <div class="subtitle-step">
+                        <div class="step-number">4</div>
+                        <div class="step-text">
+                            Choose your preferred language if multiple options are available
+                        </div>
+                    </div>
+                </div>
+                <div class="subtitle-modal-footer">
+                    <p><em>Note: Subtitle availability depends on the content source</em></p>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(modal);
+
+        // Close modal functionality
+        const closeBtn = modal.querySelector('.subtitle-modal-close');
+        closeBtn.addEventListener('click', () => {
+            document.body.removeChild(modal);
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                document.body.removeChild(modal);
+            }
+        });
+
+        // Auto-close after 10 seconds
+        setTimeout(() => {
+            if (document.body.contains(modal)) {
+                document.body.removeChild(modal);
+            }
+        }, 10000);
+    }
+
+    // Monitor iframe changes
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'src') {
+                setTimeout(checkSubtitleAvailability, 1000);
+            }
+        });
+    });
+
+    if (iframe) {
+        observer.observe(iframe, { attributes: true });
+    }
+
+    // Check on window resize for responsive instructions
+    window.addEventListener('resize', updateSubtitleInstructions);
+
+    // Initial check
+    setTimeout(checkSubtitleAvailability, 2000);
+}
+
+// Add modal styles
+function addSubtitleModalStyles() {
+    const style = document.createElement('style');
+    style.textContent = `
+        .subtitle-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            backdrop-filter: blur(5px);
+        }
+
+        .subtitle-modal {
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 191, 255, 0.3);
+        }
+
+        .subtitle-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 15px;
+        }
+
+        .subtitle-modal-header h3 {
+            color: #00bfff;
+            margin: 0;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .subtitle-modal-close {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .subtitle-modal-close:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .subtitle-step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 16px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border-left: 3px solid #00bfff;
+        }
+
+        .step-number {
+            background: #00bfff;
+            color: #000;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 12px;
+            flex-shrink: 0;
+            font-size: 12px;
+        }
+
+        .step-text {
+            color: #fff;
+            line-height: 1.4;
+            font-size: 14px;
+        }
+
+        .step-text strong {
+            color: #00bfff;
+        }
+
+        .subtitle-modal-footer {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .subtitle-modal-footer p {
+            color: #999;
+            margin: 0;
+            font-size: 12px;
+        }
+
+        @media (max-width: 480px) {
+            .subtitle-modal {
+                padding: 16px;
+                margin: 20px;
+            }
+
+            .subtitle-modal-header h3 {
+                font-size: 18px;
+            }
+
+            .step-text {
+                font-size: 13px;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    addSubtitleModalStyles();
+    initializeSubtitleIndicator();
+});
+
+// Also initialize when the page is fully loaded (fallback)
+window.addEventListener('load', function() {
+    setTimeout(initializeSubtitleIndicator, 1000);
+});
