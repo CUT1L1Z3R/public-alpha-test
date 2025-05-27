@@ -427,7 +427,7 @@ input::-webkit-input-placeholder {
   object-fit: cover;
   object-position: center top;
   opacity: 1;
-  transition: opacity 1.2s ease-in-out;
+  transition: opacity 2.2s ease-in-out;
 }
 
 #details-container {
@@ -446,7 +446,7 @@ input::-webkit-input-placeholder {
   font-size: 48px;
   font-weight: 800;
   opacity: 1;
-  transition: opacity 0.8s ease-in-out;
+  transition: opacity 2.2s ease-in-out;
 }
 
 #button-container {
