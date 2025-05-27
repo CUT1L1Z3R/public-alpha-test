@@ -327,16 +327,16 @@ function fetchAnime(containerClass, genreOrKeyword) {
         // Drama anime
         endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,18&with_keywords=210024&sort_by=popularity.desc`;
     } else if (genreOrKeyword === 'latest_episodes') {
-        // Latest anime episodes - show currently airing and very recent anime (last 2 weeks)
+        // Latest anime episodes - show anime that have aired recently (last aired episodes)
         const today = new Date();
-        const pastTwoWeeks = new Date();
-        pastTwoWeeks.setDate(pastTwoWeeks.getDate() - 14); // Past 2 weeks for latest episodes
+        const pastMonth = new Date();
+        pastMonth.setMonth(pastMonth.getMonth() - 1); // Past month for recent episode activity
 
         const todayStr = today.toISOString().split('T')[0];
-        const pastTwoWeeksStr = pastTwoWeeks.toISOString().split('T')[0];
+        const pastMonthStr = pastMonth.toISOString().split('T')[0];
 
-        // Get anime with very recent activity, sorted by first air date (newest first)
-        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&first_air_date.gte=${pastTwoWeeksStr}&first_air_date.lte=${todayStr}&sort_by=first_air_date.desc&vote_count.gte=1`;
+        // Get anime that have aired episodes recently, including ongoing series
+        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&air_date.gte=${pastMonthStr}&air_date.lte=${todayStr}&sort_by=popularity.desc&vote_count.gte=5`;
     } else if (genreOrKeyword === 'popular_season') {
         // Popular this season - current year's most popular anime
         const today = new Date();
@@ -367,26 +367,30 @@ function fetchAnime(containerClass, genreOrKeyword) {
                 genreOrKeyword === 'latest_episodes' &&
                 animeResults.length < 8
             ) {
-                // Try fallback: expand to last 4 weeks
+                // Try fallback: expand to last 3 months for more recent content
                 const today = new Date();
-                const pastFourWeeks = new Date();
-                pastFourWeeks.setDate(pastFourWeeks.getDate() - 28);
+                const pastThreeMonths = new Date();
+                pastThreeMonths.setMonth(pastThreeMonths.getMonth() - 3);
                 const todayStr = today.toISOString().split('T')[0];
-                const pastFourWeeksStr = pastFourWeeks.toISOString().split('T')[0];
-                const fallbackEndpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&first_air_date.gte=${pastFourWeeksStr}&first_air_date.lte=${todayStr}&sort_by=first_air_date.desc&vote_count.gte=1`;
+                const pastThreeMonthsStr = pastThreeMonths.toISOString().split('T')[0];
+                const fallbackEndpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&air_date.gte=${pastThreeMonthsStr}&air_date.lte=${todayStr}&sort_by=popularity.desc&vote_count.gte=1`;
 
                 fetch(`https://api.themoviedb.org/3/${fallbackEndpoint}`)
                     .then(response => response.json())
                     .then(fallbackData => {
                         let fallbackResults = fallbackData.results || [];
-                        // If still not enough, try fallback to popular anime
+                        // If still not enough, try currently airing anime
                         if (fallbackResults.length < 8) {
-                            const popFallbackEndpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&sort_by=popularity.desc&vote_count.gte=10`;
-                            fetch(`https://api.themoviedb.org/3/${popFallbackEndpoint}`)
+                            const currentlyAiringEndpoint = `tv/airing_today?api_key=${api_Key}&with_genres=16`;
+                            fetch(`https://api.themoviedb.org/3/${currentlyAiringEndpoint}`)
                                 .then(response => response.json())
-                                .then(popData => {
-                                    let popResults = popData.results || [];
-                                    animeResults = animeResults.concat(fallbackResults, popResults).filter((item, idx, arr) => arr.findIndex(i => i.id === item.id) === idx);
+                                .then(airingData => {
+                                    let airingResults = airingData.results || [];
+                                    // Filter for anime only
+                                    airingResults = airingResults.filter(item =>
+                                        item.genre_ids && item.genre_ids.includes(16)
+                                    );
+                                    animeResults = animeResults.concat(fallbackResults, airingResults).filter((item, idx, arr) => arr.findIndex(i => i.id === item.id) === idx);
                                     renderAnimeResults(containers, animeResults, containerClass);
                                 })
                                 .catch(() => {
