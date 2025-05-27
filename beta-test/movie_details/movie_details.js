@@ -101,6 +101,86 @@ const params = new URLSearchParams(window.location.search);
 const id = params.get('id');
 const media = params.get("media");
 
+// Function to check if content is actual anime (Japanese origin) vs western animation
+function isActualAnime(item) {
+    // Check for animation genre first
+    if (!item.genre_ids || !item.genre_ids.includes(16)) {
+        return false;
+    }
+
+    // Check origin country - anime typically originates from Japan
+    if (item.origin_country && item.origin_country.includes('JP')) {
+        return true;
+    }
+
+    // Check original language - anime is typically in Japanese
+    if (item.original_language === 'ja') {
+        return true;
+    }
+
+    // Check production companies for known anime studios (if available)
+    if (item.production_companies) {
+        const animeStudios = [
+            'Studio Ghibli', 'Toei Animation', 'Madhouse', 'Studio Pierrot', 'Bones',
+            'MAPPA', 'Wit Studio', 'Production I.G', 'Sunrise', 'A-1 Pictures',
+            'Kyoto Animation', 'Shaft', 'Trigger', 'CloverWorks', 'Ufotable'
+        ];
+        return item.production_companies.some(company =>
+            animeStudios.some(studio =>
+                company.name.toLowerCase().includes(studio.toLowerCase())
+            )
+        );
+    }
+
+    // For items without enough metadata, use heuristics based on title patterns
+    const title = (item.title || item.name || '').toLowerCase();
+
+    // Common western animation patterns to exclude
+    const westernPatterns = [
+        'teen titans', 'adventure time', 'steven universe', 'gravity falls',
+        'rick and morty', 'south park', 'family guy', 'simpsons',
+        'american dad', 'futurama', 'bob\'s burgers', 'archer',
+        'bojack horseman', 'big mouth', 'f is for family'
+    ];
+
+    // If it matches western patterns, it's not anime
+    if (westernPatterns.some(pattern => title.includes(pattern))) {
+        return false;
+    }
+
+    // If it has animation genre but no clear indicators, be conservative
+    // Default to false unless we have positive indicators it's anime
+    return false;
+}
+
+// Function to check if current content is actual anime
+function isCurrentContentAnime() {
+    if (!currentMovieDetails || !currentMovieDetails.genres) {
+        return false;
+    }
+
+    // Must have animation genre
+    const hasAnimationGenre = currentMovieDetails.genres.some(genre => genre.id === 16);
+    if (!hasAnimationGenre) {
+        return false;
+    }
+
+    // Check for Japanese origin indicators
+    return (currentMovieDetails.origin_country && currentMovieDetails.origin_country.includes('JP')) ||
+           (currentMovieDetails.original_language === 'ja') ||
+           (currentMovieDetails.production_companies &&
+            currentMovieDetails.production_companies.some(company => {
+                const animeStudios = [
+                    'Studio Ghibli', 'Toei Animation', 'Madhouse', 'Studio Pierrot', 'Bones',
+                    'MAPPA', 'Wit Studio', 'Production I.G', 'Sunrise', 'A-1 Pictures',
+                    'Kyoto Animation', 'Shaft', 'Trigger', 'CloverWorks', 'Ufotable'
+                ];
+                return animeStudios.some(studio =>
+                    company.name.toLowerCase().includes(studio.toLowerCase())
+                );
+            }));
+}
+
 // Function to fetch detailed information using its TMDb ID
 async function fetchMovieDetails(id) {
     const response = await fetch(`https://api.themoviedb.org/3/${media}/${id}?api_key=${api_Key}`);
@@ -666,19 +746,84 @@ async function loadTrendingContent() {
 async function fetchRecommendations() {
     try {
         const recommendations = [];
+
+        // Check if current content is actual anime (not just animation)
+        const isCurrentAnime = isCurrentContentAnime();
+
+        // If current content is anime, prioritize anime recommendations
+        if (isCurrentAnime) {
+            // Fetch anime from discover endpoint with animation genre AND Japanese language
+            const animeResponse = await fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${api_Key}&with_genres=16&with_original_language=ja&page=${loadedPages.recommendations}&sort_by=popularity.desc`);
+            const animeData = await animeResponse.json();
+            if (animeData.results && animeData.results.length > 0) {
+                const filteredAnime = animeData.results.filter(item =>
+                    item.id !== parseInt(id) && isActualAnime(item)
+                );
+                recommendations.push(...filteredAnime.slice(0, 12));
+            }
+        }
+
+        // Get regular recommendations
         const response = await fetch(`https://api.themoviedb.org/3/${media}/${id}/recommendations?api_key=${api_Key}&page=${loadedPages.recommendations}`);
         const data = await response.json();
         if (data.results && data.results.length > 0) {
-            recommendations.push(...data.results.slice(0, 15));
+            let filteredResults = data.results;
+
+            // If current content is anime, filter to prefer actual anime recommendations
+            if (isCurrentAnime) {
+                filteredResults = data.results.filter(item => isActualAnime(item));
+
+                // If no anime recommendations found, add some non-anime but keep it minimal
+                if (filteredResults.length < 5) {
+                    const nonAnime = data.results.filter(item => !isActualAnime(item)).slice(0, 3);
+                    filteredResults = [...filteredResults, ...nonAnime];
+                }
+            }
+
+            const needed = 15 - recommendations.length;
+            recommendations.push(...filteredResults.slice(0, needed));
         }
+
+        // If still not enough and it's anime, get more anime content
+        if (recommendations.length < 10 && isCurrentAnime) {
+            const moreAnimeResponse = await fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${api_Key}&with_genres=16&with_original_language=ja&page=${loadedPages.recommendations + 1}&sort_by=vote_average.desc&vote_count.gte=100`);
+            const moreAnimeData = await moreAnimeResponse.json();
+            if (moreAnimeData.results && moreAnimeData.results.length > 0) {
+                const filteredMoreAnime = moreAnimeData.results.filter(item =>
+                    item.id !== parseInt(id) &&
+                    !recommendations.some(rec => rec.id === item.id) &&
+                    isActualAnime(item)
+                );
+                const needed = 15 - recommendations.length;
+                recommendations.push(...filteredMoreAnime.slice(0, needed));
+            }
+        }
+
+        // Fallback to similar content if still not enough
         if (recommendations.length < 10) {
             const similarResponse = await fetch(`https://api.themoviedb.org/3/${media}/${id}/similar?api_key=${api_Key}&page=1`);
             const similarData = await similarResponse.json();
             if (similarData.results && similarData.results.length > 0) {
+                let filteredSimilar = similarData.results;
+
+                // Filter for actual anime if current content is anime
+                if (isCurrentAnime) {
+                    filteredSimilar = similarData.results.filter(item => isActualAnime(item));
+
+                    // If no anime similar content, add limited non-anime
+                    if (filteredSimilar.length < 3) {
+                        const nonAnimeSimilar = similarData.results.filter(item => !isActualAnime(item)).slice(0, 2);
+                        filteredSimilar = [...filteredSimilar, ...nonAnimeSimilar];
+                    }
+                }
+
+                const alreadyAdded = recommendations.map(r => r.id);
+                const uniqueSimilar = filteredSimilar.filter(item => !alreadyAdded.includes(item.id));
                 const needed = 15 - recommendations.length;
-                recommendations.push(...similarData.results.slice(0, needed));
+                recommendations.push(...uniqueSimilar.slice(0, needed));
             }
         }
+
         return recommendations;
     } catch (error) {
         console.error('Error fetching recommendations:', error);
@@ -690,7 +835,48 @@ async function fetchSimilarMovies() {
     try {
         const response = await fetch(`https://api.themoviedb.org/3/${media}/${id}/similar?api_key=${api_Key}&page=${loadedPages.similar}`);
         const data = await response.json();
-        return data.results ? data.results.slice(0, 15) : [];
+
+        if (!data.results || data.results.length === 0) {
+            return [];
+        }
+
+        // Check if current content is actual anime (not just animation)
+        const isCurrentAnime = isCurrentContentAnime();
+
+        let filteredResults = data.results;
+
+        // If current content is anime, prioritize actual anime similar content
+        if (isCurrentAnime) {
+            const animeResults = data.results.filter(item => isActualAnime(item));
+
+            // If we have anime similar content, use primarily that
+            if (animeResults.length > 0) {
+                filteredResults = animeResults;
+
+                // If not enough anime similar content, add a few non-anime (max 3)
+                if (animeResults.length < 8) {
+                    const nonAnimeResults = data.results.filter(item => !isActualAnime(item)).slice(0, 3);
+                    filteredResults = [...animeResults, ...nonAnimeResults];
+                }
+            } else {
+                // If no anime in similar results, fetch more anime content from discover with Japanese language
+                try {
+                    const animeDiscoverResponse = await fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${api_Key}&with_genres=16&with_original_language=ja&page=${loadedPages.similar}&sort_by=popularity.desc&vote_count.gte=50`);
+                    const animeDiscoverData = await animeDiscoverResponse.json();
+
+                    if (animeDiscoverData.results && animeDiscoverData.results.length > 0) {
+                        const animeContent = animeDiscoverData.results.filter(item =>
+                            item.id !== parseInt(id) && isActualAnime(item)
+                        );
+                        filteredResults = [...animeContent.slice(0, 10), ...data.results.slice(0, 5)];
+                    }
+                } catch (error) {
+                    console.log('Could not fetch additional anime content, using available similar content');
+                }
+            }
+        }
+
+        return filteredResults.slice(0, 15);
     } catch (error) {
         console.error('Error fetching similar movies:', error);
         return [];
@@ -699,10 +885,52 @@ async function fetchSimilarMovies() {
 
 async function fetchTrendingContent() {
     try {
+        // Check if current content is actual anime (not just animation)
+        const isCurrentAnime = isCurrentContentAnime();
+
+        let trendingContent = [];
+
+        // If current content is anime, fetch trending anime first
+        if (isCurrentAnime) {
+            // Fetch trending anime content with Japanese language filter
+            const trendingAnimeResponse = await fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${api_Key}&with_genres=16&with_original_language=ja&page=${loadedPages.trending}&sort_by=popularity.desc&first_air_date.gte=2020-01-01`);
+            const trendingAnimeData = await trendingAnimeResponse.json();
+
+            if (trendingAnimeData.results && trendingAnimeData.results.length > 0) {
+                const animeFiltered = trendingAnimeData.results.filter(item =>
+                    item.id !== parseInt(id) && isActualAnime(item)
+                );
+                trendingContent.push(...animeFiltered.slice(0, 10));
+            }
+        }
+
+        // Get regular trending content
         const response = await fetch(`https://api.themoviedb.org/3/trending/${media}/week?api_key=${api_Key}&page=${loadedPages.trending}`);
         const data = await response.json();
         const filtered = data.results ? data.results.filter(item => item.id !== parseInt(id)) : [];
-        return filtered.slice(0, 15);
+
+        if (isCurrentAnime) {
+            // For anime content, prioritize actual anime in trending results
+            const animeTrending = filtered.filter(item => isActualAnime(item));
+            const nonAnimeTrending = filtered.filter(item => !isActualAnime(item));
+
+            // Add anime trending first, then limited non-anime
+            trendingContent.push(...animeTrending);
+            const remainingSlots = 15 - trendingContent.length;
+            if (remainingSlots > 0) {
+                trendingContent.push(...nonAnimeTrending.slice(0, Math.min(remainingSlots, 3)));
+            }
+        } else {
+            // For non-anime content, use regular trending
+            trendingContent = filtered;
+        }
+
+        // Remove duplicates and limit results
+        const uniqueContent = trendingContent.filter((item, index, self) =>
+            index === self.findIndex(t => t.id === item.id)
+        );
+
+        return uniqueContent.slice(0, 15);
     } catch (error) {
         console.error('Error fetching trending content:', error);
         return [];
