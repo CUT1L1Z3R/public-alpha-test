@@ -136,9 +136,9 @@ function updateBannerForAnime() {
 // Initialize sections for anime
 function initializeAnimeSections() {
     // Initialize anime sections
-    fetchAnime('anime-upcoming-new-container', 'truly_upcoming');
+    fetchAnime('latest-episodes-container', 'latest_episodes');
+    fetchAnime('popular-season-container', 'popular_season');
     fetchAnime('top-rated-anime-movie-container', 'top_rated_anime_movies');
-    fetchAnime('anime-popular-container', 'popular');
     fetchAnime('anime-top-container', 'top_rated');
     fetchAnime('anime-upcoming-container', 'upcoming');
     fetchAnime('adventure-anime-container', 'adventure');
@@ -326,6 +326,24 @@ function fetchAnime(containerClass, genreOrKeyword) {
     } else if (genreOrKeyword === 'drama') {
         // Drama anime
         endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,18&with_keywords=210024&sort_by=popularity.desc`;
+    } else if (genreOrKeyword === 'latest_episodes') {
+        // Latest anime episodes - show currently airing and recent anime
+        const today = new Date();
+        const pastSixMonths = new Date();
+        pastSixMonths.setMonth(pastSixMonths.getMonth() - 6); // Past 6 months for good coverage
+
+        const todayStr = today.toISOString().split('T')[0];
+        const pastSixMonthsStr = pastSixMonths.toISOString().split('T')[0];
+
+        // Get anime with recent activity, sorted by popularity to ensure good content
+        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&first_air_date.gte=${pastSixMonthsStr}&first_air_date.lte=${todayStr}&sort_by=popularity.desc&vote_count.gte=10`;
+    } else if (genreOrKeyword === 'popular_season') {
+        // Popular this season - current year's most popular anime
+        const today = new Date();
+        const currentYear = today.getFullYear();
+
+        // Get popular anime from current year with broader criteria for better results
+        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&first_air_date.gte=${currentYear}-01-01&first_air_date.lte=${currentYear}-12-31&sort_by=popularity.desc&vote_count.gte=5`;
     } else {
         // Default endpoint for general anime
         endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&sort_by=popularity.desc`;
@@ -468,12 +486,25 @@ function fetchAnime(containerClass, genreOrKeyword) {
         .catch(error => {
             console.error('Error fetching anime data:', error);
 
-            // Special handling for adventure anime container if it fails
-            if (containerClass === 'adventure-anime-container') {
+            // Special handling for containers that might fail
+            if (containerClass === 'adventure-anime-container' ||
+                containerClass === 'latest-episodes-container' ||
+                containerClass === 'popular-season-container') {
                 containers.forEach(container => {
-                    // Try a fallback query for adventure anime
-                    console.log("Attempting fallback query for adventure anime");
-                    const fallbackEndpoint = `discover/tv?api_key=${api_Key}&with_genres=16&sort_by=popularity.desc&vote_count.gte=100`;
+                    // Try a fallback query with different content for each section
+                    console.log(`Attempting fallback query for ${containerClass}`);
+                    let fallbackEndpoint;
+
+                    if (containerClass === 'latest-episodes-container') {
+                        // For latest episodes fallback, use recently popular anime
+                        fallbackEndpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&sort_by=popularity.desc&vote_count.gte=10`;
+                    } else if (containerClass === 'popular-season-container') {
+                        // For popular season fallback, use popular anime
+                        fallbackEndpoint = `discover/tv?api_key=${api_Key}&with_genres=16&sort_by=popularity.desc&vote_count.gte=50`;
+                    } else {
+                        // Default fallback for adventure anime
+                        fallbackEndpoint = `discover/tv?api_key=${api_Key}&with_genres=16&sort_by=popularity.desc&vote_count.gte=50`;
+                    }
 
                     fetch(`https://api.themoviedb.org/3/${fallbackEndpoint}`)
                         .then(response => response.json())
@@ -482,7 +513,7 @@ function fetchAnime(containerClass, genreOrKeyword) {
                             if (animeResults.length > 0) {
                                 container.innerHTML = ''; // Clear error message
 
-                                // Just show the first 15 most popular anime
+                                // Show popular anime as fallback
                                 const validResults = animeResults
                                     .filter(item => item.poster_path || item.backdrop_path)
                                     .slice(0, 15);
@@ -532,7 +563,7 @@ function fetchAnime(containerClass, genreOrKeyword) {
                             }
                         })
                         .catch(err => {
-                            console.error('Error with fallback adventure anime fetch:', err);
+                            console.error(`Error with fallback ${containerClass} fetch:`, err);
                         });
                 });
             }
