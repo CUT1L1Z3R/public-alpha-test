@@ -2008,38 +2008,19 @@ p {
 @media (max-width: 768px) {
     .subtitle-indicator {
         max-width: 100%;
-        margin: 8px 0;
-        padding: 8px 12px;
-        font-size: 13px;
-    }
-
-    .subtitle-icon svg {
-        width: 20px;
-        height: 20px;
-    }
-
-    .subtitle-status {
-        font-size: 13px;
-    }
-
-    .subtitle-instructions {
-        font-size: 11px;
-    }
-}
-
-@media (max-width: 480px) {
-    .subtitle-indicator {
-        padding: 6px 10px;
         margin: 6px 0;
+        padding: 6px 10px;
+        font-size: 12px;
+        border-radius: 6px;
     }
 
     .subtitle-icon {
-        margin-right: 8px;
+        margin-right: 6px;
     }
 
     .subtitle-icon svg {
-        width: 18px;
-        height: 18px;
+        width: 16px;
+        height: 16px;
     }
 
     .subtitle-status {
@@ -2048,6 +2029,31 @@ p {
 
     .subtitle-instructions {
         font-size: 10px;
-        line-height: 1.2;
+    }
+}
+
+@media (max-width: 480px) {
+    .subtitle-indicator {
+        padding: 4px 8px;
+        margin: 4px 0;
+        font-size: 11px;
+    }
+
+    .subtitle-icon {
+        margin-right: 5px;
+    }
+
+    .subtitle-icon svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    .subtitle-status {
+        font-size: 11px;
+    }
+
+    .subtitle-instructions {
+        font-size: 9px;
+        line-height: 1.1;
     }
 }
