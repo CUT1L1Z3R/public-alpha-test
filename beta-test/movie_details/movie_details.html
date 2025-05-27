@@ -63,7 +63,7 @@
             }
         }
 
-        /* Subtitle indicator styling */
+        /* Subtitle indicator styling - mobile optimized */
         .subtitle-indicator {
             display: flex;
             align-items: center;
@@ -97,6 +97,28 @@
         .subtitle-instructions {
             font-size: 12px;
             color: #ccc;
+        }
+
+        /* Mobile compact styles */
+        @media (max-width: 560px) {
+            .subtitle-indicator {
+                padding: 4px 8px;
+                margin-top: 6px;
+                font-size: 12px;
+                border-radius: 5px;
+            }
+
+            .subtitle-icon {
+                margin-right: 6px;
+            }
+
+            .subtitle-status {
+                font-size: 11px;
+            }
+
+            .subtitle-instructions {
+                font-size: 9px;
+            }
         }
     </style>
 </head>
@@ -132,7 +154,7 @@
                 </div>
                 <div class="subtitle-info">
                     <span class="subtitle-status">Subtitles Available</span>
-                    <span class="subtitle-instructions">Right-click player → Subtitles/CC to enable</span>
+                    <span class="subtitle-instructions">Open Video settings → Enable Subtitles</span>
                 </div>
             </div>
 
