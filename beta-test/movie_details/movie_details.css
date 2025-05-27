@@ -682,43 +682,7 @@ iframe {
     background-color: #000000;
 }
 
-.subtitle-indicator {
-    position: static;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
-    padding: 15px 20px;
-    border-radius: 8px;
-    color: #ffffff;
-    font-size: 14px;
-    margin-top: 15px;
-    margin-bottom: 20px;
-    border: 1px solid #2a2a2a;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    transition: all 0.3s ease;
-}
 
-.subtitle-icon {
-    color: #be7dc0;
-    flex-shrink: 0;
-}
-
-.subtitle-info {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
-.subtitle-status {
-    font-weight: 600;
-    color: #ffffff;
-}
-
-.subtitle-instructions {
-    font-size: 12px;
-    color: #cccccc;
-}
 
 /* Recommendations sidebar */
 .recommendations-sidebar {
@@ -857,14 +821,6 @@ iframe {
 
     iframe {
         height: 300px;
-    }
-
-    .subtitle-indicator {
-        padding: 12px 15px;
-        margin-top: 10px;
-        margin-bottom: 15px;
-        font-size: 13px;
-        gap: 10px;
     }
 
     /* Mobile episodes improvements */
