@@ -812,27 +812,7 @@ fetchMedia('mystery-container', 'discover/tv?with_genres=9648&sort_by=popularity
 fetchMedia('fantasy-container', 'discover/tv?with_genres=10765&sort_by=popularity.desc', 'tv'); // Genre 10765: Sci-Fi & Fantasy (most include Fantasy shows)
 fetchMedia('reality-container', 'discover/tv?with_genres=10764&sort_by=popularity.desc', 'tv'); // Genre 10764: Reality
 
-// Initial fetch of anime using TMDB API with appropriate genres/keywords
-fetchAnime('anime-popular-container', 'popular'); // Popular anime
-fetchAnime('anime-top-container', 'top_rated'); // Top rated anime
-fetchAnime('anime-upcoming-container', 'upcoming'); // Ongoing anime (keeping the same container name)
-fetchAnime('anime-upcoming-new-container', 'truly_upcoming'); // Latest anime
 
-// Top rated anime movies
-fetchAnime('top-rated-anime-movie-container', 'top_rated_anime_movies');
-setupScroll('top-rated-anime-movie-container', 'top-rated-anime-movie-previous', 'top-rated-anime-movie-next');
-
-// Adventure anime
-fetchAnime('adventure-anime-container', 'adventure');
-setupScroll('adventure-anime-container', 'adventure-anime-previous', 'adventure-anime-next');
-
-// Drama anime
-fetchAnime('drama-anime-container', 'drama');
-setupScroll('drama-anime-container', 'drama-anime-previous', 'drama-anime-next');
-
-// Additional anime genres (removed the ones not needed)
-fetchAnime('anime-comedy-container', 'comedy'); // Comedy anime
-fetchAnime('anime-romance-container', 'romance'); // Romance anime
 
 // Function to fetch search results from TMDB API
 async function fetchSearchResults(query) {
