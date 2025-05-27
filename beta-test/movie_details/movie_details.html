@@ -62,6 +62,42 @@
                 word-wrap: break-word;
             }
         }
+
+        /* Subtitle indicator styling */
+        .subtitle-indicator {
+            display: flex;
+            align-items: center;
+            margin-top: 8px;
+            font-family: 'Poppins', sans-serif;
+            color: #fff;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 6px 12px;
+            border-radius: 6px;
+            max-width: 300px;
+            font-size: 14px;
+            user-select: none;
+        }
+
+        .subtitle-icon {
+            margin-right: 8px;
+            color: #00bfff;
+            flex-shrink: 0;
+        }
+
+        .subtitle-info {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+
+        .subtitle-status {
+            font-weight: 600;
+        }
+
+        .subtitle-instructions {
+            font-size: 12px;
+            color: #ccc;
+        }
     </style>
 </head>
 
@@ -85,6 +121,21 @@
             <img id="moviePoster" src="" alt="Movie Poster" width="300" height="450" loading="eager">
             <iframe id="iframe" frameborder="0" allowfullscreen playsinline
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"></iframe>
+
+            <!-- Subtitle Availability Indicator -->
+            <div id="subtitle-indicator" class="subtitle-indicator">
+                <div class="subtitle-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="2" y="5" width="20" height="14" rx="2" stroke="currentColor" stroke-width="2"/>
+                        <path d="M6 16h2m4 0h6m-8-3h4m-4-3h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <div class="subtitle-info">
+                    <span class="subtitle-status">Subtitles Available</span>
+                    <span class="subtitle-instructions">Right-click player → Subtitles/CC to enable</span>
+                </div>
+            </div>
+
             <div id="player-controls-spacer"></div>
 
             <!-- Season selector (visible only for TV shows) -->
@@ -144,7 +195,7 @@
                 <div class="server-dropdown">
                     <div class="server-dropdown-header">
                         <div class="selected-server">
-                            <span class="server-name">PSTREAM</span>
+                            <span class="server-name">SHOUKO</span>
                             <span class="server-tag tag-recommended">RECOMMENDED</span>
                             <span class="server-tag tag-stable">Stable</span>
                             <span class="server-tag tag-4k">4K</span>
@@ -153,14 +204,14 @@
                     </div>
                     <div class="server-dropdown-content">
                         <div class="server-option" data-server="iframe.pstream.org">
-                            <span class="server-name">PSTREAM</span>
+                            <span class="server-name">SHOUKO</span>
                             <span class="server-tag tag-recommended">RECOMMENDED</span>
                             <span class="server-tag tag-stable">Stable</span>
                             <span class="server-tag tag-4k">4K</span>
                         </div>
                         <div class="server-option" data-server="vidsrc.su">
                             <span class="server-name">SHINOMIYA</span>
-                            <span class="server-tag tag-recommended">BACKUP</span>
+                            <span class="server-tag tag-recommended">RECOMMENDED</span>
                             <span class="server-tag tag-4k">4K</span>
                             <span class="server-tag tag-fast">FAST</span>
                         </div>
@@ -197,8 +248,8 @@
             <div id="server-selector" class="server-selector-dropdown" style="display: none;">
                 <label for="server">Select Server:</label>
                 <select id="server" class="server-selector-select">
-                    <option value="iframe.pstream.org">PSTREAM (RECOMMENDED 4K STABLE)</option>
-                    <option value="vidsrc.su">SHINOMIYA (BACKUP 4K FAST)</option>
+                    <option value="iframe.pstream.org">SHOUKO (RECOMMENDED 4K STABLE)</option>
+                    <option value="vidsrc.su">SHINOMIYA (RECOMMENDED 4K FAST)</option>
                     <option value="vidlink.pro">Vidlink.pro</option>
                     <option value="vidsrc.vip">Vidsrc.vip</option>
                     <option value="vidsrc.cc">Vidsrc.cc</option>
