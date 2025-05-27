@@ -236,7 +236,28 @@
         <button class="nav-pill" onclick="scrollToSection('recommendations')">Recommendations</button>
     </div>
 
+    <script src="../shared-search.js"></script>
     <script src="movie_details.js"></script>
+    <script>
+        // Initialize search for movie details page
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('header-search');
+            const searchResults = document.getElementById('searchResults');
+
+            if (searchInput && !searchResults) {
+                // Create search results container if it doesn't exist
+                const resultsContainer = document.createElement('div');
+                resultsContainer.id = 'searchResults';
+                resultsContainer.className = 'search-results';
+                searchInput.parentNode.appendChild(resultsContainer);
+            }
+
+            // Initialize search with correct IDs
+            if (typeof initializeSearch === 'function') {
+                initializeSearch('header-search', 'searchResults');
+            }
+        });
+    </script>
 </body>
 
 </html>
