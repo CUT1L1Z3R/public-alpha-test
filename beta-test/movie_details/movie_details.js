@@ -1,4 +1,4 @@
-// FreeFlix Movie Details
+// FreeFlix Movie Details - Updated for andoks.cc layout
 // Selecting the logo element and adding a click event listener to navigate to the homepage
 const logo = document.querySelector('.logo');
 logo.addEventListener('click', () => {
@@ -7,6 +7,7 @@ logo.addEventListener('click', () => {
 
 // Define server fallback chain
 const serverFallbackChain = ['iframe.pstream.org', 'vidsrc.su', 'vidsrc.vip', 'vidlink.pro'];
+let currentServerIndex = 0;
 
 // Function to show toast notification
 function showToast(message, type = 'info') {
@@ -174,6 +175,7 @@ function initializeServerDropdown() {
 
             // Change server
             currentServer = server;
+            resetServerIndex();
             loadContent();
 
             // Close dropdown
@@ -195,19 +197,98 @@ function initializeServerDropdown() {
 function loadContent() {
     let url = '';
 
-    if (media === 'movie') {
-        url = `https://${currentServer}/embed/movie/${id}`;
-    } else if (media === 'tv') {
-        url = `https://${currentServer}/embed/tv/${id}/${currentSeason}/${currentEpisode}`;
+    // Special handling for iframe.pstream.org with proper TMDB format
+    if (currentServer === 'iframe.pstream.org') {
+        if (media === 'movie') {
+            url = `https://iframe.pstream.org/embed/tmdb-movie-${id}?theme=grape&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=true&scale=1.0&backlink=https%3A%2F%2Ffreeflix.top&fedapi=false&interface-settings=false&tips=false&has-watchparty=false`;
+        } else if (media === 'tv') {
+            url = `https://iframe.pstream.org/embed/tmdb-tv-${id}/${currentSeason}/${currentEpisode}?theme=grape&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=true&scale=1.0&backlink=https%3A%2F%2Ffreeflix.top&fedapi=false&interface-settings=false&tips=false&has-watchparty=false`;
+        }
+    } else {
+        // Default format for other servers
+        if (media === 'movie') {
+            url = `https://${currentServer}/embed/movie/${id}`;
+        } else if (media === 'tv') {
+            url = `https://${currentServer}/embed/tv/${id}/${currentSeason}/${currentEpisode}`;
+        }
     }
 
     if (iframe && url) {
         iframe.src = url;
         console.log(`Loading: ${url}`);
+
+        // Show subtitle indicator while loading
+        const subtitleIndicator = document.getElementById('subtitle-indicator');
+        if (subtitleIndicator) {
+            subtitleIndicator.style.display = 'flex';
+        }
+
+        // Set loading timeout for iframe.pstream.org
+        let loadingTimeout;
+        if (currentServer === 'iframe.pstream.org') {
+            loadingTimeout = setTimeout(() => {
+                console.warn('iframe.pstream.org loading timeout, trying next server');
+                showToast('Server timeout. Trying next server...', 'error');
+                tryNextServer();
+            }, 10000); // 10 second timeout
+        }
+
+        // Add error handling for iframe loading
+        iframe.onload = function() {
+            console.log('Iframe loaded successfully');
+            clearTimeout(loadingTimeout);
+
+            // Hide subtitle indicator when content loads
+            const subtitleIndicator = document.getElementById('subtitle-indicator');
+            if (subtitleIndicator) {
+                subtitleIndicator.style.display = 'none';
+            }
+        };
+
+        iframe.onerror = function() {
+            console.error('Failed to load iframe content');
+            clearTimeout(loadingTimeout);
+            showToast('Failed to load content. Trying next server...', 'error');
+            tryNextServer();
+        };
     }
 }
 
-// Generate episode list in style
+// Try next server in fallback chain
+function tryNextServer() {
+    currentServerIndex++;
+    if (currentServerIndex < serverFallbackChain.length) {
+        const nextServer = serverFallbackChain[currentServerIndex];
+        currentServer = nextServer;
+
+        // Update UI to show current server
+        const selectedServerName = document.querySelector('.selected-server .server-name');
+        if (selectedServerName) {
+            const serverDisplayNames = {
+                'iframe.pstream.org': 'SHOUKO',
+                'vidsrc.su': 'SHINOMIYA',
+                'vidsrc.vip': 'MAFUYU',
+                'vidlink.pro': 'MIZUKI'
+            };
+            selectedServerName.textContent = serverDisplayNames[nextServer] || nextServer;
+        }
+
+        showToast(`Switching to ${nextServer}...`, 'info');
+        loadContent();
+    } else {
+        showToast('All servers failed to load content', 'error');
+        currentServerIndex = 0; // Reset for next try
+    }
+}
+
+// Reset server index when manually changing servers
+function resetServerIndex() {
+    const serverName = currentServer;
+    currentServerIndex = serverFallbackChain.indexOf(serverName);
+    if (currentServerIndex === -1) currentServerIndex = 0;
+}
+
+// Generate episode list in andoks.cc style
 function generateEpisodeList(seasonData) {
     if (!episodesList || !seasonData?.episodes) return;
 
@@ -468,7 +549,7 @@ window.addEventListener('resize', () => {
     // Handle any responsive adjustments if needed
 });
 
-console.log('FreeFlix Movie Details - Layout Loaded');
+console.log('FreeFlix Movie Details - andoks.cc Layout Loaded');
 
 // Mobile-specific functionality
 let isMobileCollapsed = false;
