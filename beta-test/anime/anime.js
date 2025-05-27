@@ -173,7 +173,7 @@ function setupNavigationButtons() {
                     left: 300,
                     behavior: 'smooth'
                 });
-            });
+            }
         }
     });
 }
@@ -286,66 +286,49 @@ function fetchAnime(containerClass, genreOrKeyword) {
     let endpoint = '';
 
     if (genreOrKeyword === 'popular') {
-        // For popular anime, use discover with animation genre + anime keyword and sort by popularity
         endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&sort_by=popularity.desc`;
     } else if (genreOrKeyword === 'top_rated') {
-        // For top rated anime, use discover with animation genre + anime keyword sorted by rating
         endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&sort_by=vote_average.desc&vote_count.gte=100`;
     } else if (genreOrKeyword === 'upcoming') {
-        // For ongoing anime (renamed from upcoming), use discover with recent and ongoing air dates
         const today = new Date();
-        const dateStr = today.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+        const dateStr = today.toISOString().split('T')[0];
         endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&air_date.lte=${dateStr}&with_status=0&sort_by=popularity.desc`;
     } else if (genreOrKeyword === 'truly_upcoming') {
-        // For truly upcoming anime, use discover with future air dates
         const today = new Date();
         const futureDate = new Date();
-        futureDate.setMonth(futureDate.getMonth() + 6); // Get anime coming in the next 6 months
-
-        const todayStr = today.toISOString().split('T')[0]; // Format as YYYY-MM-DD
-        const futureDateStr = futureDate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
-
-        // Get anime that will air after today but before 6 months from now
-        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&air_date.gte=${todayStr}&air_date.lte=${futureDateStr}&sort_by=primary_release_date.asc`;
-    } else if (genreOrKeyword === 'action') {
-        // Action anime
-        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,28&with_keywords=210024&sort_by=popularity.desc`;
-    } else if (genreOrKeyword === 'romance') {
-        // Romance anime
-        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,10749&with_keywords=210024&sort_by=popularity.desc`;
-    } else if (genreOrKeyword === 'comedy') {
-        // Comedy anime
-        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,35&with_keywords=210024&sort_by=popularity.desc`;
-    } else if (genreOrKeyword === 'top_rated_anime_movies') {
-        // Top rated anime movies
-        endpoint = `discover/movie?api_key=${api_Key}&with_genres=16&sort_by=vote_average.desc&vote_count.gte=100`;
-    } else if (genreOrKeyword === 'adventure') {
-        // Action & Adventure anime - combining action and adventure genres
-        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,10759&with_keywords=210024&sort_by=popularity.desc&vote_count.gte=50`;
-        // Genres: 16=Animation, 28=Action, 12=Adventure
-    } else if (genreOrKeyword === 'drama') {
-        // Drama anime
-        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,18&with_keywords=210024&sort_by=popularity.desc`;
-    } else if (genreOrKeyword === 'latest_episodes') {
-        // Latest anime episodes - show anime that have aired recently (last aired episodes)
-        const today = new Date();
-        const pastMonth = new Date();
-        pastMonth.setMonth(pastMonth.getMonth() - 1); // Past month for recent episode activity
+        futureDate.setMonth(futureDate.getMonth() + 6);
 
         const todayStr = today.toISOString().split('T')[0];
-        const pastMonthStr = pastMonth.toISOString().split('T')[0];
+        const futureDateStr = futureDate.toISOString().split('T')[0];
 
-        // Get anime that have aired episodes recently, including ongoing series
-        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&air_date.gte=${pastMonthStr}&air_date.lte=${todayStr}&sort_by=popularity.desc&vote_count.gte=5`;
+        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&air_date.gte=${todayStr}&air_date.lte=${futureDateStr}&sort_by=primary_release_date.asc`;
+    } else if (genreOrKeyword === 'action') {
+        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,28&with_keywords=210024&sort_by=popularity.desc`;
+    } else if (genreOrKeyword === 'romance') {
+        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,10749&with_keywords=210024&sort_by=popularity.desc`;
+    } else if (genreOrKeyword === 'comedy') {
+        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,35&with_keywords=210024&sort_by=popularity.desc`;
+    } else if (genreOrKeyword === 'top_rated_anime_movies') {
+        endpoint = `discover/movie?api_key=${api_Key}&with_genres=16&sort_by=vote_average.desc&vote_count.gte=100`;
+    } else if (genreOrKeyword === 'adventure') {
+        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,10759&with_keywords=210024&sort_by=popularity.desc&vote_count.gte=50`;
+    } else if (genreOrKeyword === 'drama') {
+        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,18&with_keywords=210024&sort_by=popularity.desc`;
+    } else if (genreOrKeyword === 'latest_episodes') {
+        const today = new Date();
+        const pastTwoWeeks = new Date();
+        pastTwoWeeks.setDate(pastTwoWeeks.getDate() - 14);
+
+        const todayStr = today.toISOString().split('T')[0];
+        const pastTwoWeeksStr = pastTwoWeeks.toISOString().split('T')[0];
+
+        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&air_date.gte=${pastTwoWeeksStr}&sort_by=first_air_date.desc&vote_count.gte=1`;
     } else if (genreOrKeyword === 'popular_season') {
-        // Popular this season - current year's most popular anime
         const today = new Date();
         const currentYear = today.getFullYear();
 
-        // Get popular anime from current year with broader criteria for better results
         endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&first_air_date.gte=${currentYear}-01-01&first_air_date.lte=${currentYear}-12-31&sort_by=popularity.desc&vote_count.gte=5`;
     } else {
-        // Default endpoint for general anime
         endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&sort_by=popularity.desc`;
     }
 
@@ -367,43 +350,64 @@ function fetchAnime(containerClass, genreOrKeyword) {
                 genreOrKeyword === 'latest_episodes' &&
                 animeResults.length < 8
             ) {
-                // Try fallback: expand to last 3 months for more recent content
-                const today = new Date();
-                const pastThreeMonths = new Date();
-                pastThreeMonths.setMonth(pastThreeMonths.getMonth() - 3);
-                const todayStr = today.toISOString().split('T')[0];
-                const pastThreeMonthsStr = pastThreeMonths.toISOString().split('T')[0];
-                const fallbackEndpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&air_date.gte=${pastThreeMonthsStr}&air_date.lte=${todayStr}&sort_by=popularity.desc&vote_count.gte=1`;
+                // Try fallback 1: Currently airing anime (most recent episodes)
+                const currentlyAiringEndpoint = `tv/airing_today?api_key=${api_Key}`;
 
-                fetch(`https://api.themoviedb.org/3/${fallbackEndpoint}`)
+                fetch(`https://api.themoviedb.org/3/${currentlyAiringEndpoint}`)
                     .then(response => response.json())
-                    .then(fallbackData => {
-                        let fallbackResults = fallbackData.results || [];
-                        // If still not enough, try currently airing anime
-                        if (fallbackResults.length < 8) {
-                            const currentlyAiringEndpoint = `tv/airing_today?api_key=${api_Key}&with_genres=16`;
-                            fetch(`https://api.themoviedb.org/3/${currentlyAiringEndpoint}`)
+                    .then(airingData => {
+                        let airingResults = airingData.results || [];
+                        // Filter for anime only (genre 16 = Animation)
+                        airingResults = airingResults.filter(item =>
+                            item.genre_ids && item.genre_ids.includes(16)
+                        );
+
+                        // If still not enough, try on the air (currently airing series)
+                        if (airingResults.length < 8) {
+                            const onAirEndpoint = `tv/on_the_air?api_key=${api_Key}`;
+                            fetch(`https://api.themoviedb.org/3/${onAirEndpoint}`)
                                 .then(response => response.json())
-                                .then(airingData => {
-                                    let airingResults = airingData.results || [];
+                                .then(onAirData => {
+                                    let onAirResults = onAirData.results || [];
                                     // Filter for anime only
-                                    airingResults = airingResults.filter(item =>
+                                    onAirResults = onAirResults.filter(item =>
                                         item.genre_ids && item.genre_ids.includes(16)
                                     );
-                                    animeResults = animeResults.concat(fallbackResults, airingResults).filter((item, idx, arr) => arr.findIndex(i => i.id === item.id) === idx);
+
+                                    // Combine all results and remove duplicates
+                                    animeResults = animeResults.concat(airingResults, onAirResults)
+                                        .filter((item, idx, arr) => arr.findIndex(i => i.id === item.id) === idx)
+                                        .slice(0, 20); // Limit to 20 items
                                     renderAnimeResults(containers, animeResults, containerClass);
                                 })
                                 .catch(() => {
-                                    animeResults = animeResults.concat(fallbackResults).filter((item, idx, arr) => arr.findIndex(i => i.id === item.id) === idx);
+                                    animeResults = animeResults.concat(airingResults)
+                                        .filter((item, idx, arr) => arr.findIndex(i => i.id === item.id) === idx);
                                     renderAnimeResults(containers, animeResults, containerClass);
                                 });
                         } else {
-                            animeResults = animeResults.concat(fallbackResults).filter((item, idx, arr) => arr.findIndex(i => i.id === item.id) === idx);
+                            animeResults = animeResults.concat(airingResults)
+                                .filter((item, idx, arr) => arr.findIndex(i => i.id === item.id) === idx);
                             renderAnimeResults(containers, animeResults, containerClass);
                         }
                     })
                     .catch(() => {
-                        renderAnimeResults(containers, animeResults, containerClass);
+                        // Final fallback: use popular anime from current year
+                        const today = new Date();
+                        const currentYear = today.getFullYear();
+                        const finalFallbackEndpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&first_air_date.gte=${currentYear}-01-01&sort_by=popularity.desc&vote_count.gte=10`;
+
+                        fetch(`https://api.themoviedb.org/3/${finalFallbackEndpoint}`)
+                            .then(response => response.json())
+                            .then(fallbackData => {
+                                let fallbackResults = fallbackData.results || [];
+                                animeResults = animeResults.concat(fallbackResults)
+                                    .filter((item, idx, arr) => arr.findIndex(i => i.id === item.id) === idx);
+                                renderAnimeResults(containers, animeResults, containerClass);
+                            })
+                            .catch(() => {
+                                renderAnimeResults(containers, animeResults, containerClass);
+                            });
                     });
                 return; // Don't continue to normal rendering, will be handled in fallback
             }
