@@ -1,5 +1,7 @@
+/*
 // FreeFlix Movie Details - Updated for andoks.cc layout
 // Selecting the logo element and adding a click event listener to navigate to the homepage
+*/
 const logo = document.querySelector('.logo');
 logo.addEventListener('click', () => {
     window.location.href = '../index.html';
@@ -759,3 +761,183 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Global function to make it accessible from HTML onclick
 window.scrollToSection = scrollToSection;
+
+// Search functionality for header search
+const headerSearchInput = document.getElementById('header-search');
+
+// TMDB API key for search (use a different key for search as per edit)
+const searchApiKey = '84259f99204eeb7d45c7e3d8e36c6123';
+
+// Function to fetch search results from TMDB API
+async function fetchSearchResults(query) {
+    try {
+        // Use TMDB multi-search API to get results for everything including anime
+        const tmdbResponse = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${searchApiKey}&query=${encodeURIComponent(query)}`);
+        const tmdbData = await tmdbResponse.json();
+
+        // Also specifically search for anime with a dedicated request
+        const animeResponse = await fetch(`https://api.themoviedb.org/3/search/tv?api_key=${searchApiKey}&query=${encodeURIComponent(query)}&with_genres=16&with_keywords=210024`);
+        const animeData = await animeResponse.json();
+
+        // Format TMDB multi-search results
+        const tmdbResults = tmdbData.results.map(item => ({
+            id: item.id,
+            title: item.title || item.name,
+            year: item.release_date ? new Date(item.release_date).getFullYear() :
+                  item.first_air_date ? new Date(item.first_air_date).getFullYear() : 'N/A',
+            poster: item.poster_path ? `https://image.tmdb.org/t/p/w200${item.poster_path}` : 'https://via.placeholder.com/200x300',
+            rating: item.vote_average ? item.vote_average.toFixed(1) : 'N/A',
+            type: item.media_type === 'movie' ? 'movie' : 'tv'
+        }));
+
+        // Format dedicated anime search results
+        const animeResults = animeData.results.map(item => ({
+            id: item.id,
+            title: item.name,
+            year: item.first_air_date ? new Date(item.first_air_date).getFullYear() : 'N/A',
+            poster: item.poster_path ? `https://image.tmdb.org/t/p/w200${item.poster_path}` : 'https://via.placeholder.com/200x300',
+            rating: item.vote_average ? item.vote_average.toFixed(1) : 'N/A',
+            type: 'tv'
+        }));
+
+        // Combine results and remove duplicates
+        const allResults = [...tmdbResults, ...animeResults];
+        const uniqueResults = allResults.filter((item, index, self) =>
+            index === self.findIndex(t => t.id === item.id && t.type === item.type)
+        );
+
+        return uniqueResults.slice(0, 8); // Limit to 8 results
+    } catch (error) {
+        console.error('Error fetching search results:', error);
+        return [];
+    }
+}
+
+// Function to create search results dropdown
+function createSearchDropdown() {
+    let dropdown = document.getElementById('search-dropdown');
+    if (!dropdown) {
+        dropdown = document.createElement('div');
+        dropdown.id = 'search-dropdown';
+        dropdown.style.cssText = `
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(16, 16, 17, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(141, 22, 201, 0.3);
+            border-radius: 15px;
+            margin-top: 5px;
+            max-height: 400px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        `;
+        headerSearchInput.parentElement.appendChild(dropdown);
+    }
+    return dropdown;
+}
+
+// Function to display search results
+function displaySearchResults(results) {
+    const dropdown = createSearchDropdown();
+    dropdown.innerHTML = '';
+
+    if (results.length === 0) {
+        dropdown.innerHTML = '<div style="padding: 20px; text-align: center; color: #888;">No results found</div>';
+        dropdown.style.display = 'block';
+        return;
+    }
+
+    results.forEach(item => {
+        const resultItem = document.createElement('div');
+        resultItem.style.cssText = `
+            padding: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        `;
+
+        resultItem.innerHTML = `
+            <img src="${item.poster}" alt="${item.title}" style="
+                width: 40px;
+                height: 60px;
+                object-fit: cover;
+                border-radius: 6px;
+                flex-shrink: 0;
+            ">
+            <div style="flex: 1; min-width: 0;">
+                <div style="color: #fff; font-weight: 500; font-size: 14px; margin-bottom: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                    ${item.title}
+                </div>
+                <div style="color: #888; font-size: 12px;">
+                    ${item.year} • ${item.type === 'movie' ? 'Movie' : 'TV Show'} • ⭐ ${item.rating}
+                </div>
+            </div>
+        `;
+
+        resultItem.addEventListener('mouseenter', () => {
+            resultItem.style.backgroundColor = 'rgba(141, 22, 201, 0.2)';
+        });
+
+        resultItem.addEventListener('mouseleave', () => {
+            resultItem.style.backgroundColor = 'transparent';
+        });
+
+        resultItem.addEventListener('click', () => {
+            window.location.href = `../movie_details/movie_details.html?media=${item.type}&id=${item.id}`;
+        });
+
+        dropdown.appendChild(resultItem);
+    });
+
+    dropdown.style.display = 'block';
+}
+
+// Function to handle search input
+async function handleHeaderSearch() {
+    const query = headerSearchInput.value.trim();
+
+    if (query.length > 2) {
+        const results = await fetchSearchResults(query);
+        displaySearchResults(results);
+    } else {
+        const dropdown = document.getElementById('search-dropdown');
+        if (dropdown) {
+            dropdown.style.display = 'none';
+        }
+    }
+}
+
+// Add event listeners for search
+if (headerSearchInput) {
+    headerSearchInput.addEventListener('input', handleHeaderSearch);
+
+    headerSearchInput.addEventListener('focus', () => {
+        if (headerSearchInput.value.trim().length > 2) {
+            handleHeaderSearch();
+        }
+    });
+
+    headerSearchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            handleHeaderSearch();
+        }
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!headerSearchInput.parentElement.contains(e.target)) {
+            const dropdown = document.getElementById('search-dropdown');
+            if (dropdown) {
+                dropdown.style.display = 'none';
+            }
+        }
+    });
+}
