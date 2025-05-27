@@ -69,6 +69,15 @@ iframe {
     border: none; /* Remove border to make it cleaner */
 }
 
+/* Enhanced mobile video sizing */
+@media (max-width: 768px) {
+    iframe {
+        height: 45vh !important;
+        min-height: 400px !important;
+        max-height: 500px !important;
+    }
+}
+
 #moviePoster {
     width: 100%;
     height: auto;
@@ -1022,9 +1031,9 @@ p {
     */
     #iframe,
     iframe {
-        height: 40vh !important; /* Use 40% of viewport height for better space utilization */
-        min-height: 300px !important; /* Minimum height for usability */
-        max-height: 400px !important; /* Maximum height to prevent oversizing */
+        height: 50vh !important; /* Increased from 40vh to 50vh for larger video on small screens */
+        min-height: 350px !important; /* Increased minimum height from 300px to 350px */
+        max-height: 450px !important; /* Increased maximum height from 400px to 450px */
         width: 98vw !important;  /* Use almost full width */
         max-width: 98vw !important;
         margin-left: 1vw; /* Minimal margins for maximum space usage */
@@ -1071,9 +1080,9 @@ p {
     /* Video frame optimization */
     #iframe,
     iframe {
-        height: 35vh !important; /* Use 35% of viewport height for optimal space usage */
-        min-height: 320px !important; /* Minimum height for good viewing */
-        max-height: 450px !important; /* Maximum height to prevent oversizing */
+        height: 45vh !important; /* Increased from 35vh to 45vh for larger video player */
+        min-height: 400px !important; /* Increased minimum height from 320px to 400px */
+        max-height: 500px !important; /* Increased maximum height from 450px to 500px */
         width: 98vw !important; /* Use almost full width */
         max-width: 98vw !important;
         margin-left: 1vw; /* Minimal margins for maximum space usage */
