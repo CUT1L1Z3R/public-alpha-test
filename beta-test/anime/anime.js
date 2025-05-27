@@ -327,23 +327,23 @@ function fetchAnime(containerClass, genreOrKeyword) {
         // Drama anime
         endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,18&with_keywords=210024&sort_by=popularity.desc`;
     } else if (genreOrKeyword === 'latest_episodes') {
-        // Latest anime episodes - show currently airing and recent anime
+        // Latest anime episodes - show currently airing and very recent anime (last 2 months)
         const today = new Date();
-        const pastSixMonths = new Date();
-        pastSixMonths.setMonth(pastSixMonths.getMonth() - 6); // Past 6 months for good coverage
+        const pastTwoMonths = new Date();
+        pastTwoMonths.setMonth(pastTwoMonths.getMonth() - 2); // Past 2 months for latest episodes
 
         const todayStr = today.toISOString().split('T')[0];
-        const pastSixMonthsStr = pastSixMonths.toISOString().split('T')[0];
+        const pastTwoMonthsStr = pastTwoMonths.toISOString().split('T')[0];
 
-        // Get anime with recent activity, sorted by popularity to ensure good content
-        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&first_air_date.gte=${pastSixMonthsStr}&first_air_date.lte=${todayStr}&sort_by=popularity.desc&vote_count.gte=10`;
+        // Get anime with very recent activity, sorted by first air date (newest first)
+        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&first_air_date.gte=${pastTwoMonthsStr}&first_air_date.lte=${todayStr}&sort_by=first_air_date.desc&vote_count.gte=5`;
     } else if (genreOrKeyword === 'popular_season') {
-        // Popular this season - current year's most popular anime
+        // Popular this season - current year's most popular anime by vote count and popularity
         const today = new Date();
         const currentYear = today.getFullYear();
 
-        // Get popular anime from current year with broader criteria for better results
-        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&first_air_date.gte=${currentYear}-01-01&first_air_date.lte=${currentYear}-12-31&sort_by=popularity.desc&vote_count.gte=5`;
+        // Get popular anime from current year with higher vote count threshold, sorted by vote average
+        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&first_air_date.gte=${currentYear}-01-01&first_air_date.lte=${currentYear}-12-31&sort_by=vote_average.desc&vote_count.gte=100`;
     } else {
         // Default endpoint for general anime
         endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&sort_by=popularity.desc`;
