@@ -402,7 +402,7 @@ async function fetchLatestAnimeEpisodes(containers, containerClass) {
 
     // Show loading indicator
     containers.forEach(container => {
-        container.innerHTML = '<div style="color: white; padding: 40px; text-align: center; font-size: 1.1rem;"><div style="margin-bottom: 15px;">🔄 Loading latest anime episodes...</div><div style="font-size: 0.9rem; color: #ccc;">Fetching episodes from the past 1-2 weeks • Super recent content priority</div></div>';
+        container.innerHTML = '<div style="color: white; padding: 40px; text-align: center; font-size: 1.1rem;"><div style="margin-bottom: 15px;">🔄 Loading latest anime episodes...</div><div style="font-size: 0.9rem; color: #ccc;">Fetching most recent content with smart fallbacks</div></div>';
     });
 
     const today = new Date();
@@ -422,17 +422,17 @@ async function fetchLatestAnimeEpisodes(containers, containerClass) {
         // Currently airing TODAY - highest priority
         `tv/airing_today?api_key=${api_Key}&with_genres=16`,
 
-        // Anime that aired in the past 3 days (super recent)
-        `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&air_date.gte=${past3Days}&air_date.lte=${todayStr}&sort_by=first_air_date.desc&vote_count.gte=1`,
+        // Anime that aired in the past 3 days (super recent) - no vote requirement
+        `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&air_date.gte=${past3Days}&air_date.lte=${todayStr}&sort_by=first_air_date.desc`,
 
-        // Anime that aired this week (past 7 days)
-        `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&air_date.gte=${pastWeek}&air_date.lte=${todayStr}&sort_by=first_air_date.desc&vote_count.gte=3`,
+        // Anime that aired this week (past 7 days) - minimal vote requirement
+        `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&air_date.gte=${pastWeek}&air_date.lte=${todayStr}&sort_by=first_air_date.desc&vote_count.gte=1`,
 
         // Anime that aired in the past 2 weeks (maximum range)
-        `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&air_date.gte=${pastTwoWeeks}&air_date.lte=${todayStr}&sort_by=first_air_date.desc&vote_count.gte=5`,
+        `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&air_date.gte=${pastTwoWeeks}&air_date.lte=${todayStr}&sort_by=first_air_date.desc&vote_count.gte=3`,
 
-        // Currently ongoing series with very recent episodes
-        `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&with_status=0&air_date.gte=${pastWeek}&sort_by=first_air_date.desc&vote_count.gte=8`
+        // Currently ongoing series with recent episodes
+        `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&with_status=0&air_date.gte=${pastTwoWeeks}&sort_by=first_air_date.desc&vote_count.gte=5`
     ];
 
     try {
@@ -454,19 +454,46 @@ async function fetchLatestAnimeEpisodes(containers, containerClass) {
             }
         });
 
-        // Remove duplicates based on ID and filter for very recent content only
-        const uniqueAnime = allAnime.filter((anime, index, self) => {
-            // Remove duplicates
-            if (index !== self.findIndex(a => a.id === anime.id)) {
-                return false;
+        // Fallback: If we don't have enough content, fetch popular anime as backup
+        if (allAnime.length < 10) {
+            console.log(`Only ${allAnime.length} anime found, fetching popular anime as fallback...`);
+            try {
+                const fallbackResponse = await fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&sort_by=popularity.desc&vote_count.gte=10`);
+                if (fallbackResponse.ok) {
+                    const fallbackData = await fallbackResponse.json();
+                    if (fallbackData.results) {
+                        console.log(`Fallback returned ${fallbackData.results.length} popular anime`);
+                        allAnime = allAnime.concat(fallbackData.results);
+                    }
+                }
+            } catch (error) {
+                console.log('Fallback request failed:', error);
             }
+        }
 
-            // Only include anime that aired within the past 14 days
+        // Remove duplicates based on ID
+        let uniqueAnime = allAnime.filter((anime, index, self) =>
+            index === self.findIndex(a => a.id === anime.id)
+        );
+
+        // First try: Filter for very recent content (past 14 days)
+        const twoWeeksAgo = new Date(today.getTime() - 14 * 24 * 60 * 60 * 1000);
+        let recentAnime = uniqueAnime.filter(anime => {
             const airDate = new Date(anime.first_air_date || anime.air_date || '1970-01-01');
-            const twoWeeksAgo = new Date(today.getTime() - 14 * 24 * 60 * 60 * 1000);
-
             return airDate >= twoWeeksAgo;
         });
+
+        // Fallback: If not enough recent content, expand to past 2 months but prioritize recent
+        if (recentAnime.length < 5) {
+            console.log(`Only ${recentAnime.length} anime from past 2 weeks, expanding search range...`);
+            const twoMonthsAgo = new Date(today.getTime() - 60 * 24 * 60 * 60 * 1000);
+            uniqueAnime = uniqueAnime.filter(anime => {
+                const airDate = new Date(anime.first_air_date || anime.air_date || '1970-01-01');
+                return airDate >= twoMonthsAgo;
+            });
+        } else {
+            uniqueAnime = recentAnime;
+        }
 
         // Sort by most recent air date with heavy preference for super recent content
         uniqueAnime.sort((a, b) => {
@@ -498,7 +525,7 @@ async function fetchLatestAnimeEpisodes(containers, containerClass) {
         // Take top 20 most recent
         const latestAnime = uniqueAnime.slice(0, 20);
 
-        console.log(`Filtered to ${latestAnime.length} anime episodes from the past 1-2 weeks (super recent content)`);
+        console.log(`Filtered to ${latestAnime.length} anime episodes with recent content priority`);
 
         // Log air dates of first few items for debugging
         if (latestAnime.length > 0) {
