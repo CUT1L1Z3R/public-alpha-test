@@ -682,6 +682,42 @@ iframe {
     background-color: #000000;
 }
 
+.subtitle-indicator {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 10px 15px;
+    border-radius: 6px;
+    color: #ffffff;
+    font-size: 14px;
+    backdrop-filter: blur(10px);
+}
+
+.subtitle-icon {
+    color: #be7dc0;
+    flex-shrink: 0;
+}
+
+.subtitle-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.subtitle-status {
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.subtitle-instructions {
+    font-size: 12px;
+    color: #cccccc;
+}
+
 /* Recommendations sidebar */
 .recommendations-sidebar {
     background-color: #1a1a1a;
@@ -916,3 +952,4 @@ iframe {
     .recommendation-rating {
         font-size: 12px;
     }
+}

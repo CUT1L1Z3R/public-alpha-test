@@ -216,7 +216,44 @@ function loadContent() {
     if (iframe && url) {
         iframe.src = url;
         console.log(`Loading: ${url}`);
-        
+
+        // Show subtitle indicator while loading
+        const subtitleIndicator = document.getElementById('subtitle-indicator');
+        if (subtitleIndicator) {
+            subtitleIndicator.style.display = 'flex';
+        }
+
+        // Set loading timeout for iframe.pstream.org
+        let loadingTimeout;
+        if (currentServer === 'iframe.pstream.org') {
+            loadingTimeout = setTimeout(() => {
+                console.warn('iframe.pstream.org loading timeout, trying next server');
+                showToast('Server timeout. Trying next server...', 'error');
+                tryNextServer();
+            }, 10000); // 10 second timeout
+        }
+
+        // Add error handling for iframe loading
+        iframe.onload = function() {
+            console.log('Iframe loaded successfully');
+            clearTimeout(loadingTimeout);
+
+            // Hide subtitle indicator when content loads
+            const subtitleIndicator = document.getElementById('subtitle-indicator');
+            if (subtitleIndicator) {
+                subtitleIndicator.style.display = 'none';
+            }
+        };
+
+        iframe.onerror = function() {
+            console.error('Failed to load iframe content');
+            clearTimeout(loadingTimeout);
+            showToast('Failed to load content. Trying next server...', 'error');
+            tryNextServer();
+        };
+    }
+}
+
 // Try next server in fallback chain
 function tryNextServer() {
     currentServerIndex++;
@@ -236,7 +273,6 @@ function tryNextServer() {
             selectedServerName.textContent = serverDisplayNames[nextServer] || nextServer;
         }
 
-        updateSubtitleIndicator('Switching Server', `Loading ${serverDisplayNames[nextServer] || nextServer}...`);
         showToast(`Switching to ${nextServer}...`, 'info');
         loadContent();
     } else {
