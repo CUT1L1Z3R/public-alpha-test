@@ -1,221 +1,759 @@
-<!DOCTYPE html>
-<html lang="en" style="overflow-x: hidden; max-width: 100%;">
+/* Global styles - FreeFlix theme with andoks.cc layout */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="description" content="Get detailed information about movies and TV shows on FreeFlix. View ratings, cast, trailers, synopsis and add titles to your watchlist.">
-    <meta name="keywords" content="movie details, TV show details, anime details, movie info, cast, ratings, synopsis, trailer, FreeFlix, streaming info">
+body {
+    font-family: 'Poppins', 'Inter', sans-serif;
+    background-color: #101011;
+    color: #ffffff;
+    overflow-x: hidden;
+    line-height: 1.6;
+}
 
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://freeflix.top/movie_details/">
-    <meta property="og:title" content="FreeFlix - Movie & TV Show Details">
-    <meta property="og:description" content="Get detailed information about your favorite movies, TV shows, and anime on FreeFlix.">
-    <meta property="og:image" content="https://freeflix.top/assets/freeflix.png">
+/* Header styles - similar to andoks.cc but with FreeFlix branding */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 30px;
+    background-color: #101011;
+    border-bottom: 1px solid #2a2a2a;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
 
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://freeflix.top/movie_details/">
-    <meta property="twitter:title" content="FreeFlix - Movie & TV Show Details">
-    <meta property="twitter:description" content="Get detailed information about your favorite movies, TV shows, and anime on FreeFlix.">
-    <meta property="twitter:image" content="https://freeflix.top/assets/freeflix.png">
+.header-left {
+    display: flex;
+    align-items: center;
+}
 
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://freeflix.top/movie_details/movie_details.html">
+.logo {
+    height: 40px;
+    cursor: pointer;
+}
 
-    <link rel="stylesheet" href="movie_details.css">
-    <link rel="icon" href="/assets/freeflix.ico">
-    <title>FreeFlix - Movie & TV Show Details</title>
-    <!-- Import Poppins and Inter fonts for aesthetics -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-</head>
+.header-nav {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
 
-<body>
-    <!-- Header section -->
-    <header class="header">
-        <div class="header-left">
-            <img src="../assets/freeflix.png" alt="FreeFlix logo" class="logo" width="150" height="47" loading="eager" fetchpriority="high">
-        </div>
-        <nav class="header-nav">
-            <a href="/movies/" class="nav-link">Movie</a>
-            <a href="/tvshows/" class="nav-link">Series</a>
-            <a href="/genre/" class="nav-link">Genres</a>
-            <button class="search-btn">🔍</button>
-        </nav>
-        <div class="header-right">
-            <button class="notification-btn">🔔</button>
-            <div class="user-menu">
-                <span class="user-label">User</span>
-                <span class="user-status">FREE</span>
-            </div>
-        </div>
-    </header>
+.nav-link {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
 
-    <!-- Main content layout -->
-    <div class="main-content">
-        <!-- Hero section with backdrop and play controls -->
-        <div class="hero-section">
-            <div class="hero-backdrop">
-                <img id="backdropImage" src="" alt="Movie backdrop" class="backdrop-image">
-                <div class="hero-overlay">
-                    <div class="hero-content">
-                        <div class="hero-info">
-                            <div class="focus-mode">
-                                <span class="focus-icon">⚫</span>
-                                <span>Focus Mode: Distraction-free viewing</span>
-                            </div>
-                            <h1 id="movieTitle" class="hero-title">The Last of Us</h1>
-                            <div class="hero-meta">
-                                <span id="movieYear" class="year">2023</span>
-                                <span id="genre" class="genre-tag">Drama</span>
-                            </div>
-                            <div class="hero-details">
-                                <div class="detail-item">
-                                    <span>Seasons:</span>
-                                    <span id="seasonsCount">2</span>
-                                </div>
-                                <div class="detail-item">
-                                    <span>Status:</span>
-                                    <span id="status">Returning Series</span>
-                                </div>
-                                <div class="tmdb-score">
-                                    <span class="score" id="rating">8.6</span>
-                                    <span class="score-label">TMDB Score</span>
-                                </div>
-                            </div>
+.nav-link:hover {
+    color: #be7dc0;
+}
 
-                            <!-- Source info section -->
-                            <div class="source-info">
-                                <span>Source</span>
-                                <span class="server-tag stable">Stable</span>
-                                <span class="server-tag has-4k">Has 4K</span>
-                                <span class="server-tag hd">HD</span>
-                            </div>
+.search-btn {
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
 
-                            <!-- Action buttons -->
-                            <div class="hero-actions">
-                                <button class="play-btn">▶ Play S1E1</button>
-                                <button class="watchlist-btn">📁 Watchlist</button>
-                                <button class="download-btn">⬇ Download</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+.search-btn:hover {
+    background-color: #2a2a2a;
+}
 
-        <!-- Content area -->
-        <div class="content-area">
-            <!-- Left side - Episode list and overview -->
-            <div class="left-content">
-                <div class="overview-section">
-                    <h2>Overview</h2>
-                    <p id="plot" class="overview-text">
-                        Twenty years after modern civilization has been destroyed, Joel, a hardened survivor, is hired to smuggle Ellie, a 14-year-old girl, out of an oppressive quarantine zone. What starts as a small job soon becomes a brutal, heartbreaking journey, as they both must traverse the United States and depend on each other for survival.
-                    </p>
-                </div>
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
 
-                <!-- Season selector -->
-                <div class="season-selector">
-                    <label for="season-select">Season</label>
-                    <select id="season-select" class="season-dropdown">
-                        <option value="1">Season 1 (9 Episodes)</option>
-                    </select>
-                </div>
+.notification-btn {
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
 
-                <!-- Episodes list -->
-                <div class="episodes-container" id="episodesList">
-                    <!-- Episodes will be populated here -->
-                </div>
+.notification-btn:hover {
+    background-color: #2a2a2a;
+}
 
-                <!-- Server selector dropdown -->
-                <div class="servers-section">
-                    <div class="server-dropdown">
-                        <div class="server-dropdown-header">
-                            <div class="selected-server">
-                                <span class="server-name">SHOUKO</span>
-                                <span class="server-tag tag-recommended">RECOMMENDED</span>
-                                <span class="server-tag tag-stable">Stable</span>
-                                <span class="server-tag tag-4k">4K</span>
-                            </div>
-                            <span class="dropdown-arrow">▼</span>
-                        </div>
-                        <div class="server-dropdown-content">
-                            <div class="server-option" data-server="iframe.pstream.org">
-                                <span class="server-name">SHOUKO</span>
-                                <span class="server-tag tag-recommended">RECOMMENDED</span>
-                                <span class="server-tag tag-stable">Stable</span>
-                                <span class="server-tag tag-4k">4K</span>
-                            </div>
-                            <div class="server-option" data-server="vidsrc.su">
-                                <span class="server-name">SHINOMIYA</span>
-                                <span class="server-tag tag-recommended">RECOMMENDED</span>
-                                <span class="server-tag tag-4k">4K</span>
-                                <span class="server-tag tag-fast">FAST</span>
-                            </div>
-                            <div class="server-option" data-server="vidsrc.vip">
-                                <span class="server-name">MAFUYU</span>
-                                <span class="server-tag tag-stable">Stable</span>
-                                <span class="server-tag tag-4k">4K</span>
-                            </div>
-                            <div class="server-option" data-server="vidlink.pro">
-                                <span class="server-name">MIZUKI</span>
-                                <span class="server-tag tag-stable">Stable</span>
-                                <span class="server-tag tag-4k">4K</span>
-                                <span class="server-tag tag-hd">HD</span>
-                            </div>
-                            <div class="server-option" data-server="vidsrc.cc">
-                                <span class="server-name">KANADE</span>
-                                <span class="server-tag tag-stable">Stable</span>
-                                <span class="server-tag tag-hd">HD</span>
-                            </div>
-                            <div class="server-option" data-server="movieapi.club">
-                                <span class="server-name">SAKI</span>
-                                <span class="server-tag tag-4k">4K</span>
-                            </div>
-                            <div class="server-option" data-server="vidsrc.me">
-                                <span class="server-name">OTORI</span>
-                                <span class="server-tag tag-hd">HD</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+.user-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    font-size: 14px;
+}
 
-                <!-- Video player iframe -->
-                <div class="video-container">
-                    <iframe id="iframe" frameborder="0" allowfullscreen playsinline
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"></iframe>
+.user-label {
+    color: #ffffff;
+    font-weight: 500;
+}
 
-                    <!-- Subtitle indicator -->
-                    <div id="subtitle-indicator" class="subtitle-indicator">
-                        <div class="subtitle-icon">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <rect x="2" y="5" width="20" height="14" rx="2" stroke="currentColor" stroke-width="2"/>
-                                <path d="M6 16h2m4 0h6m-8-3h4m-4-3h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            </svg>
-                        </div>
-                        <div class="subtitle-info">
-                            <span class="subtitle-status">Streaming Optimization Notice!</span>
-                            <span class="subtitle-instructions">Please wait while the system finds the best server.</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+.user-status {
+    color: #be7dc0;
+    font-size: 12px;
+    font-weight: 600;
+}
 
-            <!-- Right side - Recommendations -->
-            <div class="right-content">
-                <div class="recommendations-sidebar">
-                    <h3 class="sidebar-title">You Might Also Like</h3>
-                    <div class="recommendations-list" id="recommendationsList">
-                        <!-- Recommendations will be populated here -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+/* Main content layout */
+.main-content {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 70px);
+}
 
-    <script src="movie_details.js"></script>
-</body>
+/* Hero section with backdrop - similar to andoks.cc */
+.hero-section {
+    position: relative;
+    height: 600px;
+    overflow: hidden;
+}
 
-</html>
+.hero-backdrop {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.backdrop-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(16, 16, 17, 0.9) 0%, rgba(16, 16, 17, 0.7) 50%, rgba(16, 16, 17, 0.9) 100%);
+    display: flex;
+    align-items: flex-end;
+    padding: 60px;
+}
+
+.hero-content {
+    width: 100%;
+    max-width: 600px;
+}
+
+.focus-mode {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    color: #ff6b6b;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.focus-icon {
+    color: #ff6b6b;
+}
+
+.hero-title {
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #ffffff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+.hero-meta {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.year {
+    font-size: 18px;
+    color: #cccccc;
+}
+
+.genre-tag {
+    background-color: rgba(190, 125, 192, 0.2);
+    color: #be7dc0;
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 14px;
+    font-weight: 500;
+    border: 1px solid #be7dc0;
+}
+
+.hero-details {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.detail-item span:first-child {
+    color: #cccccc;
+    font-size: 14px;
+}
+
+.detail-item span:last-child {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.tmdb-score {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: rgba(48, 164, 105, 0.2);
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1px solid #30a469;
+}
+
+.score {
+    font-size: 18px;
+    font-weight: 700;
+    color: #30a469;
+}
+
+.score-label {
+    font-size: 12px;
+    color: #cccccc;
+}
+
+.source-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.server-tag {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.server-tag.stable {
+    background-color: rgba(48, 164, 105, 0.2);
+    color: #30a469;
+    border: 1px solid #30a469;
+}
+
+.server-tag.has-4k {
+    background-color: rgba(190, 125, 192, 0.2);
+    color: #be7dc0;
+    border: 1px solid #be7dc0;
+}
+
+.server-tag.hd {
+    background-color: rgba(255, 107, 107, 0.2);
+    color: #ff6b6b;
+    border: 1px solid #ff6b6b;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.play-btn {
+    background: linear-gradient(135deg, #be7dc0, #751aab);
+    color: #ffffff;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+}
+
+.play-btn:hover {
+    background: linear-gradient(135deg, #d094d2, #8b2bb5);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(190, 125, 192, 0.4);
+}
+
+.watchlist-btn, .download-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 15px 25px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.watchlist-btn:hover, .download-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Content area layout */
+.content-area {
+    display: flex;
+    gap: 40px;
+    padding: 40px;
+    flex: 1;
+}
+
+.left-content {
+    flex: 2;
+    max-width: 70%;
+}
+
+.right-content {
+    flex: 1;
+    max-width: 30%;
+}
+
+/* Overview section */
+.overview-section {
+    margin-bottom: 30px;
+}
+
+.overview-section h2 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #ffffff;
+}
+
+.overview-text {
+    color: #cccccc;
+    line-height: 1.6;
+    font-size: 16px;
+}
+
+/* Season selector */
+.season-selector {
+    margin-bottom: 30px;
+    background-color: #1a1a1a;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #2a2a2a;
+}
+
+.season-selector label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.season-dropdown {
+    width: 100%;
+    padding: 12px 16px;
+    background-color: #2a2a2a;
+    border: 1px solid #3a3a3a;
+    border-radius: 6px;
+    color: #ffffff;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.season-dropdown:focus {
+    outline: none;
+    border-color: #be7dc0;
+}
+
+/* Episodes container */
+.episodes-container {
+    margin-bottom: 30px;
+}
+
+.episode-item {
+    display: flex;
+    gap: 15px;
+    padding: 15px;
+    background-color: #1a1a1a;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid #2a2a2a;
+}
+
+.episode-item:hover {
+    background-color: #2a2a2a;
+    border-color: #be7dc0;
+}
+
+.episode-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: #2a2a2a;
+    border-radius: 50%;
+    font-weight: 600;
+    color: #be7dc0;
+    flex-shrink: 0;
+}
+
+.episode-thumbnail {
+    width: 120px;
+    height: 68px;
+    object-fit: cover;
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+
+.episode-info {
+    flex: 1;
+}
+
+.episode-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 8px;
+}
+
+.episode-description {
+    color: #cccccc;
+    font-size: 14px;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Server selection section */
+.servers-section {
+    margin-bottom: 30px;
+}
+
+.server-dropdown {
+    position: relative;
+    background-color: #1a1a1a;
+    border-radius: 8px;
+    border: 1px solid #2a2a2a;
+}
+
+.server-dropdown-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.server-dropdown-header:hover {
+    background-color: #2a2a2a;
+}
+
+.selected-server {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.server-name {
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.server-tag.tag-recommended {
+    background-color: rgba(255, 107, 107, 0.2);
+    color: #ff6b6b;
+    border: 1px solid #ff6b6b;
+}
+
+.server-tag.tag-stable {
+    background-color: rgba(48, 164, 105, 0.2);
+    color: #30a469;
+    border: 1px solid #30a469;
+}
+
+.server-tag.tag-4k {
+    background-color: rgba(190, 125, 192, 0.2);
+    color: #be7dc0;
+    border: 1px solid #be7dc0;
+}
+
+.server-tag.tag-fast {
+    background-color: rgba(255, 193, 7, 0.2);
+    color: #ffc107;
+    border: 1px solid #ffc107;
+}
+
+.server-tag.tag-hd {
+    background-color: rgba(23, 162, 184, 0.2);
+    color: #17a2b8;
+    border: 1px solid #17a2b8;
+}
+
+.dropdown-arrow {
+    color: #cccccc;
+    transition: transform 0.3s ease;
+}
+
+.server-dropdown.open .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+.server-dropdown-content {
+    display: none;
+    border-top: 1px solid #2a2a2a;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.server-dropdown.open .server-dropdown-content {
+    display: block;
+}
+
+.server-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    flex-wrap: wrap;
+}
+
+.server-option:hover {
+    background-color: #2a2a2a;
+}
+
+/* Video container */
+.video-container {
+    position: relative;
+    background-color: #1a1a1a;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #2a2a2a;
+    margin-bottom: 30px;
+}
+
+iframe {
+    width: 100%;
+    height: 500px;
+    border: none;
+    background-color: #000000;
+}
+
+.subtitle-indicator {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 10px 15px;
+    border-radius: 6px;
+    color: #ffffff;
+    font-size: 14px;
+    backdrop-filter: blur(10px);
+}
+
+.subtitle-icon {
+    color: #be7dc0;
+    flex-shrink: 0;
+}
+
+.subtitle-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.subtitle-status {
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.subtitle-instructions {
+    font-size: 12px;
+    color: #cccccc;
+}
+
+/* Recommendations sidebar */
+.recommendations-sidebar {
+    background-color: #1a1a1a;
+    border-radius: 8px;
+    padding: 20px;
+    border: 1px solid #2a2a2a;
+    position: sticky;
+    top: 90px;
+    max-height: calc(100vh - 110px);
+    overflow-y: auto;
+}
+
+.sidebar-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #ffffff;
+    border-left: 4px solid #be7dc0;
+    padding-left: 15px;
+}
+
+.recommendations-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.recommendation-item {
+    display: flex;
+    gap: 15px;
+    padding: 15px;
+    background-color: #2a2a2a;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.recommendation-item:hover {
+    background-color: #3a3a3a;
+    border-color: #be7dc0;
+}
+
+.recommendation-poster {
+    width: 80px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+
+.recommendation-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.recommendation-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 5px;
+    line-height: 1.3;
+}
+
+.recommendation-year {
+    color: #cccccc;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.recommendation-rating {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 14px;
+}
+
+.rating-star {
+    color: #ffc107;
+}
+
+.rating-value {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .header {
+        padding: 10px 20px;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .header-nav {
+        gap: 20px;
+    }
+
+    .hero-overlay {
+        padding: 30px 20px;
+    }
+
+    .hero-title {
+        font-size: 32px;
+    }
+
+    .content-area {
+        flex-direction: column;
+        padding: 20px;
+        gap: 30px;
+    }
+
+    .left-content, .right-content {
+        max-width: 100%;
+    }
+
+    .hero-details {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .play-btn, .watchlist-btn, .download-btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    iframe {
+        height: 300px;
+    }
+
+    .episode-item {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .episode-thumbnail {
+        width: 100%;
+        height: 200px;
+    }
+
+    .recommendations-sidebar {
+        position: static;
+        max-height: none;
+    }
+}
