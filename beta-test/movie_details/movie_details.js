@@ -581,7 +581,7 @@ window.addEventListener('load', function() {
     const banner = document.getElementById('server-notice-banner');
     const bannerClose = document.getElementById('banner-close-btn');
     if (banner) {
-        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        // Removed automatic scroll to bottom - let user stay at current position
         banner.style.display = 'flex';
         bannerClose.addEventListener('click', () => {
             banner.style.display = 'none';
