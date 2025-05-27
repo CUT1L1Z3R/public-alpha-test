@@ -40,6 +40,12 @@ body {
     display: flex;
     align-items: center;
     gap: 30px;
+    background: linear-gradient(135deg, rgba(141, 22, 201, 0.2), rgba(160, 32, 240, 0.15));
+    backdrop-filter: blur(10px);
+    border-radius: 50px;
+    padding: 12px 25px;
+    border: 1px solid rgba(141, 22, 201, 0.3);
+    box-shadow: 0 4px 15px rgba(141, 22, 201, 0.1);
 }
 
 .nav-link {
@@ -782,6 +788,8 @@ iframe {
 
     .header-nav {
         gap: 20px;
+        padding: 10px 20px;
+        border-radius: 40px;
     }
 
     .hero-overlay {
