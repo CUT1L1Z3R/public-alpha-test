@@ -10,30 +10,19 @@ const serverFallbackChain = ['iframe.pstream.org', 'vidsrc.su', 'vidsrc.vip', 'v
 
 // Function to show toast notification
 function showToast(message, type = 'info') {
-    // Check if a toast container already exists
     let toastContainer = document.querySelector('.toast-container');
-
-    // If not, create one
     if (!toastContainer) {
         toastContainer = document.createElement('div');
         toastContainer.className = 'toast-container';
         document.body.appendChild(toastContainer);
     }
-
-    // Create the toast element
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
     toast.textContent = message;
-
-    // Add to container
     toastContainer.appendChild(toast);
-
-    // Show the toast
     setTimeout(() => {
         toast.classList.add('show');
     }, 10);
-
-    // Remove the toast after 3 seconds
     setTimeout(() => {
         toast.classList.remove('show');
         setTimeout(() => {
@@ -46,42 +35,25 @@ function showToast(message, type = 'info') {
 function handleDownload() {
     let downloadUrl = '';
     let contentType = media === 'movie' ? 'movie' : 'episode';
-
-    // Show preparing download notification
     showToast(`Preparing your ${contentType} download...`, 'info');
-
-    // Generate the appropriate download URL based on media type
     if (media === 'movie') {
-        // For movies, use the movie download endpoint
         downloadUrl = `https://dl.vidsrc.vip/movie/${id}`;
     } else if (media === 'tv') {
-        // For TV shows and anime, need to determine season and episode
         const activeEpisode = document.querySelector('.episode-item.active');
-
         if (activeEpisode) {
-            // If an episode is selected, use that specific episode
             const seasonNumber = activeEpisode.dataset.seasonNumber;
             const episodeNumber = activeEpisode.dataset.episodeNumber;
             downloadUrl = `https://dl.vidsrc.vip/tv/${id}/${seasonNumber}/${episodeNumber}`;
         } else if (seasonSelect && seasonSelect.value) {
-            // If no episode selected but season is selected, use first episode of selected season
             const seasonNumber = seasonSelect.value;
             downloadUrl = `https://dl.vidsrc.vip/tv/${id}/${seasonNumber}/1`;
         } else {
-            // Default to first episode of first season if nothing selected
             downloadUrl = `https://dl.vidsrc.vip/tv/${id}/1/1`;
         }
     }
-
-    // Log the URL for debugging
     console.log(`Download URL: ${downloadUrl}`);
-
-    // Redirect to the download countdown page with the download URL as parameter
     if (downloadUrl) {
-        // Encode the URL to avoid issues with query parameters
         const encodedUrl = encodeURIComponent(downloadUrl);
-
-        // Add a slight delay to show the toast
         setTimeout(() => {
             window.location.href = `../download.html?url=${encodedUrl}`;
         }, 800);
@@ -92,18 +64,12 @@ function handleDownload() {
 
 // Function to ensure iframe controls are accessible on mobile
 function ensureControlsAccessible() {
-    if (window.innerWidth <= 560) { // Only on mobile
+    if (window.innerWidth <= 560) {
         const iframe = document.getElementById('iframe');
         const spacer = document.getElementById('player-controls-spacer');
-
         if (iframe && spacer) {
-            // Set spacer height proportionally
             spacer.style.height = '75px';
-
-            // Force iframe to have breathing room for controls
             iframe.style.paddingRight = '50px';
-
-            // Ensure proper minimum height
             iframe.style.minHeight = '220px';
         }
     }
@@ -137,21 +103,14 @@ const media = params.get("media");
 
 // Function to fetch detailed information using its TMDb ID
 async function fetchMovieDetails(id) {
-    // For all media types including anime, use TMDB API
     const response = await fetch(`https://api.themoviedb.org/3/${media}/${id}?api_key=${api_Key}`);
     const data = await response.json();
-
-    // For anime check if we have additional genre info to include
     if (media === "tv" && data) {
-        // Check if this is likely anime by looking at genres
-        const isAnime = data.genres && data.genres.some(genre => genre.id === 16); // 16 is Animation genre
-
+        const isAnime = data.genres && data.genres.some(genre => genre.id === 16);
         if (isAnime) {
-            // Mark this as anime content for specialized handling if needed
             data.is_anime = true;
         }
     }
-
     return data;
 }
 
@@ -179,8 +138,6 @@ async function fetchSeasonEpisodes(tvId, seasonNumber) {
 document.getElementById('change-server-btn').addEventListener('click', () => {
     const serverSelector = document.getElementById('server-selector');
     serverSelector.style.display = (serverSelector.style.display === 'block') ? 'none' : 'block';
-
-    // Log current state for debugging
     console.log(`Current media type: ${media}, ID: ${id}`);
     if (media === "tv") {
         const activeEpisode = document.querySelector('.episode-item.active');
@@ -196,7 +153,6 @@ document.getElementById('server-selector').addEventListener('click', (e) => {
   }
 });
 
-// Add event listener for the close button
 document.querySelector('.close-button').addEventListener('click', () => {
   document.getElementById('server-selector').style.display = 'none';
 });
@@ -204,9 +160,7 @@ document.querySelector('.close-button').addEventListener('click', () => {
 // Function to create season dropdown items
 function createSeasonOptions(seasons) {
     seasonSelect.innerHTML = '';
-
     seasons.forEach(season => {
-        // Skip season 0 which is typically for specials
         if (season.season_number > 0) {
             const option = document.createElement('option');
             option.value = season.season_number;
@@ -214,16 +168,11 @@ function createSeasonOptions(seasons) {
             seasonSelect.appendChild(option);
         }
     });
-
-    // Set up event listener for season selection
     seasonSelect.addEventListener('change', function() {
         const selectedSeason = this.value;
         loadEpisodes(id, selectedSeason);
     });
-
-    // Load the first season episodes by default
     if (seasons.length > 0) {
-        // Find the first regular season (season_number > 0)
         const firstSeason = seasons.find(season => season.season_number > 0);
         if (firstSeason) {
             loadEpisodes(id, firstSeason.season_number);
@@ -234,61 +183,39 @@ function createSeasonOptions(seasons) {
 // Function to create episode list items
 function createEpisodesList(episodes) {
     episodesList.innerHTML = '';
-
     episodes.forEach(episode => {
         const episodeItem = document.createElement('div');
         episodeItem.className = 'episode-item';
         episodeItem.dataset.episodeNumber = episode.episode_number;
         episodeItem.dataset.seasonNumber = episode.season_number;
-
-        // Create thumbnail container
         const thumbnailContainer = document.createElement('div');
         thumbnailContainer.className = 'thumbnail-container';
-
-        // Create thumbnail image
         const thumbnail = document.createElement('img');
         thumbnail.className = 'episode-thumbnail';
         thumbnail.src = episode.still_path
             ? `https://image.tmdb.org/t/p/w300${episode.still_path}`
             : 'https://via.placeholder.com/300x170?text=No+Image';
         thumbnail.alt = `${episode.name} Thumbnail`;
-
-        // Create episode number badge
         const episodeNumber = document.createElement('div');
         episodeNumber.className = 'episode-number';
         episodeNumber.textContent = episode.episode_number;
-
-        // Add thumbnail and number to container
         thumbnailContainer.appendChild(thumbnail);
         thumbnailContainer.appendChild(episodeNumber);
-
-        // Create episode info container
         const episodeInfo = document.createElement('div');
         episodeInfo.className = 'episode-info';
-
-        // Create episode title
         const episodeTitle = document.createElement('div');
         episodeTitle.className = 'episode-title';
         episodeTitle.textContent = episode.name;
-
-        // Create episode description
         const episodeDescription = document.createElement('div');
         episodeDescription.className = 'episode-description';
         episodeDescription.textContent = episode.overview || 'No description available.';
-
-        // Add title and description to info container
         episodeInfo.appendChild(episodeTitle);
         episodeInfo.appendChild(episodeDescription);
-
-        // Add all elements to episode item
         episodeItem.appendChild(thumbnailContainer);
         episodeItem.appendChild(episodeInfo);
-
-        // Add click event to play the episode
         episodeItem.addEventListener('click', () => {
             playEpisode(id, episode.season_number, episode.episode_number);
         });
-
         episodesList.appendChild(episodeItem);
     });
 }
@@ -306,27 +233,17 @@ async function loadEpisodes(tvId, seasonNumber) {
 
 // Add code to update player when source changes
 function loadMedia(embedURL, server) {
-    // Set the source of the iframe to the video URL
     iframe.setAttribute('src', embedURL);
-
-    // Show the iframe and ensure it's visible
     iframe.style.display = "block";
-
-    // Hide the movie poster when the video is loaded
     moviePoster.style.display = "none";
-
-    // Ensure controls are accessible after changing source
     setTimeout(ensureControlsAccessible, 500);
 }
 
 // Function to handle video source change based on selected server
 async function changeServer() {
-    const server = document.getElementById('server').value; // Get the selected server
-    const type = media === "movie" ? "movie" : (media === "anime" ? "anime" : "tv"); // Movie, TV, or Anime type
-
-    // Check if we're viewing a TV show with episode selected
+    const server = document.getElementById('server').value;
+    const type = media === "movie" ? "movie" : (media === "anime" ? "anime" : "tv");
     if (type === "tv" && seasonsContainer.style.display === "flex") {
-        // If an episode is already selected (playing), update it with the new server
         const activeEpisode = document.querySelector('.episode-item.active');
         if (activeEpisode) {
             const seasonNumber = activeEpisode.dataset.seasonNumber;
@@ -335,13 +252,8 @@ async function changeServer() {
             return;
         }
     }
-
-    let embedURL = "";  // URL to embed video from the selected server
-
-    // Set the video URL depending on the selected server and media type
+    let embedURL = "";
     if (type === "anime") {
-        // For anime, we'll use Gogo-anime, 9anime or other anime-specific providers
-        // This is a placeholder implementation - these URLs are examples and may not work
         switch (server) {
             case "vidlink.pro":
                 embedURL = `https://vidlink.pro/anime/${id}?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
@@ -365,16 +277,13 @@ async function changeServer() {
                 embedURL = `https://moviesapi.club/anime/${id}`;
                 break;
             default:
-                // Fallback to a generic anime provider
                 embedURL = `https://vidlink.pro/anime/${id}?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
                 break;
         }
     } else {
-        // For movies and TV shows, use the existing providers
         switch (server) {
             case "vidlink.pro":
                 if (type === "tv") {
-                    // For TV shows, default to first episode of first season
                     embedURL = `https://vidlink.pro/tv/${id}/1/1?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
                 } else {
                     embedURL = `https://vidlink.pro/movie/${id}?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
@@ -382,7 +291,6 @@ async function changeServer() {
                 break;
             case "iframe.pstream.org":
                 if (type === "tv") {
-                    // For TV shows, default to first episode of first season
                     embedURL = `https://iframe.pstream.org/embed/tmdb-tv-${id}?theme=grape&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=false&scale=1.0&backlink=https%3A%2F%2Ffreeflix.top&fedapi=false&interface-settings=false&tips=false&has-watchparty=false`;
                 } else {
                     embedURL = `https://iframe.pstream.org/embed/tmdb-movie-${id}?theme=grape&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=false&scale=1.0&backlink=https%3A%2F%2Ffreeflix.top&fedapi=false&interface-settings=false&tips=false&has-watchparty=false`;
@@ -407,7 +315,6 @@ async function changeServer() {
                 embedURL = `https://moviesapi.club/${type}/${id}`;
                 break;
             default:
-                // Default to iframe.pstream.org as primary fallback
                 if (type === "tv") {
                     embedURL = `https://iframe.pstream.org/embed/tmdb-tv-${id}?theme=grape&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=false&scale=1.0&backlink=https%3A%2F%2Ffreeflix.top&fedapi=false&interface-settings=false&tips=false&has-watchparty=false`;
                 } else {
@@ -416,17 +323,12 @@ async function changeServer() {
                 break;
         }
     }
-
-    // Log the URL for debugging
     console.log(`Loading ${type} from: ${embedURL}`);
-
-    // Update the iframe source with the correct video URL and set attributes
     iframe.setAttribute('src', embedURL);
     iframe.setAttribute('playsinline', '');
     iframe.setAttribute('webkit-playsinline', 'true');
     iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen');
     iframe.setAttribute('allowfullscreen', '');
-    // Setup fallback chain on error
     let currentIndex = serverFallbackChain.indexOf(server);
     iframe.onerror = () => {
         const nextIndex = currentIndex + 1;
@@ -437,13 +339,8 @@ async function changeServer() {
             changeServer();
         }
     };
-    // Ensure iframe is visible and sized correctly
-    iframe.style.display = "block";  // Show the iframe
-
-    // Hide the movie poster when the video is playing
-    moviePoster.style.display = "none";  // Hide the movie poster image
-
-    // Ensure controls are accessible after changing source
+    iframe.style.display = "block";
+    moviePoster.style.display = "none";
     setTimeout(ensureControlsAccessible, 500);
 }
 
@@ -451,8 +348,6 @@ async function changeServer() {
 function playEpisode(tvId, seasonNumber, episodeNumber) {
     const server = document.getElementById('server').value;
     let embedURL = "";
-
-    // Update the URL for each server to include season and episode parameters
     switch (server) {
         case "vidsrc.vip":
             embedURL = `https://vidsrc.vip/tv/${tvId}/${seasonNumber}/${episodeNumber}`;
@@ -479,22 +374,16 @@ function playEpisode(tvId, seasonNumber, episodeNumber) {
             embedURL = `https://moviesapi.club/tv/${tvId}/${seasonNumber}/${episodeNumber}`;
             break;
         default:
-            // Default to iframe.pstream.org as primary fallback
             embedURL = `https://iframe.pstream.org/embed/tmdb-tv-${tvId}?season=${seasonNumber}&episode=${episodeNumber}&theme=grape&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=false&scale=1.0&backlink=https%3A%2F%2Ffreeflix.top&fedapi=false&interface-settings=false&tips=false&has-watchparty=false`;
             break;
     }
-
     if (embedURL) {
-        // Log the URL for debugging
         console.log(`Loading TV episode from: ${embedURL}`);
-
-        // Update the iframe source with the episode URL and set attributes
         iframe.setAttribute('src', embedURL);
         iframe.setAttribute('playsinline', '');
         iframe.setAttribute('webkit-playsinline', 'true');
         iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen');
         iframe.setAttribute('allowfullscreen', '');
-        // Setup fallback chain on error for episodes
         let epIndex = serverFallbackChain.indexOf(server);
         iframe.onerror = () => {
             const nextEp = epIndex + 1;
@@ -505,26 +394,16 @@ function playEpisode(tvId, seasonNumber, episodeNumber) {
                 changeServer();
             }
         };
-
         iframe.style.display = "block";
         moviePoster.style.display = "none";
-
-        // Ensure controls are accessible after changing source
         setTimeout(ensureControlsAccessible, 500);
-
-        // Mark the selected episode as active
         const episodes = document.querySelectorAll('.episode-item');
         episodes.forEach(item => item.classList.remove('active'));
-
         const currentEpisode = document.querySelector(`.episode-item[data-season-number="${seasonNumber}"][data-episode-number="${episodeNumber}"]`);
         if (currentEpisode) {
             currentEpisode.classList.add('active');
-
-            // Scroll to the active episode for better UX
             episodesList.scrollTop = currentEpisode.offsetTop - episodesList.offsetTop - 10;
         }
-
-        // Scroll to top of video for better mobile experience
         if (window.innerWidth <= 740) {
             window.scrollTo({
                 top: iframe.offsetTop - 20,
@@ -538,14 +417,10 @@ function playEpisode(tvId, seasonNumber, episodeNumber) {
 async function displayMovieDetails() {
     try {
         const movieDetails = await fetchMovieDetails(id);
-
         var spokenlanguage = movieDetails.spoken_languages ? movieDetails.spoken_languages.map(language => language.english_name) : ['Unknown'];
         language.textContent = spokenlanguage.join(', ');
-
         var genreNames = movieDetails.genres ? movieDetails.genres.map(genre => genre.name) : ['Unknown'];
         genre.innerText = genreNames.join(', ');
-
-        // For anime, display a special message if we're using a placeholder
         if (media === "anime" && movieDetails.overview === 'Unable to load anime details.') {
             plot.textContent = "This anime is available for viewing. Click the Play button to start.";
         } else if (movieDetails.overview && movieDetails.overview.length > 290) {
@@ -553,9 +428,7 @@ async function displayMovieDetails() {
         } else {
             plot.textContent = movieDetails.overview || 'No description available';
         }
-
         movieTitle.textContent = movieDetails.name || movieDetails.title;
-
         if (movieDetails.backdrop_path) {
             if (movieDetails.backdrop_path.startsWith('http')) {
                 moviePoster.src = movieDetails.backdrop_path;
@@ -571,35 +444,24 @@ async function displayMovieDetails() {
         } else {
             moviePoster.src = 'https://via.placeholder.com/500x281?text=No+Image+Available';
         }
-
         movieYear.textContent = `${movieDetails.release_date || movieDetails.first_air_date || 'Unknown'}`;
         rating.textContent = movieDetails.vote_average || 'N/A';
-
-        // If this is a TV show, setup the seasons and episodes section
         if (media === "tv") {
             const seasons = await fetchTVSeasons(id);
             if (seasons && seasons.length > 0) {
                 createSeasonOptions(seasons);
-                // Display the seasons container
                 seasonsContainer.style.display = "flex";
             }
         }
-
-        // Call the changeServer function to update the video source
         changeServer();
-
-        // Updating the favorite button text and adding a click event listener to toggle favorites
         if (watchlist.some(favoriteMovie => favoriteMovie.id === movieDetails.id)) {
             watchListBtn.textContent = "Remove From WatchList";
         } else {
             watchListBtn.textContent = "Add To WatchList";
         }
-
         watchListBtn.addEventListener('click', () => toggleFavorite(movieDetails));
-
-        // Add event listener for the download button
         downloadBtn.addEventListener('click', handleDownload);
-
+        loadRecommendations(movieDetails);
     } catch (error) {
         console.error('Error displaying movie details:', error);
         movieTitle.textContent = "Details are not available right now! Please try after some time.";
@@ -621,34 +483,22 @@ function toggleFavorite(movieDetails) {
 
 // Enhanced server dropdown UI functionality
 function initServerDropdown() {
-    // Setup server dropdown toggle
     const serverDropdownHeader = document.querySelector('.server-dropdown-header');
     const serverDropdownContent = document.querySelector('.server-dropdown-content');
     const serverDropdown = document.querySelector('.server-dropdown');
     const dropdownArrow = document.querySelector('.dropdown-arrow');
-
-    if (!serverDropdownHeader) return; // Exit if elements don't exist
-
-    // Toggle dropdown when clicking the header
+    if (!serverDropdownHeader) return;
     serverDropdownHeader.addEventListener('click', function(event) {
         event.stopPropagation();
-
-        // Toggle visibility
         const isShowing = !serverDropdownContent.classList.contains('show');
         serverDropdownContent.classList.toggle('show');
         serverDropdownHeader.classList.toggle('active');
         dropdownArrow.classList.toggle('up');
-
-        // Add/remove dedicated space class
         if (isShowing) {
             serverDropdown.classList.add('has-open-dropdown');
-
-            // Scroll to ensure the dropdown is visible if needed
             setTimeout(() => {
                 const contentRect = serverDropdownContent.getBoundingClientRect();
                 const viewportHeight = window.innerHeight;
-
-                // If dropdown extends below viewport, scroll it into view
                 if (contentRect.bottom > viewportHeight) {
                     window.scrollBy({
                         top: Math.min(contentRect.height, contentRect.bottom - viewportHeight + 20),
@@ -660,8 +510,6 @@ function initServerDropdown() {
             serverDropdown.classList.remove('has-open-dropdown');
         }
     });
-
-    // Close dropdown when clicking outside
     document.addEventListener('click', function(event) {
         if (!event.target.closest('.server-dropdown')) {
             serverDropdownContent.classList.remove('show');
@@ -670,38 +518,22 @@ function initServerDropdown() {
             serverDropdown.classList.remove('has-open-dropdown');
         }
     });
-
-    // Handle server selection
     const serverOptions = document.querySelectorAll('.server-option');
     const selectedServerDisplay = document.querySelector('.selected-server');
-
     serverOptions.forEach(option => {
         option.addEventListener('click', function() {
-            // Update the hidden select for compatibility with existing code
             const serverValue = this.getAttribute('data-server');
             document.getElementById('server').value = serverValue;
-
-            // Update selected server display in header
             selectedServerDisplay.innerHTML = this.innerHTML;
-
-            // Remove active class from all options
             serverOptions.forEach(opt => opt.classList.remove('active'));
-
-            // Add active class to clicked option
             this.classList.add('active');
-
-            // Close the dropdown
             serverDropdownContent.classList.remove('show');
             serverDropdownHeader.classList.remove('active');
             dropdownArrow.classList.remove('up');
             serverDropdown.classList.remove('has-open-dropdown');
-
-            // Call the existing changeServer function
             changeServer();
         });
     });
-
-    // Set initial active server
     const initialServer = document.getElementById('server').value;
     const initialServerOption = document.querySelector(`.server-option[data-server="${initialServer}"]`);
     if (initialServerOption) {
@@ -710,40 +542,28 @@ function initServerDropdown() {
     }
 }
 
-// Function to handle changes when server selection is made
 document.getElementById('server').addEventListener('change', () => {
     changeServer();
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Ensure our controls are accessible on mobile
     ensureControlsAccessible();
-
-    // Add resize event
     window.addEventListener('resize', function() {
         ensureControlsAccessible();
     });
-
-    // Also call it a bit after page load (helpful for mobile browsers)
     setTimeout(ensureControlsAccessible, 1000);
-
-    // Add ripple effect to download button
     const downloadBtn = document.querySelector('.downloadBtn');
     if (downloadBtn) {
         downloadBtn.addEventListener('click', function(e) {
             const ripple = document.createElement('span');
             ripple.classList.add('ripple');
             this.appendChild(ripple);
-
             const rect = this.getBoundingClientRect();
             const size = Math.max(rect.width, rect.height);
-
             ripple.style.width = ripple.style.height = size + 'px';
             ripple.style.left = (e.clientX - rect.left - size/2) + 'px';
             ripple.style.top = (e.clientY - rect.top - size/2) + 'px';
-
             ripple.classList.add('active');
-
             setTimeout(() => {
                 ripple.remove();
             }, 600);
@@ -751,30 +571,306 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Initialize everything when the window loads
 window.addEventListener('load', function() {
-    // Set a default server if none is selected
     const serverSelect = document.getElementById('server');
     if (serverSelect && !serverSelect.value) {
         serverSelect.value = "iframe.pstream.org";
     }
-
-    // Initialize server dropdown
     initServerDropdown();
-
-    // Display movie details
     displayMovieDetails();
-    // Show server change notice banner on load
     const banner = document.getElementById('server-notice-banner');
     const bannerClose = document.getElementById('banner-close-btn');
     if (banner) {
-        // Scroll to bottom to ensure banner is visible on mobile
         window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         banner.style.display = 'flex';
         bannerClose.addEventListener('click', () => {
             banner.style.display = 'none';
         });
-        // Auto close banner after 4 seconds
         setTimeout(() => { banner.style.display = 'none'; }, 11000);
     }
 });
+
+// --- Enhanced Multi-Category Recommendations System ---
+
+// Global variables for recommendations
+let currentMovieDetails = null;
+let loadedPages = {
+    recommendations: 1,
+    similar: 1,
+    trending: 1,
+    genre: 1
+};
+let maxPages = 3; // Limit to prevent too many API calls
+
+// Function to load recommendations based on current movie/show
+async function loadRecommendations(currentItem) {
+    currentMovieDetails = currentItem;
+    Promise.all([
+        loadRecommendedForYou(),
+        loadSimilarContent(),
+        loadTrendingContent(),
+        loadGenreContent()
+    ]).then(() => {
+        setupLoadMoreButton();
+    }).catch(error => {
+        console.error('Error loading recommendations:', error);
+    });
+}
+
+// Function to load "Recommended For You" section
+async function loadRecommendedForYou() {
+    const grid = document.getElementById('recommendationsGrid');
+    const loading = document.getElementById('recommendationsLoading');
+    if (!grid || !loading) return;
+    try {
+        loading.classList.remove('hidden');
+        const recommendations = await fetchRecommendations();
+        displayContentInGrid(recommendations, grid, loading);
+    } catch (error) {
+        console.error('Error loading recommended content:', error);
+        loading.classList.add('hidden');
+    }
+}
+
+// Function to load "More Like This" section
+async function loadSimilarContent() {
+    const grid = document.getElementById('similarGrid');
+    const loading = document.getElementById('similarLoading');
+    if (!grid || !loading) return;
+    try {
+        loading.classList.remove('hidden');
+        const similar = await fetchSimilarMovies();
+        displayContentInGrid(similar, grid, loading);
+    } catch (error) {
+        console.error('Error loading similar content:', error);
+        loading.classList.add('hidden');
+    }
+}
+
+// Function to load "Trending Now" section
+async function loadTrendingContent() {
+    const grid = document.getElementById('trendingGrid');
+    const loading = document.getElementById('trendingLoading');
+    if (!grid || !loading) return;
+    try {
+        loading.classList.remove('hidden');
+        const trending = await fetchTrendingContent();
+        displayContentInGrid(trending, grid, loading);
+    } catch (error) {
+        console.error('Error loading trending content:', error);
+        loading.classList.add('hidden');
+    }
+}
+
+// Function to load genre-based content
+async function loadGenreContent() {
+    const grid = document.getElementById('genreGrid');
+    const loading = document.getElementById('genreLoading');
+    const genreTitle = document.getElementById('genreTitle');
+    if (!grid || !loading || !genreTitle) return;
+    try {
+        loading.classList.remove('hidden');
+        if (currentMovieDetails && currentMovieDetails.genres && currentMovieDetails.genres.length > 0) {
+            const primaryGenre = currentMovieDetails.genres[0];
+            const mediaType = media === 'movie' ? 'Movies' : 'TV Shows';
+            genreTitle.textContent = `More ${primaryGenre.name} ${mediaType}`;
+        }
+        const genreContent = await fetchGenreBasedContent();
+        displayContentInGrid(genreContent, grid, loading);
+    } catch (error) {
+        console.error('Error loading genre content:', error);
+        loading.classList.add('hidden');
+    }
+}
+
+// Enhanced fetch functions for different content types
+async function fetchRecommendations() {
+    try {
+        const recommendations = [];
+        const response = await fetch(`https://api.themoviedb.org/3/${media}/${id}/recommendations?api_key=${api_Key}&page=${loadedPages.recommendations}`);
+        const data = await response.json();
+        if (data.results && data.results.length > 0) {
+            recommendations.push(...data.results.slice(0, 12));
+        }
+        if (recommendations.length < 8) {
+            const similarResponse = await fetch(`https://api.themoviedb.org/3/${media}/${id}/similar?api_key=${api_Key}&page=1`);
+            const similarData = await similarResponse.json();
+            if (similarData.results && similarData.results.length > 0) {
+                const needed = 12 - recommendations.length;
+                recommendations.push(...similarData.results.slice(0, needed));
+            }
+        }
+        return recommendations;
+    } catch (error) {
+        console.error('Error fetching recommendations:', error);
+        return [];
+    }
+}
+
+async function fetchSimilarMovies() {
+    try {
+        const response = await fetch(`https://api.themoviedb.org/3/${media}/${id}/similar?api_key=${api_Key}&page=${loadedPages.similar}`);
+        const data = await response.json();
+        return data.results ? data.results.slice(0, 12) : [];
+    } catch (error) {
+        console.error('Error fetching similar movies:', error);
+        return [];
+    }
+}
+
+async function fetchTrendingContent() {
+    try {
+        const response = await fetch(`https://api.themoviedb.org/3/trending/${media}/week?api_key=${api_Key}&page=${loadedPages.trending}`);
+        const data = await response.json();
+        const filtered = data.results ? data.results.filter(item => item.id !== parseInt(id)) : [];
+        return filtered.slice(0, 12);
+    } catch (error) {
+        console.error('Error fetching trending content:', error);
+        return [];
+    }
+}
+
+async function fetchGenreBasedContent() {
+    try {
+        if (!currentMovieDetails || !currentMovieDetails.genres || currentMovieDetails.genres.length === 0) {
+            return await fetchPopularContent();
+        }
+        const genreId = currentMovieDetails.genres[0].id;
+        const response = await fetch(`https://api.themoviedb.org/3/discover/${media}?api_key=${api_Key}&with_genres=${genreId}&sort_by=popularity.desc&page=${loadedPages.genre}`);
+        const data = await response.json();
+        const filtered = data.results ? data.results.filter(item => item.id !== parseInt(id)) : [];
+        return filtered.slice(0, 12);
+    } catch (error) {
+        console.error('Error fetching genre content:', error);
+        return await fetchPopularContent();
+    }
+}
+
+async function fetchPopularContent() {
+    try {
+        const response = await fetch(`https://api.themoviedb.org/3/${media}/popular?api_key=${api_Key}&page=1`);
+        const data = await response.json();
+        const filtered = data.results ? data.results.filter(item => item.id !== parseInt(id)) : [];
+        return filtered.slice(0, 12);
+    } catch (error) {
+        console.error('Error fetching popular content:', error);
+        return [];
+    }
+}
+
+// Enhanced display function
+function displayContentInGrid(content, grid, loading) {
+    if (!grid || !loading) return;
+    loading.classList.add('hidden');
+    if (!content || content.length === 0) {
+        grid.style.display = 'none';
+        return;
+    }
+    if (!grid.children.length) {
+        grid.innerHTML = '';
+    }
+    content.forEach((item, index) => {
+        const card = createRecommendationCard(item);
+        card.style.animationDelay = `${(index % 8) * 0.1}s`;
+        grid.appendChild(card);
+    });
+    setTimeout(() => {
+        grid.classList.add('loaded');
+    }, 100);
+}
+
+// Enhanced card creation with more details
+function createRecommendationCard(item) {
+    const card = document.createElement('div');
+    card.className = 'recommendation-card';
+    const title = item.title || item.name;
+    const releaseDate = item.release_date || item.first_air_date;
+    const year = releaseDate ? new Date(releaseDate).getFullYear() : 'N/A';
+    const rating = item.vote_average ? item.vote_average.toFixed(1) : 'N/A';
+    const overview = item.overview || 'No description available.';
+    const posterPath = item.poster_path
+        ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
+        : 'https://via.placeholder.com/500x750/1a1a1a/666?text=No+Image';
+    let genreText = '';
+    if (item.genre_ids && item.genre_ids.length > 0) {
+        const genreMap = {
+            28: 'Action', 12: 'Adventure', 16: 'Animation', 35: 'Comedy', 80: 'Crime',
+            99: 'Documentary', 18: 'Drama', 10751: 'Family', 14: 'Fantasy', 36: 'History',
+            27: 'Horror', 10402: 'Music', 9648: 'Mystery', 10749: 'Romance', 878: 'Sci-Fi',
+            10770: 'TV Movie', 53: 'Thriller', 10752: 'War', 37: 'Western',
+            10759: 'Action & Adventure', 10762: 'Kids', 10763: 'News', 10764: 'Reality',
+            10765: 'Sci-Fi & Fantasy', 10766: 'Soap', 10767: 'Talk', 10768: 'War & Politics'
+        };
+        genreText = genreMap[item.genre_ids[0]] || (media === 'movie' ? 'Movie' : 'TV Show');
+    } else {
+        genreText = media === 'movie' ? 'Movie' : 'TV Show';
+    }
+    card.innerHTML = `
+        <img src="${posterPath}" alt="${title}" class="recommendation-poster" loading="lazy">
+        <div class="recommendation-info">
+            <h3 class="recommendation-title">${title}</h3>
+            <div class="recommendation-meta">
+                <span class="recommendation-year">${year}</span>
+                <span class="recommendation-rating">${rating}</span>
+            </div>
+            <p class="recommendation-overview">${overview}</p>
+            <span class="recommendation-genre">${genreText}</span>
+        </div>
+    `;
+    card.addEventListener('click', () => {
+        const itemMedia = item.title ? 'movie' : 'tv';
+        window.location.href = `movie_details.html?id=${item.id}&media=${itemMedia}`;
+    });
+    return card;
+}
+
+// Load more functionality
+function setupLoadMoreButton() {
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
+    if (!loadMoreBtn) return;
+    loadMoreBtn.addEventListener('click', async () => {
+        if (loadMoreBtn.classList.contains('loading')) return;
+        loadMoreBtn.classList.add('loading');
+        loadMoreBtn.querySelector('span').textContent = 'Loading...';
+        try {
+            Object.keys(loadedPages).forEach(key => {
+                if (loadedPages[key] < maxPages) {
+                    loadedPages[key]++;
+                }
+            });
+            await Promise.all([
+                loadMoreForCategory('recommendationsGrid', 'recommendationsLoading', fetchRecommendations),
+                loadMoreForCategory('similarGrid', 'similarLoading', fetchSimilarMovies),
+                loadMoreForCategory('trendingGrid', 'trendingLoading', fetchTrendingContent),
+                loadMoreForCategory('genreGrid', 'genreLoading', fetchGenreBasedContent)
+            ]);
+            const allPagesLoaded = Object.values(loadedPages).every(page => page >= maxPages);
+            if (allPagesLoaded) {
+                loadMoreBtn.style.display = 'none';
+            }
+        } catch (error) {
+            console.error('Error loading more content:', error);
+        } finally {
+            loadMoreBtn.classList.remove('loading');
+            loadMoreBtn.querySelector('span').textContent = 'Load More Recommendations';
+        }
+    });
+}
+
+async function loadMoreForCategory(gridId, loadingId, fetchFunction) {
+    const grid = document.getElementById(gridId);
+    const loading = document.getElementById(loadingId);
+    if (!grid || !loading) return;
+    try {
+        const content = await fetchFunction();
+        if (content && content.length > 0) {
+            content.forEach((item, index) => {
+                const card = createRecommendationCard(item);
+                card.style.animationDelay = `${index * 0.1}s`;
+                grid.appendChild(card);
+            });
+        }
+    } catch (error) {
+        console.error(`Error loading more content for ${gridId}:`, error);
+    }
+}
