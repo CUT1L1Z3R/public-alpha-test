@@ -775,6 +775,6 @@ window.addEventListener('load', function() {
             banner.style.display = 'none';
         });
         // Auto close banner after 4 seconds
-        setTimeout(() => { banner.style.display = 'none'; }, 7000);
+        setTimeout(() => { banner.style.display = 'none'; }, 11000);
     }
 });
