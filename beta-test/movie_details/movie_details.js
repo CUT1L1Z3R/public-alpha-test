@@ -371,9 +371,9 @@ async function changeServer() {
                 break;
             case "iframe.pstream.org":
                 if (type === "tv") {
-                    embedURL = `https://iframe.pstream.org/embed/tmdb-tv-${id}/1/1?theme=grape&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=true&scale=1.0&backlink=https%3A%2F%2Ffreeflix.top&fedapi=false&interface-settings=false&tips=false&has-watchparty=false`;
+                    embedURL = `https://iframe.pstream.org/embed/tmdb-tv-${id}/1/1?theme=grape&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=true&scale=1.0&backlink=https%3A%2F%2Ffreeflix.top&fedapi=false&interface-settings=false&tips=false&has-watchparty=false&subtitles=true`;
                 } else {
-                    embedURL = `https://iframe.pstream.org/embed/tmdb-movie-${id}?theme=grape&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=true&scale=1.0&backlink=https%3A%2F%2Ffreeflix.top&fedapi=false&interface-settings=false&tips=false&has-watchparty=false`;
+                    embedURL = `https://iframe.pstream.org/embed/tmdb-movie-${id}?theme=grape&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=true&scale=1.0&backlink=https%3A%2F%2Ffreeflix.top&fedapi=false&interface-settings=false&tips=false&has-watchparty=false&subtitles=true`;
                 }
                 break;
             case "vidsrc.cc":
@@ -396,9 +396,9 @@ async function changeServer() {
                 break;
             default:
                 if (type === "tv") {
-                    embedURL = `https://iframe.pstream.org/embed/tmdb-tv-${id}/1/1?theme=grape&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=true&scale=1.0&backlink=https%3A%2F%2Ffreeflix.top&fedapi=false&interface-settings=false&tips=false&has-watchparty=false`;
+                    embedURL = `https://iframe.pstream.org/embed/tmdb-tv-${id}/1/1?theme=grape&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=true&scale=1.0&backlink=https%3A%2F%2Ffreeflix.top&fedapi=false&interface-settings=false&tips=false&has-watchparty=false&subtitles=true`;
                 } else {
-                    embedURL = `https://iframe.pstream.org/embed/tmdb-movie-${id}?theme=grape&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=true&scale=1.0&backlink=https%3A%2F%2Ffreeflix.top&fedapi=false&interface-settings=false&tips=false&has-watchparty=false`;
+                    embedURL = `https://iframe.pstream.org/embed/tmdb-movie-${id}?theme=grape&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=true&scale=1.0&backlink=https%3A%2F%2Ffreeflix.top&fedapi=false&interface-settings=false&tips=false&has-watchparty=false&subtitles=true`;
                 }
                 break;
         }
@@ -436,7 +436,7 @@ function playEpisode(tvId, seasonNumber, episodeNumber) {
             embedURL = `https://vidlink.pro/tv/${tvId}/${seasonNumber}/${episodeNumber}?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
             break;
         case "iframe.pstream.org":
-            embedURL = `https://iframe.pstream.org/embed/tmdb-tv-${tvId}/${seasonNumber}/${episodeNumber}?theme=purple&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=true&scale=1.0&backlink=https%3A%2F%2Ffreeflix.top&fedapi=false&interface-settings=false&tips=false&has-watchparty=false`;
+            embedURL = `https://iframe.pstream.org/embed/tmdb-tv-${tvId}/${seasonNumber}/${episodeNumber}?theme=purple&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=true&scale=1.0&backlink=https%3A%2F%2Ffreeflix.top&fedapi=false&interface-settings=false&tips=false&has-watchparty=false&subtitles=true`;
             break;
         case "vidsrc.cc":
             embedURL = `https://vidsrc.cc/v2/embed/tv/${tvId}/${seasonNumber}/${episodeNumber}`;
@@ -454,7 +454,7 @@ function playEpisode(tvId, seasonNumber, episodeNumber) {
             embedURL = `https://moviesapi.club/tv/${tvId}/${seasonNumber}/${episodeNumber}`;
             break;
         default:
-            embedURL = `https://iframe.pstream.org/embed/tmdb-tv-${tvId}/${seasonNumber}/${episodeNumber}?theme=purple&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=true&scale=1.0&backlink=https%3A%2F%2Ffreeflix.top&fedapi=false&interface-settings=false&tips=false&has-watchparty=false`;
+            embedURL = `https://iframe.pstream.org/embed/tmdb-tv-${tvId}/${seasonNumber}/${episodeNumber}?theme=purple&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=true&scale=1.0&backlink=https%3A%2F%2Ffreeflix.top&fedapi=false&interface-settings=false&tips=false&has-watchparty=false&subtitles=true`;
             break;
     }
     if (embedURL) {
