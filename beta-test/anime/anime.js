@@ -55,7 +55,7 @@ function initAnimePage() {
     initializeAnimeSections();
 }
 
-// Update banner with upcoming anime
+// Update banner with Popular This Season anime
 function updateBannerForAnime() {
     const banner = document.getElementById('banner');
     const bannerTitle = document.getElementById('banner-title');
@@ -73,22 +73,18 @@ function updateBannerForAnime() {
     bannerItems = [];
     currentBannerIndex = 0;
 
-    // For Anime section, use upcoming anime for banner slideshow
+    // For Anime section, use Popular This Season anime for banner slideshow
     const today = new Date();
-    const futureDate = new Date();
-    futureDate.setMonth(futureDate.getMonth() + 6); // Get anime coming in the next 6 months
+    const currentYear = today.getFullYear();
 
-    const todayStr = today.toISOString().split('T')[0]; // Format as YYYY-MM-DD
-    const futureDateStr = futureDate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
-
-    // Get anime that will air after today but before 6 months from now
-    fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&air_date.gte=${todayStr}&air_date.lte=${futureDateStr}&sort_by=primary_release_date.asc`)
+    // Get popular anime from current year with broader criteria for better results
+    fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&first_air_date.gte=${currentYear}-01-01&first_air_date.lte=${currentYear}-12-31&sort_by=popularity.desc&vote_count.gte=5`)
         .then(response => response.json())
         .then(data => {
-            const upcomingAnimes = data.results || [];
-            console.log('Upcoming anime fetched:', upcomingAnimes.length);
+            const popularSeasonAnimes = data.results || [];
+            console.log('Popular This Season anime fetched:', popularSeasonAnimes.length);
             // Filter to animes with backdrop images, get up to 9 items
-            bannerItems = upcomingAnimes.filter(anime => anime.backdrop_path).slice(0, 9).map(anime => ({
+            bannerItems = popularSeasonAnimes.filter(anime => anime.backdrop_path).slice(0, 9).map(anime => ({
                 ...anime,
                 mediaType: 'tv'
             }));
@@ -219,8 +215,8 @@ function showBannerAtIndex(index) {
             extraInfo.push(new Date(item.first_air_date).getFullYear());
         }
 
-        // Add "Latest Update" tag for anime
-        extraInfo.push('Latest Update');
+        // Add "Popular This Season" tag for anime
+        extraInfo.push('Popular This Season');
 
         // Add rating if available
         if (item.vote_average) {
@@ -241,18 +237,18 @@ function showBannerAtIndex(index) {
                 subtitleElement.style.marginTop = '8px';
                 subtitleElement.style.fontWeight = 'normal';
 
-                // Style the "Latest Update" tag for anime section
-                if (subtitleElement.textContent.includes('Latest Update')) {
-                    // Create a span to style just the "Latest Update" text
+                // Style the "Popular This Season" tag for anime section
+                if (subtitleElement.textContent.includes('Popular This Season')) {
+                    // Create a span to style just the "Popular This Season" text
                     subtitleElement.innerHTML = subtitleElement.innerHTML.replace(
-                        'Latest Update',
-                        '<span class="latest-update-badge">Latest Update</span>'
+                        'Popular This Season',
+                        '<span class="popular-season-badge">Popular This Season</span>'
                     );
 
                     // Style the badge
-                    const badge = subtitleElement.querySelector('.latest-update-badge');
+                    const badge = subtitleElement.querySelector('.popular-season-badge');
                     if (badge) {
-                        badge.style.backgroundColor = 'rgba(52, 152, 219, 0.9)'; // Blue for latest updates
+                        badge.style.backgroundColor = 'rgba(255, 193, 7, 0.9)'; // Gold/amber for popular content
                         badge.style.padding = '3px 8px';
                         badge.style.borderRadius = '4px';
                         badge.style.color = 'white';
