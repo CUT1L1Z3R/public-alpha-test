@@ -207,7 +207,7 @@ function loadContent() {
     }
 }
 
-// Generate episode list in andoks.cc style
+// Generate episode list in style
 function generateEpisodeList(seasonData) {
     if (!episodesList || !seasonData?.episodes) return;
 
@@ -468,7 +468,7 @@ window.addEventListener('resize', () => {
     // Handle any responsive adjustments if needed
 });
 
-console.log('FreeFlix Movie Details - andoks.cc Layout Loaded');
+console.log('FreeFlix Movie Details - Layout Loaded');
 
 // Mobile-specific functionality
 let isMobileCollapsed = false;
