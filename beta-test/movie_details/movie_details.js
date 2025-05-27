@@ -62,6 +62,14 @@ function showToast(message, type = 'info') {
     }, 3000);
 }
 
+// Helper function to format runtime
+function formatRuntime(minutes) {
+    if (!minutes) return 'N/A';
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    return hours > 0 ? `${hours}h ${mins}m` : `${mins}m`;
+}
+
 // Function to handle content download
 function handleDownload() {
     let downloadUrl = '';
@@ -111,6 +119,11 @@ const seasonSelect = document.getElementById('season-select');
 const episodesList = document.getElementById('episodesList');
 const seasonsCount = document.getElementById('seasonsCount');
 const status = document.getElementById('status');
+
+// Movie-specific elements
+const runtime = document.getElementById('runtime');
+const language = document.getElementById('language');
+const movieStatus = document.getElementById('movieStatus');
 
 // Server dropdown elements
 const serverDropdown = document.querySelector('.server-dropdown');
@@ -314,6 +327,13 @@ async function fetchMediaDetails() {
 
         // TV Show specific updates
         if (media === 'tv') {
+            // Show TV-specific elements
+            const tvOnlyElements = document.querySelectorAll('.tv-only');
+            const movieOnlyElements = document.querySelectorAll('.movie-only');
+
+            tvOnlyElements.forEach(el => el.style.display = 'flex');
+            movieOnlyElements.forEach(el => el.style.display = 'none');
+
             if (seasonsCount) seasonsCount.textContent = data.number_of_seasons || 'N/A';
             if (status) status.textContent = data.status || 'Unknown';
 
@@ -328,9 +348,24 @@ async function fetchMediaDetails() {
                 }
             }
         } else {
+            // Movie specific updates
+            const tvOnlyElements = document.querySelectorAll('.tv-only');
+            const movieOnlyElements = document.querySelectorAll('.movie-only');
+
+            tvOnlyElements.forEach(el => el.style.display = 'none');
+            movieOnlyElements.forEach(el => el.style.display = 'flex');
+
             // Hide TV-specific elements for movies
             const seasonSelector = document.querySelector('.season-selector');
             if (seasonSelector) seasonSelector.style.display = 'none';
+
+            // Update movie-specific content
+            if (runtime) runtime.textContent = formatRuntime(data.runtime);
+            if (language) {
+                const primaryLanguage = data.spoken_languages?.[0]?.english_name || 'English';
+                language.textContent = primaryLanguage;
+            }
+            if (movieStatus) movieStatus.textContent = data.status || 'Released';
 
             if (playBtn) playBtn.textContent = '▶ Play Movie';
         }
