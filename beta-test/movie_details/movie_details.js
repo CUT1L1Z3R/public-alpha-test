@@ -218,18 +218,16 @@ function loadContent() {
         console.log(`Loading: ${url}`);
 
         // Show subtitle indicator while loading
-        const subtitleIndicator = document.getElementById('subtitle-indicator');
-        if (subtitleIndicator) {
-            subtitleIndicator.style.display = 'flex';
-        }
+        updateSubtitleIndicator('Streaming Optimization Notice!', 'Please wait while the system finds the best server.');
 
         // Set loading timeout for iframe.pstream.org
         let loadingTimeout;
         if (currentServer === 'iframe.pstream.org') {
             loadingTimeout = setTimeout(() => {
                 console.warn('iframe.pstream.org loading timeout, trying next server');
+                updateSubtitleIndicator('Server Timeout', 'Trying next server...');
                 showToast('Server timeout. Trying next server...', 'error');
-                tryNextServer();
+                setTimeout(() => tryNextServer(), 1000); // Small delay to show message
             }, 10000); // 10 second timeout
         }
 
@@ -239,18 +237,54 @@ function loadContent() {
             clearTimeout(loadingTimeout);
 
             // Hide subtitle indicator when content loads
-            const subtitleIndicator = document.getElementById('subtitle-indicator');
-            if (subtitleIndicator) {
-                subtitleIndicator.style.display = 'none';
-            }
+            hideSubtitleIndicator();
         };
 
         iframe.onerror = function() {
             console.error('Failed to load iframe content');
             clearTimeout(loadingTimeout);
+
+            // Keep subtitle indicator visible during server switch
+            const subtitleIndicator = document.getElementById('subtitle-indicator');
+            if (subtitleIndicator) {
+                updateSubtitleIndicator('Server Error', 'Switching to next server...');
+            }
+
             showToast('Failed to load content. Trying next server...', 'error');
             tryNextServer();
         };
+    }
+}
+
+// Update subtitle indicator content
+function updateSubtitleIndicator(status, instructions) {
+    const subtitleIndicator = document.getElementById('subtitle-indicator');
+    const subtitleStatus = document.querySelector('.subtitle-status');
+    const subtitleInstructions = document.querySelector('.subtitle-instructions');
+
+    if (subtitleIndicator && subtitleStatus && subtitleInstructions) {
+        subtitleStatus.textContent = status;
+        subtitleInstructions.textContent = instructions;
+
+        // Show if hidden
+        subtitleIndicator.style.display = 'flex';
+        subtitleIndicator.classList.remove('hidden');
+        subtitleIndicator.classList.add('loading');
+    }
+}
+
+// Hide subtitle indicator with animation
+function hideSubtitleIndicator() {
+    const subtitleIndicator = document.getElementById('subtitle-indicator');
+    if (subtitleIndicator) {
+        subtitleIndicator.classList.remove('loading');
+        subtitleIndicator.classList.add('hidden');
+
+        setTimeout(() => {
+            if (subtitleIndicator.classList.contains('hidden')) {
+                subtitleIndicator.style.display = 'none';
+            }
+        }, 300);
     }
 }
 
@@ -273,6 +307,7 @@ function tryNextServer() {
             selectedServerName.textContent = serverDisplayNames[nextServer] || nextServer;
         }
 
+        updateSubtitleIndicator('Switching Server', `Loading ${serverDisplayNames[nextServer] || nextServer}...`);
         showToast(`Switching to ${nextServer}...`, 'info');
         loadContent();
     } else {
