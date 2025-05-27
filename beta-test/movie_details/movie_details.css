@@ -159,7 +159,7 @@ p {
     display: none;
     flex-direction: column;
     width: 100%;
-    margin-top: 30px !important;
+    margin-top: 10px !important;
     color: white;
     background-color: #111;
     border-radius: 10px;
@@ -1106,7 +1106,7 @@ p {
 
     /* Season container adjustments */
     .seasons-container {
-        margin-top: 15px !important;
+        margin-top: 8px !important;
         width: 100%;
         margin-left: auto;
         margin-right: auto;
@@ -1265,7 +1265,7 @@ p {
     }
 
     .seasons-container {
-        margin-top: 30px;
+        margin-top: 12px;
         width: 95%;
         margin-left: auto;
         margin-right: auto;
@@ -1332,7 +1332,7 @@ p {
     }
 
     .seasons-container {
-        margin-top: 40px;
+        margin-top: 15px;
         width: 95%;
         margin-left: auto;
         margin-right: auto;
@@ -2008,52 +2008,52 @@ p {
 @media (max-width: 768px) {
     .subtitle-indicator {
         max-width: 100%;
-        margin: 6px 0;
-        padding: 6px 10px;
-        font-size: 12px;
-        border-radius: 6px;
+        margin: 8px 0;
+        padding: 8px 12px;
+        font-size: 13px;
+        border-radius: 7px;
     }
 
     .subtitle-icon {
-        margin-right: 6px;
+        margin-right: 8px;
     }
 
     .subtitle-icon svg {
-        width: 16px;
-        height: 16px;
+        width: 18px;
+        height: 18px;
     }
 
     .subtitle-status {
-        font-size: 12px;
+        font-size: 13px;
     }
 
     .subtitle-instructions {
-        font-size: 10px;
+        font-size: 11px;
     }
 }
 
 @media (max-width: 480px) {
     .subtitle-indicator {
-        padding: 4px 8px;
-        margin: 4px 0;
-        font-size: 11px;
+        padding: 7px 11px;
+        margin: 7px 0;
+        font-size: 13px;
     }
 
     .subtitle-icon {
-        margin-right: 5px;
+        margin-right: 8px;
     }
 
     .subtitle-icon svg {
-        width: 14px;
-        height: 14px;
+        width: 17px;
+        height: 17px;
     }
 
     .subtitle-status {
-        font-size: 11px;
+        font-size: 13px;
     }
 
     .subtitle-instructions {
-        font-size: 9px;
-        line-height: 1.1;
+        font-size: 11px;
+        line-height: 1.2;
     }
 }
