@@ -1,4 +1,4 @@
-// FreeFlix Movie Details - Updated for andoks.cc layout
+// FreeFlix Movie Details
 // Selecting the logo element and adding a click event listener to navigate to the homepage
 const logo = document.querySelector('.logo');
 logo.addEventListener('click', () => {
