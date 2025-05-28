@@ -868,7 +868,7 @@ iframe {
 
     .hero-overlay {
     padding: 30px 20px;
-    padding-top: 90px; /* Extra top padding for title visibility */
+    padding-top: 40px; /* Extra top padding for title visibility */
     align-items: flex-start; /* Change from flex-end to flex-start */
     justify-content: flex-start; /* Ensure content starts from top */
     }
