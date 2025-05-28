@@ -1,132 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FreeFlix - Stream Unlimited Movies & TV Shows for Free</title>
     <meta name="description" content="🎬 Stream Unlimited Free Movies and TV Shows on FreeFlix - Watch HD blockbusters, trending series, popular anime with no subscription fees. Best free streaming site 2025!">
-    <meta name="keywords" content="free movies online, free TV shows streaming, FreeFlix, watch free movies, no subscription streaming, free anime, Netflix alternatives, Disney+ alternatives, free streaming platforms, HD movies free, new releases free, popular TV series free, best free streaming site, horror movies free, action movies streaming, comedy shows free">
-    <meta name="application-name" content="FreeFlix">
-    <meta name="apple-mobile-web-app-title" content="FreeFlix">
-    <meta name="generator" content="FreeFlix Ultimate Movies Streaming Platform">
-    <meta name="google-site-verification" content="FreeFlix premium streaming platform - 100% free">
-    <meta name="google" content="notranslate">
-    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-    <meta name="author" content="FreeFlix Team">
-    <meta name="rating" content="general">
-    <meta name="theme-color" content="#e50914">
 
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://freeflix.top/">
-    <meta property="og:title" content="FreeFlix - #1 Free Streaming & Download Platform for Movies, TV Shows, and Anime">
-    <meta property="og:description" content="Watch unlimited HD movies, TV shows, and anime completely free. Stream the latest releases without subscription fees or signup. Your favorite entertainment, just a click away.">
-    <meta property="og:image" content="https://freeflix.top/assets/freeflix.png">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:locale" content="en_US">
-    <meta property="og:site_name" content="FreeFlix">
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="FreeFlix - #1 Free Streaming & Download Platform for Movies, TV Shows, and Anime">
-    <meta name="twitter:description" content="Stream unlimited free movies and TV shows in HD quality with no subscription or signup required.">
-    <meta name="twitter:image" content="https://freeflix.top/assets/freeflix.png">
-
-    <!-- Canonical Link -->
-    <link rel="canonical" href="https://freeflix.top/">
-
-    <!-- Preconnect to External Domains -->
-    <link rel="preconnect" href="https://image.tmdb.org">
+    <!-- Preconnect to optimize performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Favicons -->
-    <link rel="icon" type="image/png" sizes="32x32" href="/assets/freeflix.png?v=1.0.2">
-    <link rel="icon" type="image/png" sizes="16x16" href="/assets/freeflix.png?v=1.0.2">
-    <link rel="apple-touch-icon" sizes="180x180" href="/assets/freeflix.png?v=1.0.2">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/assets/freeflix.png">
 
-    <!-- SEO Enhancement Scripts -->
-    <script src="/schema-markup.js?v=1.0.2" defer></script>
-    <script src="/seo-metadata.js?v=1.0.2" defer></script>
-    <script src="/seo-performance.js?v=1.0.2" defer></script>
-
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://freeflix.top/">
-    <meta property="twitter:title" content="FreeFlix - #1 Free Streaming & Download Platform for Movies, TV Shows, and Anime">
-    <meta property="twitter:description" content="Watch unlimited HD movies, TV shows, and Anime completely free. Stream the latest releases without subscription fees or signup. Best free streaming site of 2025!">
-    <meta property="twitter:image" content="https://freeflix.top/assets/freeflix.png">
-    <meta name="twitter:creator" content="@FreeFlix">
-    <meta name="twitter:site" content="@FreeFlix">
-
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://freeflix.top/">
-    <link rel="sitemap" type="application/xml" title="Sitemap" href="https://freeflix.top/sitemap.xml">
-    <link rel="alternate" href="https://freeflix.top/sitemap.html" hreflang="x-default" title="HTML Sitemap">
-    <link rel="alternate" hreflang="en" href="https://freeflix.top/">
-    <link rel="alternate" hreflang="x-default" href="https://freeflix.top/">
-
-    <!-- Preload critical assets -->
-    <link rel="preload" href="/assets/freeflix.png?v=1.0.2" as="image">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="/index.css?v=1.0.2" as="style">
-    <link rel="preload" href="/custom-navigation.js?v=1.0.2" as="script">
-
-    <!-- Modern styling for enhanced landing page -->
     <style>
-        /* Modern Header Styling */
-        .modern-header {
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #4c8be7;
+            --primary-dark: #3f7bd9;
+            --secondary: #769eca;
+            --accent: #d6e5f0;
+            --dark: #091529;
+            --dark-secondary: #14345e;
+            --dark-tertiary: #557197;
+            --text-primary: #ffffff;
+            --text-secondary: #d6e5f0;
+            --text-muted: #769eca;
+            --gradient-1: linear-gradient(135deg, #4c8be7 0%, #769eca 50%, #d6e5f0 100%);
+            --gradient-2: linear-gradient(135deg, #091529 0%, #14345e 100%);
+            --gradient-3: linear-gradient(135deg, #3f7bd9 0%, #4c8be7 100%);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        .navbar {
             position: fixed;
             top: 0;
-            left: 0;
-            right: 0;
-            height: 70px;
-            background: rgba(0, 0, 0, 0.95);
+            width: 100%;
+            background: rgba(9, 21, 41, 0.95);
             backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(76, 139, 231, 0.2);
             z-index: 1000;
-            border-bottom: 1px solid rgba(141, 22, 201, 0.3);
             transition: all 0.3s ease;
         }
 
-        .header-container {
+        .nav-container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 0 2rem;
-            height: 100%;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            height: 80px;
         }
 
         .logo {
             display: flex;
             align-items: center;
             gap: 12px;
+            font-size: 2rem;
+            font-weight: 800;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .logo img {
-            height: 40px;
-            width: auto;
-        }
-
-        .logo-text {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #ffffff;
-            letter-spacing: 1px;
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            filter: drop-shadow(0 0 10px rgba(76, 139, 231, 0.3));
         }
 
         .nav-links {
             display: flex;
-            gap: 2rem;
+            gap: 2.5rem;
+            list-style: none;
         }
 
-        .nav-link {
-            color: #ffffff;
+        .nav-links a {
+            color: var(--text-secondary);
             text-decoration: none;
             font-weight: 500;
             transition: all 0.3s ease;
@@ -134,438 +101,823 @@
             padding: 0.5rem 0;
         }
 
-        .nav-link::after {
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a::after {
             content: '';
             position: absolute;
             bottom: 0;
             left: 0;
             width: 0;
             height: 2px;
-            background: #8d16c9;
+            background: var(--gradient-1);
             transition: width 0.3s ease;
         }
 
-        .nav-link:hover::after {
+        .nav-links a:hover::after {
             width: 100%;
         }
 
-        .nav-link:hover {
-            color: #8d16c9;
-        }
-
-        /* Hero Section Enhancements */
-        .hero-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(ellipse at center, rgba(141, 22, 201, 0.1) 0%, transparent 70%);
-            pointer-events: none;
-        }
-
-        /* Enhanced buttons */
-        .hero-button {
-            display: inline-block;
-            padding: 14px 32px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #ffffff;
-            background: linear-gradient(135deg, #8d16c9 0%, #6b1396 100%);
-            border: none;
-            border-radius: 8px;
+        .cta-button {
+            background: var(--gradient-3);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
             text-decoration: none;
+            font-weight: 600;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(141, 22, 201, 0.3);
+            box-shadow: 0 4px 15px rgba(76, 139, 231, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(76, 139, 231, 0.4);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            background:
+                radial-gradient(ellipse at top, rgba(76, 139, 231, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at bottom, rgba(20, 52, 94, 0.3) 0%, transparent 70%),
+                linear-gradient(135deg, var(--dark) 0%, var(--dark-secondary) 100%);
             position: relative;
             overflow: hidden;
         }
 
-        .hero-button::before {
+        .hero::before {
             content: '';
             position: absolute;
             top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                radial-gradient(circle at 25% 25%, rgba(76, 139, 231, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(118, 158, 202, 0.08) 0%, transparent 50%);
+            opacity: 0.6;
         }
 
-        .hero-button:hover::before {
-            left: 100%;
+        .hero-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            position: relative;
+            z-index: 2;
         }
 
-        .hero-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(141, 22, 201, 0.4);
+        .hero-content h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        /* Enhanced search input */
-        .hero-search {
-            width: 100%;
-            max-width: 450px;
-            padding: 16px 20px;
+        .hero-content .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-weight: 400;
+            opacity: 0.9;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+        }
+
+        .btn-primary {
+            background: var(--gradient-3);
+            color: white;
+            padding: 16px 32px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
             font-size: 1.1rem;
-            border: 2px solid rgba(141, 22, 201, 0.3);
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(76, 139, 231, 0.3);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(76, 139, 231, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            padding: 16px 32px;
+            border: 2px solid var(--primary);
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
             transition: all 0.3s ease;
         }
 
-        .hero-search::placeholder {
-            color: rgba(255, 255, 255, 0.7);
+        .btn-secondary:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
         }
 
-        .hero-search:focus {
-            outline: none;
-            border-color: #8d16c9;
-            box-shadow: 0 0 20px rgba(141, 22, 201, 0.3);
-        }
-
-        /* Preview Cards Styling */
-        .preview-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
+        .search-container {
+            position: relative;
+            max-width: 500px;
             margin-bottom: 2rem;
         }
 
-        .preview-card {
+        .search-input {
+            width: 100%;
+            padding: 20px 24px;
+            padding-right: 60px;
+            border: 2px solid rgba(76, 139, 231, 0.3);
+            border-radius: 25px;
+            background: rgba(20, 52, 94, 0.3);
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .search-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(76, 139, 231, 0.1);
+            background: rgba(20, 52, 94, 0.5);
+        }
+
+        .search-button {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--gradient-3);
+            border: none;
+            padding: 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-button:hover {
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        /* Hero Visual */
+        .hero-visual {
             position: relative;
-            border-radius: 12px;
+            height: 600px;
+        }
+
+        .movie-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            height: 100%;
+            transform: perspective(1000px) rotateY(-15deg) rotateX(10deg);
+        }
+
+        .movie-card {
+            background: rgba(20, 52, 94, 0.4);
+            border-radius: 16px;
             overflow: hidden;
             transition: all 0.3s ease;
+            position: relative;
             cursor: pointer;
-            background: #1a1a1a;
-            text-decoration: none;
-            color: inherit;
-            display: block;
+            border: 1px solid rgba(76, 139, 231, 0.2);
+            backdrop-filter: blur(10px);
         }
 
-        .preview-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 30px rgba(141, 22, 201, 0.3);
+        .movie-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(76, 139, 231, 0.3);
+            border-color: var(--primary);
         }
 
-        .preview-card img {
+        .movie-card img {
             width: 100%;
-            height: 300px;
+            height: 100%;
             object-fit: cover;
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
         }
 
-        .preview-card:hover img {
-            transform: scale(1.05);
+        .movie-card:hover img {
+            transform: scale(1.1);
         }
 
-        .preview-overlay {
+        .movie-card-overlay {
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(transparent, rgba(0,0,0,0.9));
-            padding: 2rem 1rem 1rem;
-            color: white;
+            background: linear-gradient(transparent, rgba(9, 21, 41, 0.95));
+            padding: 1.5rem 1rem 1rem;
             transform: translateY(100%);
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
         }
 
-        .preview-card:hover .preview-overlay {
+        .movie-card:hover .movie-card-overlay {
             transform: translateY(0);
         }
 
-        .preview-overlay h3 {
-            margin: 0 0 0.5rem;
-            font-size: 1.2rem;
+        .movie-card-title {
             font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
         }
 
-        .preview-overlay p {
-            margin: 0;
-            color: #8d16c9;
+        .movie-card-info {
             font-size: 0.9rem;
+            color: var(--text-muted);
         }
 
-        /* Mobile responsiveness */
-        @media (max-width: 768px) {
-            .header-container {
-                padding: 0 1rem;
-            }
+        /* Features Section */
+        .features {
+            padding: 8rem 0;
+            background: var(--dark-secondary);
+            position: relative;
+        }
 
+        .features::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 0%, rgba(76, 139, 231, 0.05) 50%, transparent 100%);
+        }
+
+        .features-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: rgba(9, 21, 41, 0.6);
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 1px solid rgba(76, 139, 231, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-3);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(76, 139, 231, 0.2);
+            border-color: var(--primary);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-3);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .feature-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        /* Stats Section */
+        .stats {
+            padding: 6rem 0;
+            background: var(--dark);
+        }
+
+        .stats-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 2rem;
+            background: rgba(20, 52, 94, 0.3);
+            border-radius: 20px;
+            border: 1px solid rgba(76, 139, 231, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 8rem 0;
+            background:
+                radial-gradient(ellipse at center, rgba(76, 139, 231, 0.2) 0%, transparent 70%),
+                var(--dark-secondary);
+            text-align: center;
+            position: relative;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent 0%, rgba(76, 139, 231, 0.1) 50%, transparent 100%);
+        }
+
+        .cta-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cta-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            opacity: 0.9;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--dark);
+            padding: 4rem 0 2rem;
+            border-top: 1px solid rgba(76, 139, 231, 0.2);
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            text-align: center;
+        }
+
+        .footer-nav {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer-nav a:hover {
+            color: var(--primary);
+        }
+
+        .footer-text {
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            opacity: 0.8;
+        }
+
+        .footer-copyright {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            opacity: 0.6;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
             .nav-links {
                 display: none;
             }
 
-            .logo-text {
-                font-size: 1.5rem;
+            .hero-container {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+                text-align: center;
             }
 
-            .preview-grid {
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-actions {
+                justify-content: center;
+            }
+
+            .movie-cards-grid {
+                transform: none;
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .cta-title {
+                font-size: 2.5rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-nav {
+                flex-direction: column;
                 gap: 1rem;
             }
+        }
 
-            .preview-card img {
-                height: 250px;
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
             }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* Floating elements */
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Additional blue theme enhancements */
+        .glow-effect {
+            box-shadow: 0 0 20px rgba(76, 139, 231, 0.3);
+        }
+
+        .hero-visual::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(76, 139, 231, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
-
-    <!-- Structured Data for Movie Streaming Website -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "FreeFlix - Free Movie Streaming",
-      "alternateName": ["FreeFlix Streaming", "Free Flix", "FreeFlix Movies", "Free Netflix Alternative"],
-      "url": "https://freeflix.top/",
-      "sameAs": ["https://freeflix.top"],
-      "keywords": ["free movies", "free tv shows", "streaming service", "watch online", "no subscription", "free anime", "movie streaming", "tv streaming", "netflix alternative", "disney plus alternative", "hulu alternative", "free entertainment"],
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": {
-          "@type": "EntryPoint",
-          "urlTemplate": "https://freeflix.top/?search={search_term_string}"
-        },
-        "query-input": "required name=search_term_string"
-      },
-      "description": "Stream Your Favorite Movies And TV Shows For Free on FreeFlix. Watch the latest blockbusters, classic films, trending TV series, and popular anime without subscription fees. The best free streaming platform offering HD content with no sign-up required.",
-      "inLanguage": "en-US",
-      "isAccessibleForFree": true
-    }
-    </script>
-
-    <!-- Organization structured data to improve site identification -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "FreeFlix",
-      "url": "https://freeflix.top/",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "https://freeflix.top/assets/freeflix.png",
-        "width": "512",
-        "height": "512"
-      },
-      "sameAs": ["https://freeflix.top"],
-      "email": "contact@freeflix.top",
-      "description": "FreeFlix provides free access to thousands of movies, TV shows, and anime episodes without requiring any subscription or payment. Our mission is to make entertainment accessible to everyone."
-    }
-    </script>
-
-    <!-- VideoObject structured data -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "ItemList",
-      "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "item": {
-            "@type": "Movie",
-            "name": "Free Movies on FreeFlix",
-            "description": "Watch thousands of movies completely free on FreeFlix. New releases, classics, and blockbusters all available with no subscription required.",
-            "genre": ["Action", "Comedy", "Horror", "Thriller", "Drama", "Romance", "Adventure", "Fantasy", "Mystery", "Science Fiction"],
-            "url": "https://freeflix.top/movies/index.html",
-            "aggregateRating": {
-              "@type": "AggregateRating",
-              "ratingValue": "4.9",
-              "bestRating": "5",
-              "worstRating": "1",
-              "ratingCount": "24892"
-            }
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "item": {
-            "@type": "TVSeries",
-            "name": "Free TV Shows on FreeFlix",
-            "description": "Stream popular TV series and shows for free. Binge-watch entire seasons with no fees or subscription.",
-            "genre": ["Drama", "Comedy", "Crime", "Action & Adventure", "Mystery", "Reality TV", "Documentary"],
-            "url": "https://freeflix.top/tvshows/index.html",
-            "aggregateRating": {
-              "@type": "AggregateRating",
-              "ratingValue": "4.8",
-              "bestRating": "5",
-              "worstRating": "1",
-              "ratingCount": "18763"
-            }
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 3,
-          "item": {
-            "@type": "Movie",
-            "name": "Free Anime on FreeFlix",
-            "description": "Watch the latest and most popular anime series and movies completely free. New episodes, classics, and exclusive content.",
-            "genre": ["Anime", "Action", "Adventure", "Comedy", "Drama", "Romance"],
-            "url": "https://freeflix.top/anime/index.html",
-            "aggregateRating": {
-              "@type": "AggregateRating",
-              "ratingValue": "4.9",
-              "bestRating": "5",
-              "worstRating": "1",
-              "ratingCount": "15621"
-            }
-          }
-        }
-      ]
-    }
-    </script>
-
-    <!-- FAQPage structured data -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "Is FreeFlix really free?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Yes! FreeFlix is 100% free. We don't require any payment, subscription, or even account registration to watch movies, TV shows, or anime."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "How can I watch movies on FreeFlix?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Simply visit our website, browse through our vast collection or use the search function to find what you want to watch, click on it, and start streaming immediately!"
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Does FreeFlix have new releases and popular content?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Absolutely! We regularly update our library with the latest blockbusters, trending TV series, and popular anime shows as soon as they become available."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Is FreeFlix legal?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "FreeFlix operates by aggregating content that is freely available from various public sources. We respect copyright laws and do not host any content on our servers."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Can I use FreeFlix on my mobile device?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Yes, FreeFlix is fully responsive and works perfectly on all devices including smartphones, tablets, laptops, and desktop computers."
-          }
-        }
-      ]
-    }
-    </script>
 </head>
 <body>
-    <!-- Watch32 Hero Clone -->
-    <!-- Modern Header matching main site -->
-    <header class="modern-header">
-        <div class="header-container">
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
             <div class="logo">
-                <img src="https://ext.same-assets.com/4235281404/1579149571.png" alt="FreeFlix Logo" />
+                <img src="https://ext.same-assets.com/4235281404/1579149571.png" alt="FreeFlix">
+                FreeFlix
             </div>
-            <div class="nav-links">
-                <a href="home.html" class="nav-link">Home</a>
-                <a href="home.html#movies" class="nav-link">Movies</a>
-                <a href="home.html#tv" class="nav-link">TV Shows</a>
-                <a href="home.html#anime" class="nav-link">Anime</a>
+            <ul class="nav-links">
+                <li><a href="home.html">Home</a></li>
+                <li><a href="home.html#movies">Movies</a></li>
+                <li><a href="home.html#tv">TV Shows</a></li>
+                <li><a href="home.html#anime">Anime</a></li>
+            </ul>
+            <a href="home.html" class="cta-button">Start Watching</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-content fade-in-up">
+                <h1>Your Free Cinema, Anytime, Anywhere</h1>
+                <p class="subtitle">Tired of dodgy sites asking for your credit card? Say hello to FreeFlix, the chill zone where your privacy and pocket stay untouched. We're like the VIP lounge for movie buffs, except the door's open for everyone.</p>
+
+                <div class="search-container">
+                    <input type="text" class="search-input" placeholder="Enter keywords...">
+                    <button class="search-button">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="hero-actions">
+                    <a href="home.html" class="btn-primary">View Full Site</a>
+                    <a href="#features" class="btn-secondary">Learn More</a>
+                </div>
+            </div>
+
+            <div class="hero-visual floating">
+                <div class="movie-cards-grid">
+                    <div class="movie-card">
+                        <img src="https://ext.same-assets.com/4235281404/3463191794.jpeg" alt="Popular Movie">
+                        <div class="movie-card-overlay">
+                            <div class="movie-card-title">Latest Blockbusters</div>
+                            <div class="movie-card-info">Action • 2025</div>
+                        </div>
+                    </div>
+                    <div class="movie-card">
+                        <img src="https://ext.same-assets.com/4235281404/1293039756.jpeg" alt="TV Series">
+                        <div class="movie-card-overlay">
+                            <div class="movie-card-title">Trending Series</div>
+                            <div class="movie-card-info">Drama • 8.9★</div>
+                        </div>
+                    </div>
+                    <div class="movie-card">
+                        <img src="https://ext.same-assets.com/4235281404/844226167.jpeg" alt="Anime">
+                        <div class="movie-card-overlay">
+                            <div class="movie-card-title">Popular Anime</div>
+                            <div class="movie-card-info">Animation • New</div>
+                        </div>
+                    </div>
+                    <div class="movie-card">
+                        <img src="https://ext.same-assets.com/4235281404/1881823309.jpeg" alt="Classic">
+                        <div class="movie-card-overlay">
+                            <div class="movie-card-title">Classic Movies</div>
+                            <div class="movie-card-info">Classic • 9.1★</div>
+                        </div>
+                    </div>
+                    <div class="movie-card">
+                        <img src="https://ext.same-assets.com/4235281404/3463191794.jpeg" alt="Documentary">
+                        <div class="movie-card-overlay">
+                            <div class="movie-card-title">Documentaries</div>
+                            <div class="movie-card-info">Documentary • HD</div>
+                        </div>
+                    </div>
+                    <div class="movie-card">
+                        <img src="https://ext.same-assets.com/4235281404/1293039756.jpeg" alt="Comedy">
+                        <div class="movie-card-overlay">
+                            <div class="movie-card-title">Comedy Shows</div>
+                            <div class="movie-card-info">Comedy • Popular</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </header>
-
-    <section id="watch32-hero" style="background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7)), url('https://ext.same-assets.com/4235281404/3463191794.jpeg'); background-size: cover; background-position: center; background-attachment: fixed; color: #d6e5f0; padding: 100px 0 0 0; min-height: 90vh; text-align: center; position: relative;">
-      <!-- Add darker overlay for better text readability -->
-      <div class="hero-overlay" style="background: rgba(0,0,0,0.4);"></div>
-      <div style="max-width:650px;margin:52px auto 0 auto; position: relative; z-index: 10;">
-        <p style="font-size:1.3em; color: #b7cae3; margin-bottom: 2rem; opacity: 0.9;">FreeFlix</p>
-        <form style="margin:44px 0 32px 0;">
-          <input type="text" placeholder="Enter keywords..." class="hero-search">
-        </form>
-        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-          <a href="home.html" class="hero-button">View Full Site</a>
-        </div>
-      </div>
-      <div style="max-width:830px;margin:21px auto 0 auto;font-size:1.18em;text-align:left;padding:0 16px;color:#d6e5f0">
-          <h2 style="font-size:1.35em;margin-top:38px;margin-bottom:9px;font-weight:700;color:#fff;">FreeFlix - Your Free Cinema, Anytime, Anywhere</h2>
-          <p>Tired of dodgy sites asking for your credit card "for verification purposes"? Say hello to FreeFlix, the chill zone where your privacy and pocket stay untouched. We're like the VIP lounge for movie buffs, except the door's open for everyone. No cards, no personal details, just pure, uninterrupted entertainment.</p>
-          <h2 style="font-size:1.28em;margin-top:38px;margin-bottom:9px;font-weight:700;color:#fff;">Freeflix - Where Your Dream Free Movie Site Happens</h2>
-          <p>Have you ever pictured your dream free movie site? Does it have every title you would like to watch? Does it let you binge-watch them without any limits, and completely free of charge? Is loading speed fast, and does it work smoothly on any device? Does it have tons of ads or the ads are as minimal as possible? If you haven’t even thought of these features, you’re missing out a lot. Free movie sites have evolved so fast and you deserve the best, here we call it <b>FreeFlix</b>.</p>
-          <h2 style="font-size:1.22em;margin-top:38px;margin-bottom:9px;font-weight:700;color:#fff;">Is FreeFlix Safe?</h2>
-          <p>One of the first lessons we all learn when venturing into the risky terrain of the internet is to guard our private information unless absolutely necessary. While watching movies online may feel necessary, at FreeFlix, there's no need to sacrifice your personal data. We don't require any sign-ups or registrations, and we certainly don't store your name, email address, or banking information on our servers. So, you can maintain your online anonymity by using a VPN if you prefer. Plus, with minimal and safe ads, our site remains entirely free from viruses and malware, ensuring a hassle-free experience.</p>
-          <h2 style="font-size:1.22em;margin-top:38px;margin-bottom:9px;font-weight:700;color:#fff;">Is FreeFlix Free?</h2>
-          <p>Many sites claim to be free as a clickbait but it’s not how FreeFlix works. With no payment, you have full access to our content library as well as features. FreeFlix was, is, and will always be free to make sure you can enjoy your favorite movies and TV shows without making a dent in your wallet.</p>
-          <h2 style="font-size:1.22em;margin-top:38px;margin-bottom:9px;font-weight:700;color:#fff;">Is FreeFlix Legal?</h2>
-          <p>While FreeFlix may not be considered a legal site in the traditional sense, it's important to note that streaming movies online on FreeFlix is generally not regarded as illegal either. According to copyright attorneys, individuals typically face the possibility of criminal or civil charges when they engage in activities like sharing or downloading pirated files. Streaming content on the platform, on the other hand, tends to fall into a different legal category and is often seen as a passive act that doesn't entail the same level of liability.</p>
-          <h2 style="font-size:1.18em;margin-top:38px;margin-bottom:9px;font-weight:700;color:#fff;">Why FreeFlix, Not Another Site?</h2>
-          <ul style="padding-left: 25px;max-width:840px;line-height:1.66;">
-            <li><b>Safety First</b>: FreeFlix ranks among the safest websites for free online movie streaming. As mentioned earlier, our platform is entirely ad-free, ensuring you can enjoy movies and TV shows without any concerns about jeopardizing your device or identity.</li>
-            <li><b>Sleek and Simple UI Design</b>: Just like Google's renowned minimalistic design, finding your desired movie on FreeFlix is as effortless as searching for any topic on Google. If you're looking for a specific title, enter your keywords into the top search box.</li>
-            <li><b>A Wealth of Content</b>: FreeFlix proudly boasts an extensive library of over 10,000 movies and TV shows. Chances are you'll discover it here. We update our collection daily, including user-requested titles, and introduce you to hidden gems.</li>
-            <li><b>Seamless Streaming</b>: Our platform offers a premium viewing experience without any cost. Enjoy buttery-smooth streaming, thanks to lightning-fast loading speeds and seamless playback. Say goodbye to lagging, buffering, or intrusive pop-ups.</li>
-            <li><b>Cross-Device Compatibility</b>: FreeFlix is designed to be mobile-friendly and compatible with Chromecast, enabling you to stream your favorite movies and TV shows on nearly any device, whether it's your smartphone or smart TV. </li>
-            <li><b>Minimal Ads</b>: Unlike many other free movie streaming sites, FreeFlix is extremely selective when it comes to which ads to show. We do our best to make sure your overall watching experience is as smooth as possible.</li>
-          </ul>
-      </div>
-
-
-          <a href="home.html" class="preview-card">
-            <img src="https://ext.same-assets.com/4235281404/3463191794.jpeg" alt="Until Dawn Movie" loading="lazy">
-            <div class="preview-overlay">
-              <h3>Until Dawn</h3>
-              <p>Latest • Movie • 6.4</p>
-            </div>
-          </a>
-          <a href="home.html" class="preview-card">
-            <img src="https://ext.same-assets.com/4235281404/1293039756.jpeg" alt="Raw Series" loading="lazy">
-            <div class="preview-overlay">
-              <h3>Raw</h3>
-              <p>Netflix • Series • 6.8</p>
-            </div>
-          </a>
-          <a href="home.html" class="preview-card">
-            <img src="https://ext.same-assets.com/4235281404/844226167.jpeg" alt="Star Wars Series" loading="lazy">
-            <div class="preview-overlay">
-              <h3>Star Wars</h3>
-              <p>Disney+ • Series • 8.5</p>
-            </div>
-          </a>
-          <a href="home.html" class="preview-card">
-            <img src="https://ext.same-assets.com/4235281404/1881823309.jpeg" alt="Lucifer Series" loading="lazy">
-            <div class="preview-overlay">
-              <h3>Lucifer</h3>
-              <p>Netflix • Series • 8.4</p>
-            </div>
-          </a>
-        </div>
-      </div>
-
-
-      <footer style="margin:48px auto 0 auto; max-width:800px; text-align:center;color:#b7cae3; font-size:1.05em; padding:24px 10px 10px 10px;border-top:1px solid rgba(141, 22, 201, 0.3);">
-        <nav style="margin-bottom:13px;">
-          <a href="home.html" style="margin:0 20px;color:#d6e5f0;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#8d16c9'" onmouseout="this.style.color='#d6e5f0'">Home</a>
-          <a href="home.html#movies" style="margin:0 20px;color:#d6e5f0;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#8d16c9'" onmouseout="this.style.color='#d6e5f0'">Movies</a>
-          <a href="home.html#tv" style="margin:0 20px;color:#d6e5f0;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#8d16c9'" onmouseout="this.style.color='#d6e5f0'">TV shows</a>
-          <a href="home.html#anime" style="margin:0 20px;color:#d6e5f0;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#8d16c9'" onmouseout="this.style.color='#d6e5f0'">Anime</a>
-          <a href="home.html" style="margin:0 20px;color:#d6e5f0;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#8d16c9'" onmouseout="this.style.color='#d6e5f0'">Sitemaps</a>
-        </nav>
-        <span>FreeFlix is a Free Movies streaming site with zero ads. Over 10000 movies and TV-Series. Watch/Download full movies from FreeFlix!</span>
-        <br><span style="color:#7291c7;">© FreeFlix</span>
-      </footer>
     </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="features-container">
+            <div class="section-header">
+                <h2 class="section-title">Why FreeFlix, Not Another Site?</h2>
+                <p class="section-subtitle">With the outstanding features outlined below, we're confident that FreeFlix will become your next go-to platform.</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3 class="feature-title">Safety First</h3>
+                    <p class="feature-description">FreeFlix ranks among the safest websites for free online movie streaming. Our platform is entirely ad-free, ensuring you can enjoy movies and TV shows without any concerns about jeopardizing your device or identity.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3 class="feature-title">Sleek & Simple UI Design</h3>
+                    <p class="feature-description">Just like Google's renowned minimalistic design, finding your desired movie on FreeFlix is as effortless as searching for any topic on Google. Clean, intuitive, and user-friendly.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📚</div>
+                    <h3 class="feature-title">A Wealth of Content</h3>
+                    <p class="feature-description">FreeFlix proudly boasts an extensive library of over 10,000 movies and TV shows. From the latest blockbusters to cherished classics and regional indie films.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3 class="feature-title">Seamless Streaming</h3>
+                    <p class="feature-description">Enjoy buttery-smooth streaming, thanks to lightning-fast loading speeds and seamless playback. Say goodbye to interruptions caused by lagging, buffering, or intrusive ads.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3 class="feature-title">Cross-Device Compatibility</h3>
+                    <p class="feature-description">FreeFlix is designed to be mobile-friendly and compatible with Chromecast, enabling you to stream your favorite content on nearly any device.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3 class="feature-title">Minimal Ads</h3>
+                    <p class="feature-description">Unlike many other free movie streaming sites, FreeFlix is extremely selective when it comes to which ads to show. We understand your watching experience matters most.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="stats-container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">10K+</div>
+                    <div class="stat-label">Movies & Shows</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">1M+</div>
+                    <div class="stat-label">Happy Users</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Always Available</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">0$</div>
+                    <div class="stat-label">Cost to You</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="cta-container">
+            <h2 class="cta-title">Ready to Start Watching?</h2>
+            <p class="cta-subtitle">Join millions of users who trust FreeFlix for their entertainment needs. No cards, no personal details, just pure, uninterrupted entertainment.</p>
+            <a href="home.html" class="btn-primary">Go to FreeFlix</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <nav class="footer-nav">
+                <a href="home.html">Home</a>
+                <a href="home.html#movies">Movies</a>
+                <a href="home.html#tv">TV Shows</a>
+                <a href="home.html#anime">Anime</a>
+                <a href="home.html">Sitemap</a>
+            </nav>
+            <p class="footer-text">FreeFlix is a Free Movies streaming site with zero ads. We let you watch movies online without having to register or paying, with over 10,000 movies and TV-Series.</p>
+            <p class="footer-copyright">© FreeFlix</p>
+        </div>
+    </footer>
+
+    <script>
+        // Add smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add scroll effect to navbar
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 100) {
+                navbar.style.background = 'rgba(9, 21, 41, 0.98)';
+            } else {
+                navbar.style.background = 'rgba(9, 21, 41, 0.95)';
+            }
+        });
+
+        // Add search functionality
+        document.querySelector('.search-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const searchTerm = this.value.trim();
+                if (searchTerm) {
+                    window.location.href = `home.html?search=${encodeURIComponent(searchTerm)}`;
+                }
+            }
+        });
+
+        document.querySelector('.search-button').addEventListener('click', function() {
+            const searchInput = document.querySelector('.search-input');
+            const searchTerm = searchInput.value.trim();
+            if (searchTerm) {
+                window.location.href = `home.html?search=${encodeURIComponent(searchTerm)}`;
+            }
+        });
+
+        // Add loading animation
+        window.addEventListener('load', function() {
+            document.querySelector('.hero-content').style.animation = 'fadeInUp 0.8s ease-out';
+        });
+    </script>
 </body>
 </html>
