@@ -297,31 +297,7 @@ async function updateMovieCards() {
     }
 }
 
-// Function to manually refresh cache
-function refreshMovieCards() {
-    localStorage.removeItem(CACHE_KEY);
-    localStorage.removeItem(LAST_UPDATE_KEY);
-    console.log('Cache cleared, refreshing movie cards...');
-    updateMovieCards();
-}
-
-// Function to get cache status
-function getCacheStatus() {
-    const lastUpdate = localStorage.getItem(LAST_UPDATE_KEY);
-    if (!lastUpdate) return 'No cache';
-
-    const cacheAge = Date.now() - parseInt(lastUpdate);
-    const hoursAgo = Math.floor(cacheAge / (60 * 60 * 1000));
-    const minutesAgo = Math.floor((cacheAge % (60 * 60 * 1000)) / (60 * 1000));
-
-    if (hoursAgo > 0) {
-        return `Updated ${hoursAgo}h ${minutesAgo}m ago`;
-    } else {
-        return `Updated ${minutesAgo}m ago`;
-    }
-}
-
 // Export for use in other files
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { TMDBApi, updateMovieCards, refreshMovieCards, getCacheStatus };
+    module.exports = { TMDBApi, updateMovieCards };
 }
