@@ -74,20 +74,19 @@
         .logo {
             display: flex;
             align-items: center;
-            gap: 12px;
-            font-size: 2rem;
-            font-weight: 800;
-            background: var(--gradient-1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            justify-content: center;
         }
 
         .logo img {
-            width: 45px;
-            height: 45px;
-            border-radius: 12px;
-            filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.4));
+            width: 120px;
+            height: auto;
+            filter: drop-shadow(0 0 15px rgba(139, 92, 246, 0.5));
+            transition: all 0.3s ease;
+        }
+
+        .logo img:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.7));
         }
 
         .nav-links {
@@ -719,7 +718,6 @@
         <div class="nav-container">
             <div class="logo">
                 <img src="https://ext.same-assets.com/4235281404/1579149571.png" alt="FreeFlix">
-                FreeFlix
             </div>
             <ul class="nav-links">
                 <li><a href="home.html">Home</a></li>
