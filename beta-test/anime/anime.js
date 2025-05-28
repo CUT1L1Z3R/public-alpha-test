@@ -415,8 +415,8 @@ async function fetchLatestAnimeEpisodes(containers, containerClass) {
     const pastTwoWeeks = new Date(today.getTime() - 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
 
     const endpoints = [
-        // Currently airing TODAY - highest priority
-        `tv/airing_today?api_key=${api_Key}&with_genres=16`,
+        // Currently airing anime today - with anime keyword to ensure anime only
+        `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&air_date.gte=${todayStr}&air_date.lte=${todayStr}&sort_by=first_air_date.desc`,
 
         // Anime that aired in the past 3 days (super recent) - no vote requirement
         `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&air_date.gte=${past3Days}&air_date.lte=${todayStr}&sort_by=first_air_date.desc`,
@@ -427,7 +427,7 @@ async function fetchLatestAnimeEpisodes(containers, containerClass) {
         // Anime that aired in the past 2 weeks (maximum range)
         `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&air_date.gte=${pastTwoWeeks}&air_date.lte=${todayStr}&sort_by=first_air_date.desc&vote_count.gte=3`,
 
-        // Currently ongoing series with recent episodes
+        // Currently ongoing anime series with recent episodes
         `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&with_status=0&air_date.gte=${pastTwoWeeks}&sort_by=first_air_date.desc&vote_count.gte=5`
     ];
 
@@ -454,7 +454,7 @@ async function fetchLatestAnimeEpisodes(containers, containerClass) {
         if (allAnime.length < 10) {
             console.log(`Only ${allAnime.length} anime found, fetching popular anime as fallback...`);
             try {
-                const fallbackResponse = await fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&sort_by=popularity.desc&vote_count.gte=10`);
+                const fallbackResponse = await fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&with_origin_country=JP&sort_by=popularity.desc&vote_count.gte=10`);
                 if (fallbackResponse.ok) {
                     const fallbackData = await fallbackResponse.json();
                     if (fallbackData.results) {
@@ -471,6 +471,55 @@ async function fetchLatestAnimeEpisodes(containers, containerClass) {
         let uniqueAnime = allAnime.filter((anime, index, self) =>
             index === self.findIndex(a => a.id === anime.id)
         );
+
+        // Additional filtering to ensure only anime content
+        uniqueAnime = uniqueAnime.filter(anime => {
+            const name = (anime.name || anime.title || '').toLowerCase();
+            const overview = (anime.overview || '').toLowerCase();
+
+            // Filter out common non-anime content keywords
+            const nonAnimeKeywords = [
+                'documentary', 'reality', 'news', 'talk show', 'game show',
+                'cooking', 'travel', 'sports', 'politics', 'history channel',
+                'discovery', 'national geographic', 'bbc', 'cnn', 'fox news',
+                'cooking show', 'reality tv', 'talent show', 'competition',
+                'live action', 'western animation', 'american animation',
+                'cartoon network', 'nickelodeon', 'disney channel'
+            ];
+
+            // Check if it contains non-anime keywords
+            const hasNonAnimeKeywords = nonAnimeKeywords.some(keyword =>
+                name.includes(keyword) || overview.includes(keyword)
+            );
+
+            // Filter out content that's clearly not anime
+            if (hasNonAnimeKeywords) {
+                return false;
+            }
+
+            // Prefer content with Japanese origin indicators or anime-related keywords
+            const animeKeywords = [
+                'anime', 'manga', 'japanese', 'japan', 'studio', 'toei',
+                'mappa', 'madhouse', 'bones', 'wit studio', 'pierrot',
+                'shonen', 'seinen', 'shoujo', 'josei', 'ova', 'ona'
+            ];
+
+            const hasAnimeKeywords = animeKeywords.some(keyword =>
+                name.includes(keyword) || overview.includes(keyword)
+            );
+
+            // If it has anime keywords, definitely include
+            if (hasAnimeKeywords) {
+                return true;
+            }
+
+            // For content without clear indicators, check origin country
+            const originCountry = anime.origin_country || [];
+            const isFromJapan = originCountry.includes('JP');
+
+            // Include if from Japan or if it has typical anime characteristics
+            return isFromJapan || anime.genre_ids?.includes(16); // 16 is Animation genre
+        });
 
         // First try: Filter for very recent content (past 14 days)
         const twoWeeksAgo = new Date(today.getTime() - 14 * 24 * 60 * 60 * 1000);
@@ -663,13 +712,13 @@ function fetchAnime(containerClass, genreOrKeyword) {
 
                     if (containerClass === 'latest-episodes-container' || containerClass === 'anime-latest-episodes-container') {
                         // For latest episodes fallback, use currently airing anime with high popularity
-                        fallbackEndpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&with_status=0&sort_by=popularity.desc&vote_count.gte=10`;
+                        fallbackEndpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&with_origin_country=JP&with_status=0&sort_by=popularity.desc&vote_count.gte=10`;
                     } else if (containerClass === 'popular-season-container') {
                         // For popular season fallback, use popular anime
-                        fallbackEndpoint = `discover/tv?api_key=${api_Key}&with_genres=16&sort_by=popularity.desc&vote_count.gte=50`;
+                        fallbackEndpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&with_origin_country=JP&sort_by=popularity.desc&vote_count.gte=50`;
                     } else {
                         // Default fallback for adventure anime
-                        fallbackEndpoint = `discover/tv?api_key=${api_Key}&with_genres=16&sort_by=popularity.desc&vote_count.gte=50`;
+                        fallbackEndpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&with_origin_country=JP&sort_by=popularity.desc&vote_count.gte=50`;
                     }
 
                     fetch(`https://api.themoviedb.org/3/${fallbackEndpoint}`)
