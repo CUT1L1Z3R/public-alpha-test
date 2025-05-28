@@ -474,8 +474,8 @@ input::-webkit-input-placeholder {
 
 .search-button svg {
   color: white;
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   flex-shrink: 0;
 }
 
