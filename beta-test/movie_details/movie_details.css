@@ -863,7 +863,7 @@ iframe {
 
    .hero-section {
     margin-top: 30px; /* Push hero section below tall mobile header */
-    height: 700px; /* Reduce height to compensate */
+    height: 650px; /* Reduce height to compensate */
     }
 
     .hero-overlay {
