@@ -21,6 +21,7 @@ const api_Key = '84259f99204eeb7d45c7e3d8e36c6123';
 
 // Document ready function
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM loaded, initializing anime page...');
     // Initialize the anime page
     initAnimePage();
 
@@ -48,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Initialize the anime page
 function initAnimePage() {
+    console.log('Initializing anime page...');
     // Update banner for anime section
     updateBannerForAnime();
 
@@ -77,8 +79,8 @@ function updateBannerForAnime() {
     const today = new Date();
     const currentYear = today.getFullYear();
 
-    // Get popular anime from current year with broader criteria for better results
-    fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&first_air_date.gte=${currentYear}-01-01&first_air_date.lte=${currentYear}-12-31&sort_by=popularity.desc&vote_count.gte=5`)
+    // Get popular anime from 2022 onwards with broader criteria for better results
+    fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&first_air_date.gte=2022-01-01&first_air_date.lte=${currentYear}-12-31&sort_by=popularity.desc&vote_count.gte=3`)
         .then(response => response.json())
         .then(data => {
             const popularSeasonAnimes = data.results || [];
@@ -131,10 +133,9 @@ function updateBannerForAnime() {
 
 // Initialize sections for anime
 function initializeAnimeSections() {
-    fetchAnime('anime-popular-container', 'popular');
-    fetchAnime('anime-latest-episodes-container', 'latest_episodes');
-    fetchAnime('latest-episodes-container', 'latest_episodes');
+    console.log('Initializing anime sections...');
     fetchAnime('popular-season-container', 'popular_season');
+    fetchAnime('latest-episodes-container', 'latest_episodes');
     fetchAnime('top-rated-anime-movie-container', 'top_rated_anime_movies');
     fetchAnime('anime-top-container', 'top_rated');
     fetchAnime('anime-upcoming-container', 'upcoming');
@@ -270,6 +271,41 @@ function showBannerAtIndex(index) {
 }
 
 // Function to fetch anime from TMDB API
+// Function to get supplementary recent anime data
+function getRecentAnimeSupplements(containerClass) {
+    // Popular 2024-2025 anime IDs from TMDB
+    const recentAnimeIds = {
+        'popular_season': [136630, 240411, 206584, 158909, 95557, 153312, 221734, 222636, 213774, 208739],
+        'top_rated': [136630, 240411, 206584, 158909, 95557, 153312, 221734, 222636, 213774, 208739],
+        'upcoming': [240411, 206584, 158909, 95557, 153312, 221734, 222636, 213774, 208739, 136630],
+        'latest_episodes': [136630, 240411, 206584, 158909, 95557, 153312, 221734, 222636, 213774, 208739],
+        'romance': [206584, 158909, 95557, 153312, 221734, 222636, 213774, 136630],
+        'comedy': [240411, 206584, 158909, 95557, 153312, 221734, 222636, 136630],
+        'adventure': [136630, 240411, 206584, 158909, 95557, 153312, 221734, 222636],
+        'drama': [206584, 158909, 95557, 153312, 221734, 222636, 213774, 136630]
+    };
+
+    return recentAnimeIds[containerClass] || recentAnimeIds['popular_season'];
+}
+
+// Function to fetch specific anime by IDs
+async function fetchAnimeByIds(ids) {
+    const animePromises = ids.slice(0, 8).map(async id => {
+        try {
+            const response = await fetch(`https://api.themoviedb.org/3/tv/${id}?api_key=${api_Key}&append_to_response=external_ids`);
+            if (response.ok) {
+                return await response.json();
+            }
+        } catch (error) {
+            console.log(`Error fetching anime ID ${id}:`, error);
+        }
+        return null;
+    });
+
+    const results = await Promise.all(animePromises);
+    return results.filter(result => result !== null);
+}
+
 // Function to display anime results in containers
 function displayAnimeResults(container, animeResults, containerClass) {
     container.innerHTML = ''; // Clear the container first to prevent duplicates
@@ -281,8 +317,84 @@ function displayAnimeResults(container, animeResults, containerClass) {
         return;
     }
 
-    // Filter out items without backdrop or poster images
-    const validResults = animeResults.filter(item => item.poster_path || item.backdrop_path);
+    // Filter out items without backdrop or poster images and apply anime filtering
+    const validResults = animeResults.filter(item => {
+        if (!item.poster_path && !item.backdrop_path) {
+            return false;
+        }
+
+        // Additional anime filtering
+        const name = (item.name || item.title || '').toLowerCase();
+        const overview = (item.overview || '').toLowerCase();
+
+        // Exclude western animation keywords
+        const westernKeywords = [
+            'disney', 'pixar', 'dreamworks', 'cartoon network', 'nickelodeon',
+            'adult swim', 'south park', 'family guy', 'simpsons', 'american dad',
+            'rick and morty', 'futurama', 'bob burgers', 'archer',
+            'american', 'canadian', 'british', 'french', 'german', 'european',
+            'spider-man', 'spiderman', 'spider man', 'across the spider', 'into the spider',
+            'marvel', 'dc comics', 'batman', 'superman', 'wonder woman',
+            'x-men', 'iron man', 'captain america', 'thor', 'hulk',
+            'avengers', 'guardians of the galaxy', 'fantastic four',
+            'teenage mutant ninja turtles', 'tmnt', 'transformers',
+            'my little pony', 'mlp', 'friendship is magic',
+            'spongebob', 'patrick star', 'adventure time', 'regular show',
+            'steven universe', 'gravity falls', 'phineas and ferb',
+            'kim possible', 'danny phantom', 'fairly oddparents',
+            'powerpuff girls', 'dexter laboratory', 'johnny bravo',
+            'courage the cowardly dog', 'ed edd and eddy',
+            'teen titans go', 'ben 10', 'generator rex',
+            'samurai jack', 'foster home', 'chowder',
+            'flapjack', 'clarence', 'uncle grandpa', 'we bare bears',
+            'over the garden wall', 'infinity train', 'amphibia',
+            'the owl house', 'ducktales', 'darkwing duck',
+            'gargoyles', 'recess', 'pepper ann', 'house of mouse',
+            'lilo and stitch', 'atlantis', 'treasure planet',
+            'bolt', 'frozen', 'tangled', 'moana', 'encanto',
+            'raya and the last dragon', 'turning red', 'luca',
+            'soul', 'onward', 'coco', 'finding nemo', 'finding dory',
+            'monsters inc', 'toy story', 'cars', 'wall-e', 'up',
+            'inside out', 'the good dinosaur', 'brave', 'ratatouille',
+            'the incredibles', 'shrek', 'madagascar', 'kung fu panda',
+            'how to train your dragon', 'trolls', 'the croods',
+            'minions', 'despicable me', 'sing', 'rio', 'ice age',
+            'epic', 'the nut job', 'open season', 'cloudy with',
+            'hotel transylvania', 'the smurfs', 'alvin and the chipmunks',
+            'scooby-doo', 'tom and jerry', 'looney tunes', 'bugs bunny',
+            'daffy duck', 'porky pig', 'tweety', 'sylvester',
+            'pepe le pew', 'foghorn leghorn', 'marvin the martian',
+            'yosemite sam', 'speedy gonzales', 'road runner',
+            'wile e coyote', 'tasmanian devil', 'lola bunny'
+        ];
+
+        const hasWesternKeywords = westernKeywords.some(keyword =>
+            name.includes(keyword) || overview.includes(keyword)
+        );
+
+        if (hasWesternKeywords) {
+            return false;
+        }
+
+        // Check origin country - prefer Japanese content
+        const originCountry = item.origin_country || [];
+        const isFromJapan = originCountry.includes('JP');
+        const westernCountries = ['US', 'CA', 'GB', 'FR', 'DE', 'AU', 'NZ'];
+        const isFromWesternCountry = westernCountries.some(country =>
+            originCountry.includes(country)
+        );
+
+        // If from western country, exclude unless it has clear anime indicators
+        if (isFromWesternCountry) {
+            const animeKeywords = ['anime', 'manga', 'japanese', 'japan'];
+            const hasAnimeKeywords = animeKeywords.some(keyword =>
+                name.includes(keyword) || overview.includes(keyword)
+            );
+            return hasAnimeKeywords;
+        }
+
+        return true; // Allow other content (including Japanese)
+    });
 
     if (validResults.length === 0) {
         console.warn(`No valid image results found for ${containerClass}`);
@@ -454,7 +566,7 @@ async function fetchLatestAnimeEpisodes(containers, containerClass) {
         if (allAnime.length < 10) {
             console.log(`Only ${allAnime.length} anime found, fetching popular anime as fallback...`);
             try {
-                const fallbackResponse = await fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&with_origin_country=JP&sort_by=popularity.desc&vote_count.gte=10`);
+                const fallbackResponse = await fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&with_origin_country=JP&first_air_date.gte=2024-01-01&sort_by=popularity.desc&vote_count.gte=5`);
                 if (fallbackResponse.ok) {
                     const fallbackData = await fallbackResponse.json();
                     if (fallbackData.results) {
@@ -484,7 +596,14 @@ async function fetchLatestAnimeEpisodes(containers, containerClass) {
                 'discovery', 'national geographic', 'bbc', 'cnn', 'fox news',
                 'cooking show', 'reality tv', 'talent show', 'competition',
                 'live action', 'western animation', 'american animation',
-                'cartoon network', 'nickelodeon', 'disney channel'
+                'cartoon network', 'nickelodeon', 'disney channel', 'disney',
+                'pixar', 'dreamworks', 'adult swim', 'comedy central',
+                'south park', 'family guy', 'the simpsons', 'american dad',
+                'rick and morty', 'futurama', 'king of the hill',
+                'bob burgers', 'archer', 'venture bros', 'robot chicken',
+                'american', 'canadian', 'french', 'german', 'british',
+                'european', 'western', 'english dub', 'cartoon',
+                'animated series', 'animated movie', 'cgi', '3d animation'
             ];
 
             // Check if it contains non-anime keywords
@@ -501,7 +620,12 @@ async function fetchLatestAnimeEpisodes(containers, containerClass) {
             const animeKeywords = [
                 'anime', 'manga', 'japanese', 'japan', 'studio', 'toei',
                 'mappa', 'madhouse', 'bones', 'wit studio', 'pierrot',
-                'shonen', 'seinen', 'shoujo', 'josei', 'ova', 'ona'
+                'shonen', 'seinen', 'shoujo', 'josei', 'ova', 'ona',
+                'kyoto animation', 'studio ghibli', 'sunrise', 'trigger',
+                'cloverworks', 'a-1 pictures', 'ufotable', 'shaft',
+                'silver link', 'doga kobo', 'brains base', 'j.c.staff',
+                'production i.g', 'gainax', 'lerche', 'white fox',
+                'nippon animation', 'tms entertainment', 'studio deen'
             ];
 
             const hasAnimeKeywords = animeKeywords.some(keyword =>
@@ -517,8 +641,19 @@ async function fetchLatestAnimeEpisodes(containers, containerClass) {
             const originCountry = anime.origin_country || [];
             const isFromJapan = originCountry.includes('JP');
 
-            // Include if from Japan or if it has typical anime characteristics
-            return isFromJapan || anime.genre_ids?.includes(16); // 16 is Animation genre
+            // Exclude content from clearly non-Japanese countries
+            const westernCountries = ['US', 'CA', 'GB', 'FR', 'DE', 'AU', 'NZ'];
+            const isFromWesternCountry = westernCountries.some(country =>
+                originCountry.includes(country)
+            );
+
+            // If it's from a western country and doesn't have anime keywords, exclude it
+            if (isFromWesternCountry && !hasAnimeKeywords) {
+                return false;
+            }
+
+            // Include only if from Japan
+            return isFromJapan;
         });
 
         // First try: Filter for very recent content (past 14 days)
@@ -608,16 +743,16 @@ function fetchAnime(containerClass, genreOrKeyword) {
     let endpoint = '';
 
     if (genreOrKeyword === 'popular') {
-        // For popular anime, use discover with animation genre + anime keyword and sort by popularity
-        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&sort_by=popularity.desc`;
+        // For popular anime, use discover with animation genre + anime keyword and sort by popularity (from 2022+)
+        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&first_air_date.gte=2022-01-01&sort_by=popularity.desc`;
     } else if (genreOrKeyword === 'top_rated') {
-        // For top rated anime, use discover with animation genre + anime keyword sorted by rating
-        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&sort_by=vote_average.desc&vote_count.gte=100`;
+        // For top rated anime, use discover with animation genre + anime keyword sorted by rating (from 2022+)
+        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&with_origin_country=JP&first_air_date.gte=2022-01-01&sort_by=vote_average.desc&vote_count.gte=10`;
     } else if (genreOrKeyword === 'upcoming') {
-        // For ongoing anime (renamed from upcoming), use discover with recent and ongoing air dates
+        // For ongoing anime (renamed from upcoming), use discover with recent and ongoing air dates (from 2022+)
         const today = new Date();
         const dateStr = today.toISOString().split('T')[0]; // Format as YYYY-MM-DD
-        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&air_date.lte=${dateStr}&with_status=0&sort_by=popularity.desc`;
+        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&with_origin_country=JP&first_air_date.gte=2022-01-01&air_date.lte=${dateStr}&with_status=0&sort_by=popularity.desc`;
     } else if (genreOrKeyword === 'truly_upcoming') {
         // For truly upcoming anime, use discover with future air dates
         const today = new Date();
@@ -630,49 +765,49 @@ function fetchAnime(containerClass, genreOrKeyword) {
         // Get anime that will air after today but before 6 months from now
         endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&air_date.gte=${todayStr}&air_date.lte=${futureDateStr}&sort_by=primary_release_date.asc`;
     } else if (genreOrKeyword === 'action') {
-        // Action anime
-        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,28&with_keywords=210024&sort_by=popularity.desc`;
+        // Action anime (from 2022+)
+        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,28&with_keywords=210024&with_origin_country=JP&first_air_date.gte=2022-01-01&sort_by=popularity.desc`;
     } else if (genreOrKeyword === 'romance') {
-        // Romance anime
-        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,10749&with_keywords=210024&sort_by=popularity.desc`;
+        // Romance anime (from 2022+)
+        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,10749&with_keywords=210024&with_origin_country=JP&first_air_date.gte=2022-01-01&sort_by=popularity.desc`;
     } else if (genreOrKeyword === 'comedy') {
-        // Comedy anime
-        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,35&with_keywords=210024&sort_by=popularity.desc`;
+        // Comedy anime (from 2022+)
+        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,35&with_keywords=210024&with_origin_country=JP&first_air_date.gte=2022-01-01&sort_by=popularity.desc`;
     } else if (genreOrKeyword === 'top_rated_anime_movies') {
-        // Top rated anime movies
-        endpoint = `discover/movie?api_key=${api_Key}&with_genres=16&sort_by=vote_average.desc&vote_count.gte=100`;
+        // Top rated anime movies (from 2022+)
+        endpoint = `discover/movie?api_key=${api_Key}&with_genres=16&with_origin_country=JP&primary_release_date.gte=2022-01-01&sort_by=vote_average.desc&vote_count.gte=10`;
     } else if (genreOrKeyword === 'adventure') {
-        // Action & Adventure anime - combining action and adventure genres
-        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,10759&with_keywords=210024&sort_by=popularity.desc&vote_count.gte=50`;
+        // Action & Adventure anime - combining action and adventure genres (from 2022+)
+        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,10759&with_keywords=210024&with_origin_country=JP&first_air_date.gte=2022-01-01&sort_by=popularity.desc&vote_count.gte=5`;
         // Genres: 16=Animation, 28=Action, 12=Adventure
     } else if (genreOrKeyword === 'drama') {
-        // Drama anime
-        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,18&with_keywords=210024&sort_by=popularity.desc`;
+        // Drama anime (from 2022+)
+        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,18&with_keywords=210024&with_origin_country=JP&first_air_date.gte=2022-01-01&sort_by=popularity.desc`;
     } else if (genreOrKeyword === 'latest_episodes') {
         // Latest anime episodes - show very recent anime with emphasis on currently airing
         const today = new Date();
-        const pastMonth = new Date();
-        pastMonth.setMonth(pastMonth.getMonth() - 1); // Past month for more recent content
+        const pastWeek = new Date();
+        pastWeek.setDate(pastWeek.getDate() - 14); // Past 2 weeks for more recent content
 
-        const futureMonth = new Date();
-        futureMonth.setMonth(futureMonth.getMonth() + 1); // Next month for upcoming episodes
+        const futureWeek = new Date();
+        futureWeek.setDate(futureWeek.getDate() + 14); // Next 2 weeks for upcoming episodes
 
         const todayStr = today.toISOString().split('T')[0];
-        const pastMonthStr = pastMonth.toISOString().split('T')[0];
-        const futureMonthStr = futureMonth.toISOString().split('T')[0];
+        const pastWeekStr = pastWeek.toISOString().split('T')[0];
+        const futureWeekStr = futureWeek.toISOString().split('T')[0];
 
-        // Get anime that are currently airing or very recently aired with higher popularity threshold
-        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&air_date.gte=${pastMonthStr}&air_date.lte=${futureMonthStr}&with_status=0,1&sort_by=first_air_date.desc&vote_count.gte=10`;
+        // Get anime that are currently airing or very recently aired with lower vote threshold for more results
+        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&air_date.gte=${pastWeekStr}&air_date.lte=${futureWeekStr}&with_status=0,1&sort_by=first_air_date.desc&vote_count.gte=5`;
     } else if (genreOrKeyword === 'popular_season') {
-        // Popular this season - current year's most popular anime
+        // Popular this season - 2024-2025 most popular anime
         const today = new Date();
         const currentYear = today.getFullYear();
 
-        // Get popular anime from current year with broader criteria for better results
-        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&first_air_date.gte=${currentYear}-01-01&first_air_date.lte=${currentYear}-12-31&sort_by=popularity.desc&vote_count.gte=5`;
+        // Get popular anime from 2022 onwards with broader criteria for better results
+        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&first_air_date.gte=2022-01-01&first_air_date.lte=${currentYear}-12-31&sort_by=popularity.desc&vote_count.gte=3`;
     } else {
-        // Default endpoint for general anime
-        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&sort_by=popularity.desc`;
+        // Default endpoint for general anime (from 2022+)
+        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&with_origin_country=JP&first_air_date.gte=2022-01-01&sort_by=popularity.desc`;
     }
 
     // Special handling for latest episodes to get very recent content
@@ -690,9 +825,21 @@ function fetchAnime(containerClass, genreOrKeyword) {
             }
             return response.json();
         })
-        .then(data => {
+        .then(async data => {
             console.log(`Got anime data from TMDB for ${containerClass}, found ${data.results ? data.results.length : 0} items`);
-            const animeResults = data.results || [];
+            let animeResults = data.results || [];
+
+            // If we have fewer than 8 results, supplement with recent anime
+            if (animeResults.length < 8) {
+                try {
+                    const recentIds = getRecentAnimeSupplements(containerClass);
+                    const recentAnime = await fetchAnimeByIds(recentIds);
+                    console.log(`Added ${recentAnime.length} supplementary recent anime for ${containerClass}`);
+                    animeResults = [...animeResults, ...recentAnime].slice(0, 20);
+                } catch (error) {
+                    console.log('Error fetching supplementary anime:', error);
+                }
+            }
 
             containers.forEach(container => {
                 displayAnimeResults(container, animeResults, containerClass);
@@ -717,8 +864,8 @@ function fetchAnime(containerClass, genreOrKeyword) {
                         // For popular season fallback, use popular anime
                         fallbackEndpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&with_origin_country=JP&sort_by=popularity.desc&vote_count.gte=50`;
                     } else {
-                        // Default fallback for adventure anime
-                        fallbackEndpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&with_origin_country=JP&sort_by=popularity.desc&vote_count.gte=50`;
+                        // Default fallback for adventure anime (from 2022+)
+                        fallbackEndpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&with_origin_country=JP&first_air_date.gte=2022-01-01&sort_by=popularity.desc&vote_count.gte=5`;
                     }
 
                     fetch(`https://api.themoviedb.org/3/${fallbackEndpoint}`)
