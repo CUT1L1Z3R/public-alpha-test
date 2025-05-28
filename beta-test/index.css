@@ -398,7 +398,7 @@ body {
 .search-input {
   width: 100%;
   padding: 20px 24px;
-  padding-right: 60px;
+  padding-right: 70px;
   border: 2px solid rgba(139, 92, 246, 0.3);
   border-radius: 25px;
   background: rgba(26, 26, 27, 0.6);
@@ -450,28 +450,33 @@ input::-webkit-input-placeholder {
 /* Landing Page Search Button */
 .search-button {
   position: absolute;
-  right: 8px;
+  right: 12px;
   top: 50%;
   transform: translateY(-50%);
   background: var(--gradient-2);
   border: none;
-  padding: 12px;
-  border-radius: 20px;
+  padding: 10px;
+  border-radius: 50%;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 10;
+  width: 44px;
+  height: 44px;
 }
 
 .search-button:hover {
   transform: translateY(-50%) scale(1.05);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
 }
 
 .search-button svg {
   color: white;
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
 }
 
 /* Search Results - Updated with Landing Page Styling */
