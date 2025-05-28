@@ -10,14 +10,14 @@ const LAST_UPDATE_KEY = 'freeflix_last_update';
 
 // Popular 2025 anime titles to search for
 const POPULAR_2025_ANIME = [
-    'Solo Leveling',
-    'Dandadan',
-    'Dragon Ball Daima',
-    'The Apothecary Diaries',
-    'My Happy Marriage',
+    'Wind Breaker',
+    'Witch Watch',
+    'Umamusume: Cinderella Gray',
+    'My Hero Academia: Vigilantes',
+    'Blue Lock Season 2',
     'Kaiju No. 8',
-    'Fire Force',
-    'Sakamoto Days'
+    'Fire Force Season 3',
+    'Dragon Ball Daima'
 ];
 
 class TMDBApi {
@@ -200,14 +200,14 @@ class TMDBApi {
     getFallbackAnime() {
         return [
             {
-                name: 'Solo Leveling',
-                poster_path: '/jzo8MfgYXNl0kdgmX7EjkJpLnTE.jpg',
-                vote_average: 8.6
+                name: 'Wind Breaker',
+                poster_path: '/vYfGqPdx3Fd48eGKRQEKi9ykzOQ.jpg',
+                vote_average: 8.3
             },
             {
-                name: 'Dandadan',
-                poster_path: '/cX8MPBaXoOUKN3n9FnKgZNp8Qe1.jpg',
-                vote_average: 8.4
+                name: 'My Hero Academia: Vigilantes',
+                poster_path: '/hN8aQOp8l1pXHELFZtHuoYYrrv8.jpg',
+                vote_average: 8.5
             }
         ];
     }
