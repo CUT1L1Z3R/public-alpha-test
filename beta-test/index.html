@@ -76,6 +76,244 @@
     <link rel="preload" href="/index.css?v=1.0.2" as="style">
     <link rel="preload" href="/custom-navigation.js?v=1.0.2" as="script">
 
+    <!-- Modern styling for enhanced landing page -->
+    <style>
+        /* Modern Header Styling */
+        .modern-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(141, 22, 201, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo img {
+            height: 40px;
+            width: auto;
+        }
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #8d16c9;
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-link:hover {
+            color: #8d16c9;
+        }
+
+        /* Hero Section Enhancements */
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at center, rgba(141, 22, 201, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        /* Enhanced buttons */
+        .hero-button {
+            display: inline-block;
+            padding: 14px 32px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #ffffff;
+            background: linear-gradient(135deg, #8d16c9 0%, #6b1396 100%);
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(141, 22, 201, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .hero-button:hover::before {
+            left: 100%;
+        }
+
+        .hero-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(141, 22, 201, 0.4);
+        }
+
+        /* Enhanced search input */
+        .hero-search {
+            width: 100%;
+            max-width: 450px;
+            padding: 16px 20px;
+            font-size: 1.1rem;
+            border: 2px solid rgba(141, 22, 201, 0.3);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .hero-search::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .hero-search:focus {
+            outline: none;
+            border-color: #8d16c9;
+            box-shadow: 0 0 20px rgba(141, 22, 201, 0.3);
+        }
+
+        /* Preview Cards Styling */
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .preview-card {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: #1a1a1a;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .preview-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(141, 22, 201, 0.3);
+        }
+
+        .preview-card img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .preview-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .preview-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9));
+            padding: 2rem 1rem 1rem;
+            color: white;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .preview-card:hover .preview-overlay {
+            transform: translateY(0);
+        }
+
+        .preview-overlay h3 {
+            margin: 0 0 0.5rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .preview-overlay p {
+            margin: 0;
+            color: #8d16c9;
+            font-size: 0.9rem;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 0 1rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .logo-text {
+                font-size: 1.5rem;
+            }
+
+            .preview-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 1rem;
+            }
+
+            .preview-card img {
+                height: 250px;
+            }
+        }
+    </style>
+
     <!-- Structured Data for Movie Streaming Website -->
     <script type="application/ld+json">
     {
@@ -235,24 +473,32 @@
 </head>
 <body>
     <!-- Watch32 Hero Clone -->
-    <section id="watch32-hero" style="background: radial-gradient(ellipse at center, #14345e 0%, #091529 100%); color: #d6e5f0; padding: 48px 0 0 0; min-height: 90vh; text-align: center;">
-      <header style="display:flex;align-items:center;justify-content:space-between;max-width:1280px;margin:0 auto;padding:16px 24px 0 24px;font-family:'Roboto',Arial,sans-serif;font-weight:600;">
-        <div style="display:flex;align-items:center;gap:10px">
-          <img src="https://ext.same-assets.com/3156653937/812311454.png" alt="Watch32 Logo" style="height:42px;width:auto;margin-right:6px"/>
-          <span style="font-size:28px;color:#d6e5f0;letter-spacing:2px;line-height:44px;">FreeFlix</span>
+    <!-- Modern Header matching main site -->
+    <header class="modern-header">
+        <div class="header-container">
+            <div class="logo">
+                <img src="https://ext.same-assets.com/4235281404/1579149571.png" alt="FreeFlix Logo" />
+            </div>
+            <div class="nav-links">
+                <a href="home.html" class="nav-link">Home</a>
+                <a href="home.html#movies" class="nav-link">Movies</a>
+                <a href="home.html#tv" class="nav-link">TV Shows</a>
+                <a href="home.html#anime" class="nav-link">Anime</a>
+            </div>
         </div>
-        <nav style="display:flex;align-items:center;gap:36px;">
-          <a href="#" style="color:#d6e5f0;text-decoration:none;font-size:1.08em;transition:.15s">Home</a>
-          <a href="#" style="color:#d6e5f0;text-decoration:none;font-size:1.08em;transition:.15s">Movies</a>
-          <a href="#" style="color:#d6e5f0;text-decoration:none;font-size:1.08em;transition:.15s">TV Shows</a>
-          <a href="#" style="color:#d6e5f0;text-decoration:none;font-size:1.08em;transition:.15s">Anime</a>
-        </nav>
-      </header>
-      <div style="max-width:650px;margin:52px auto 0 auto;">
-        <h1 style="font-size:2.4rem;font-weight:700;margin-bottom:6px;color:#fff;">FreeFlix</h1>
-        <span style="font-size:1.17em; color: #b7cae3;">FreeFlix</span>
-        <form style="margin:44px 0 24px 0"><input type="text" placeholder="Enter keywords..." style="width:100%;max-width:430px;padding:15px 18px;font-size:1.08em;border-radius:6px;border:none;box-shadow:0 2px 24px rgba(51,76,121,0.17);background:#253c63;color:#fff;"></form>
-        <a href="#" style="display:inline-block;padding:12px 48px;font-size:1.2em;font-family:inherit;font-weight:600;color:#fff;background:#14345e;border-radius:12px;border:2px solid #4c8be7;text-decoration:none;margin-top:18px;margin-bottom:20px;transition:.18s;">View Full Site</a>
+    </header>
+
+    <section id="watch32-hero" style="background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7)), url('https://ext.same-assets.com/4235281404/3463191794.jpeg'); background-size: cover; background-position: center; background-attachment: fixed; color: #d6e5f0; padding: 100px 0 0 0; min-height: 90vh; text-align: center; position: relative;">
+      <!-- Add darker overlay for better text readability -->
+      <div class="hero-overlay" style="background: rgba(0,0,0,0.4);"></div>
+      <div style="max-width:650px;margin:52px auto 0 auto; position: relative; z-index: 10;">
+        <p style="font-size:1.3em; color: #b7cae3; margin-bottom: 2rem; opacity: 0.9;">FreeFlix</p>
+        <form style="margin:44px 0 32px 0;">
+          <input type="text" placeholder="Enter keywords..." class="hero-search">
+        </form>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+          <a href="home.html" class="hero-button">View Full Site</a>
+        </div>
       </div>
       <div style="max-width:830px;margin:21px auto 0 auto;font-size:1.18em;text-align:left;padding:0 16px;color:#d6e5f0">
           <h2 style="font-size:1.35em;margin-top:38px;margin-bottom:9px;font-weight:700;color:#fff;">FreeFlix - Your Free Cinema, Anytime, Anywhere</h2>
@@ -275,16 +521,47 @@
             <li><b>Minimal Ads</b>: Unlike many other free movie streaming sites, FreeFlix is extremely selective when it comes to which ads to show. We do our best to make sure your overall watching experience is as smooth as possible.</li>
           </ul>
       </div>
-      <div style="margin: 36px auto 12px auto; text-align: center;">
-        <a href="#" style="display:inline-block;padding:12px 42px;font-size:1.13em;border-radius:11px;background:#4c8be7;color:#fff;text-decoration:none;font-weight:600;box-shadow:0 2px 14px rgba(51,76,121,0.10);margin-bottom:18px;">Go to FreeFlix</a>
+
+
+          <a href="home.html" class="preview-card">
+            <img src="https://ext.same-assets.com/4235281404/3463191794.jpeg" alt="Until Dawn Movie" loading="lazy">
+            <div class="preview-overlay">
+              <h3>Until Dawn</h3>
+              <p>Latest • Movie • 6.4</p>
+            </div>
+          </a>
+          <a href="home.html" class="preview-card">
+            <img src="https://ext.same-assets.com/4235281404/1293039756.jpeg" alt="Raw Series" loading="lazy">
+            <div class="preview-overlay">
+              <h3>Raw</h3>
+              <p>Netflix • Series • 6.8</p>
+            </div>
+          </a>
+          <a href="home.html" class="preview-card">
+            <img src="https://ext.same-assets.com/4235281404/844226167.jpeg" alt="Star Wars Series" loading="lazy">
+            <div class="preview-overlay">
+              <h3>Star Wars</h3>
+              <p>Disney+ • Series • 8.5</p>
+            </div>
+          </a>
+          <a href="home.html" class="preview-card">
+            <img src="https://ext.same-assets.com/4235281404/1881823309.jpeg" alt="Lucifer Series" loading="lazy">
+            <div class="preview-overlay">
+              <h3>Lucifer</h3>
+              <p>Netflix • Series • 8.4</p>
+            </div>
+          </a>
+        </div>
       </div>
-      <footer style="margin:48px auto 0 auto; max-width:800px; text-align:center;color:#b7cae3; font-size:1.05em; padding:24px 10px 10px 10px;border-top:1px solid #2b4063;">
+
+
+      <footer style="margin:48px auto 0 auto; max-width:800px; text-align:center;color:#b7cae3; font-size:1.05em; padding:24px 10px 10px 10px;border-top:1px solid rgba(141, 22, 201, 0.3);">
         <nav style="margin-bottom:13px;">
-          <a href="#" style="margin:0 20px;color:#d6e5f0;text-decoration:none;">Home</a>
-          <a href="#" style="margin:0 20px;color:#d6e5f0;text-decoration:none;">Movies</a>
-          <a href="#" style="margin:0 20px;color:#d6e5f0;text-decoration:none;">TV shows</a>
-          <a href="#" style="margin:0 20px;color:#d6e5f0;text-decoration:none;">Anime</a>
-          <a href="#" style="margin:0 20px;color:#d6e5f0;text-decoration:none;">Sitemaps</a>
+          <a href="home.html" style="margin:0 20px;color:#d6e5f0;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#8d16c9'" onmouseout="this.style.color='#d6e5f0'">Home</a>
+          <a href="home.html#movies" style="margin:0 20px;color:#d6e5f0;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#8d16c9'" onmouseout="this.style.color='#d6e5f0'">Movies</a>
+          <a href="home.html#tv" style="margin:0 20px;color:#d6e5f0;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#8d16c9'" onmouseout="this.style.color='#d6e5f0'">TV shows</a>
+          <a href="home.html#anime" style="margin:0 20px;color:#d6e5f0;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#8d16c9'" onmouseout="this.style.color='#d6e5f0'">Anime</a>
+          <a href="home.html" style="margin:0 20px;color:#d6e5f0;text-decoration:none;transition:color 0.3s ease;" onmouseover="this.style.color='#8d16c9'" onmouseout="this.style.color='#d6e5f0'">Sitemaps</a>
         </nav>
         <span>FreeFlix is a Free Movies streaming site with zero ads. Over 10000 movies and TV-Series. Watch/Download full movies from FreeFlix!</span>
         <br><span style="color:#7291c7;">© FreeFlix</span>
