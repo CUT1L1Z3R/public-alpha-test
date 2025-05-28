@@ -957,42 +957,6 @@
         // Initialize movie cards with TMDB data
         document.addEventListener('DOMContentLoaded', function() {
             updateMovieCards();
-
-            // Update cache status
-            function updateCacheStatus() {
-                const statusEl = document.getElementById('cache-status');
-                if (statusEl) {
-                    statusEl.textContent = getCacheStatus();
-                }
-            }
-
-            // Add cache status element if it doesn't exist
-            const heroVisual = document.querySelector('.hero-visual');
-            if (heroVisual && !document.getElementById('cache-status')) {
-                const cacheControls = document.createElement('div');
-                cacheControls.className = 'cache-controls';
-                cacheControls.style.cssText = 'position: absolute; top: -40px; right: 0; font-size: 0.8rem; color: var(--text-muted); z-index: 10;';
-                cacheControls.innerHTML = `
-                    <span id="cache-status">Loading...</span>
-                    <button id="refresh-btn" style="margin-left: 10px; background: var(--primary); color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 0.7rem;">↻ Refresh</button>
-                `;
-                heroVisual.appendChild(cacheControls);
-
-                // Add refresh button functionality
-                document.getElementById('refresh-btn').addEventListener('click', function() {
-                    this.textContent = '↻ Refreshing...';
-                    this.disabled = true;
-                    refreshMovieCards();
-                    setTimeout(() => {
-                        this.textContent = '↻ Refresh';
-                        this.disabled = false;
-                        updateCacheStatus();
-                    }, 1000);
-                });
-            }
-
-            // Initial cache status update
-            setTimeout(updateCacheStatus, 500);
         });
     </script>
 </body>
