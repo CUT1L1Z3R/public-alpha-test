@@ -142,8 +142,12 @@
             box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
         }
 
-        /* Hide mobile menu by default */
+        /* Hide mobile menu and button by default */
         .mobile-menu-btn {
+            display: none;
+        }
+
+        .mobile-menu {
             display: none;
         }
 
@@ -579,7 +583,7 @@
         }
 
         .footer-nav {
-            display: none; /* Hide on desktop */
+            display: flex;
             justify-content: center;
             gap: 3rem;
             margin-bottom: 2rem;
