@@ -1,5 +1,3 @@
-// Instructions: Restore the complete mobile navigation file without debugging logs
-
 // Mobile Navigation Handler
 document.addEventListener('DOMContentLoaded', function() {
     const mobileNavToggle = document.getElementById('mobileNavToggle');
