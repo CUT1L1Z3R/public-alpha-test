@@ -709,6 +709,19 @@
                 display: none;
             }
 
+            /* Show specific cards on mobile - movies and anime mix */
+            .movie-card:nth-child(1), /* Sinners - Movie */
+            .movie-card:nth-child(2), /* Fountain of Youth - Movie */
+            .movie-card:nth-child(3), /* The Last of Us - TV Show */
+            .movie-card:nth-child(5) { /* WIND BREAKER - Anime */
+                display: block;
+            }
+
+            .movie-card:nth-child(4), /* Dept. Q - TV Show */
+            .movie-card:nth-child(6) { /* Witch Watch - Anime */
+                display: none;
+            }
+
             .movie-card img {
                 width: 100%;
                 height: 100%;
@@ -741,6 +754,29 @@
                 color: rgba(255, 255, 255, 0.85);
                 text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
                 font-weight: 500;
+            }
+
+            /* Special styling for anime cards on mobile */
+            .movie-card[data-type="anime"] {
+                border: 2px solid rgba(168, 139, 250, 0.7);
+                box-shadow: 0 8px 32px rgba(168, 139, 250, 0.4);
+                position: relative;
+            }
+
+            .movie-card[data-type="anime"]::before {
+                content: 'ANIME';
+                position: absolute;
+                top: 8px;
+                right: 8px;
+                background: linear-gradient(135deg, #a855f7, #8b5cf6);
+                color: white;
+                font-size: 0.7rem;
+                font-weight: 700;
+                padding: 4px 8px;
+                border-radius: 8px;
+                z-index: 3;
+                text-shadow: none;
+                box-shadow: 0 2px 8px rgba(168, 139, 250, 0.5);
             }
 
             .features {
