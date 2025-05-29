@@ -228,6 +228,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const breadcrumbList = document.createElement('ol');
     breadcrumbList.style.cssText = 'display:flex;list-style:none;padding:10px 20px;margin:0;background-color:rgba(0,0,0,0.2);color:white;';
 
+    // Hide breadcrumbs on desktop (768px and above)
+    const mediaQueryStyle = document.createElement('style');
+    mediaQueryStyle.textContent = `
+      @media (min-width: 768px) {
+        .breadcrumbs {
+          display: none !important;
+        }
+      }
+    `;
+    document.head.appendChild(mediaQueryStyle);
+
     // Create breadcrumb items
     breadcrumbItems.forEach((item, index) => {
       const listItem = document.createElement('li');
