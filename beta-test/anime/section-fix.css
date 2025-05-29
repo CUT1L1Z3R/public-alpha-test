@@ -3,6 +3,11 @@
  * Ensures correct button placement and portrait banner navigation
  */
 
+/* Body background styling to match home page */
+body {
+  background: var(--gradient-bg);
+}
+
 /* Dropdown styles for genre navigation */
 .dropdown {
   position: relative;
@@ -108,6 +113,11 @@
   .dropdown-column {
     flex-basis: 100%;
     margin-bottom: 15px;
+  }
+
+  /* Hide watchlist button on mobile */
+  .watchList-Btn {
+    display: none !important;
   }
 }
 

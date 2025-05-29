@@ -1,3 +1,8 @@
+/* Body background styling to match home page */
+body {
+  background: var(--gradient-bg);
+}
+
 /* Dropdown styles for genre navigation */
 .dropdown {
   position: relative;
@@ -86,6 +91,11 @@
 
 /* Mobile dropdown adjustments */
 @media screen and (max-width: 768px) {
+  /* Hide watchlist button on mobile */
+  .watchList-Btn {
+    display: none !important;
+  }
+
   .dropdown-content {
     min-width: 90vw;
     left: 0;

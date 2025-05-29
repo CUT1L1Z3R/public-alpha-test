@@ -71,13 +71,19 @@
 
 <body>
     <!-- Header container -->
-    <header class="header">
+    <header class="header navbar">
         <img src="/assets/freeflix.png" alt="FreeFlix logo" id="netflix-logo" width="150" height="47" loading="eager" fetchpriority="high">
-        <div class="input-container">
-            <input type="text" id="searchInput" placeholder="Search TV shows...">
+        <div class="input-container search-container">
+            <input type="text" id="searchInput" class="search-input" placeholder="Search TV shows...">
+            <button class="search-button">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                </svg>
+            </button>
+            <div id="searchResults"></div>
         </div>
-        <div id="searchResults"></div>
-        <button id="goToWatchlist" class="watchList-Btn">WatchList</button>
+        <button id="goToWatchlist" class="watchList-Btn cta-button">WatchList</button>
     </header>
 
     <!-- Navigation Menu -->

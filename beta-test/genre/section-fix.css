@@ -355,6 +355,11 @@
 }
 
 @media (max-width: 768px) {
+    /* Hide watchlist button on mobile */
+    .watch-list-button {
+        display: none !important;
+    }
+
     .header {
         padding: 0 15px;
         height: 50px;
