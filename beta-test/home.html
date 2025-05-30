@@ -250,6 +250,7 @@
     <link rel="stylesheet" href="./custom-buttons.css?v=1.0.2">
     <link rel="stylesheet" href="./header-enhancement.css?v=1.0.2">
     <link rel="stylesheet" href="./nav-gradient-pills.css?v=1.0.2">
+    <link rel="stylesheet" href="./home-search-fix.css?v=1.0.2">
     <link rel="icon" href="./assets/freeflix.ico?v=1.0.2" type="image/x-icon">
     <link rel="shortcut icon" href="./assets/freeflix.ico?v=1.0.2" type="image/x-icon">
     <title>FreeFlix - #1 Free Streaming & Download Platform for Movies, TV Shows, and Anime</title>
@@ -258,6 +259,30 @@
 </head>
 
 <body>
+    <!-- Banner container -->
+    <div id="banner-container">
+        <img id="banner" src="" alt="Featured movie or show banner" width="100%" height="auto" loading="lazy" />
+        <div id="details-container">
+            <h1 id="banner-title"></h1>
+            <div id="button-container">
+                <button id="play-button">
+                    <img style="width: 0.8rem; height: 0.8rem;" src="/assets/play.png" width="13" height="13" alt="Play button" loading="lazy" />
+                    <span>Play</span>
+                </button>
+                <button id="more-info">
+                    <img id="info-icon" src="/assets/info.png" width="13" height="13" alt="Info button" loading="lazy" />
+                    <span>More Information</span>
+                </button>
+            </div>
+        </div>
+        <div id="empty"></div>
+        <div id="banner-overlay"></div>
+
+        <!-- Banner navigation arrows -->
+        <button id="banner-prev" class="banner-nav-button">&#10094;</button>
+        <button id="banner-next" class="banner-nav-button">&#10095;</button>
+    </div>
+
     <!-- Header container -->
     <header class="header navbar">
         <div class="header-left">
@@ -300,32 +325,6 @@
 
     <!-- Mobile Navigation Overlay -->
     <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
-
-
-
-    <!-- Banner container -->
-    <div id="banner-container">
-        <img id="banner" src="" alt="Featured movie or show banner" width="100%" height="auto" loading="lazy" />
-        <div id="details-container">
-            <h1 id="banner-title"></h1>
-            <div id="button-container">
-                <button id="play-button">
-                    <img style="width: 0.8rem; height: 0.8rem;" src="/assets/play.png" width="13" height="13" alt="Play button" loading="lazy" />
-                    <span>Play</span>
-                </button>
-                <button id="more-info">
-                    <img id="info-icon" src="/assets/info.png" width="13" height="13" alt="Info button" loading="lazy" />
-                    <span>More Information</span>
-                </button>
-            </div>
-        </div>
-        <div id="empty"></div>
-        <div id="banner-overlay"></div>
-
-        <!-- Banner navigation arrows -->
-        <button id="banner-prev" class="banner-nav-button">&#10094;</button>
-        <button id="banner-next" class="banner-nav-button">&#10095;</button>
-    </div>
 
     <!-- Main content container for sections -->
     <div class="sections-container" style="max-width: 1400px; margin: 0 auto; padding: 2rem 1rem;">
