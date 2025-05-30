@@ -684,11 +684,60 @@
                 padding: 2rem 0;
             }
 
+            /* Mobile menu close button */
+            .mobile-menu-close {
+                position: absolute;
+                top: 1.5rem;
+                right: 1.5rem;
+                width: 44px;
+                height: 44px;
+                background: rgba(255, 255, 255, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                border-radius: 50%;
+                color: var(--text-primary);
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.3s ease;
+                backdrop-filter: blur(10px);
+                z-index: 1000;
+            }
+
+            .mobile-menu-close:hover {
+                background: rgba(255, 255, 255, 0.2);
+                border-color: rgba(255, 255, 255, 0.3);
+                transform: scale(1.05);
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            }
+
+            .mobile-menu-close:active {
+                transform: scale(0.95);
+            }
+
+            .mobile-menu-close svg {
+                transition: transform 0.2s ease;
+            }
+
+            .mobile-menu-close:hover svg {
+                transform: rotate(90deg);
+            }
+
+            /* Mobile menu content wrapper */
+            .mobile-menu-content {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                width: 100%;
+                padding-top: 2rem;
+            }
+
             .mobile-menu.active {
                 display: flex;
             }
 
-            .mobile-menu a {
+            .mobile-menu-content a {
                 color: var(--text-primary);
                 text-decoration: none;
                 font-size: 1.5rem;
@@ -702,7 +751,7 @@
                 border: 2px solid transparent;
             }
 
-            .mobile-menu a:hover {
+            .mobile-menu-content a:hover {
                 background: var(--gradient-2);
                 border-color: var(--primary);
                 transform: translateY(-2px);
@@ -1097,10 +1146,19 @@
 
         <!-- Mobile menu overlay -->
         <div class="mobile-menu" id="mobile-menu">
-            <a href="home.html">Home</a>
-            <a href="movies/index.html">Movies</a>
-            <a href="tvshows/index.html">TV Shows</a>
-            <a href="anime/index.html">Anime</a>
+            <!-- Close button -->
+            <button class="mobile-menu-close" id="mobile-menu-close">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+
+            <div class="mobile-menu-content">
+                <a href="home.html">Home</a>
+                <a href="movies/index.html">Movies</a>
+                <a href="tvshows/index.html">TV Shows</a>
+                <a href="anime/index.html">Anime</a>
+            </div>
         </div>
     </nav>
 
@@ -1328,36 +1386,58 @@
         document.addEventListener('DOMContentLoaded', function() {
             const mobileMenuBtn = document.getElementById('mobile-menu-btn');
             const mobileMenu = document.getElementById('mobile-menu');
+            const mobileMenuClose = document.getElementById('mobile-menu-close');
+
+            function closeMobileMenu() {
+                mobileMenuBtn.classList.remove('active');
+                mobileMenu.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            function openMobileMenu() {
+                mobileMenuBtn.classList.add('active');
+                mobileMenu.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
 
             if (mobileMenuBtn && mobileMenu) {
+                // Toggle menu when clicking hamburger button
                 mobileMenuBtn.addEventListener('click', function() {
-                    mobileMenuBtn.classList.toggle('active');
-                    mobileMenu.classList.toggle('active');
-
-                    // Prevent body scroll when menu is open
                     if (mobileMenu.classList.contains('active')) {
-                        document.body.style.overflow = 'hidden';
+                        closeMobileMenu();
                     } else {
-                        document.body.style.overflow = '';
+                        openMobileMenu();
                     }
                 });
+
+                // Close menu when clicking close button
+                if (mobileMenuClose) {
+                    mobileMenuClose.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        closeMobileMenu();
+                    });
+                }
 
                 // Close menu when clicking on a link
                 const mobileMenuLinks = mobileMenu.querySelectorAll('a');
                 mobileMenuLinks.forEach(link => {
                     link.addEventListener('click', function() {
-                        mobileMenuBtn.classList.remove('active');
-                        mobileMenu.classList.remove('active');
-                        document.body.style.overflow = '';
+                        closeMobileMenu();
                     });
                 });
 
-                // Close menu when clicking outside
+                // Close menu when clicking outside (but not on close button)
                 document.addEventListener('click', function(e) {
-                    if (!mobileMenuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
-                        mobileMenuBtn.classList.remove('active');
-                        mobileMenu.classList.remove('active');
-                        document.body.style.overflow = '';
+                    if (!mobileMenuBtn.contains(e.target) &&
+                        !mobileMenu.contains(e.target)) {
+                        closeMobileMenu();
+                    }
+                });
+
+                // Close menu with Escape key
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape' && mobileMenu.classList.contains('active')) {
+                        closeMobileMenu();
                     }
                 });
             }
