@@ -310,8 +310,8 @@ body {
 /* Mobile Menu Close Button */
 .mobile-menu-close {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 15px;
+  right: 15px;
   background: rgba(139, 92, 246, 0.15);
   border: 2px solid rgba(139, 92, 246, 0.3);
   border-radius: 12px;
@@ -443,7 +443,7 @@ body {
     align-items: center;
     justify-content: flex-start;
     height: auto; /* Changed from 100% to auto to allow content to expand */
-    padding: 10px 0;
+    padding: 70px 0 10px 0; /* Added top padding to avoid close button overlap */
     min-height: calc(100vh - 60px); /* Ensure minimum height but allow expansion */
   }
 
