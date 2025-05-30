@@ -519,6 +519,32 @@ input::-webkit-input-placeholder {
   transform: translateX(2px);
 }
 
+/* Mobile search results responsive styles */
+@media screen and (max-width: 768px) {
+  #searchResults {
+    top: 80px !important;
+    left: 50% !important;
+    width: 90% !important;
+    max-width: 400px !important;
+    margin: 0 !important;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  #searchResults {
+    top: 75px !important;
+    width: 95% !important;
+    max-width: none !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+  }
+
+  .movie-list {
+    padding: 10px;
+    font-size: 14px;
+  }
+}
+
 .search-item-thumbnail {
   width: 50px;
   height: 75px;
