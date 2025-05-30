@@ -171,25 +171,15 @@ input:focus {
     box-shadow: none !important;
 }
 
-/* FreeFlix Logo Styling - Purple background like in screenshot */
+/* FreeFlix Logo Styling - No background */
 #netflix-logo {
     width: 150px !important;
     height: 47px !important;
-    padding: 8px 12px !important;
-    background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%) !important;
-    border-radius: 8px !important;
-    filter: drop-shadow(0 2px 8px rgba(139, 92, 246, 0.4)) !important;
     transition: all 0.3s ease !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3) !important;
 }
 
 #netflix-logo:hover {
-    filter: drop-shadow(0 4px 12px rgba(139, 92, 246, 0.6)) !important;
     transform: translateY(-2px) !important;
-    box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4) !important;
 }
 
 /* WatchList Button - Purple aesthetic styling */
