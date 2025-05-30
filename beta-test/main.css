@@ -394,6 +394,7 @@ body {
   filter: drop-shadow(0 0 15px rgba(139, 92, 246, 0.5));
   transition: all 0.3s ease;
   margin: 0;
+  margin-left: 15px; /* Move logo to the right */
 }
 
 #netflix-logo:hover {
@@ -494,8 +495,8 @@ body {
 /* Landing Page Search Input Styling */
 .search-input {
   width: 100%;
-  padding: 16px 20px;
-  padding-right: 55px;
+  padding: 20px 24px;
+  padding-right: 56px;
   border: 2px solid rgba(139, 92, 246, 0.4);
   border-radius: 20px;
   background: rgba(26, 26, 27, 0.8);
@@ -549,12 +550,12 @@ input::-webkit-input-placeholder {
 /* Landing Page Search Button */
 .search-button {
   position: absolute;
-  right: 10px;
+  right: 8px;
   top: 50%;
   transform: translateY(-50%);
   background: var(--gradient-2);
   border: none;
-  padding: 8px;
+  padding: 10px;
   border-radius: 50%;
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -562,8 +563,8 @@ input::-webkit-input-placeholder {
   align-items: center;
   justify-content: center;
   z-index: 10;
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
 }
 
@@ -574,8 +575,8 @@ input::-webkit-input-placeholder {
 
 .search-button svg {
   color: white;
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   flex-shrink: 0;
 }
 
@@ -703,6 +704,18 @@ input::-webkit-input-placeholder {
   z-index: 1;
 }
 
+/* Header positioning over banner */
+.header.navbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background: rgba(12, 12, 13, 0.6);
+  backdrop-filter: blur(10px);
+  border-bottom: none;
+}
+
 /* Add proper spacing between banner and section headings */
 #banner-container {
     margin-bottom: 40px !important;
@@ -711,7 +724,7 @@ input::-webkit-input-placeholder {
 
 /* Add top margin for pages without banner */
 .sections-container {
-    margin-top: 120px !important; /* Account for header + nav menu height */
+    margin-top: 0px !important; /* No extra margin needed since banner is now at top */
 }
 
 #banner {
