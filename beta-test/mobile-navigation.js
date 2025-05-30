@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const mobileNavToggle = document.getElementById('mobileNavToggle');
     const navMenu = document.getElementById('navMenu');
     const mobileNavOverlay = document.getElementById('mobileNavOverlay');
+    const mobileMenuClose = document.getElementById('mobileMenuClose');
     const dropdownItems = document.querySelectorAll('.dropdown');
 
     // Toggle mobile navigation
@@ -53,6 +54,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (mobileNavOverlay) {
         mobileNavOverlay.addEventListener('click', closeMobileNav);
+    }
+
+    // Add event listener for mobile menu close button
+    if (mobileMenuClose) {
+        mobileMenuClose.addEventListener('click', closeMobileNav);
     }
 
     // Handle dropdown clicks on mobile
