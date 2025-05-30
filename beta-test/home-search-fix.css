@@ -173,8 +173,8 @@ input:focus {
 
 /* FreeFlix Logo Styling - No background */
 #netflix-logo {
-    width: 150px !important;
-    height: 47px !important;
+    width: 180px;
+    height: 60px;
     filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3)) drop-shadow(0 0 15px rgba(139, 92, 246, 0.4));
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
