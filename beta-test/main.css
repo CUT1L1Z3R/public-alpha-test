@@ -1568,7 +1568,7 @@ input::-webkit-input-placeholder {
   #banner-container {
     width: 100vw;
     height: 60vh;
-    margin-top: 120px; /* Adjusted for new header + nav heights */
+    margin-top: 25px; /* Ultra-tight spacing for mobile - creates modern, immersive layout with minimal gap */
     margin-bottom: 15px !important;
     position: relative;
   }
@@ -3216,7 +3216,7 @@ html::-webkit-scrollbar-thumb:hover {
   #banner-container {
     width: 100vw;
     height: 60vh;
-    margin-top: 120px; /* Adjusted for new header + nav heights */
+    margin-top: 25px; /* Ultra-tight spacing for mobile - creates modern, immersive layout with minimal gap */
     margin-bottom: 15px !important;
     position: relative;
   }
