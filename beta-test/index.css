@@ -307,6 +307,105 @@ body {
   transform: rotate(-45deg) translate(7px, -6px);
 }
 
+/* Mobile Menu Close Button */
+.mobile-menu-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(139, 92, 246, 0.15);
+  border: 2px solid rgba(139, 92, 246, 0.3);
+  border-radius: 12px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+  z-index: 1004;
+  opacity: 0;
+  transform: scale(0.8) rotate(90deg);
+  pointer-events: none;
+}
+
+.mobile-menu-close svg {
+  color: var(--primary);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.5));
+}
+
+.mobile-menu-close:hover {
+  background: rgba(139, 92, 246, 0.25);
+  border-color: rgba(139, 92, 246, 0.5);
+  transform: scale(1.05) rotate(0deg);
+  box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+}
+
+.mobile-menu-close:hover svg {
+  color: white;
+  transform: rotate(90deg);
+  filter: drop-shadow(0 0 12px rgba(139, 92, 246, 0.8));
+}
+
+.mobile-menu-close:active {
+  transform: scale(0.95) rotate(0deg);
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.6);
+}
+
+/* Show close button when mobile menu is active */
+.nav-menu.active .mobile-menu-close {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+  pointer-events: all;
+  animation: closeButtonFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes closeButtonFadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) rotate(90deg);
+  }
+  50% {
+    transform: scale(1.1) rotate(45deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+/* Responsive adjustments for very small screens */
+@media screen and (max-width: 480px) {
+  .mobile-menu-close {
+    top: 15px;
+    right: 15px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .mobile-menu-close svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* Additional visual enhancement */
+@media (prefers-reduced-motion: no-preference) {
+  .mobile-menu-close:hover {
+    animation: pulseGlow 2s infinite;
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+  }
+  50% {
+    box-shadow: 0 8px 35px rgba(139, 92, 246, 0.6);
+  }
+}
+
 /* Mobile dropdown adjustments */
 @media screen and (max-width: 768px) {
   .mobile-nav-toggle {
@@ -328,6 +427,11 @@ body {
     z-index: 1002; /* Increased z-index to ensure it's above other elements */
     overflow-y: auto; /* Allow vertical scrolling if content is too tall */
     overflow-x: hidden; /* Hide horizontal overflow */
+  }
+
+  /* Enhanced mobile close button positioning in mobile view */
+  .nav-menu .mobile-menu-close {
+    display: flex;
   }
 
   .nav-menu.active {
