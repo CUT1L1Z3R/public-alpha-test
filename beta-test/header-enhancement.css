@@ -1,0 +1,266 @@
+/* Clean & Professional Header Enhancement - Netflix Style */
+
+/* Override existing header styles with clean, minimal design */
+.header {
+  width: 100vw;
+  height: 80px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  /* Clean dark transparency instead of colorful gradients */
+  background: rgba(0, 0, 0, 0.75);
+
+  position: fixed;
+  top: 0;
+  z-index: 1002;
+
+  /* Minimal blur for elegance */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  /* Smooth transitions */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Subtle border - almost invisible */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+  /* Clean shadow - minimal and professional */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+
+  padding: 0 2rem;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Subtle hover effect - increase opacity slightly */
+.header:hover {
+  background: rgba(0, 0, 0, 0.85);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Enhanced logo styling for better integration */
+#netflix-logo {
+  width: 150px;
+  height: 47px;
+  filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.3));
+  transition: filter 0.3s ease;
+}
+
+#netflix-logo:hover {
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
+}
+
+/* Clean search container styling */
+.search-container {
+  position: relative;
+  max-width: 400px;
+  flex: 1;
+  margin: 0 2rem;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px 45px 10px 16px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  color: #ffffff;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.2);
+  outline: none;
+}
+
+.search-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.search-button {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.search-button:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Clean watchlist button */
+.watchList-Btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.watchList-Btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+/* Mobile navigation toggle - clean styling */
+.mobile-nav-toggle {
+  display: none;
+  flex-direction: column;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.mobile-nav-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.mobile-nav-toggle span {
+  width: 20px;
+  height: 2px;
+  background: #ffffff;
+  margin: 3px 0;
+  transition: all 0.3s ease;
+  border-radius: 1px;
+}
+
+/* Navigation menu enhancement */
+.nav-menu {
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.nav-list {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.nav-item a {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 0;
+  transition: color 0.3s ease;
+  position: relative;
+}
+
+.nav-item a:hover,
+.nav-item.active a {
+  color: #ffffff;
+}
+
+.nav-item.active a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #ffffff;
+  border-radius: 1px;
+}
+
+/* Mobile responsive adjustments */
+@media screen and (max-width: 768px) {
+  .header {
+    padding: 0 1rem;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  #netflix-logo {
+    width: 140px;
+    height: 45px;
+    order: 1;
+  }
+
+  .mobile-nav-toggle {
+    display: flex;
+    order: 0;
+    margin-right: 0.5rem;
+  }
+
+  .search-container {
+    order: 3;
+    margin: 0;
+    max-width: none;
+    flex: none;
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  .watchList-Btn {
+    order: 2;
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .header {
+    height: auto;
+    min-height: 60px;
+    flex-wrap: wrap;
+    padding: 0.75rem;
+  }
+
+  #netflix-logo {
+    width: 120px;
+    height: 38px;
+  }
+
+  .search-container {
+    width: 100%;
+    margin-top: 0.75rem;
+    order: 3;
+  }
+}
+
+/* Ensure seamless blending with content */
+.header + * {
+  padding-top: 80px;
+}
+
+/* Clean scrollbar styling for search results */
+#searchResults::-webkit-scrollbar {
+  width: 6px;
+}
+
+#searchResults::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+}
+
+#searchResults::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+#searchResults::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
