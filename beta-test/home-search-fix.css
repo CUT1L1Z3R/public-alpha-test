@@ -175,11 +175,13 @@ input:focus {
 #netflix-logo {
     width: 150px !important;
     height: 47px !important;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));
     transition: all 0.3s ease !important;
 }
 
 #netflix-logo:hover {
     transform: translateY(-2px) !important;
+    filter: drop-shadow(0 4px 12px rgba(139, 92, 246, 0.3));
 }
 
 /* WatchList Button - Purple aesthetic styling */
