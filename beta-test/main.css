@@ -463,8 +463,8 @@ input::-webkit-input-placeholder {
   align-items: center;
   justify-content: center;
   z-index: 10;
-  width: 36px;
-  height: 36px;
+  width: 42px;
+  height: 42px;
 }
 
 .search-button:hover {
@@ -474,8 +474,8 @@ input::-webkit-input-placeholder {
 
 .search-button svg {
   color: white;
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   flex-shrink: 0;
 }
 
