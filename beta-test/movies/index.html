@@ -73,6 +73,11 @@
 <body>
     <!-- Header container -->
     <header class="header navbar">
+        <button class="mobile-nav-toggle" id="mobileNavToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
         <img src="/assets/freeflix.png" alt="FreeFlix logo" id="netflix-logo" width="150" height="47" loading="eager" fetchpriority="high">
         <div class="input-container search-container">
             <input type="text" id="searchInput" class="search-input" placeholder="Search movies...">
@@ -87,8 +92,11 @@
         <button id="goToWatchlist" class="watchList-Btn cta-button">WatchList</button>
     </header>
 
+    <!-- Mobile Navigation Overlay -->
+    <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+
     <!-- Navigation Menu -->
-    <nav class="nav-menu">
+    <nav class="nav-menu" id="navMenu">
         <ul class="nav-list">
             <li class="nav-item"><a href="../" data-section="all">All</a></li>
             <li class="nav-item active"><a href="index.html" data-section="movies">Movies</a></li>
@@ -118,10 +126,16 @@
                         <a href="../anime/index.html?genre=fantasy">Fantasy</a>
                         <a href="../anime/index.html?genre=romance">Romance</a>
                     </div>
-                    <div class="dropdown-footer">
 
-                    </div>
                 </div>
+            </li>
+            <li class="nav-item mobile-watchlist">
+                <a href="javascript:void(0)" id="mobileWatchlistBtn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7z"/>
+                    </svg>
+                    My Watchlist
+                </a>
             </li>
         </ul>
     </nav>
@@ -293,6 +307,7 @@
     <!-- Load script at the end for better performance -->
     <script src="../navigation-fix.js?v=1.0.1"></script>
     <script src="../custom-navigation.js?v=1.0.1"></script>
+    <script src="../mobile-navigation.js?v=1.0.2"></script>
     <script src="movies.js"></script>
 </body>
 </html>
