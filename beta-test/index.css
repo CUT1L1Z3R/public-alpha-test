@@ -60,8 +60,8 @@ body {
   }
 
   #netflix-logo {
-    width: 120px;
-    height: 40px;
+    width: 140px;
+    height: 45px;
     order: 1;
   }
 
@@ -83,16 +83,18 @@ body {
   }
 
   .search-input {
-    padding: 12px 16px;
+    padding: 14px 16px;
     padding-right: 50px;
     font-size: 14px;
-    border-radius: 20px;
+    border-radius: 22px;
+    height: 48px;
+    box-sizing: border-box;
   }
 
   .search-button {
     right: 8px;
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
   }
 
   .search-button svg {
@@ -112,8 +114,8 @@ body {
   }
 
   #netflix-logo {
-    width: 100px;
-    height: 35px;
+    width: 115px;
+    height: 40px;
   }
 
   .mobile-nav-toggle {
@@ -131,15 +133,17 @@ body {
 
   .search-input {
     font-size: 13px;
-    padding: 10px 14px;
+    padding: 12px 14px;
     padding-right: 45px;
-    border-radius: 18px;
+    border-radius: 20px;
+    height: 44px;
+    box-sizing: border-box;
   }
 
   .search-button {
     right: 6px;
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
   }
 
   .search-button svg {
