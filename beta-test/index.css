@@ -113,7 +113,7 @@ body {
 
   .search-input {
     padding: 14px 16px;
-    padding-right: 50px;
+    padding-right: 48px;
     font-size: 14px;
     border-radius: 22px;
     height: 48px;
@@ -121,7 +121,7 @@ body {
   }
 
   .search-button {
-    right: 8px;
+    right: 6px;
     width: 36px;
     height: 36px;
   }
@@ -163,14 +163,14 @@ body {
   .search-input {
     font-size: 13px;
     padding: 12px 14px;
-    padding-right: 45px;
+    padding-right: 42px;
     border-radius: 20px;
     height: 44px;
     box-sizing: border-box;
   }
 
   .search-button {
-    right: 6px;
+    right: 5px;
     width: 32px;
     height: 32px;
   }
