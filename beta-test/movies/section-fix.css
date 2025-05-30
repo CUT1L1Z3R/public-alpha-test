@@ -160,11 +160,6 @@ body {
 
 /* Mobile dropdown adjustments */
 @media screen and (max-width: 768px) {
-  /* Hide watchlist button on mobile */
-  .watchList-Btn {
-    display: none !important;
-  }
-
   .dropdown-content {
     min-width: 90vw;
     left: 0;
@@ -186,7 +181,7 @@ body {
 }
 
 /**
- * TV Shows section-specific fixes for FreeFlix
+ * Movie section specific fixes
  * Ensures correct button placement and portrait banner navigation
  */
 
@@ -269,8 +264,7 @@ body {
   background-color: #a428e6;
 }
 
-/* Override any conflicting styles and ensure navigation buttons work correctly */
-.tv-section .navigation-button,
+/* Fix for navigation buttons visibility and positioning */
 .movie-section .navigation-button {
   height: 170px !important;
   width: 40px;
@@ -280,110 +274,50 @@ body {
   z-index: 15 !important;
   opacity: 0;
   transition: opacity 0.3s ease-in-out, background-color 0.3s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.8rem;
-  color: #8d16c9;
-  background-color: rgba(0,0,0,0.3);
-  border-radius: 5px;
-  cursor: pointer;
 }
 
-.tv-section .movie-container:hover .navigation-button,
-.movie-section .movie-container:hover .navigation-button {
-  opacity: 0.8 !important;
-}
-
-.tv-section .navigation-button:hover,
-.movie-section .navigation-button:hover {
-  opacity: 1 !important;
-  background-color: rgba(0,0,0,0.5);
-}
-
-.tv-section .previous,
 .movie-section .previous {
   left: 0;
 }
 
-.tv-section .next,
 .movie-section .next {
   right: 0;
 }
 
-/* Netflix Originals/Portrait container navigation buttons */
-.netflix-previous, .netflix-next {
+/* Special height for Netflix/portrait containers */
+.movie-section .netflix-previous,
+.movie-section .netflix-next {
   height: 340px !important;
   z-index: 15;
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  opacity: 0;
-  transition: opacity 0.3s, background-color 0.3s;
-  background-color: rgba(0,0,0,0.3);
-  color: #8d16c9;
-  border-radius: 5px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.8rem;
-  width: 40px;
 }
 
-.netflix-previous {
-  left: 0;
-}
-
-.netflix-next {
-  right: 0;
-}
-
-/* Ensure buttons are always visible on hover */
-.netflix-container:hover + .netflix-next,
-.netflix-container:hover ~ .netflix-previous,
-.netflix-previous:hover,
-.netflix-next:hover,
-.movie-container:hover .netflix-previous,
-.movie-container:hover .netflix-next {
+.movie-section .movie-container:hover .navigation-button {
   opacity: 0.8 !important;
 }
 
-.netflix-previous:hover,
-.netflix-next:hover {
+.movie-section .navigation-button:hover {
   opacity: 1 !important;
   background-color: rgba(0,0,0,0.5);
 }
 
 /* Ensure containers have proper sizing */
-.tv-section .movie-container,
-.movie-section .movie-container,
-.movie-container {
+.movie-section .movie-container {
   position: relative;
   overflow: visible;
   margin-bottom: 20px;
+  padding-left: 0px;
+  padding-right: 0px;
 }
 
-/* Ensure navigation buttons are properly aligned */
-.navigation-button {
-  z-index: 15;
+/* Consistent item sizing */
+.movie-section .movie-item {
+  width: 290px;
+  height: 170px;
 }
 
-.previous {
-  left: 0;
-}
-
-.next {
-  right: 0;
-}
-
-/* Make sure Netflix Originals buttons are visible when container is hovered */
-.movie-container:hover .netflix-previous,
-.movie-container:hover .netflix-next {
-  opacity: 0.8 !important;
-}
-
-.tv-section .movies-box,
 .movie-section .movies-box {
   min-height: 190px;
   overflow-x: auto;
@@ -391,82 +325,78 @@ body {
   -ms-overflow-style: none; /* IE and Edge */
 }
 
-.tv-section .movies-box::-webkit-scrollbar,
 .movie-section .movies-box::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera */
 }
 
-/* Consistent item sizing */
-.tv-section .movie-item,
-.movie-section .movie-item {
-  width: 290px;
-  height: 170px;
-}
-
-/* Additional fix for mobile view */
+/* Mobile specific fixes */
 @media (max-width: 768px) {
-  .tv-section .navigation-button,
-  .movie-section .navigation-button {
-    width: 35px;
-    height: 150px !important;
-    opacity: 0.7;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 15 !important;
-    font-size: 1.5rem;
+  /* Hide watchlist button on mobile */
+  .watchList-Btn {
+    display: none !important;
   }
 
-  /* Ensure Netflix Originals navigation buttons are visible and positioned correctly in mobile */
-  .netflix-previous, .netflix-next {
+  /* Adjusted size and position for mobile navigation buttons */
+  .movie-section .navigation-button {
+    width: 32px;
+    height: 150px !important;
+    font-size: 1.5rem;
+    opacity: 0.7;
+    z-index: 15 !important;
+  }
+
+  /* Netflix Originals fix for portrait containers in mobile */
+  .movie-section .netflix-previous,
+  .movie-section .netflix-next {
     height: 260px !important;
     width: 32px;
     top: 50%;
     z-index: 15;
     opacity: 0.7;
+    position: absolute;
     transform: translateY(-50%);
-    font-size: 1.5rem;
   }
 
-  .netflix-previous {
+  .movie-section .netflix-previous {
     left: 0;
   }
 
-  .netflix-next {
+  .movie-section .netflix-next {
     right: 0;
   }
 
-  /* Extra space for movie containers so buttons aren't cut off */
-  .tv-section .movie-container,
-  .movie-section .movie-container,
-  .movie-container {
+  /* Proper spacing around movie containers for mobile */
+  .movie-section .movie-container {
     padding-left: 20px;
     padding-right: 20px;
     margin-left: 0;
     margin-right: 0;
+    position: relative;
   }
 }
 
 @media (max-width: 480px) {
-  .tv-section .navigation-button,
   .movie-section .navigation-button {
     width: 30px;
     height: 130px !important;
     font-size: 1.2rem;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 15 !important;
   }
 
-  .netflix-previous, .netflix-next {
+  .movie-section .netflix-previous,
+  .movie-section .netflix-next {
     height: 260px !important;
     width: 30px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 1.2rem;
   }
 }
 
-/* Style fix for active navigation items */
-.nav-item.active {
-  background-color: rgb(141, 22, 201);
+/* Ensure navigation buttons are visible on touch devices */
+@media (hover: none) {
+  .movie-section .navigation-button {
+    opacity: 0.6;
+  }
+
+  .movie-section .netflix-previous,
+  .movie-section .netflix-next {
+    opacity: 0.7;
+  }
 }
