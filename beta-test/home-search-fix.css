@@ -206,7 +206,7 @@ input:focus {
     background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%) !important;
     transform: translateY(-2px) !important;
     box-shadow: 0 6px 20px rgba(139, 92, 246, 0.5) !important;
-    filter: brightness(1.1) !important;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3)) drop-shadow(0 0 15px rgba(139, 92, 246, 0.4));
 }
 
 .watchList-Btn:active,
