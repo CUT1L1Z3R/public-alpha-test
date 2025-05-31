@@ -498,6 +498,10 @@ body {
   flex: 1;
 }
 
+.input-container {
+  position: relative;
+}
+
 #banner-overlay {
   position: absolute;
   top: 0;
