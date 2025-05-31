@@ -196,7 +196,7 @@ body {
   top: 60px;
   left: 0%; /* Center perfectly */
   right: 10
-  transform: 0; /* Center perfectly */
+  transform: none; /* Center perfectly */
   width: 500px; /* Match max-width of input container */
   background-color: #141414;
   color: white;
