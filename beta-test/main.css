@@ -515,7 +515,7 @@ body {
 
 /* Landing Page Search Input Styling */
 .search-input {
-  width: 100%;
+  width: 270px;
   padding: 16px 20px;
   padding-right: 55px;
   border: 2px solid rgba(139, 92, 246, 0.4);
