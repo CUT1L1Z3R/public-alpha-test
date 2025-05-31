@@ -611,6 +611,7 @@ input::-webkit-input-placeholder {
   z-index: 1001 !important;
   max-height: 80vh !important;
   overflow-y: auto !important;
+  overflow-x: hidden !important;
   border: 1px solid rgba(139, 92, 246, 0.3) !important;
   backdrop-filter: blur(20px) !important;
 }
@@ -630,6 +631,8 @@ input::-webkit-input-placeholder {
   background-color: rgba(26, 26, 27, 0.6);
   cursor: pointer;
   transition: all 0.3s ease;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .movie-list:hover {
