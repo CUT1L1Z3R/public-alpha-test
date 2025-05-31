@@ -599,11 +599,11 @@ input::-webkit-input-placeholder {
 
 /* Search Results - Updated with Landing Page Styling */
 #searchResults {
-  position: fixed !important;
-  top: 90px !important; /* Updated for new header height */
-  left: 50% !important;
-  transform: translateX(-50%) !important;
-  width: 500px !important;
+  position: absolute !important;
+  top: 100% !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
   background: rgba(26, 26, 27, 0.95) !important;
   color: var(--text-primary) !important;
   border-radius: 12px !important;
@@ -613,6 +613,7 @@ input::-webkit-input-placeholder {
   overflow-y: auto !important;
   border: 1px solid rgba(139, 92, 246, 0.3) !important;
   backdrop-filter: blur(20px) !important;
+  margin-top: 8px !important;
 }
 
 #searchResults p {
