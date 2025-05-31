@@ -427,6 +427,8 @@ body {
     z-index: 1002; /* Increased z-index to ensure it's above other elements */
     overflow-y: auto; /* Allow vertical scrolling if content is too tall */
     overflow-x: hidden; /* Hide horizontal overflow */
+    visibility: visible;
+    opacity: 1;
   }
 
   /* Enhanced mobile close button positioning in mobile view */
@@ -436,6 +438,21 @@ body {
 
   .nav-menu.active {
     left: 0;
+    visibility: visible;
+    opacity: 1;
+  }
+
+  /* Ensure navigation items are visible when menu is active */
+  .nav-menu.active .nav-list {
+    display: flex;
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .nav-menu.active .nav-item {
+    display: block;
+    visibility: visible;
+    opacity: 1;
   }
 
   .nav-list {
@@ -445,6 +462,9 @@ body {
     height: auto; /* Changed from 100% to auto to allow content to expand */
     padding: 70px 0 10px 0; /* Added top padding to avoid close button overlap */
     min-height: calc(100vh - 60px); /* Ensure minimum height but allow expansion */
+    display: flex;
+    visibility: visible;
+    opacity: 1;
   }
 
   .nav-item {
@@ -456,6 +476,9 @@ body {
     border: 1px solid rgba(139, 92, 246, 0.2);
     backdrop-filter: blur(10px);
     transition: all 0.3s ease;
+    display: block;
+    visibility: visible;
+    opacity: 1;
   }
 
   .nav-item:hover {
