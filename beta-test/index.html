@@ -1382,7 +1382,7 @@
                                 cursor: pointer;
                                 border: 1px solid rgba(139, 92, 246, 0.3);
                             " onmouseover="this.style.transform='translateY(-10px)'" onmouseout="this.style.transform='translateY(0)'"
-                               onclick="openMovieDetails(${movie.id}, 'movie')"
+                               onclick="openMovieDetails(${movie.id}, 'movie')">
                                 <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}"
                                      alt="${movie.title}"
                                      style="width: 100%; height: 300px; object-fit: cover;"
@@ -1416,7 +1416,7 @@
             closeSearchResults();
 
             // Redirect to movie details page with the TMDB ID
-            const url = `movie_details/movie_details.html?id=${movieId}&type=${mediaType}`;
+            const url = `movie_details/movie_details.html?id=${movieId}&media=${mediaType}`;
             window.open(url, '_blank');
         };
 
