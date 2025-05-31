@@ -3,24 +3,6 @@ body {
   background: var(--gradient-bg);
 }
 
-/* Navigation menu enhancement for TV shows page - Completely transparent */
-.nav-menu {
-  width: 100%;
-  background: transparent;
-  position: fixed;
-  top: 90px;
-  z-index: 999;
-  padding: 12px 0;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  border: none;
-  box-shadow: none;
-}
-
-/* Enhanced nav-menu hover effect for TV shows - keep transparent */
-.nav-menu:hover {
-  background: transparent;
-}
-
 /* Mobile Menu Close Button - Enhanced for Section Pages */
 .mobile-menu-close {
   position: absolute;
