@@ -699,16 +699,13 @@
                 transition: all 0.3s ease;
                 width: 80%;
                 text-align: center;
-                border: 2px solid rgba(139, 92, 246, 0.4);
-                background: rgba(26, 26, 27, 0.3);
-                backdrop-filter: blur(10px);
+                border: 2px solid transparent;
             }
 
             .mobile-menu a:hover {
                 background: var(--gradient-2);
                 border-color: var(--primary);
                 transform: translateY(-2px);
-                box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
             }
 
             .hero {
@@ -1305,20 +1302,11 @@
             }
         });
 
-        document.querySelector('.search-button').addEventListener('click', function(e) {
-            e.preventDefault();
+        document.querySelector('.search-button').addEventListener('click', function() {
             const searchInput = document.querySelector('.search-input');
             const searchTerm = searchInput.value.trim();
             if (searchTerm) {
                 window.location.href = `home.html?search=${encodeURIComponent(searchTerm)}`;
-            } else {
-                // Provide visual feedback if search is empty
-                searchInput.style.borderColor = 'rgba(239, 68, 68, 0.6)';
-                searchInput.setAttribute('placeholder', 'Please enter search terms...');
-                setTimeout(() => {
-                    searchInput.style.borderColor = 'rgba(139, 92, 246, 0.3)';
-                    searchInput.setAttribute('placeholder', 'Enter keywords...');
-                }, 2000);
             }
         });
 
