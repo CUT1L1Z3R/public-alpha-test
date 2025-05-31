@@ -1,0 +1,41 @@
+/* SEARCH ALIGNMENT FIX - Simple override for all pages */
+
+/* Make search containers relative positioned */
+.input-container,
+.search-container {
+  position: relative !important;
+}
+
+/* Fix search results positioning to align with search input */
+#searchResults {
+  position: absolute !important;
+  top: calc(100% + 8px) !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  max-width: none !important;
+  transform: none !important;
+  z-index: 1001 !important;
+  margin: 0 !important;
+}
+
+/* Mobile responsive adjustments */
+@media screen and (max-width: 768px) {
+  #searchResults {
+    top: calc(100% + 5px) !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    transform: none !important;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  #searchResults {
+    top: calc(100% + 5px) !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    transform: none !important;
+  }
+}
