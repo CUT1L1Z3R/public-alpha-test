@@ -11,7 +11,7 @@
   }
 
   .search-input {
-    width: 50%;
+    width: calc(100% - 42px);
     height: 46px;
     padding: 12px 18px;
     padding-right: 55px; /* Space for search button */
@@ -45,7 +45,7 @@
 
   .search-button {
     position: absolute;
-    right: 6px;
+    right: 3px;
     top: 50%;
     transform: translateY(-50%);
     width: 36px;
