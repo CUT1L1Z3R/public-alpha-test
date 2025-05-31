@@ -18,24 +18,3 @@
   z-index: 1001 !important;
   margin: 0 !important;
 }
-
-/* Mobile responsive adjustments */
-@media screen and (max-width: 768px) {
-  #searchResults {
-    top: calc(100% + 5px) !important;
-    left: 0 !important;
-    right: 0 !important;
-    width: 100% !important;
-    transform: none !important;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  #searchResults {
-    top: calc(100% + 5px) !important;
-    left: 0 !important;
-    right: 0 !important;
-    width: 100% !important;
-    transform: none !important;
-  }
-}
