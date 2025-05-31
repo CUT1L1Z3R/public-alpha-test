@@ -40,9 +40,9 @@ body {
   justify-content: space-between;
   align-items: center;
   background: linear-gradient(135deg,
-    rgba(12, 12, 13, 0.85) 0%,
-    rgba(26, 26, 27, 0.8) 25%,
-    rgba(45, 45, 48, 0.75) 50%,
+    rgba(12, 12, 13, 0.95) 0%,
+    rgba(26, 26, 27, 0.9) 25%,
+    rgba(45, 45, 48, 0.85) 50%,
     rgba(139, 92, 246, 0.2) 75%,
     rgba(236, 72, 153, 0.15) 100%);
   position: fixed;
@@ -52,9 +52,9 @@ body {
   -webkit-backdrop-filter: blur(30px) saturate(1.8);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   border-bottom: none;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3),
-              0 4px 16px rgba(139, 92, 246, 0.1),
-              inset 0 1px 0 rgba(255, 255, 255, 0.1);
+ box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4),
+              0 6px 20px rgba(139, 92, 246, 0.2),
+              inset 0 1px 0 rgba(255, 255, 255, 0.15);
   padding: 0 2rem;
   max-width: 100%;
   box-sizing: border-box;
