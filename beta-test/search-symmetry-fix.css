@@ -1,0 +1,154 @@
+/* Search Symmetry Fix - Ensures search input and search results have matching widths */
+
+/* Desktop search container styles */
+@media screen and (min-width: 769px) {
+  .search-container,
+  .input-container {
+    position: relative;
+    width: 400px; /* Set fixed width for consistency */
+    max-width: none;
+    margin: 0 auto;
+  }
+
+  .search-input {
+    width: 100%;
+    height: 50px;
+    padding: 12px 20px;
+    padding-right: 60px; /* Space for search button */
+    background: rgba(45, 45, 48, 0.8);
+    border: 2px solid rgba(139, 92, 246, 0.3);
+    border-radius: 25px;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    outline: none;
+    backdrop-filter: blur(20px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-sizing: border-box;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+
+  .search-input::placeholder {
+    color: rgba(229, 231, 235, 0.7);
+    font-weight: 500;
+  }
+
+  .search-input:focus {
+    border-color: rgba(139, 92, 246, 0.8);
+    background: rgba(45, 45, 48, 0.9);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2),
+                0 8px 30px rgba(139, 92, 246, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    transform: translateY(-1px);
+  }
+
+  .search-button {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+  }
+
+  .search-button:hover {
+    transform: translateY(-50%) scale(1.05);
+    box-shadow: 0 6px 25px rgba(139, 92, 246, 0.5);
+    background: linear-gradient(135deg, #a855f7 0%, #f472b6 100%);
+  }
+
+  .search-button:active {
+    transform: translateY(-50%) scale(0.95);
+  }
+
+  .search-button svg {
+    width: 20px;
+    height: 20px;
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.3));
+  }
+}
+
+/* Fix search results to match search input width */
+#searchResults {
+  position: absolute !important;
+  top: 60px !important; /* Position below search input */
+  left: 0 !important;
+  transform: none !important;
+  width: 100% !important; /* Match parent container width */
+  background-color: rgba(20, 20, 23, 0.95) !important;
+  color: white !important;
+  border-radius: 15px !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6),
+              0 8px 32px rgba(139, 92, 246, 0.2) !important;
+  z-index: 1001 !important;
+  max-height: 70vh !important;
+  overflow-y: auto !important;
+  border: 2px solid rgba(139, 92, 246, 0.3) !important;
+  margin-top: 0 !important;
+  backdrop-filter: blur(30px) !important;
+}
+
+/* Ensure search results items are properly styled */
+.movie-list {
+  padding: 15px;
+  border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+  display: flex;
+  align-items: center;
+  background-color: rgba(26, 26, 27, 0.8);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.movie-list:hover {
+  background-color: rgba(139, 92, 246, 0.1);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(139, 92, 246, 0.2);
+}
+
+.movie-list:last-child {
+  border-bottom: none;
+  border-radius: 0 0 15px 15px;
+}
+
+.movie-list:first-child {
+  border-radius: 15px 15px 0 0;
+}
+
+/* Mobile responsiveness */
+@media screen and (max-width: 768px) {
+  .search-container,
+  .input-container {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    flex: 1;
+  }
+
+  #searchResults {
+    width: 90% !important;
+    left: 5% !important;
+    max-width: 350px !important;
+    top: 55px !important;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  #searchResults {
+    width: 85% !important;
+    left: 7.5% !important;
+    max-width: 320px !important;
+    top: 50px !important;
+  }
+}
