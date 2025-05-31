@@ -3,37 +3,50 @@
  * Ensures consistent search results positioning across all pages
  */
 
-/* Search results container */
+/* Search results container - will be overridden by search-symmetry-fix.css for desktop */
 #searchResults {
   position: absolute !important;
-  top: 45px !important; /* Reduced from previous value to be closer to search button */
-  left: 50% !important;
-  transform: translateX(-50%) !important;
-  width: 300px !important;
-  background-color: #141414 !important;
+  top: 60px !important;
+  left: 0 !important;
+  transform: none !important;
+  width: 100% !important;
+  background-color: rgba(20, 20, 23, 0.95) !important;
   color: white !important;
-  border-radius: 5px !important;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5) !important;
-  z-index: 1001 !important; /* Increased z-index to ensure it's on top */
-  max-height: 80vh !important;
+  border-radius: 15px !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 8px 32px rgba(139, 92, 246, 0.2) !important;
+  z-index: 1001 !important;
+  max-height: 70vh !important;
   overflow-y: auto !important;
-  border: 1px solid #8d16c9 !important;
-  margin-top: 0 !important; /* Removed margin to position exactly */
+  border: 2px solid rgba(139, 92, 246, 0.3) !important;
+  margin-top: 0 !important;
+  backdrop-filter: blur(30px) !important;
 }
 
 /* Search results items */
 .movie-list {
-  padding: 10px;
-  border-bottom: 1px solid #333;
+  padding: 15px;
+  border-bottom: 1px solid rgba(139, 92, 246, 0.2);
   display: flex;
   align-items: center;
-  background-color: #1a1a1a;
+  background-color: rgba(26, 26, 27, 0.8);
   cursor: pointer;
   position: relative;
+  transition: all 0.3s ease;
 }
 
 .movie-list:hover {
-  background-color: #2a2a2a;
+  background-color: rgba(139, 92, 246, 0.1);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(139, 92, 246, 0.2);
+}
+
+.movie-list:last-child {
+  border-bottom: none;
+  border-radius: 0 0 15px 15px;
+}
+
+.movie-list:first-child {
+  border-radius: 15px 15px 0 0;
 }
 
 /* Custom styles for search result items */
@@ -69,20 +82,25 @@
 }
 
 .watchListBtn {
-  background: linear-gradient(135deg, #a710e0 0%, #8a14ca 100%);
+  background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
   color: white;
   border: none;
   border-radius: 20px;
-  padding: 6px 12px;
+  padding: 8px 16px;
   font-size: 12px;
   cursor: pointer;
   margin-left: 10px;
   white-space: nowrap;
   min-width: 100px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
 }
 
 .watchListBtn:hover {
-  background: linear-gradient(135deg, #8a14ca 0%, #a710e0 100%);
+  background: linear-gradient(135deg, #a855f7 0%, #f472b6 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(139, 92, 246, 0.5);
 }
 
 #searchResults p {
