@@ -194,8 +194,9 @@ body {
 #searchResults {
   position: absolute;
   top: 60px;
-  left: 10%; /* Center perfectly */
-  transform: translateX(-50%); /* Center perfectly */
+  left: 0%; /* Center perfectly */
+  right: 10
+  transform: 0; /* Center perfectly */
   width: 500px; /* Match max-width of input container */
   background-color: #141414;
   color: white;
