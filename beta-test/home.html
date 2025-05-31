@@ -248,9 +248,6 @@
     <link rel="stylesheet" href="./main.css?v=1.0.2">
     <link rel="stylesheet" href="./index.css?v=1.0.2">
     <link rel="stylesheet" href="./custom-buttons.css?v=1.0.2">
-    <link rel="stylesheet" href="./header-enhancement.css?v=1.0.2">
-    <link rel="stylesheet" href="./nav-gradient-pills.css?v=1.0.2">
-    <link rel="stylesheet" href="./home-search-fix.css?v=1.0.2">
     <link rel="icon" href="./assets/freeflix.ico?v=1.0.2" type="image/x-icon">
     <link rel="shortcut icon" href="./assets/freeflix.ico?v=1.0.2" type="image/x-icon">
     <title>FreeFlix - #1 Free Streaming & Download Platform for Movies, TV Shows, and Anime</title>
@@ -259,6 +256,82 @@
 </head>
 
 <body>
+    <!-- Header container -->
+    <header class="header navbar">
+        <button class="mobile-nav-toggle" id="mobileNavToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <img src="/assets/freeflix.png" alt="FreeFlix logo" id="netflix-logo" width="150" height="47" loading="eager" fetchpriority="high">
+        <div class="input-container search-container">
+            <input type="text" id="searchInput" class="search-input" placeholder="Search movies...">
+            <button class="search-button">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                </svg>
+            </button>
+            <div id="searchResults"></div>
+        </div>
+        <button id="goToWatchlist" class="watchList-Btn cta-button">WatchList</button>
+    </header>
+
+    <!-- Mobile Navigation Overlay -->
+    <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+
+    <!-- Navigation Menu -->
+    <nav class="nav-menu" id="navMenu">
+        <!-- Close Button for Mobile Menu -->
+        <button class="mobile-menu-close" id="mobileMenuClose">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
+        <ul class="nav-list">
+            <li class="nav-item active"><a href="index.html" data-section="all">All</a></li>
+            <li class="nav-item"><a href="movies/index.html" data-section="movies">Movies</a></li>
+            <li class="nav-item"><a href="tvshows/index.html" data-section="tv">TV Shows</a></li>
+            <li class="nav-item"><a href="anime/index.html" data-section="anime">Anime</a></li>
+            <li class="nav-item dropdown">
+                <a href="javascript:void(0)" data-section="genres">Genres</a>
+                <div class="dropdown-content">
+                    <div class="dropdown-column">
+                        <h3>Movies</h3>
+                        <a href="movies/index.html?genre=action">Action</a>
+                        <a href="movies/index.html?genre=comedy">Comedy</a>
+                        <a href="movies/index.html?genre=horror">Horror</a>
+                        <a href="movies/index.html?genre=thriller">Thriller</a>
+                    </div>
+                    <div class="dropdown-column">
+                        <h3>TV Shows</h3>
+                        <a href="tvshows/index.html?genre=drama">Drama</a>
+                        <a href="tvshows/index.html?genre=comedy">Comedy</a>
+                        <a href="tvshows/index.html?genre=crime">Crime</a>
+                        <a href="tvshows/index.html?genre=mystery">Mystery</a>
+                    </div>
+                    <div class="dropdown-column">
+                        <h3>Anime</h3>
+                        <a href="anime/index.html?genre=action">Action</a>
+                        <a href="anime/index.html?genre=adventure">Adventure</a>
+                        <a href="anime/index.html?genre=fantasy">Fantasy</a>
+                        <a href="anime/index.html?genre=romance">Romance</a>
+                    </div>
+
+                </div>
+            </li>
+            <li class="nav-item mobile-watchlist">
+                <a href="javascript:void(0)" id="mobileWatchlistBtn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7z"/>
+                    </svg>
+                    My Watchlist
+                </a>
+            </li>
+        </ul>
+    </nav>
+
     <!-- Banner container -->
     <div id="banner-container">
         <img id="banner" src="" alt="Featured movie or show banner" width="100%" height="auto" loading="lazy" />
@@ -282,87 +355,6 @@
         <button id="banner-prev" class="banner-nav-button">&#10094;</button>
         <button id="banner-next" class="banner-nav-button">&#10095;</button>
     </div>
-
-    <!-- Header container -->
-    <header class="header navbar">
-        <div class="header-left">
-            <button class="mobile-nav-toggle" id="mobileNavToggle">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-            <img src="/assets/freeflix.png" alt="FreeFlix logo" id="netflix-logo" width="150" height="47" loading="eager" fetchpriority="high">
-        </div>
-
-        <!-- Navigation Menu in center -->
-        <div class="header-center">
-            <nav class="nav-menu header-nav-center" id="navMenu">
-                <!-- Close Button for Mobile Menu -->
-                <button class="mobile-menu-close" id="mobileMenuClose">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                </button>
-                <ul class="nav-list">
-                    <li class="nav-item active"><a href="index.html" data-section="all">All</a></li>
-                    <li class="nav-item"><a href="movies/index.html" data-section="movies">Movies</a></li>
-                    <li class="nav-item"><a href="tvshows/index.html" data-section="tv">TV Shows</a></li>
-                    <li class="nav-item"><a href="anime/index.html" data-section="anime">Anime</a></li>
-                    <li class="nav-item dropdown">
-                        <a href="javascript:void(0)" data-section="genres">Genres</a>
-                        <div class="dropdown-content">
-                            <div class="dropdown-column">
-                                <h3>Movies</h3>
-                                <a href="movies/index.html?genre=action">Action</a>
-                                <a href="movies/index.html?genre=comedy">Comedy</a>
-                                <a href="movies/index.html?genre=horror">Horror</a>
-                                <a href="movies/index.html?genre=thriller">Thriller</a>
-                            </div>
-                            <div class="dropdown-column">
-                                <h3>TV Shows</h3>
-                                <a href="tvshows/index.html?genre=drama">Drama</a>
-                                <a href="tvshows/index.html?genre=comedy">Comedy</a>
-                                <a href="tvshows/index.html?genre=crime">Crime</a>
-                                <a href="tvshows/index.html?genre=mystery">Mystery</a>
-                            </div>
-                            <div class="dropdown-column">
-                                <h3>Anime</h3>
-                                <a href="anime/index.html?genre=action">Action</a>
-                                <a href="anime/index.html?genre=adventure">Adventure</a>
-                                <a href="anime/index.html?genre=fantasy">Fantasy</a>
-                                <a href="anime/index.html?genre=romance">Romance</a>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="nav-item mobile-watchlist">
-                        <a href="javascript:void(0)" id="mobileWatchlistBtn">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
-                                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7z"/>
-                            </svg>
-                            My Watchlist
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-        <div class="header-right">
-            <div class="input-container search-container">
-                <input type="text" id="searchInput" class="search-input" placeholder="Search movies...">
-                <button class="search-button">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <path d="m21 21-4.35-4.35"></path>
-                    </svg>
-                </button>
-                <div id="searchResults"></div>
-            </div>
-            <button id="goToWatchlist" class="watchList-Btn cta-button">WatchList</button>
-        </div>
-    </header>
-
-    <!-- Mobile Navigation Overlay -->
-    <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
 
     <!-- Main content container for sections -->
     <div class="sections-container" style="max-width: 1400px; margin: 0 auto; padding: 2rem 1rem;">
