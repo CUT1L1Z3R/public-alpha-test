@@ -2166,7 +2166,7 @@ input::-webkit-input-placeholder {
     z-index: 1000 !important;
     position: fixed !important;
     top: 60px !important;
-    left: 48.5% !important;
+    left: 50% !important;
     transform: translateX(-50%) !important;
     width: 500px !important;
     max-width: 500px !important;
@@ -2187,7 +2187,7 @@ input::-webkit-input-placeholder {
     isolation: isolate; /* Create a new stacking context */
     position: fixed !important;
     z-index: 1000 !important;
-    left: 48.5% !important;
+    left: 50% !important;
     right: auto !important;
     top: 60px !important;
     width: 500px !important;
@@ -3814,7 +3814,7 @@ html::-webkit-scrollbar-thumb:hover {
     z-index: 1000 !important;
     position: fixed !important;
     top: 60px !important;
-    left: 48.5% !important;
+    left: 50% !important;
     transform: translateX(-50%) !important;
     width: 500px !important;
     max-width: 500px !important;
@@ -3835,7 +3835,7 @@ html::-webkit-scrollbar-thumb:hover {
     isolation: isolate; /* Create a new stacking context */
     position: fixed !important;
     z-index: 1000 !important;
-    left: 48.5% !important;
+    left: 50% !important;
     right: auto !important;
     top: 60px !important;
     width: 500px !important;
