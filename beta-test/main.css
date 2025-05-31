@@ -299,7 +299,7 @@ body {
   display: none;
   position: absolute;
   top: 100%;
-  left: 50%;
+  left: 52%;
   transform: translateX(-50%);
   background-color: rgba(26, 26, 27, 0.95);
   min-width: 700px;
@@ -2187,7 +2187,7 @@ input::-webkit-input-placeholder {
     isolation: isolate; /* Create a new stacking context */
     position: fixed !important;
     z-index: 1000 !important;
-    left: 50% !important;
+    left: 52% !important;
     right: auto !important;
     top: 60px !important;
     width: 500px !important;
