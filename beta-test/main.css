@@ -601,7 +601,7 @@ input::-webkit-input-placeholder {
 #searchResults {
   position: fixed !important;
   top: 90px !important; /* Updated for new header height */
-  left: 48.5% !important;
+  left: 50% !important;
   transform: translateX(-50%) !important;
   width: 500px !important;
   background: rgba(26, 26, 27, 0.95) !important;
