@@ -1,0 +1,21 @@
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "FreeFlix",
+  "url": "https://freeflix.top/",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://freeflix.top/?search={search_term_string}",
+    "query-input": "required name=search_term_string"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "FreeFlix",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://freeflix.top/assets/freeflix.png",
+      "width": 512,
+      "height": 512
+    }
+  }
+}

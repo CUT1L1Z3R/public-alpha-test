@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "buildCommand": "echo 'Static site, no build step needed'",
+  "outputDirectory": ".",
+  "rewrites": [
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/movies", "destination": "/movies/index.html" },
+    { "source": "/tvshows", "destination": "/tvshows/index.html" },
+    { "source": "/anime", "destination": "/anime/index.html" },
+    { "source": "/movie_details", "destination": "/movie_details/movie_details.html" },
+    { "source": "/watchList", "destination": "/watchList/watchlist.html" },
+    { "source": "/(.*)", "destination": "/$1" }
+  ]
+}
