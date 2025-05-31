@@ -299,7 +299,7 @@ body {
   display: none;
   position: absolute;
   top: 100%;
-  left: 52%;
+  left: 50%;
   transform: translateX(-50%);
   background-color: rgba(26, 26, 27, 0.95);
   min-width: 700px;
@@ -601,7 +601,7 @@ input::-webkit-input-placeholder {
 #searchResults {
   position: fixed !important;
   top: 90px !important; /* Updated for new header height */
-  left: 50% !important;
+  left: 52% !important;
   transform: translateX(-50%) !important;
   width: 500px !important;
   background: rgba(26, 26, 27, 0.95) !important;
@@ -641,7 +641,7 @@ input::-webkit-input-placeholder {
 @media screen and (max-width: 768px) {
   #searchResults {
     top: 80px !important;
-    left: 50% !important;
+    left: 52% !important;
     width: 90% !important;
     max-width: 400px !important;
     margin: 0 !important;
@@ -653,7 +653,7 @@ input::-webkit-input-placeholder {
     top: 75px !important;
     width: 95% !important;
     max-width: none !important;
-    left: 50% !important;
+    left: 52% !important;
     transform: translateX(-50%) !important;
   }
 
@@ -1614,7 +1614,7 @@ input::-webkit-input-placeholder {
     width: 90vw !important;
     max-width: 90vw !important;
     max-height: 300px !important;
-    left: 50% !important;
+    left: 52% !important;
     right: auto !important;
     top: 80px !important; /* Updated for new header height */
     transform: translateX(-50%) !important;
@@ -2166,7 +2166,7 @@ input::-webkit-input-placeholder {
     z-index: 1000 !important;
     position: fixed !important;
     top: 60px !important;
-    left: 50% !important;
+    left: 52% !important;
     transform: translateX(-50%) !important;
     width: 500px !important;
     max-width: 500px !important;
@@ -2779,7 +2779,7 @@ html::-webkit-scrollbar-thumb:hover {
 @media (max-width: 768px) {
   #genre-dropdown {
     width: 450px;
-    left: 50% !important;
+    left: 52% !important;
     transform: translateX(-50%);
     transform-origin: top center;
   }
@@ -2793,7 +2793,7 @@ html::-webkit-scrollbar-thumb:hover {
   #genre-dropdown {
     width: 95%;
     max-width: 320px;
-    left: 50% !important;
+    left: 52% !important;
     transform: translateX(-50%);
   }
   .genre-dropdown-container {
@@ -2820,7 +2820,7 @@ html::-webkit-scrollbar-thumb:hover {
   #genre-dropdown {
     position: fixed !important;
     width: 90% !important;
-    left: 50% !important;
+    left: 52% !important;
     top: 50% !important;
     transform: translate(-50%, -50%) !important;
     max-height: 80vh;
@@ -3262,7 +3262,7 @@ html::-webkit-scrollbar-thumb:hover {
     width: 90vw !important;
     max-width: 90vw !important;
     max-height: 300px !important;
-    left: 50% !important;
+    left: 52% !important;
     right: auto !important;
     top: 80px !important; /* Updated for new header height */
     transform: translateX(-50%) !important;
@@ -3814,7 +3814,7 @@ html::-webkit-scrollbar-thumb:hover {
     z-index: 1000 !important;
     position: fixed !important;
     top: 60px !important;
-    left: 50% !important;
+    left: 52% !important;
     transform: translateX(-50%) !important;
     width: 500px !important;
     max-width: 500px !important;
@@ -3835,7 +3835,7 @@ html::-webkit-scrollbar-thumb:hover {
     isolation: isolate; /* Create a new stacking context */
     position: fixed !important;
     z-index: 1000 !important;
-    left: 50% !important;
+    left: 52% !important;
     right: auto !important;
     top: 60px !important;
     width: 500px !important;
@@ -4427,7 +4427,7 @@ html::-webkit-scrollbar-thumb:hover {
 @media (max-width: 768px) {
   #genre-dropdown {
     width: 450px;
-    left: 50% !important;
+    left: 52% !important;
     transform: translateX(-50%);
     transform-origin: top center;
   }
@@ -4441,7 +4441,7 @@ html::-webkit-scrollbar-thumb:hover {
   #genre-dropdown {
     width: 95%;
     max-width: 320px;
-    left: 50% !important;
+    left: 52% !important;
     transform: translateX(-50%);
   }
   .genre-dropdown-container {
@@ -4468,7 +4468,7 @@ html::-webkit-scrollbar-thumb:hover {
   #genre-dropdown {
     position: fixed !important;
     width: 90% !important;
-    left: 50% !important;
+    left: 52% !important;
     top: 50% !important;
     transform: translate(-50%, -50%) !important;
     max-height: 80vh;
