@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+
+    <!-- Anime Main Page -->
+    <url>
+        <loc>https://freeflix.top/anime/index.html</loc>
+        <lastmod>2025-05-15</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.9</priority>
+        <image:image>
+            <image:loc>https://freeflix.top/assets/freeflix.png</image:loc>
+            <image:title>FreeFlix Anime - Watch Free Anime Online</image:title>
+            <image:caption>Stream the latest and classic anime shows and movies for free</image:caption>
+        </image:image>
+    </url>
+
+    <!-- Anime Categories -->
+    <url>
+        <loc>https://freeflix.top/anime/?category=latest</loc>
+        <lastmod>2025-05-15</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://freeflix.top/anime/?category=popular</loc>
+        <lastmod>2025-05-15</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://freeflix.top/anime/?category=top-rated</loc>
+        <lastmod>2025-05-15</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://freeflix.top/anime/?category=ongoing</loc>
+        <lastmod>2025-05-15</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- Anime Genre Categories -->
+    <url>
+        <loc>https://freeflix.top/anime/?genre=action</loc>
+        <lastmod>2025-05-15</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://freeflix.top/anime/?genre=adventure</loc>
+        <lastmod>2025-05-15</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://freeflix.top/anime/?genre=comedy</loc>
+        <lastmod>2025-05-15</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://freeflix.top/anime/?genre=drama</loc>
+        <lastmod>2025-05-15</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://freeflix.top/anime/?genre=romance</loc>
+        <lastmod>2025-05-15</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://freeflix.top/anime/?genre=fantasy</loc>
+        <lastmod>2025-05-15</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://freeflix.top/anime/?genre=mystery</loc>
+        <lastmod>2025-05-15</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://freeflix.top/anime/?genre=supernatural</loc>
+        <lastmod>2025-05-15</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- Top Rated Anime Movies -->
+    <url>
+        <loc>https://freeflix.top/anime/?category=top-rated-movies</loc>
+        <lastmod>2025-05-15</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+</urlset>

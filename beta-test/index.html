@@ -1,0 +1,1376 @@
+<!--// This is a Landing Page// -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FreeFlix - Stream Unlimited Movies & TV Shows for Free</title>
+    <meta name="description" content="🎬 Stream Unlimited Free Movies and TV Shows on FreeFlix - Watch HD blockbusters, trending series, popular anime with no subscription fees. Best free streaming site 2025!">
+
+    <!-- Preconnect to optimize performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/assets/freeflix.png">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #8b5cf6;
+            --primary-dark: #7c3aed;
+            --primary-light: #a78bfa;
+            --secondary: #ec4899;
+            --accent: #06b6d4;
+            --dark: #0c0c0d;
+            --dark-secondary: #1a1a1b;
+            --dark-tertiary: #2d2d30;
+            --purple-deep: #5d45a7;
+            --purple-bright: #a855f7;
+            --text-primary: #ffffff;
+            --text-secondary: #e5e7eb;
+            --text-muted: #9ca3af;
+            --gradient-1: linear-gradient(135deg, #8b5cf6 0%, #ec4899 50%, #06b6d4 100%);
+            --gradient-2: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
+            --gradient-3: linear-gradient(135deg, #5d45a7 0%, #8b5cf6 50%, #a855f7 100%);
+            --gradient-bg: linear-gradient(135deg, #0c0c0d 0%, #1a1a1b 50%, #2d2d30 100%);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(12, 12, 13, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 80px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo img {
+            width: 180px;
+            height: 60px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 15px rgba(139, 92, 246, 0.5));
+            transition: all 0.3s ease;
+        }
+
+        .logo img:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.7));
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-1);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .cta-button {
+            background: var(--gradient-2);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+        }
+
+        /* Hide mobile menu and button by default */
+        .mobile-menu-btn {
+            display: none;
+        }
+
+        .mobile-menu {
+            display: none;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            background:
+                radial-gradient(ellipse at top left, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at bottom right, rgba(236, 72, 153, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at center, rgba(93, 69, 167, 0.08) 0%, transparent 70%),
+                var(--gradient-bg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                radial-gradient(circle at 25% 25%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(168, 139, 250, 0.08) 0%, transparent 50%);
+            opacity: 0.6;
+        }
+
+        .hero-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-content h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-content .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-weight: 400;
+            opacity: 0.9;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+        }
+
+        .btn-primary {
+            background: var(--gradient-2);
+            color: white;
+            padding: 16px 32px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            padding: 16px 32px;
+            border: 2px solid var(--primary);
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .search-container {
+            position: relative;
+            max-width: 500px;
+            margin-bottom: 2rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 20px 24px;
+            padding-right: 60px;
+            border: 2px solid rgba(139, 92, 246, 0.3);
+            border-radius: 25px;
+            background: rgba(26, 26, 27, 0.6);
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .search-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+            background: rgba(26, 26, 27, 0.8);
+        }
+
+        .search-button {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--gradient-2);
+            border: none;
+            padding: 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-button:hover {
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        /* Hero Visual */
+        .hero-visual {
+            position: relative;
+            height: 600px;
+        }
+
+        .movie-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            height: 100%;
+            transform: perspective(1000px) rotateY(-15deg) rotateX(10deg);
+        }
+
+        .movie-card {
+            background: rgba(26, 26, 27, 0.6);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            position: relative;
+            cursor: pointer;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .movie-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.3);
+            border-color: var(--primary);
+        }
+
+        .movie-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.3s ease;
+        }
+
+        .movie-card:hover img {
+            transform: scale(1.1);
+        }
+
+        .movie-card-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(12, 12, 13, 0.95));
+            padding: 1.5rem 1rem 1rem;
+            transform: translateY(100%);
+            transition: all 0.3s ease;
+        }
+
+        .movie-card:hover .movie-card-overlay {
+            transform: translateY(0);
+        }
+
+        .movie-card-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .movie-card-info {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 8rem 0;
+            background: var(--dark-secondary);
+            position: relative;
+        }
+
+        .features::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 0%, rgba(139, 92, 246, 0.05) 50%, transparent 100%);
+        }
+
+        .features-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: rgba(12, 12, 13, 0.6);
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-2);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2);
+            border-color: var(--primary);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-2);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .feature-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        /* Stats Section */
+        .stats {
+            padding: 6rem 0;
+            background: var(--dark);
+        }
+
+        .stats-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 2rem;
+            background: rgba(26, 26, 27, 0.6);
+            border-radius: 20px;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
+        }
+
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 8rem 0;
+            background:
+                radial-gradient(ellipse at center, rgba(139, 92, 246, 0.2) 0%, transparent 70%),
+                var(--dark-secondary);
+            text-align: center;
+            position: relative;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent 0%, rgba(139, 92, 246, 0.1) 50%, transparent 100%);
+        }
+
+        .cta-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cta-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            opacity: 0.9;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--dark);
+            padding: 4rem 0 2rem;
+            border-top: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            text-align: center;
+        }
+
+        .footer-nav {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer-nav a:hover {
+            color: var(--primary);
+        }
+
+        .footer-text {
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            opacity: 0.8;
+        }
+
+        .footer-copyright {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            opacity: 0.6;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0 1rem;
+                height: 70px;
+            }
+
+            .logo img {
+                width: 140px;
+                height: 45px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .cta-button {
+                display: none;
+            }
+
+            /* Mobile hamburger menu */
+            .mobile-menu-btn {
+                display: flex !important;
+                flex-direction: column;
+                justify-content: center;
+                width: 30px;
+                height: 30px;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0;
+            }
+
+            .mobile-menu-btn span {
+                display: block;
+                height: 3px;
+                width: 100%;
+                background: var(--text-primary);
+                margin: 3px 0;
+                transition: all 0.3s ease;
+                border-radius: 2px;
+            }
+
+            .mobile-menu-btn.active span:nth-child(1) {
+                transform: rotate(45deg) translate(5px, 5px);
+            }
+
+            .mobile-menu-btn.active span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .mobile-menu-btn.active span:nth-child(3) {
+                transform: rotate(-45deg) translate(7px, -6px);
+            }
+
+            /* Mobile menu overlay */
+            .mobile-menu {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                height: calc(100vh - 70px);
+                background: rgba(12, 12, 13, 0.98);
+                backdrop-filter: blur(20px);
+                z-index: 999;
+                display: none;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                padding: 2rem 0;
+            }
+
+            .mobile-menu.active {
+                display: flex;
+            }
+
+            .mobile-menu a {
+                color: var(--text-primary);
+                text-decoration: none;
+                font-size: 1.5rem;
+                font-weight: 600;
+                padding: 1rem 2rem;
+                margin: 0.5rem 0;
+                border-radius: 12px;
+                transition: all 0.3s ease;
+                width: 80%;
+                text-align: center;
+                border: 2px solid transparent;
+            }
+
+            .mobile-menu a:hover {
+                background: var(--gradient-2);
+                border-color: var(--primary);
+                transform: translateY(-2px);
+            }
+
+            .hero {
+                min-height: 100vh;
+                padding: 80px 0 60px;
+                display: flex;
+                align-items: center;
+            }
+
+            .hero-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                text-align: center;
+                padding: 0 1rem;
+            }
+
+            .hero-content h1 {
+                font-size: 2.2rem;
+                line-height: 1.2;
+                margin-bottom: 1rem;
+            }
+
+            .hero-content .subtitle {
+                font-size: 1.1rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .search-container {
+                max-width: 100%;
+                margin-bottom: 1.5rem;
+            }
+
+            .search-input {
+                padding: 16px 20px;
+                padding-right: 55px;
+                font-size: 1rem;
+            }
+
+            .search-button {
+                right: 6px;
+                padding: 10px;
+            }
+
+            .hero-actions {
+                justify-content: center;
+                gap: 0.8rem;
+                margin-bottom: 2rem;
+            }
+
+            .btn-primary, .btn-secondary {
+                padding: 14px 24px;
+                font-size: 1rem;
+                border-radius: 20px;
+            }
+
+            .hero-visual {
+                height: auto;
+                margin-top: 1rem;
+                min-height: 400px;
+            }
+
+            .movie-cards-grid {
+                transform: none;
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: repeat(2, 190px);
+                gap: 1rem;
+                padding: 0 1rem;
+                height: auto;
+                min-height: auto;
+            }
+
+            .movie-card {
+                border-radius: 16px;
+                height: 190px;
+                min-height: 190px;
+                position: relative;
+                overflow: hidden;
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+                border: 2px solid rgba(139, 92, 246, 0.4);
+                background: linear-gradient(135deg, rgba(26, 26, 27, 0.9), rgba(45, 45, 48, 0.9));
+            }
+
+            .movie-card:nth-child(n+5) {
+                display: none;
+            }
+
+            /* Show specific cards on mobile - movies and anime mix */
+            .movie-card:nth-child(1), /* Sinners - Movie */
+            .movie-card:nth-child(2), /* Fountain of Youth - Movie */
+            .movie-card:nth-child(3), /* The Last of Us - TV Show */
+            .movie-card:nth-child(5) { /* WIND BREAKER - Anime */
+                display: block;
+            }
+
+            .movie-card:nth-child(4), /* Dept. Q - TV Show */
+            .movie-card:nth-child(6) { /* Witch Watch - Anime */
+                display: none;
+            }
+
+            .movie-card img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                filter: brightness(0.9);
+            }
+
+            .movie-card-overlay {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: linear-gradient(transparent, rgba(0, 0, 0, 0.95));
+                padding: 1.5rem 1rem 1rem;
+                transform: translateY(0);
+                opacity: 1;
+            }
+
+            .movie-card-title {
+                font-size: 1rem;
+                font-weight: 700;
+                margin-bottom: 0.3rem;
+                color: white;
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+                line-height: 1.2;
+            }
+
+            .movie-card-info {
+                font-size: 0.85rem;
+                color: rgba(255, 255, 255, 0.85);
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+                font-weight: 500;
+            }
+
+            /* Special styling for anime cards on mobile */
+            .movie-card[data-type="anime"] {
+                border: 2px solid rgba(168, 139, 250, 0.7);
+                box-shadow: 0 8px 32px rgba(168, 139, 250, 0.4);
+                position: relative;
+            }
+
+            .features {
+                padding: 4rem 0;
+            }
+
+            .features-container {
+                padding: 0 1rem;
+            }
+
+            .section-header {
+                margin-bottom: 3rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+                margin-bottom: 0.8rem;
+            }
+
+            .section-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .feature-card {
+                padding: 2rem 1.5rem;
+                border-radius: 16px;
+            }
+
+            .feature-title {
+                font-size: 1.3rem;
+            }
+
+            .stats {
+                padding: 4rem 0;
+            }
+
+            .stats-container {
+                padding: 0 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .stat-item {
+                padding: 1.5rem 1rem;
+            }
+
+            .stat-number {
+                font-size: 2.5rem;
+            }
+
+            .stat-label {
+                font-size: 1rem;
+            }
+
+            .cta-section {
+                padding: 4rem 0;
+            }
+
+            .cta-container {
+                padding: 0 1rem;
+            }
+
+            .cta-title {
+                font-size: 2.2rem;
+                margin-bottom: 1rem;
+            }
+
+            .cta-subtitle {
+                font-size: 1.1rem;
+                margin-bottom: 2rem;
+            }
+
+            .footer {
+                padding: 3rem 0 1.5rem;
+            }
+
+            .footer-container {
+                padding: 0 1rem;
+            }
+
+            .footer-nav {
+                flex-direction: row;
+                gap: 1.5rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .footer-text {
+                font-size: 0.9rem;
+                line-height: 1.6;
+            }
+        }
+
+        /* Additional mobile improvements */
+        @media (max-width: 480px) {
+            .hero-content h1 {
+                font-size: 1.9rem;
+            }
+
+            .hero-content .subtitle {
+                font-size: 1rem;
+            }
+
+            .movie-cards-grid {
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: repeat(2, 170px);
+                gap: 0.8rem;
+                padding: 0 0.5rem;
+            }
+
+            .movie-card {
+                height: 170px;
+                min-height: 170px;
+                border-radius: 14px;
+            }
+
+            .movie-card-title {
+                font-size: 0.9rem;
+            }
+
+            .movie-card-info {
+                font-size: 0.8rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .cta-title {
+                font-size: 2rem;
+            }
+
+            .feature-card {
+                padding: 1.5rem 1rem;
+            }
+
+            .stat-number {
+                font-size: 2.2rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .footer-nav {
+                flex-direction: row;
+                gap: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* Floating elements */
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Additional purple theme enhancements */
+        .glow-effect {
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .hero-visual::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Purple accent elements */
+        .purple-accent {
+            border-left: 4px solid var(--primary);
+            padding-left: 1rem;
+        }
+
+        .purple-dot::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="https://ext.same-assets.com/4235281404/1579149571.png" alt="FreeFlix">
+            </div>
+            <ul class="nav-links">
+                <li><a href="home.html">Home</a></li>
+                <li><a href="movies/index.html">Movies</a></li>
+                <li><a href="tvshows/index.html">TV Shows</a></li>
+                <li><a href="anime/index.html">Anime</a></li>
+            </ul>
+            <a href="home.html" class="cta-button">Start Watching</a>
+
+            <!-- Mobile hamburger menu -->
+            <button class="mobile-menu-btn" id="mobile-menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+
+        <!-- Mobile menu overlay -->
+        <div class="mobile-menu" id="mobile-menu">
+            <a href="home.html">Home</a>
+            <a href="movies/index.html">Movies</a>
+            <a href="tvshows/index.html">TV Shows</a>
+            <a href="anime/index.html">Anime</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-content fade-in-up">
+                <h1>Your Free Cinema, Anytime, Anywhere</h1>
+                <p class="subtitle">Tired of dodgy sites asking for your credit card? Say hello to FreeFlix, the chill zone where your privacy and pocket stay untouched. We're like the VIP lounge for movie buffs, except the door's open for everyone.</p>
+
+                <div class="search-container">
+                    <input type="text" class="search-input" placeholder="Enter keywords...">
+                    <button class="search-button">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="hero-actions">
+                    <a href="home.html" class="btn-primary">View Full Site</a>
+                    <a href="#features" class="btn-secondary">Learn More</a>
+                </div>
+            </div>
+
+            <div class="hero-visual floating">
+                <div class="movie-cards-grid">
+                    <div class="movie-card" data-type="movie">
+                        <img src="https://image.tmdb.org/t/p/w500/or06FN3Dka5tukK1e9sl16pB3iy.jpg" alt="Trending Movie">
+                        <div class="movie-card-overlay">
+                            <div class="movie-card-title">Loading...</div>
+                            <div class="movie-card-info">Movie • ⭐8.5</div>
+                        </div>
+                    </div>
+                    <div class="movie-card" data-type="movie">
+                        <img src="https://image.tmdb.org/t/p/w500/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg" alt="Trending Movie">
+                        <div class="movie-card-overlay">
+                            <div class="movie-card-title">Loading...</div>
+                            <div class="movie-card-info">Movie • ⭐8.2</div>
+                        </div>
+                    </div>
+                    <div class="movie-card" data-type="movie">
+                        <img src="https://image.tmdb.org/t/p/w500/b0PlSFdDwbyK0cf5RxwDpaOJQvQ.jpg" alt="Trending Movie">
+                        <div class="movie-card-overlay">
+                            <div class="movie-card-title">Loading...</div>
+                            <div class="movie-card-info">Movie • ⭐7.8</div>
+                        </div>
+                    </div>
+                    <div class="movie-card" data-type="movie">
+                        <img src="https://image.tmdb.org/t/p/w500/62HCnUTziyWcpDaBO2i1DX17ljH.jpg" alt="Trending Movie">
+                        <div class="movie-card-overlay">
+                            <div class="movie-card-title">Loading...</div>
+                            <div class="movie-card-info">Movie • ⭐8.3</div>
+                        </div>
+                    </div>
+                    <div class="movie-card" data-type="anime">
+                        <img src="https://image.tmdb.org/t/p/w500/jzo8MfgYXNl0kdgmX7EjkJpLnTE.jpg" alt="Popular Anime 2025">
+                        <div class="movie-card-overlay">
+                            <div class="movie-card-title">Solo Leveling</div>
+                            <div class="movie-card-info">Anime • ⭐8.6</div>
+                        </div>
+                    </div>
+                    <div class="movie-card" data-type="anime">
+                        <img src="https://image.tmdb.org/t/p/w500/cX8MPBaXoOUKN3n9FnKgZNp8Qe1.jpg" alt="Popular Anime 2025">
+                        <div class="movie-card-overlay">
+                            <div class="movie-card-title">Dandadan</div>
+                            <div class="movie-card-info">Anime • ⭐8.4</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="features-container">
+            <div class="section-header">
+                <h2 class="section-title">Why FreeFlix, Not Another Site?</h2>
+                <p class="section-subtitle">With the outstanding features outlined below, we're confident that FreeFlix will become your next go-to platform.</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3 class="feature-title">Safety First</h3>
+                    <p class="feature-description">FreeFlix ranks among the safest websites for free online movie streaming. Our platform is entirely ad-free, ensuring you can enjoy movies and TV shows without any concerns about jeopardizing your device or identity.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3 class="feature-title">Sleek & Simple UI Design</h3>
+                    <p class="feature-description">Just like Google's renowned minimalistic design, finding your desired movie on FreeFlix is as effortless as searching for any topic on Google. Clean, intuitive, and user-friendly.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📚</div>
+                    <h3 class="feature-title">A Wealth of Content</h3>
+                    <p class="feature-description">FreeFlix proudly boasts an extensive library of over 10,000 movies and TV shows. From the latest blockbusters to cherished classics and regional indie films.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3 class="feature-title">Seamless Streaming</h3>
+                    <p class="feature-description">Enjoy buttery-smooth streaming, thanks to lightning-fast loading speeds and seamless playback. Say goodbye to interruptions caused by lagging, buffering, or intrusive ads.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3 class="feature-title">Cross-Device Compatibility</h3>
+                    <p class="feature-description">FreeFlix is designed to be mobile-friendly and compatible with Chromecast, enabling you to stream your favorite content on nearly any device.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3 class="feature-title">Minimal Ads</h3>
+                    <p class="feature-description">Unlike many other free movie streaming sites, FreeFlix is extremely selective when it comes to which ads to show. We understand your watching experience matters most.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="stats-container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">10K+</div>
+                    <div class="stat-label">Movies & Shows</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">1M+</div>
+                    <div class="stat-label">Happy Users</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Always Available</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">0$</div>
+                    <div class="stat-label">Cost to You</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="cta-container">
+            <h2 class="cta-title">Ready to Start Watching?</h2>
+            <p class="cta-subtitle">Join millions of users who trust FreeFlix for their entertainment needs. No cards, no personal details, just pure, uninterrupted entertainment.</p>
+            <a href="home.html" class="btn-primary">Go to FreeFlix</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <nav class="footer-nav">
+                <a href="home.html">Home</a>
+                <a href="movies/index.html">Movies</a>
+                <a href="tvshows/index.html">TV Shows</a>
+                <a href="anime/index.html">Anime</a>
+                <a href="sitemap.html">Sitemap</a>
+            </nav>
+            <p class="footer-text">FreeFlix is a Free Movies streaming site with zero ads. We let you watch movies online without having to register or paying, with over 10,000 movies and TV-Series.</p>
+            <p class="footer-copyright">© FreeFlix</p>
+        </div>
+    </footer>
+
+    <script>
+        // Add smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add scroll effect to navbar
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 100) {
+                navbar.style.background = 'rgba(12, 12, 13, 0.98)';
+            } else {
+                navbar.style.background = 'rgba(12, 12, 13, 0.95)';
+            }
+        });
+
+        // Add search functionality
+        document.querySelector('.search-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const searchTerm = this.value.trim();
+                if (searchTerm) {
+                    window.location.href = `home.html?search=${encodeURIComponent(searchTerm)}`;
+                }
+            }
+        });
+
+        document.querySelector('.search-button').addEventListener('click', function() {
+            const searchInput = document.querySelector('.search-input');
+            const searchTerm = searchInput.value.trim();
+            if (searchTerm) {
+                window.location.href = `home.html?search=${encodeURIComponent(searchTerm)}`;
+            }
+        });
+
+        // Add loading animation
+        window.addEventListener('load', function() {
+            document.querySelector('.hero-content').style.animation = 'fadeInUp 0.8s ease-out';
+        });
+
+        // Add purple accent animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.feature-card, .stat-item, .movie-card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+                card.classList.add('fade-in-up');
+            });
+        });
+
+        // Mobile hamburger menu functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    mobileMenuBtn.classList.toggle('active');
+                    mobileMenu.classList.toggle('active');
+
+                    // Prevent body scroll when menu is open
+                    if (mobileMenu.classList.contains('active')) {
+                        document.body.style.overflow = 'hidden';
+                    } else {
+                        document.body.style.overflow = '';
+                    }
+                });
+
+                // Close menu when clicking on a link
+                const mobileMenuLinks = mobileMenu.querySelectorAll('a');
+                mobileMenuLinks.forEach(link => {
+                    link.addEventListener('click', function() {
+                        mobileMenuBtn.classList.remove('active');
+                        mobileMenu.classList.remove('active');
+                        document.body.style.overflow = '';
+                    });
+                });
+
+                // Close menu when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!mobileMenuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+                        mobileMenuBtn.classList.remove('active');
+                        mobileMenu.classList.remove('active');
+                        document.body.style.overflow = '';
+                    }
+                });
+            }
+        });
+    </script>
+
+    <!-- TMDB API Integration -->
+    <script src="tmdb-api.js"></script>
+    <script>
+        // Initialize movie cards with TMDB data
+        document.addEventListener('DOMContentLoaded', function() {
+            updateMovieCards();
+        });
+    </script>
+</body>
+</html>

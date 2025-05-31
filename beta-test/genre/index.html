@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en" style="overflow-x: hidden; max-width: 100%;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="description" content="Browse movies, TV shows, and anime by genre on FreeFlix. Find action, comedy, drama, horror, thriller, romance, fantasy, and more categories to stream for free without subscription.">
+    <meta name="keywords" content="movie genres, TV show genres, anime genres, FreeFlix, streaming by genre, action, comedy, drama, horror, thriller, fantasy, romance, sci-fi">
+
+    <!-- Robots meta tag to ensure indexing -->
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://freeflix.top/genre/">
+    <meta property="og:title" content="FreeFlix - Browse by Genre">
+    <meta property="og:description" content="Browse movies, TV shows, and anime by genre on FreeFlix. Find your favorite content categories to stream for free.">
+    <meta property="og:image" content="https://freeflix.top/assets/freeflix.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://freeflix.top/genre/">
+    <meta property="twitter:title" content="FreeFlix - Browse by Genre">
+    <meta property="twitter:description" content="Browse movies, TV shows, and anime by genre on FreeFlix. Find your favorite content categories to stream for free.">
+    <meta property="twitter:image" content="https://freeflix.top/assets/freeflix.png">
+
+    <!-- Schema.org structured data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "FreeFlix - Browse by Genre",
+      "description": "Browse movies, TV shows, and anime by genre on FreeFlix. Find your favorite content categories to stream for free.",
+      "url": "https://freeflix.top/genre/",
+      "image": "https://freeflix.top/assets/freeflix.png",
+      "mainEntity": {
+        "@type": "ItemList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Action",
+            "url": "https://freeflix.top/genre/?genre=action"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Comedy",
+            "url": "https://freeflix.top/genre/?genre=comedy"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Drama",
+            "url": "https://freeflix.top/genre/?genre=drama"
+          },
+          {
+            "@type": "ListItem",
+            "position": 4,
+            "name": "Horror",
+            "url": "https://freeflix.top/genre/?genre=horror"
+          },
+          {
+            "@type": "ListItem",
+            "position": 5,
+            "name": "Thriller",
+            "url": "https://freeflix.top/genre/?genre=thriller"
+          }
+        ]
+      }
+    }
+    </script>
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://freeflix.top/genre/">
+    <link rel="stylesheet" href="../main.css?v=1.0.2">
+    <link rel="stylesheet" href="../index.css">
+    <link rel="stylesheet" href="../custom-buttons.css">
+    <link rel="stylesheet" href="../header-enhancement.css">
+    <link rel="stylesheet" href="../custom-search.css">
+    <link rel="stylesheet" href="./section-fix.css">
+    <link rel="stylesheet" href="./enhanced-style.css">
+    <style>
+        /* Mobile viewport scaling fix */
+        @media (max-width: 480px) {
+            html {
+                font-size: 14px;
+            }
+        }
+
+        /* Inline styles to override any conflicts */
+        .header {
+            padding: 0 15px 0 30px !important; /* Reduced right padding */
+            justify-content: space-between !important;
+            display: flex !important;
+            align-items: center !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+        }
+        .watch-list-button {
+            position: relative !important;
+            right: auto !important;
+            margin-left: auto !important;
+            margin-right: 10px !important; /* Further reduced right margin */
+            min-width: 120px !important;
+            flex-shrink: 0 !important; /* Prevent button from shrinking */
+        }
+        .genre-title {
+            text-align: center !important;
+            margin: 1rem auto 1.5rem !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            display: inline-block !important;
+            width: auto !important;
+        }
+        .movie-title {
+            font-size: 0.8rem !important;
+            line-height: 1.2 !important;
+            max-width: 70% !important;
+        }
+        .movie-overlay {
+            border: none !important;
+            bottom: 0 !important; /* Ensure overlay is at the bottom */
+            top: auto !important; /* Remove any top positioning */
+            transform: translateY(0) !important; /* No transform */
+            padding: 30px 15px 10px !important; /* Increased top padding to push content further down */
+            justify-content: flex-end !important; /* Align content to bottom */
+            min-height: 100px !important; /* Increased height to push content down */
+        }
+        .movie-item:hover .movie-overlay {
+            background: linear-gradient(to top, rgba(141, 22, 201, 0.8) 0%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.2) 100%) !important;
+            /* Modified gradient to make purple highlight shorter */
+        }
+        .title-rating-container {
+            margin-top: 10px !important; /* Increased space above container */
+        }
+        .movie-item, .image-wrapper, .image-wrapper img {
+            border: none !important;
+        }
+        /* Remove watch-now-button styles since we're not using it anymore */
+
+        /* Responsive adjustments for watchlist button */
+        @media (max-width: 768px) {
+            .watch-list-button {
+                min-width: 100px !important;
+                margin-right: 5px !important; /* Further reduced margin */
+            }
+        }
+
+        @media (max-width: 480px) {
+            /* Responsive layout fixes for mobile */
+            html, body {
+                width: 100% !important;
+                max-width: 100% !important;
+                overflow-x: hidden !important;
+            }
+
+            .header {
+                width: 100% !important;
+                padding: 0 8px !important;
+                height: 50px !important; /* Increased height */
+            }
+
+            .watch-list-button {
+                min-width: 80px !important;
+                margin-right: 3px !important;
+                padding: 4px 8px !important;
+                height: 34px !important;
+                font-size: 12px !important;
+            }
+
+            /* Enhanced navigation styling */
+            .nav-menu {
+                padding: 8px 0 !important;
+                border-bottom: 2px solid rgba(141, 22, 201, 0.5) !important;
+                background-color: rgba(20, 20, 20, 0.98) !important;
+            }
+
+            .nav-items {
+                height: 40px !important;
+                padding: 0 10px !important;
+            }
+
+            .nav-item {
+                margin-right: 8px !important;
+            }
+
+            .nav-item a {
+                padding: 10px 15px !important;
+                font-size: 0.85rem !important;
+                font-weight: 500 !important;
+                border-radius: 20px !important;
+                border: 1px solid rgba(141, 22, 201, 0.3) !important;
+            }
+
+            .nav-item.active a {
+                background-color: rgba(141, 22, 201, 0.7) !important;
+                border: 1px solid rgba(141, 22, 201, 0.8) !important;
+                font-weight: 600 !important;
+            }
+
+            /* Enhanced genre title */
+            .genre-title {
+                font-size: 1.5rem !important;
+                margin: 1rem auto 1.2rem !important;
+                padding: 5px 15px !important;
+                border-radius: 30px !important;
+            }
+
+            /* Enhanced filter buttons */
+            .filter-options {
+                gap: 10px !important;
+                margin-bottom: 15px !important;
+            }
+
+            .filter-button {
+                padding: 8px 15px !important;
+                font-size: 0.85rem !important;
+                font-weight: 500 !important;
+                letter-spacing: 0.5px !important;
+                min-width: 80px !important;
+            }
+
+            /* Optimized grid for mobile - two columns */
+            .genre-grid-container {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 15px !important;
+                padding: 0 10px !important;
+                justify-content: space-between !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+                max-width: 100vw !important;
+            }
+
+            .movie-item {
+                margin: 0 auto !important;
+                max-width: 100% !important;
+                height: 150px !important;
+            }
+
+            /* Streamlined overlay for mobile */
+            .movie-overlay {
+                padding: 25px 10px 8px !important;
+                min-height: 85px !important;
+            }
+
+            .title-rating-container {
+                margin-bottom: 3px !important;
+                margin-top: 5px !important;
+            }
+
+            .movie-title {
+                font-size: 0.9rem !important;
+            }
+
+            .movie-rating {
+                font-size: 0.8rem !important;
+            }
+
+            .rating-star {
+                font-size: 0.9rem !important;
+            }
+        }
+    </style>
+</head>
+<body style="overflow-x: hidden; max-width: 100%; width: 100%">
+    <header class="header">
+        <div class="logo">
+            <a href="../index.html">
+                <img src="../assets/freeflix.png" alt="FreeFlix Logo">
+            </a>
+        </div>
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search movies...">
+            <div id="searchResults" style="display: none;"></div>
+        </div>
+        <button id="goToWatchlist" class="watch-list-button">
+            <span class="button-text">Watchlist</span>
+        </button>
+    </header>
+
+    <nav class="nav-menu">
+        <ul class="nav-items">
+            <li class="nav-item">
+                <a href="../index.html" data-section="all">All</a>
+            </li>
+            <li class="nav-item">
+                <a href="../movies/index.html" data-section="movies">Movies</a>
+            </li>
+            <li class="nav-item">
+                <a href="../tvshows/index.html" data-section="tv">TV Shows</a>
+            </li>
+            <li class="nav-item">
+                <a href="../anime/index.html" data-section="anime">Anime</a>
+            </li>
+            <li class="nav-item">
+                <a href="#" data-section="genres">Genres</a>
+            </li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <h1 id="genre-title" class="genre-title">Genre Results</h1>
+
+        <div id="genre-filter-container" class="genre-filter-container">
+            <div class="filter-options">
+                <button id="filter-popular" class="filter-button active">Popular</button>
+                <button id="filter-top-rated" class="filter-button">Top Rated</button>
+                <button id="filter-newest" class="filter-button">Newest</button>
+            </div>
+        </div>
+
+        <div id="genre-grid-container" class="genre-grid-container">
+            <!-- Results will be displayed here as a grid -->
+        </div>
+
+        <div id="pagination-container" class="pagination-container">
+            <button id="prev-page" class="pagination-button" disabled>&laquo; Previous</button>
+            <span id="page-indicator" class="page-indicator">Page 1</span>
+            <button id="next-page" class="pagination-button">Next &raquo;</button>
+        </div>
+
+        <div id="loading-indicator" class="loading-indicator">
+            <div class="loading-spinner"></div>
+            <p>Loading content...</p>
+        </div>
+
+        <div id="no-results" class="no-results" style="display: none;">
+            <p>No results found for this genre. Please try another genre.</p>
+        </div>
+
+        <button id="back-to-top-btn" class="back-to-top" title="Back to Top">↑</button>
+    </main>
+
+    <footer class="footer">
+        <div>
+            <p>FreeFlix &copy; 2023 - All Rights Reserved</p>
+            <p>This site does not store any files on its server. All contents are provided by non-affiliated third parties.</p>
+        </div>
+    </footer>
+
+    <script src="../custom-navigation.js"></script>
+    <script src="./genre.js"></script>
+</body>
+</html>
