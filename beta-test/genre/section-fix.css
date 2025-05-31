@@ -454,6 +454,42 @@
         margin: 0 5px;
     }
 
+    /* Add search results styling for genre pages */
+    #searchResults {
+        position: absolute;
+        top: 60px;
+        left: 50%; /* Center perfectly */
+        transform: translateX(-50%); /* Center perfectly */
+        width: 500px; /* Match max-width of input container */
+        background-color: #141414;
+        color: white;
+        border-radius: 5px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        max-height: 80vh;
+        overflow-y: auto;
+        /* Remove the purple border */
+        border: none;
+    }
+
+    #searchResults p {
+        padding: 15px;
+        text-align: center;
+        margin: 0;
+    }
+
+    .movie-list {
+        padding: 10px;
+        border-bottom: 1px solid #333;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+    }
+
+    .movie-list:hover {
+        background-color: #333;
+    }
+
     /* ENHANCED MOBILE NAVIGATION DESIGN */
     .nav-menu {
         top: 50px;
