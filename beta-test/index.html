@@ -1306,7 +1306,115 @@
             const searchInput = document.querySelector('.search-input');
             const searchTerm = searchInput.value.trim();
             if (searchTerm) {
-                window.location.href = `home.html?search=${encodeURIComponent(searchTerm)}`;
+                // Use your TMDB API to search for movies
+                searchMovies(searchTerm);
+            }
+        });
+
+        // Add search functionality with your TMDB API
+        async function searchMovies(query) {
+            const TMDB_API_KEY = '3fd2be6f0c70a2a598f084ddfb75487c';
+            const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
+
+            try {
+                // Show loading state
+                showSearchResults('Loading...', []);
+
+                const response = await fetch(`${TMDB_BASE_URL}/search/movie?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}`);
+                const data = await response.json();
+
+                if (data.results && data.results.length > 0) {
+                    showSearchResults(`Found ${data.results.length} results for "${query}"`, data.results.slice(0, 12));
+                } else {
+                    showSearchResults(`No results found for "${query}"`, []);
+                }
+            } catch (error) {
+                console.error('Search error:', error);
+                showSearchResults('Error occurred while searching. Please try again.', []);
+            }
+        }
+
+        function showSearchResults(message, movies) {
+            // Create search results overlay
+            let overlay = document.getElementById('search-overlay');
+            if (!overlay) {
+                overlay = document.createElement('div');
+                overlay.id = 'search-overlay';
+                overlay.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(12, 12, 13, 0.95);
+                    z-index: 9999;
+                    overflow-y: auto;
+                    padding: 2rem;
+                `;
+                document.body.appendChild(overlay);
+            }
+
+            overlay.innerHTML = `
+                <div style="max-width: 1200px; margin: 0 auto;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <h2 style="color: #8b5cf6; font-size: 2rem; margin: 0;">${message}</h2>
+                        <button onclick="closeSearchResults()" style="
+                            background: none;
+                            border: none;
+                            color: white;
+                            font-size: 2rem;
+                            cursor: pointer;
+                            padding: 0.5rem;
+                        ">×</button>
+                    </div>
+                    <div id="search-results-grid" style="
+                        display: grid;
+                        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                        gap: 1.5rem;
+                    ">
+                        ${movies.map(movie => `
+                            <div style="
+                                background: rgba(26, 26, 27, 0.8);
+                                border-radius: 12px;
+                                overflow: hidden;
+                                transition: transform 0.3s ease;
+                                cursor: pointer;
+                                border: 1px solid rgba(139, 92, 246, 0.3);
+                            " onmouseover="this.style.transform='translateY(-10px)'" onmouseout="this.style.transform='translateY(0)'">
+                                <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}"
+                                     alt="${movie.title}"
+                                     style="width: 100%; height: 300px; object-fit: cover;"
+                                     onerror="this.src='https://via.placeholder.com/500x750/1a1a1b/8b5cf6?text=${encodeURIComponent(movie.title)}'">
+                                <div style="padding: 1rem;">
+                                    <h3 style="color: white; margin: 0 0 0.5rem 0; font-size: 1rem;">${movie.title}</h3>
+                                    <p style="color: #9ca3af; font-size: 0.875rem; margin: 0;">${new Date(movie.release_date).getFullYear() || 'N/A'} • ⭐${movie.vote_average?.toFixed(1) || 'N/A'}</p>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            overlay.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Function to close search results
+        window.closeSearchResults = function() {
+            const overlay = document.getElementById('search-overlay');
+            if (overlay) {
+                overlay.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+        };
+
+        // Also handle Enter key in search input
+        document.querySelector('.search-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const searchTerm = this.value.trim();
+                if (searchTerm) {
+                    searchMovies(searchTerm);
+                }
             }
         });
 
