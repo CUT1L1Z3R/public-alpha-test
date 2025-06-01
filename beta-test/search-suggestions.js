@@ -381,25 +381,35 @@ class SearchSuggestions {
     }
 
     adjustPosition() {
-        // Check if dropdown would go off screen and adjust if needed
-        const rect = this.suggestionsContainer.getBoundingClientRect();
-        const viewportHeight = window.innerHeight;
-        const spaceBelow = viewportHeight - rect.bottom;
+        // Reset positioning to default (below search input)
+        this.suggestionsContainer.style.top = 'calc(100% + 4px)';
+        this.suggestionsContainer.style.bottom = 'auto';
+        this.suggestionsContainer.style.marginBottom = '0';
+        this.suggestionsContainer.style.maxHeight = '300px';
 
-        if (spaceBelow < 0) {
-            // Not enough space below, try positioning above
-            const searchRect = this.searchInput.getBoundingClientRect();
-            const spaceAbove = searchRect.top;
+        // Wait for next frame to get accurate measurements
+        requestAnimationFrame(() => {
+            const rect = this.suggestionsContainer.getBoundingClientRect();
+            const viewportHeight = window.innerHeight;
+            const spaceBelow = viewportHeight - rect.bottom;
 
-            if (spaceAbove > Math.abs(spaceBelow)) {
-                this.suggestionsContainer.style.top = 'auto';
-                this.suggestionsContainer.style.bottom = '100%';
-                this.suggestionsContainer.style.marginBottom = '4px';
-            } else {
-                // Adjust max-height to fit available space
-                this.suggestionsContainer.style.maxHeight = `${Math.max(150, spaceBelow + rect.height)}px`;
+            // Only reposition if there's really not enough space below (less than 50px)
+            if (spaceBelow < 50) {
+                const searchRect = this.searchInput.getBoundingClientRect();
+                const spaceAbove = searchRect.top;
+
+                // Only position above if there's significantly more space above
+                if (spaceAbove > rect.height + 100) {
+                    this.suggestionsContainer.style.top = 'auto';
+                    this.suggestionsContainer.style.bottom = '100%';
+                    this.suggestionsContainer.style.marginBottom = '4px';
+                } else {
+                    // Reduce max-height to fit available space below
+                    const availableHeight = Math.max(150, spaceBelow - 20);
+                    this.suggestionsContainer.style.maxHeight = `${availableHeight}px`;
+                }
             }
-        }
+        });
     }
 
     hideSuggestions() {
