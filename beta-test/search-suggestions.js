@@ -24,6 +24,7 @@ class SearchSuggestions {
         container.style.cssText = `
             position: absolute;
             top: calc(100% + 4px);
+            bottom: auto;
             left: 0;
             right: 0;
             background: rgba(26, 26, 27, 0.98);
@@ -36,6 +37,8 @@ class SearchSuggestions {
             backdrop-filter: blur(25px);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(139, 92, 246, 0.2);
             display: none;
+            margin-top: 0;
+            margin-bottom: 0;
         `;
 
         return container;
@@ -375,42 +378,16 @@ class SearchSuggestions {
     }
 
     showSuggestions() {
+        // Always position below the search input
         this.suggestionsContainer.style.display = 'block';
-        this.selectedIndex = -1;
-        this.adjustPosition();
-    }
-
-    adjustPosition() {
-        // Reset positioning to default (below search input)
         this.suggestionsContainer.style.top = 'calc(100% + 4px)';
         this.suggestionsContainer.style.bottom = 'auto';
         this.suggestionsContainer.style.marginBottom = '0';
         this.suggestionsContainer.style.maxHeight = '300px';
-
-        // Wait for next frame to get accurate measurements
-        requestAnimationFrame(() => {
-            const rect = this.suggestionsContainer.getBoundingClientRect();
-            const viewportHeight = window.innerHeight;
-            const spaceBelow = viewportHeight - rect.bottom;
-
-            // Only reposition if there's really not enough space below (less than 50px)
-            if (spaceBelow < 50) {
-                const searchRect = this.searchInput.getBoundingClientRect();
-                const spaceAbove = searchRect.top;
-
-                // Only position above if there's significantly more space above
-                if (spaceAbove > rect.height + 100) {
-                    this.suggestionsContainer.style.top = 'auto';
-                    this.suggestionsContainer.style.bottom = '100%';
-                    this.suggestionsContainer.style.marginBottom = '4px';
-                } else {
-                    // Reduce max-height to fit available space below
-                    const availableHeight = Math.max(150, spaceBelow - 20);
-                    this.suggestionsContainer.style.maxHeight = `${availableHeight}px`;
-                }
-            }
-        });
+        this.selectedIndex = -1;
     }
+
+
 
     hideSuggestions() {
         this.suggestionsContainer.style.display = 'none';
