@@ -23,21 +23,20 @@ class SearchSuggestions {
         container.className = 'search-suggestions';
         container.style.cssText = `
             position: absolute;
-            top: 100%;
+            top: calc(100% + 4px);
             left: 0;
             right: 0;
-            background: rgba(26, 26, 27, 0.95);
-            border: 1px solid rgba(139, 92, 246, 0.3);
+            background: rgba(26, 26, 27, 0.98);
+            border: 1px solid rgba(139, 92, 246, 0.4);
             border-radius: 12px;
-            border-top: none;
-            border-top-left-radius: 0;
-            border-top-right-radius: 0;
-            max-height: 400px;
+            max-height: 300px;
             overflow-y: auto;
-            z-index: 1000;
-            backdrop-filter: blur(20px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            backdrop-filter: blur(25px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(139, 92, 246, 0.2);
             display: none;
+            min-width: 100%;
+            white-space: nowrap;
         `;
 
         return container;
@@ -78,7 +77,18 @@ class SearchSuggestions {
         const searchContainer = this.searchInput.closest('.search-container');
         if (searchContainer) {
             searchContainer.style.position = 'relative';
+            searchContainer.style.zIndex = '10000';
+            searchContainer.style.overflow = 'visible';
             searchContainer.appendChild(this.suggestionsContainer);
+
+            // Ensure parent containers allow overflow
+            let parent = searchContainer.parentElement;
+            while (parent && parent !== document.body) {
+                if (parent.style.overflow === 'hidden') {
+                    parent.style.overflow = 'visible';
+                }
+                parent = parent.parentElement;
+            }
         }
     }
 
@@ -314,6 +324,25 @@ class SearchSuggestions {
                 padding: 0;
                 color: rgba(255, 255, 255, 0.5);
             }
+
+            /* Custom scrollbar for suggestions */
+            .search-suggestions::-webkit-scrollbar {
+                width: 6px;
+            }
+
+            .search-suggestions::-webkit-scrollbar-track {
+                background: rgba(139, 92, 246, 0.1);
+                border-radius: 3px;
+            }
+
+            .search-suggestions::-webkit-scrollbar-thumb {
+                background: rgba(139, 92, 246, 0.6);
+                border-radius: 3px;
+            }
+
+            .search-suggestions::-webkit-scrollbar-thumb:hover {
+                background: rgba(139, 92, 246, 0.8);
+            }
         `;
 
         document.head.appendChild(styles);
@@ -343,6 +372,29 @@ class SearchSuggestions {
     showSuggestions() {
         this.suggestionsContainer.style.display = 'block';
         this.selectedIndex = -1;
+        this.adjustPosition();
+    }
+
+    adjustPosition() {
+        // Check if dropdown would go off screen and adjust if needed
+        const rect = this.suggestionsContainer.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+        const spaceBelow = viewportHeight - rect.bottom;
+
+        if (spaceBelow < 0) {
+            // Not enough space below, try positioning above
+            const searchRect = this.searchInput.getBoundingClientRect();
+            const spaceAbove = searchRect.top;
+
+            if (spaceAbove > Math.abs(spaceBelow)) {
+                this.suggestionsContainer.style.top = 'auto';
+                this.suggestionsContainer.style.bottom = '100%';
+                this.suggestionsContainer.style.marginBottom = '4px';
+            } else {
+                // Adjust max-height to fit available space
+                this.suggestionsContainer.style.maxHeight = `${Math.max(150, spaceBelow + rect.height)}px`;
+            }
+        }
     }
 
     hideSuggestions() {
