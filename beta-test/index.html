@@ -162,7 +162,7 @@
                 radial-gradient(ellipse at center, rgba(93, 69, 167, 0.08) 0%, transparent 70%),
                 var(--gradient-bg);
             position: relative;
-            overflow: hidden;
+            overflow: visible;
         }
 
         .hero::before {
@@ -188,6 +188,7 @@
             align-items: center;
             position: relative;
             z-index: 2;
+            overflow: visible;
         }
 
         .hero-content h1 {
@@ -256,6 +257,8 @@
             position: relative;
             max-width: 500px;
             margin-bottom: 2rem;
+            z-index: 10000;
+            overflow: visible;
         }
 
         .search-input {
