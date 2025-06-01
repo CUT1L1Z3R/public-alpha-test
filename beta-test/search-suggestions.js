@@ -33,7 +33,7 @@ class SearchSuggestions {
             max-height: 300px;
             overflow-y: auto;
             overflow-x: hidden;
-            z-index: 9999;
+            z-index: 10001;
             backdrop-filter: blur(25px);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(139, 92, 246, 0.2);
             display: none;
@@ -79,7 +79,7 @@ class SearchSuggestions {
         const searchContainer = this.searchInput.closest('.search-container');
         if (searchContainer) {
             searchContainer.style.position = 'relative';
-            searchContainer.style.zIndex = '10000';
+            searchContainer.style.zIndex = '10002';
             searchContainer.style.overflow = 'visible';
             searchContainer.appendChild(this.suggestionsContainer);
 
