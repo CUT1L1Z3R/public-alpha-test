@@ -38,6 +38,72 @@ class TMDBApi {
         }
     }
 
+    // Search functionality for movies, TV shows, and anime
+    async searchMulti(query, page = 1) {
+        try {
+            const response = await fetch(`${this.baseUrl}/search/multi?api_key=${this.apiKey}&query=${encodeURIComponent(query)}&page=${page}`);
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error searching:', error);
+            return { results: [], total_results: 0, total_pages: 0 };
+        }
+    }
+
+    async searchMovies(query, page = 1) {
+        try {
+            const response = await fetch(`${this.baseUrl}/search/movie?api_key=${this.apiKey}&query=${encodeURIComponent(query)}&page=${page}`);
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error searching movies:', error);
+            return { results: [], total_results: 0, total_pages: 0 };
+        }
+    }
+
+    async searchTVShows(query, page = 1) {
+        try {
+            const response = await fetch(`${this.baseUrl}/search/tv?api_key=${this.apiKey}&query=${encodeURIComponent(query)}&page=${page}`);
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error searching TV shows:', error);
+            return { results: [], total_results: 0, total_pages: 0 };
+        }
+    }
+
+    async searchPeople(query, page = 1) {
+        try {
+            const response = await fetch(`${this.baseUrl}/search/person?api_key=${this.apiKey}&query=${encodeURIComponent(query)}&page=${page}`);
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error searching people:', error);
+            return { results: [], total_results: 0, total_pages: 0 };
+        }
+    }
+
+    formatSearchResult(item) {
+        const mediaType = item.media_type || (item.title ? 'movie' : 'tv');
+        const title = item.title || item.name || 'Unknown Title';
+        const releaseDate = item.release_date || item.first_air_date || '';
+        const year = releaseDate ? new Date(releaseDate).getFullYear() : '';
+        const overview = item.overview || 'No description available.';
+        const posterPath = item.poster_path ? `${this.imageBase}${item.poster_path}` : '/assets/placeholder-poster.jpg';
+        const rating = item.vote_average ? item.vote_average.toFixed(1) : 'N/A';
+
+        return {
+            id: item.id,
+            title: title,
+            year: year,
+            overview: overview.substring(0, 150) + (overview.length > 150 ? '...' : ''),
+            poster: posterPath,
+            rating: rating,
+            mediaType: mediaType,
+            releaseDate: releaseDate
+        };
+    }
+
     async fetchPopularAnime() {
         try {
             // Search for popular 2025 anime
