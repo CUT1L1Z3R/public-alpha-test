@@ -623,6 +623,18 @@
     <script src="./index.js?v=1.0.2"></script>
 
     <script>
+    // Handle search parameter redirect
+    (function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const searchQuery = urlParams.get('search');
+
+        // If there's a search parameter, redirect to the new search results page
+        if (searchQuery) {
+            window.location.replace(`search-results.html?search=${encodeURIComponent(searchQuery)}`);
+            return;
+        }
+    })();
+
     // Modified script to avoid auto-reloading but still handle versioning
     (function() {
         const lastUpdate = localStorage.getItem('lastUpdate');
