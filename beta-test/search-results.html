@@ -63,7 +63,7 @@
             padding: 1rem 2rem;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            gap: 2rem;
             min-height: 80px;
             height: auto;
         }
@@ -75,6 +75,7 @@
             font-weight: 800;
             color: var(--primary);
             text-decoration: none;
+            flex-shrink: 0;
         }
 
         .logo img {
@@ -86,8 +87,8 @@
         .search-container {
             flex: 1;
             max-width: 600px;
-            margin: 0 2rem;
             position: relative;
+            margin-right: 1rem;
         }
 
         .search-input {
@@ -130,6 +131,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
+            flex-shrink: 0;
         }
 
         .watchlist-btn:hover {
@@ -143,6 +145,10 @@
         }
 
         @media (min-width: 769px) {
+            .header {
+                justify-content: flex-start;
+            }
+
             .header-top {
                 display: contents;
             }
@@ -429,33 +435,33 @@
         /* Mobile Responsive */
         @media (max-width: 768px) {
             .header {
-                padding: 1rem;
+                padding: 1rem 1rem;
                 height: auto;
                 flex-direction: column;
-                gap: 0;
+                gap: 1rem;
                 align-items: stretch;
-            }
-
-            .header-top {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                margin-bottom: 1rem;
+                min-height: auto;
             }
 
             .header .logo {
-                flex-shrink: 0;
+                align-self: center;
+                margin-bottom: 0;
             }
 
             .header .logo img {
-                width: 140px;
-                height: 45px;
+                width: 160px;
+                height: 50px;
             }
 
             .search-container {
                 margin: 0;
                 max-width: 100%;
                 width: 100%;
+                order: 2;
+            }
+
+            .watchlist-btn {
+                display: none;
             }
 
             .search-input {
@@ -463,21 +469,19 @@
                 font-size: 16px;
                 border-radius: 30px;
                 width: 100%;
+                min-height: 52px;
             }
 
             .search-button {
                 right: 12px;
                 padding: 12px;
-            }
-
-            .watchlist-btn {
-                padding: 10px 20px;
-                font-size: 0.9rem;
-                flex-shrink: 0;
+                width: 44px;
+                height: 44px;
+                border-radius: 22px;
             }
 
             .nav-menu {
-                top: 140px;
+                top: 120px;
                 padding: 1rem;
             }
 
@@ -493,7 +497,7 @@
             }
 
             .search-results-container {
-                padding: 220px 1rem 2rem;
+                padding: 200px 1rem 2rem;
             }
 
             .results-grid {
@@ -537,37 +541,78 @@
             }
         }
 
-        @media (max-width: 480px) {
+        /* Medium mobile screens */
+        @media (max-width: 640px) and (min-width: 481px) {
             .header {
-                padding: 1rem 0.75rem;
-                gap: 1.25rem;
+                padding: 1rem 0.875rem;
+                gap: 1rem;
             }
 
             .header .logo img {
-                width: 120px;
-                height: 40px;
+                width: 150px;
+                height: 47px;
+            }
+
+            .search-input {
+                padding: 15px 58px 15px 19px;
+                font-size: 16px;
+                min-height: 50px;
+            }
+
+            .search-button {
+                right: 11px;
+                padding: 11px;
+                width: 42px;
+                height: 42px;
+                border-radius: 21px;
+            }
+
+            .watchlist-btn {
+                display: none;
+            }
+
+            .nav-menu {
+                top: 110px;
+                padding: 0.875rem;
+            }
+
+            .search-results-container {
+                padding: 190px 0.875rem 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 1rem 0.75rem;
+                gap: 1rem;
+            }
+
+            .header .logo img {
+                width: 140px;
+                height: 44px;
             }
 
             .search-input {
                 padding: 14px 55px 14px 18px;
                 font-size: 16px; /* Prevent zoom on iOS */
                 border-radius: 25px;
+                min-height: 48px;
             }
 
             .search-button {
                 right: 10px;
                 padding: 10px;
+                width: 40px;
+                height: 40px;
+                border-radius: 20px;
             }
 
             .watchlist-btn {
-                padding: 8px 16px;
-                font-size: 0.85rem;
-                top: 0.75rem;
-                right: 0.75rem;
+                display: none;
             }
 
             .nav-menu {
-                top: 130px;
+                top: 100px;
                 padding: 0.75rem;
             }
 
@@ -581,7 +626,7 @@
             }
 
             .search-results-container {
-                padding: 200px 0.75rem 2rem;
+                padding: 220px 0.75rem 2rem;
             }
 
             .result-poster {
@@ -596,19 +641,35 @@
         /* Extra small screens */
         @media (max-width: 360px) {
             .header {
-                padding: 0.75rem 0.5rem;
+                padding: 1rem 0.5rem;
                 gap: 1rem;
             }
 
+            .header .logo img {
+                width: 130px;
+                height: 41px;
+            }
+
             .search-input {
-                padding: 12px 50px 12px 16px;
-                font-size: 15px;
+                padding: 12px 48px 12px 16px;
+                font-size: 16px;
+                min-height: 44px;
+            }
+
+            .search-button {
+                right: 8px;
+                padding: 8px;
+                width: 36px;
+                height: 36px;
+                border-radius: 18px;
             }
 
             .watchlist-btn {
-                padding: 6px 12px;
-                font-size: 0.8rem;
-                border-radius: 20px;
+                display: none;
+            }
+
+            .nav-menu {
+                top: 130px;
             }
 
             .nav-items {
@@ -621,7 +682,7 @@
             }
 
             .search-results-container {
-                padding: 190px 0.5rem 2rem;
+                padding: 210px 0.5rem 2rem;
             }
         }
 
@@ -661,15 +722,10 @@
 
 <body style="overflow-x: hidden; max-width: 100%; width: 100%">
     <header class="header">
-        <div class="header-top">
-            <div class="logo">
-                <a href="index.html">
-                    <img src="https://ext.same-assets.com/552138780/1579149571.png" alt="FreeFlix" />
-                </a>
-            </div>
-            <button id="goToWatchlist" class="watchlist-btn">
-                <span>Watchlist</span>
-            </button>
+        <div class="logo">
+            <a href="index.html">
+                <img src="https://ext.same-assets.com/552138780/1579149571.png" alt="FreeFlix" />
+            </a>
         </div>
         <div class="search-container">
             <input type="text" id="searchInput" class="search-input" placeholder="Search movies, TV shows..." />
@@ -679,6 +735,9 @@
                 </svg>
             </button>
         </div>
+        <button id="goToWatchlist" class="watchlist-btn">
+            <span>Watchlist</span>
+        </button>
     </header>
 
     <nav class="nav-menu">
