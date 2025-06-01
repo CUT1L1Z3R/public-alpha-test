@@ -31,12 +31,11 @@ class SearchSuggestions {
             border-radius: 12px;
             max-height: 300px;
             overflow-y: auto;
+            overflow-x: hidden;
             z-index: 9999;
             backdrop-filter: blur(25px);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(139, 92, 246, 0.2);
             display: none;
-            min-width: 100%;
-            white-space: nowrap;
         `;
 
         return container;
@@ -241,6 +240,9 @@ class SearchSuggestions {
                 border-bottom: 1px solid rgba(139, 92, 246, 0.1);
                 cursor: pointer;
                 transition: all 0.2s ease;
+                overflow: hidden;
+                width: 100%;
+                box-sizing: border-box;
             }
 
             .suggestion-item:last-child {
@@ -279,6 +281,8 @@ class SearchSuggestions {
             .suggestion-info {
                 flex: 1;
                 min-width: 0;
+                overflow: hidden;
+                width: 100%;
             }
 
             .suggestion-title {
@@ -290,6 +294,7 @@ class SearchSuggestions {
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
+                max-width: 100%;
             }
 
             .suggestion-meta {
