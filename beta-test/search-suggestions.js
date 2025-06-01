@@ -22,18 +22,20 @@ class SearchSuggestions {
         const container = document.createElement('div');
         container.className = 'search-suggestions';
         container.style.cssText = `
-            position: absolute;
-            top: calc(100% + 4px);
+            position: fixed;
+            top: 140px;
             bottom: auto;
-            left: 0;
-            right: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            max-width: calc(100vw - 4rem);
             background: rgba(26, 26, 27, 0.98);
             border: 1px solid rgba(139, 92, 246, 0.4);
             border-radius: 12px;
             max-height: 300px;
             overflow-y: auto;
             overflow-x: hidden;
-            z-index: 10001;
+            z-index: 999999;
             backdrop-filter: blur(25px);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(139, 92, 246, 0.2);
             display: none;
@@ -76,22 +78,26 @@ class SearchSuggestions {
     }
 
     positionSuggestionsContainer() {
-        const searchContainer = this.searchInput.closest('.search-container');
-        if (searchContainer) {
-            searchContainer.style.position = 'relative';
-            searchContainer.style.zIndex = '10002';
-            searchContainer.style.overflow = 'visible';
-            searchContainer.appendChild(this.suggestionsContainer);
+        // Append to body to avoid stacking context issues
+        document.body.appendChild(this.suggestionsContainer);
 
-            // Ensure parent containers allow overflow
-            let parent = searchContainer.parentElement;
-            while (parent && parent !== document.body) {
-                if (parent.style.overflow === 'hidden') {
-                    parent.style.overflow = 'visible';
-                }
-                parent = parent.parentElement;
-            }
-        }
+        // Add event listener to reposition on window resize
+        window.addEventListener('resize', () => {
+            this.updateSuggestionsPosition();
+        });
+    }
+
+    updateSuggestionsPosition() {
+        if (!this.searchInput) return;
+
+        const searchRect = this.searchInput.getBoundingClientRect();
+        const container = this.suggestionsContainer;
+
+        // Position the dropdown below the search input
+        container.style.top = `${searchRect.bottom + 4}px`;
+        container.style.left = `${searchRect.left}px`;
+        container.style.width = `${searchRect.width}px`;
+        container.style.transform = 'none';
     }
 
     handleInput(query) {
@@ -378,12 +384,9 @@ class SearchSuggestions {
     }
 
     showSuggestions() {
-        // Always position below the search input
+        // Update position relative to search input
+        this.updateSuggestionsPosition();
         this.suggestionsContainer.style.display = 'block';
-        this.suggestionsContainer.style.top = 'calc(100% + 4px)';
-        this.suggestionsContainer.style.bottom = 'auto';
-        this.suggestionsContainer.style.marginBottom = '0';
-        this.suggestionsContainer.style.maxHeight = '300px';
         this.selectedIndex = -1;
     }
 
