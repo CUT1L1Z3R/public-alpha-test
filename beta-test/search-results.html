@@ -64,7 +64,8 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            height: 80px;
+            min-height: 80px;
+            height: auto;
         }
 
         .logo {
@@ -134,6 +135,17 @@
         .watchlist-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3);
+        }
+
+        /* Desktop header layout */
+        .header-top {
+            display: contents;
+        }
+
+        @media (min-width: 769px) {
+            .header-top {
+                display: contents;
+            }
         }
 
         /* Navigation */
@@ -418,18 +430,55 @@
         @media (max-width: 768px) {
             .header {
                 padding: 1rem;
-                flex-direction: column;
                 height: auto;
-                gap: 1rem;
+                flex-direction: column;
+                gap: 0;
+                align-items: stretch;
+            }
+
+            .header-top {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 1rem;
+            }
+
+            .header .logo {
+                flex-shrink: 0;
+            }
+
+            .header .logo img {
+                width: 140px;
+                height: 45px;
             }
 
             .search-container {
                 margin: 0;
                 max-width: 100%;
+                width: 100%;
+            }
+
+            .search-input {
+                padding: 16px 60px 16px 20px;
+                font-size: 16px;
+                border-radius: 30px;
+                width: 100%;
+            }
+
+            .search-button {
+                right: 12px;
+                padding: 12px;
+            }
+
+            .watchlist-btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+                flex-shrink: 0;
             }
 
             .nav-menu {
-                top: 120px;
+                top: 140px;
+                padding: 1rem;
             }
 
             .nav-items {
@@ -438,8 +487,13 @@
                 justify-content: center;
             }
 
+            .nav-item a {
+                padding: 0.75rem 1.25rem;
+                font-size: 0.9rem;
+            }
+
             .search-results-container {
-                padding: 200px 1rem 2rem;
+                padding: 220px 1rem 2rem;
             }
 
             .results-grid {
@@ -485,16 +539,49 @@
 
         @media (max-width: 480px) {
             .header {
-                padding: 0.75rem;
+                padding: 1rem 0.75rem;
+                gap: 1.25rem;
             }
 
-            .logo img {
+            .header .logo img {
                 width: 120px;
                 height: 40px;
             }
 
             .search-input {
+                padding: 14px 55px 14px 18px;
                 font-size: 16px; /* Prevent zoom on iOS */
+                border-radius: 25px;
+            }
+
+            .search-button {
+                right: 10px;
+                padding: 10px;
+            }
+
+            .watchlist-btn {
+                padding: 8px 16px;
+                font-size: 0.85rem;
+                top: 0.75rem;
+                right: 0.75rem;
+            }
+
+            .nav-menu {
+                top: 130px;
+                padding: 0.75rem;
+            }
+
+            .nav-items {
+                gap: 0.75rem;
+            }
+
+            .nav-item a {
+                padding: 0.6rem 1rem;
+                font-size: 0.85rem;
+            }
+
+            .search-results-container {
+                padding: 200px 0.75rem 2rem;
             }
 
             .result-poster {
@@ -503,6 +590,38 @@
 
             .result-info {
                 padding: 0.75rem;
+            }
+        }
+
+        /* Extra small screens */
+        @media (max-width: 360px) {
+            .header {
+                padding: 0.75rem 0.5rem;
+                gap: 1rem;
+            }
+
+            .search-input {
+                padding: 12px 50px 12px 16px;
+                font-size: 15px;
+            }
+
+            .watchlist-btn {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+                border-radius: 20px;
+            }
+
+            .nav-items {
+                gap: 0.5rem;
+            }
+
+            .nav-item a {
+                padding: 0.5rem 0.8rem;
+                font-size: 0.8rem;
+            }
+
+            .search-results-container {
+                padding: 190px 0.5rem 2rem;
             }
         }
 
@@ -542,10 +661,15 @@
 
 <body style="overflow-x: hidden; max-width: 100%; width: 100%">
     <header class="header">
-        <div class="logo">
-            <a href="index.html">
-                <img src="https://ext.same-assets.com/552138780/1579149571.png" alt="FreeFlix" />
-            </a>
+        <div class="header-top">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="https://ext.same-assets.com/552138780/1579149571.png" alt="FreeFlix" />
+                </a>
+            </div>
+            <button id="goToWatchlist" class="watchlist-btn">
+                <span>Watchlist</span>
+            </button>
         </div>
         <div class="search-container">
             <input type="text" id="searchInput" class="search-input" placeholder="Search movies, TV shows..." />
@@ -555,9 +679,6 @@
                 </svg>
             </button>
         </div>
-        <button id="goToWatchlist" class="watchlist-btn">
-            <span>Watchlist</span>
-        </button>
     </header>
 
     <nav class="nav-menu">
