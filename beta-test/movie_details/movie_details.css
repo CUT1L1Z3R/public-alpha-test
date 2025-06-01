@@ -861,46 +861,71 @@ iframe {
         align-self: center;
     }
 
-   .hero-section {
-    height: 650px; /* Reduce height to compensate */
+    .hero-section {
+        height: auto; /* Allow natural height */
+        min-height: 100vh; /* Full viewport height */
     }
 
     .hero-overlay {
-    padding: 30px 20px;
-    padding-top: 10px; /* Extra top padding for title visibility */
-    align-items: flex-start; /* Change from flex-end to flex-start */
-    justify-content: flex-start; /* Ensure content starts from top */
+        padding: 20px;
+        padding-top: 40px; /* Extra top padding for title visibility */
+        align-items: center; /* Center content vertically */
+        justify-content: center; /* Center content horizontally */
+    }
+
+    .hero-content {
+        width: 100%;
+        max-width: none;
+        text-align: center;
     }
 
     .hero-title {
-        font-size: 32px;
+        font-size: 28px;
+        line-height: 1.2;
+        margin-bottom: 20px;
     }
 
     .content-area {
         flex-direction: column;
         padding: 20px;
         gap: 30px;
-        padding-bottom: 80px; /* Space for mobile nav pills */
+        padding-bottom: 100px; /* Extra space for mobile nav pills */
     }
 
     .left-content, .right-content {
         max-width: 100%;
     }
 
+    .hero-meta {
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-bottom: 25px;
+    }
+
     .hero-details {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: center;
         gap: 15px;
+        margin-bottom: 25px;
+    }
+
+    .source-info {
+        justify-content: center;
+        margin-bottom: 30px;
     }
 
     .hero-actions {
         flex-direction: column;
         width: 100%;
+        gap: 15px;
+        margin-top: 25px;
     }
 
     .play-btn, .watchlist-btn, .download-btn {
         width: 100%;
         text-align: center;
+        padding: 15px 20px;
+        font-size: 16px;
     }
 
     iframe {
