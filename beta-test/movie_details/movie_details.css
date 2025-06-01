@@ -872,20 +872,21 @@ iframe {
     }
 
     .hero-section {
-        height: 85vh; /* Good mobile height that shows content */
-        min-height: 500px; /* Reasonable minimum height */
-        max-height: 700px; /* Prevent excessive height on large mobile screens */
+        height: 75vh; /* Reduced height to ensure buttons fit */
+        min-height: 450px; /* Reduced minimum height */
+        max-height: 600px; /* Reduced max height for better button visibility */
     }
 
     .hero-overlay {
-        padding: 25px;
-        padding-top: 50px;
-        padding-bottom: 25px;
+        padding: 20px;
+        padding-top: 30px;
+        padding-bottom: 15px;
         align-items: flex-start;
         justify-content: flex-start;
         display: flex;
         flex-direction: column;
         height: 100%;
+        overflow: visible;
     }
 
     .hero-content {
@@ -894,15 +895,16 @@ iframe {
         flex: 1;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        justify-content: flex-start;
+        overflow: visible;
     }
 
     .hero-info {
-        flex: 1;
+        flex: 0 0 auto;
         display: flex;
         flex-direction: column;
-        justify-content: center; /* Center the content vertically */
-        padding-bottom: 10px; /* Reduced padding */
+        justify-content: flex-start;
+        padding-bottom: 5px;
     }
 
     .hero-title {
@@ -931,28 +933,28 @@ iframe {
     .hero-meta {
         justify-content: flex-start;
         flex-wrap: wrap;
-        margin-bottom: 18px;
-        gap: 12px;
+        margin-bottom: 12px; /* Reduced margin */
+        gap: 10px;
     }
 
     .year {
-        font-size: 19px;
+        font-size: 18px;
         font-weight: 500;
         color: #e0e0e0;
     }
 
     .genre-tag {
-        padding: 6px 14px;
-        border-radius: 18px;
-        font-size: 15px;
+        padding: 5px 12px;
+        border-radius: 16px;
+        font-size: 14px;
         font-weight: 600;
     }
 
     .hero-details {
         flex-direction: column;
         align-items: flex-start;
-        gap: 15px;
-        margin-bottom: 18px;
+        gap: 12px; /* Reduced gap */
+        margin-bottom: 12px; /* Reduced margin */
     }
 
     .detail-item {
@@ -991,8 +993,8 @@ iframe {
 
     .source-info {
         justify-content: flex-start;
-        margin-bottom: 20px;
-        gap: 8px;
+        margin-bottom: 12px; /* Reduced margin */
+        gap: 6px;
     }
 
     .server-tag {
@@ -1005,17 +1007,19 @@ iframe {
     .hero-actions {
         flex-direction: column;
         width: 100%;
-        gap: 10px; /* Reduced gap for tighter spacing */
-        margin-top: 15px; /* Reduced margin */
-        margin-bottom: 10px; /* Add bottom margin for spacing */
+        gap: 8px; /* Tighter spacing to fit all buttons */
+        margin-top: 10px;
+        margin-bottom: 5px;
+        flex-shrink: 0; /* Prevent shrinking */
     }
 
     .play-btn, .watchlist-btn, .download-btn {
         width: 100%;
         text-align: center;
-        padding: 12px 20px; /* Slightly reduced padding */
+        padding: 10px 20px; /* Reduced padding to save space */
         font-size: 14px;
         border-radius: 8px;
+        font-weight: 600;
     }
 
     iframe {
