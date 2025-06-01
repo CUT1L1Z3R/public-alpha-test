@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en" style="overflow-x: hidden; max-width: 100%;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>Search Results - FreeFlix</title>
+    <meta name="description" content="Search results for movies, TV shows, and anime on FreeFlix. Find your favorite content for free.">
+
+    <!-- Preconnect to External Domains -->
+    <link rel="preconnect" href="https://image.tmdb.org">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="main.css?v=1.0.2">
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="custom-buttons.css">
+    <link rel="stylesheet" href="custom-search.css">
+    <link rel="stylesheet" href="mobile-search-fix.css">
+
+    <style>
+        /* Search Results Specific Styles */
+        .search-results-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 140px 20px 40px;
+            min-height: 100vh;
+        }
+
+        .search-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .search-query {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 50%, #06b6d4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .search-meta {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+        }
+
+        .search-filters {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 20px;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 25px;
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: rgba(139, 92, 246, 0.3);
+            border-color: rgba(139, 92, 246, 0.6);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .result-card {
+            background: rgba(26, 26, 27, 0.8);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .result-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(139, 92, 246, 0.5);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
+        }
+
+        .result-poster {
+            width: 100%;
+            height: 400px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .result-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .result-card:hover .result-poster img {
+            transform: scale(1.05);
+        }
+
+        .result-info {
+            padding: 1.5rem;
+        }
+
+        .result-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+
+        .result-year {
+            color: rgba(139, 92, 246, 0.8);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-type {
+            display: inline-block;
+            background: rgba(139, 92, 246, 0.3);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .result-overview {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .result-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #ffd700;
+            font-weight: 600;
+        }
+
+        .loading-spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(139, 92, 246, 0.2);
+            border-left: 4px solid #8b5cf6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .no-results h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 3rem;
+        }
+
+        .pagination-btn {
+            padding: 10px 20px;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pagination-btn:hover:not(:disabled) {
+            background: rgba(139, 92, 246, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .page-info {
+            display: flex;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.7);
+            padding: 10px 20px;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .search-results-container {
+                padding: 120px 15px 40px;
+            }
+
+            .search-query {
+                font-size: 2rem;
+            }
+
+            .results-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 1.5rem;
+            }
+
+            .filter-btn {
+                padding: 6px 16px;
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .search-results-container {
+                padding: 100px 10px 40px;
+            }
+
+            .search-query {
+                font-size: 1.5rem;
+            }
+
+            .results-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 1rem;
+            }
+
+            .search-filters {
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body style="overflow-x: hidden; max-width: 100%; width: 100%">
+    <header class="header">
+        <div class="logo">
+            <a href="index.html">
+                <img src="assets/freeflix.png" alt="FreeFlix Logo">
+            </a>
+        </div>
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search movies, TV shows...">
+            <div id="searchResults" style="display: none;"></div>
+        </div>
+        <button id="goToWatchlist" class="watch-list-button">
+            <span class="button-text">Watchlist</span>
+        </button>
+    </header>
+
+    <nav class="nav-menu">
+        <ul class="nav-items">
+            <li class="nav-item">
+                <a href="index.html" data-section="all">All</a>
+            </li>
+            <li class="nav-item">
+                <a href="movies/index.html" data-section="movies">Movies</a>
+            </li>
+            <li class="nav-item">
+                <a href="tvshows/index.html" data-section="tv">TV Shows</a>
+            </li>
+            <li class="nav-item">
+                <a href="anime/index.html" data-section="anime">Anime</a>
+            </li>
+            <li class="nav-item">
+                <a href="genre/index.html" data-section="genres">Genres</a>
+            </li>
+        </ul>
+    </nav>
+
+    <main class="search-results-container">
+        <div class="search-header">
+            <h1 class="search-query" id="searchQuery">Search Results</h1>
+            <p class="search-meta" id="searchMeta">Found results for your query</p>
+        </div>
+
+        <div class="search-filters">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="movie">Movies</button>
+            <button class="filter-btn" data-filter="tv">TV Shows</button>
+            <button class="filter-btn" data-filter="person">People</button>
+        </div>
+
+        <div id="loadingSpinner" class="loading-spinner" style="display: none;">
+            <div class="spinner"></div>
+        </div>
+
+        <div id="resultsContainer" class="results-grid">
+            <!-- Results will be populated here -->
+        </div>
+
+        <div id="noResults" class="no-results" style="display: none;">
+            <h3>No Results Found</h3>
+            <p>Try adjusting your search terms or browse our categories.</p>
+        </div>
+
+        <div id="pagination" class="pagination" style="display: none;">
+            <button class="pagination-btn" id="prevPage">← Previous</button>
+            <div class="page-info" id="pageInfo">Page 1 of 1</div>
+            <button class="pagination-btn" id="nextPage">Next →</button>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div>
+            <p>FreeFlix © 2023 - All Rights Reserved</p>
+            <p>This site does not store any files on its server. All contents are provided by non-affiliated third parties.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="tmdb-api.js"></script>
+    <script src="custom-navigation.js"></script>
+    <script>
+        class SearchResults {
+            constructor() {
+                this.tmdbApi = new TMDBApi();
+                this.currentQuery = '';
+                this.currentFilter = 'all';
+                this.currentPage = 1;
+                this.totalPages = 1;
+                this.allResults = [];
+                this.filteredResults = [];
+
+                this.init();
+            }
+
+            init() {
+                this.getSearchQuery();
+                this.setupEventListeners();
+                if (this.currentQuery) {
+                    this.performSearch();
+                }
+            }
+
+            getSearchQuery() {
+                const urlParams = new URLSearchParams(window.location.search);
+                this.currentQuery = urlParams.get('search') || '';
+
+                if (this.currentQuery) {
+                    document.getElementById('searchQuery').textContent = `"${this.currentQuery}"`;
+                    document.getElementById('searchInput').value = this.currentQuery;
+                } else {
+                    // Redirect to home if no search query
+                    window.location.href = 'index.html';
+                }
+            }
+
+            setupEventListeners() {
+                // Filter buttons
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        this.setActiveFilter(e.target.dataset.filter);
+                    });
+                });
+
+                // Search input
+                document.getElementById('searchInput').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        const query = e.target.value.trim();
+                        if (query && query !== this.currentQuery) {
+                            window.location.href = `search-results.html?search=${encodeURIComponent(query)}`;
+                        }
+                    }
+                });
+
+                // Pagination
+                document.getElementById('prevPage').addEventListener('click', () => {
+                    if (this.currentPage > 1) {
+                        this.currentPage--;
+                        this.performSearch();
+                    }
+                });
+
+                document.getElementById('nextPage').addEventListener('click', () => {
+                    if (this.currentPage < this.totalPages) {
+                        this.currentPage++;
+                        this.performSearch();
+                    }
+                });
+            }
+
+            setActiveFilter(filter) {
+                this.currentFilter = filter;
+                this.currentPage = 1;
+
+                // Update active button
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.querySelector(`[data-filter="${filter}"]`).classList.add('active');
+
+                this.filterAndDisplayResults();
+            }
+
+            async performSearch() {
+                this.showLoading();
+
+                try {
+                    let searchResults;
+
+                    switch (this.currentFilter) {
+                        case 'movie':
+                            searchResults = await this.tmdbApi.searchMovies(this.currentQuery, this.currentPage);
+                            break;
+                        case 'tv':
+                            searchResults = await this.tmdbApi.searchTVShows(this.currentQuery, this.currentPage);
+                            break;
+                        case 'person':
+                            searchResults = await this.tmdbApi.searchPeople(this.currentQuery, this.currentPage);
+                            break;
+                        default:
+                            searchResults = await this.tmdbApi.searchMulti(this.currentQuery, this.currentPage);
+                    }
+
+                    this.allResults = searchResults.results || [];
+                    this.totalPages = searchResults.total_pages || 1;
+
+                    this.updateSearchMeta(searchResults.total_results || 0);
+                    this.displayResults();
+                    this.updatePagination();
+
+                } catch (error) {
+                    console.error('Search error:', error);
+                    this.showNoResults();
+                } finally {
+                    this.hideLoading();
+                }
+            }
+
+            filterAndDisplayResults() {
+                if (this.currentFilter === 'all') {
+                    this.performSearch();
+                } else {
+                    this.performSearch();
+                }
+            }
+
+            displayResults() {
+                const container = document.getElementById('resultsContainer');
+
+                if (this.allResults.length === 0) {
+                    this.showNoResults();
+                    return;
+                }
+
+                container.innerHTML = this.allResults.map(item => this.createResultCard(item)).join('');
+                document.getElementById('noResults').style.display = 'none';
+                container.style.display = 'grid';
+            }
+
+            createResultCard(item) {
+                const formatted = this.tmdbApi.formatSearchResult(item);
+                const typeLabel = this.getTypeLabel(formatted.mediaType);
+
+                return `
+                    <div class="result-card" onclick="this.openDetails(${formatted.id}, '${formatted.mediaType}')">
+                        <div class="result-poster">
+                            <img src="${formatted.poster}" alt="${formatted.title}" loading="lazy"
+                                 onerror="this.src='/assets/placeholder-poster.jpg'">
+                        </div>
+                        <div class="result-info">
+                            <h3 class="result-title">${formatted.title}</h3>
+                            ${formatted.year ? `<div class="result-year">${formatted.year}</div>` : ''}
+                            <div class="result-type">${typeLabel}</div>
+                            <div class="result-overview">${formatted.overview}</div>
+                            ${formatted.rating !== 'N/A' ? `
+                                <div class="result-rating">
+                                    <span>⭐</span>
+                                    <span>${formatted.rating}</span>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }
+
+            getTypeLabel(mediaType) {
+                switch (mediaType) {
+                    case 'movie': return 'Movie';
+                    case 'tv': return 'TV Show';
+                    case 'person': return 'Person';
+                    default: return 'Unknown';
+                }
+            }
+
+            updateSearchMeta(totalResults) {
+                const meta = document.getElementById('searchMeta');
+                if (totalResults === 0) {
+                    meta.textContent = 'No results found';
+                } else if (totalResults === 1) {
+                    meta.textContent = '1 result found';
+                } else {
+                    meta.textContent = `${totalResults.toLocaleString()} results found`;
+                }
+            }
+
+            updatePagination() {
+                const pagination = document.getElementById('pagination');
+                const prevBtn = document.getElementById('prevPage');
+                const nextBtn = document.getElementById('nextPage');
+                const pageInfo = document.getElementById('pageInfo');
+
+                if (this.totalPages > 1) {
+                    pagination.style.display = 'flex';
+                    prevBtn.disabled = this.currentPage === 1;
+                    nextBtn.disabled = this.currentPage === this.totalPages;
+                    pageInfo.textContent = `Page ${this.currentPage} of ${this.totalPages}`;
+                } else {
+                    pagination.style.display = 'none';
+                }
+            }
+
+            showLoading() {
+                document.getElementById('loadingSpinner').style.display = 'flex';
+                document.getElementById('resultsContainer').style.display = 'none';
+                document.getElementById('noResults').style.display = 'none';
+            }
+
+            hideLoading() {
+                document.getElementById('loadingSpinner').style.display = 'none';
+            }
+
+            showNoResults() {
+                document.getElementById('noResults').style.display = 'block';
+                document.getElementById('resultsContainer').style.display = 'none';
+                document.getElementById('pagination').style.display = 'none';
+            }
+
+            openDetails(id, mediaType) {
+                // For now, we'll just log the details
+                // In a real implementation, you'd navigate to a details page
+                console.log(`Opening details for ${mediaType} with ID: ${id}`);
+
+                // Example: navigate to movie details page
+                // window.location.href = `movie_details/movie_details.html?id=${id}&type=${mediaType}`;
+            }
+        }
+
+        // Initialize search results when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new SearchResults();
+        });
+    </script>
+</body>
+</html>
